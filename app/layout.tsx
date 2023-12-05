@@ -13,10 +13,10 @@ export const metadata: Metadata = {
 		template: `%s - ${siteConfig.name}`,
 	},
 	description: siteConfig.description,
-	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "white" },
-		{ media: "(prefers-color-scheme: dark)", color: "black" },
-	],
+	// themeColor: [
+	// 	{ media: "(prefers-color-scheme: light)", color: "white" },
+	// 	{ media: "(prefers-color-scheme: dark)", color: "black" },
+	// ],
 	icons: {
 		icon: "/favicon.ico",
 		shortcut: "/favicon-16x16.png",
@@ -24,11 +24,26 @@ export const metadata: Metadata = {
 	},
 };
 
+
+
 export default function RootLayout({
 	children,
+	dashboard,
+	login
 }: {
 	children: React.ReactNode;
+	dashboard: React.ReactNode;
+	login: React.ReactNode;
 }) {
+
+	const userLogged = true ; 
+	// const userLogged = false ;
+
+	const Home = () => {
+		// return <>{login}</>
+		return userLogged ? <>{children}{dashboard}</> : <>LOGIN{dashboard}{login}</>
+	}	
+
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head />
@@ -41,9 +56,11 @@ export default function RootLayout({
 				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
 					<div className="relative flex flex-col h-screen">
 						<Navbar />
+
 						<main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-							{children}
+							<Home/>
 						</main>
+
 						<footer className="w-full flex items-center justify-center py-3">
 							<Link
 								isExternal
@@ -55,6 +72,7 @@ export default function RootLayout({
 								<p className="text-primary">NextUI</p>
 							</Link>
 						</footer>
+					
 					</div>
 				</Providers>
 			</body>
