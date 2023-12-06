@@ -1,0 +1,167 @@
+import { string } from 'prop-types';
+import api from './axiosInstanse';
+
+
+interface Drive {
+    id:string,
+    name:string,
+    url:string
+}
+
+interface Ecotaxa {
+    id:string
+}
+
+interface Project {
+    id:string,
+    name:string,
+    drive:Drive,
+    acronym: string,
+    description: string,
+    updatedAt: Date,
+    createdAt: Date,
+    driveId: string,
+    ecotaxaId: string,
+    ecotaxa?: Ecotaxa
+}
+
+
+interface Metadata {
+    key: string
+    value: string
+    type: string
+}
+
+interface SubSample {
+  id: string
+  metadata: Array<Metadata>
+  scan: Array<Scan>
+}
+
+interface Scan {
+  id: string
+  url: string
+  metadata: Array<Metadata>
+}
+interface Sample {
+    id: string,
+    name: string,
+    metadata: Array<Metadata>
+    subSamples: Array<SubSample>
+}
+
+// [
+//     {
+//       "id": "655d3062983b92b6e29b3369",
+//       "name": "monproject",
+//       "acronym": null,
+//       "description": null,
+//       "ecotaxaId": null,
+//       "updatedAt": null,
+//       "createdAt": "2023-11-21T22:34:10.972Z",
+//       "driveId": "655c5b54457834999b769d06",
+//       "drive": {
+//         "id": "655c5b54457834999b769d06",
+//         "name": "Zooscan",
+//         "url": "file://drives/zooscan"
+//       },
+//       "ecotaxa": null
+//     }
+//   ]
+
+
+interface Projects {
+    data:Array<Project>
+}
+
+interface Samples {
+    data:Array<Sample>
+}
+
+// export async function getProject(id:string){
+
+//     const response = await api.get<Project>(`/projects/${id}`);
+
+//     console.log("getProject response: ", response);
+
+//     return response.data; 
+// }
+
+
+// export async function getProjects(page: number){
+export async function getProjects(){
+
+    // const pageSize = 12;
+    // const response = await api.get<Projects>(`/projects?limit=${pageSize}&offset=${pageSize * (page - 1)}`);
+    const response = await api.get<Projects>(`/projects`);
+
+    console.log("getProjects response: ", response);
+
+    return response.data; 
+}
+
+
+export async function getProject(url:string){
+
+  const response = await api.get<Project>(url);
+
+  console.log("getProject response: ", response);
+
+  return response.data; 
+}
+
+
+export async function addProject(data:Project){
+
+    return await api.post('/projects', data)
+      .then(function (response) {
+        console.log(response);
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+        throw(error);
+      });
+
+  }
+
+
+  export async function getDrives(){
+    const response = await api.get<Drive>(`/drives`);
+    
+    console.log("getDrives response: ", response);
+
+    return response.data; 
+}
+
+export async function addSample(projectId:string, data:Sample){
+
+    return await api.post(`/projects/${projectId}/samples`, data)
+      .then(function (response) {
+        console.log("addSample response: ", response);
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+        throw(error);
+      });
+
+  }
+
+  // export async function getSamples(projectId:string){
+  export async function getSamples(url:string){
+
+    // console.log("getSamples(",projectId,")")
+    console.log("getSamples(",url,")")
+
+    // throw (projectId)
+
+    // const pageSize = 12;
+    // const response = await api.get<Projects>(`/projects?limit=${pageSize}&offset=${pageSize * (page - 1)}`);
+    // const response = await api.get<Samples>(`/projects/${projectId}/samples`);
+    const response = await api.get<Samples>(url);
+
+    console.log("getSamples response: ", response);
+
+    return response.data; 
+}

@@ -83,6 +83,9 @@ export const Navbar = () => {
 				justify="end"
 			>
 				<NavbarItem className="hidden sm:flex gap-2">
+					<Link isExternal href={siteConfig.links.ecotaxa} aria-label="Ecotaxa">
+						<TwitterIcon className="text-default-500" />
+					</Link>
 					<Link isExternal href={siteConfig.links.twitter} aria-label="Twitter">
 						<TwitterIcon className="text-default-500" />
 					</Link>
@@ -95,7 +98,7 @@ export const Navbar = () => {
 					<ThemeSwitch />
 				</NavbarItem>
 				<NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-				<NavbarItem className="hidden md:flex">
+				{/* <NavbarItem className="hidden md:flex">
 					<Button
             isExternal
 						as={Link}
@@ -106,7 +109,7 @@ export const Navbar = () => {
 					>
 						Sponsor
 					</Button>
-				</NavbarItem>
+				</NavbarItem> */}
 			</NavbarContent>
 
 			<NavbarContent className="sm:hidden basis-1 pl-4" justify="end">

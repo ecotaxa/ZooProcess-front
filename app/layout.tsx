@@ -72,7 +72,6 @@ export default function RootLayout({
 								<p className="text-primary">NextUI</p>
 							</Link>
 						</footer>
-					
 					</div>
 				</Providers>
 			</body>

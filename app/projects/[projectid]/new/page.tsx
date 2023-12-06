@@ -2,7 +2,7 @@ const Sample = () => {
 
     return (
         <div>
-            <h1>Sample</h1>
+            <h1>New Sample</h1>
         </div>
     );
 };
