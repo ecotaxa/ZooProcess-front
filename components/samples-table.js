@@ -6,22 +6,26 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button
 import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key';
 
+import { Debug } from '@/Components/Debug';
 
 const columns = [
-    {name: "ID", uid: "id"},
+    // {name: "ID", uid: "id"},
     // {name: "DRIVE", uid: "drive"},
     {name: "NAME", uid: "name"},
     // {name: "SAMPLE", uid: "sample"},
-    // {name: "SCAN", uid: "scan"},
-    // {name: "CREATE AT", uid: "createdAt"},
-    // {name: "UPDATED AT", uid: "updatedAt"},
+    {name: "SCAN", uid: "scan"},
+    {name: "FRACTION/SUBSAMPLE", uid:"fraction"},
+    {name: "CREATE AT", uid: "createdAt"},
+    {name: "UPDATED AT", uid: "updatedAt"},
+    {name: "STATUS", uid: "status"},
     {name: "ACTIONS", uid: "actions"},
   ];
 
 export function SamplesTableNextUI(props) {
     const {projectId, samples=[]} = props
 
-    console.log("SamplesTable( samples= ", samples,")")
+    console.log("SamplesTable projectId= ", projectId);
+    console.log("SamplesTable samples= ", samples);
 
     const updateddata = samples.map( (sample) => { sample['key']=sample.id ; return sample;} )
     console.log("SamplesTableNextUI updateddata: ",updateddata)
@@ -126,7 +130,7 @@ export function SamplesTableNextUI(props) {
                     href={`/projects/${projectId}/samples/${sample.id}`}
                     // onPress={ (projectid,sampleid=sample.id) => onDetail(projectid,sampleid) }                
                 >
-                    Details
+                    Scan Sub-Sample
                 </Button>
             </div>
             );
@@ -137,7 +141,10 @@ export function SamplesTableNextUI(props) {
     }, []);
 
 
+
   return (
+    <>
+    <Debug params={props} />
     <Table aria-label="Projects">
       <TableHeader columns={columns}>
         {(column) => (
@@ -154,5 +161,6 @@ export function SamplesTableNextUI(props) {
         )}
       </TableBody>
     </Table>
+    </>
   );
 }

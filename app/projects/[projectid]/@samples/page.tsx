@@ -19,7 +19,7 @@ interface pageProps {
   params: {projectid: string}
 }
 
-const Samples : FC<pageProps> = (params:any) => {
+const Samples : FC<pageProps> = ({params}) => {
     // const router = useRouter()
     // const projectid = router.query.projectid //as string
     // const sampleid = router.query.sampleid //as string
@@ -31,8 +31,8 @@ const Samples : FC<pageProps> = (params:any) => {
     // const sampleid = 10;
     const projectId = params.projectid ;
 
-    const { samples, isLoading, isError } = useSamples()
-    const [ sampleList, setSampleList ] = useState([samples])
+    const { samples, isLoading, isError } = useSamples(projectId)
+    const [ sampleList, setSampleList ] = useState(samples)
 
     // const formatData = (data:any) => {
     //   console.log("formatData: ",data);
@@ -61,12 +61,24 @@ const Samples : FC<pageProps> = (params:any) => {
   
         console.log("sample: ", sample);
 
-        return {
-          id: data[sample].id,
-          name: data[sample].name,
-          // createdAt,
-          // updatedAt,    
+        if ( sample == "key"){
+            console.error("ARRGG indey == key");
+            console.log("ARRGG indey == key")
+            console.debug(data);
+            console.log("pfffff")
+        } else {
+          const s = data[sample]
+
+          return {
+            id: data[sample].id,
+            name: data[sample].name,
+            fraction:s.nbFractions,
+            scans:s.nbScans,
+            createdAt:s.createdAt,
+            updatedAt:s.updatedAt,
+          }  
         }
+
       });
   
       console.log("formated data: ",samples);
@@ -76,6 +88,7 @@ const Samples : FC<pageProps> = (params:any) => {
     useEffect( () => { 
       console.log("samples has changed", samples);
       const data = formatData(samples)
+      // const data = samples
       setSampleList(data);
     } , [samples])
 
@@ -89,9 +102,9 @@ const Samples : FC<pageProps> = (params:any) => {
   return (
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
           <div className="text-center justify-center">
-              <h4 data-testid="title">
-                  Samples
-              </h4>
+              <h1 data-testid="title">
+                  Samples {projectId}
+              </h1>
               <Spacer y={5}/>
               <Card className="inline-block "
                   data-testid="projectCard" 

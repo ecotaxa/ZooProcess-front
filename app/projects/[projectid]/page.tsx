@@ -1,12 +1,15 @@
+"use client"
+
 import { Card, CardBody, CardHeader, Spacer } from "@nextui-org/react";
 import { Tab, Tabs } from "@nextui-org/tabs";
-import Samples from "./samples/page";
-import Stats from "./stats/page";
-import Scans from "./scans/page";
-import Metadata from "./metadata/page";
+import Samples from "./@samples/page";
+import Stats from "./@stats/page";
+import Scans from "./@scans/page";
+import Metadata from "./@metadata/page";
 // import Samples from "./@samples/page";
 
 import { FC } from "react";
+import { Debug } from "@/Components/Debug";
 
 interface pageProps {
     params: {projectid: string}
@@ -17,7 +20,7 @@ const Project : FC<pageProps> = ({ params }) => {
 
     const projectid = params.projectid
 
-    const projectName = "Zooscan_ptb_wp2_2021_journee";
+    const projectName = "MOCK ;) Zooscan_ptb_wp2_2021_journee";
 
     return (
         <div>
@@ -28,24 +31,27 @@ const Project : FC<pageProps> = ({ params }) => {
                 </CardHeader>
                 <CardBody>
                     <h1>{projectName}</h1>
+                    <h3>{projectid}</h3>
                 </CardBody>
             </Card>
             <Spacer y={20}/>
+            <Debug params={params}/>
         {/* <div className="flex w-full flex-col"> */}
-            {/* <Tabs aria-label="Options"> */}
-                {/* <Tab key="stats" title="Stats"> */}
+            <Tabs aria-label="Options">
+                <Tab key="stats" title="Stats">
                     <Stats/>
-                {/* </Tab> */}
-                {/* <Tab key="metadata" title="Metadata" href={`/projects/${projectid}/metadata`}> */}
+                </Tab>
+                <Tab key="metadata" title="Metadata" href={`/projects/${projectid}/metadata`}>
                     <Metadata/>
-                {/* </Tab> */}
-                {/* <Tab key="samples" title="Samples"> */}
+                </Tab>
+                <Tab key="samples" title="Samples">
                     <Samples params={params}/>
-                {/* </Tab> */}
-                {/* <Tab key="scans" title="Scans"> */}
+                    <Debug params={params}/>
+                </Tab>
+                <Tab key="scans" title="Scans">
                     <Scans/>
-                {/* </Tab> */}
-            {/* </Tabs> */}
+                </Tab>
+            </Tabs>
         {/* </div> */}
 
     </div>

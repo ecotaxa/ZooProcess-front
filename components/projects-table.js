@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react";
 import { Button, Link, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
 // import { Button } from "@mui/material";
@@ -107,6 +109,7 @@ export function ProjectsTableNextUI(props) {
             );              
 
         case "actions":
+            console.log("build action: ", project)
             return (
             <div className="relative flex items-center gap-2" key={key(project.id,'action')}>
                 <Button 
