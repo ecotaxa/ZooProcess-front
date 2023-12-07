@@ -1,7 +1,8 @@
-import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
+import {  Card, CardContent, Grid, Typography } from "@mui/material";
 // import { FormElements, fraction_inputFormElments, inputFormElements, inputFormElements_tow_type_vertical, sampleid_formElements } from '../services/formElements';
 import { useState, useMemo } from "react";
 import { FormElements } from "@/components/myFormElements";
+import { Button } from "@nextui-org/button";
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
 // MyForm
@@ -163,10 +164,10 @@ export function MyForm(props){
           <Grid style={{padding: "80px 5px 5px"}}>
             <Card style={{ maxWidth: 800, margin: "0 auto"}}>
               <CardContent>
-                <Typography variant="h4" 
+                <h4
                   color="primary">
                     {title}
-                </Typography>
+                </h4>
                 <Typography variant="subtitle1" 
                   color="textSecondary">
                     {subtitle}

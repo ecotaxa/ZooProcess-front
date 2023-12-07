@@ -37,10 +37,10 @@ import { Drive } from '@/app/api/network/zooprocess-api';
 
 let emptyProject = {
         // "project_id": null,
-        "name": "Zooscan_",
+        "name": null, // "Zooscan_",
         "drive": null,
         "acronym": null,
-        "description": "toto",
+        "description": null,
         "ecotaxa_project_title":null,
         "ecotaxa_project":null
     }
@@ -69,7 +69,7 @@ const NewProject = (params:any) => {
     //   const data = updateProjectForm(drives)
     //   setDrivesList(data);
     // } , [drives]);
-  
+
     let form : any = {}
     form['forms'] = projectForm; //driveList
     form['value'] = emptyProject;

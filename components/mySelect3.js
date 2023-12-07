@@ -1,4 +1,4 @@
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material"
+//import { Select, MenuItem, FormControl, InputLabel } from "@mui/material"
 import { useState } from "react";
 
 export function MySelect(props){
@@ -20,7 +20,7 @@ export function MySelect(props){
 
     const opts = {}
     if (props.required === true) {
-        opts['required'] = true
+        opts['isRequired'] = true
     }
 
     opts['xs'] = props.xs
@@ -41,7 +41,22 @@ export function MySelect(props){
     }
 
     return (
-    <FormControl {...opts} 
+<>
+            <Select
+            
+                isRequired
+                items={props.choice}
+                label={props.name}
+                placeholder={props.placeholder}
+                className="max-w-xs"
+                onChange={(event) => handleChange(event.target.value)}
+                value={value}
+            >
+                {(item) => <SelectItem key={item.id}>{item.name}</SelectItem>}
+            </Select>
+
+
+    {/* <FormControl {...opts} 
             fullWidth={props.fullWidth}
             sx={ sxValue()} 
             size="regular"
@@ -69,10 +84,11 @@ export function MySelect(props){
                     <MenuItem 
                         key={choix.id} 
                         value={choix.id}
-                    >{choix.name}</MenuItem>
+                    >{choix.value}</MenuItem>
             )}
             </Select>
-        </FormControl>
+        </FormControl> */}
+</>
         )
 
 }

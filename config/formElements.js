@@ -452,7 +452,7 @@ export const sampleid_formElements=[
                 { name:"name", placeholder:"Project name", label:'Project Name',
                 tag:"TextField", type:"text",
                 variant:"outlined",  required:true, 
-                minLength:"zooscan_".length,
+                prefix:"zooscan_", minLength:"zooscan_".length,
                 xs:12, sm:6, size:"small"
                 },
                 { name:"drive", placeholder:"Project thematic (tara, archives_lov, ...)", label:'Project Drive',

@@ -16,6 +16,7 @@ import { Select, SelectItem } from "@nextui-org/react";
 // import { DateTimeField, LocalizationProvider, deDE } from "@mui/x-date-pickers";
 // import {  DateTimePicker, LocalizationProvider, deDE } from "@mui/x-date-pickers";
 
+import {MyInput}from "@/components/mySelect4.js"
 
 export function FormElements(props) {
 
@@ -28,24 +29,56 @@ export function FormElements(props) {
 
     switch ( props.tag ){
         case "TextField":
-            if (mui){
-            return (<MyTextField {...props} key={props.name}
-                onChange={props.onChange}/>)
+            if (mui ){ //|| props.minLength){
+                return (<MyTextField {...props} key={props.name}
+                    onChange={props.onChange}/>)
             } else {
+
+                let opt = {
+                    type: props.type,
+                    value: props.value,
+                    label: props.label,
+                    placeholder: props.placeholder,
+                }
+                if (props.required == true) { opt['isRequired'] = true}
+                if (props.prefix) { opt['startContent'] = props.prefix }
+                if (props.endAdornment?.text) { opt['endContent'] = props.endAdornment.text}
+
+                console.log("opt: ", opt);
+
                 return (
                     <Input 
-                    isRequired
-                    type={props.type} 
-                    label={props.label} 
-                    placeholder={props.placeholder} />
+                        {...opt}
+                        onChange={props.onChange}
+                    />
+                    // <Input 
+                    //     isRequired={true}
+                    //     //value={props.value}
+                    //     type={props.type} 
+                    //     label={props.label} 
+                    //     placeholder={props.placeholder} 
+                    //     endContent={props.endAdornment?.text || ""}
+                    //     startContent="Zooscan_"
+                    //     onChange={props.onChange}
+                    //     //minLength={props.minLength}
+                    // />
                 )
             }
         case "Select":
-            if (mui) {
+            if (true) {
                 return (<MySelect {...props}  key={props.name}
                 onChange={props.onChange}/>)
             } else {
-                console.log("SELECT props:" , props);
+                if (true){
+
+                    return(
+                        <MyInput  
+                            props
+                        /> 
+                    )
+
+                }else{
+                console.log("SELECT props:", props);
                 return (
                     <Select
                     isRequired
@@ -55,10 +88,10 @@ export function FormElements(props) {
                     className="max-w-xs"
                     onChange={props.onChange}
                   >
-                    {(animal) => <SelectItem key={props.choice.id}>{props.choice.name}</SelectItem>}
+                    {(item) => <SelectItem key={item.id}>{item.name}</SelectItem>}
                   </Select>
                 )
-            }
+            }}
         case "DateField":
             <MyDatePicker {...props}  key={props.name}
                 onChange={props.onChange}/>
