@@ -2,17 +2,17 @@ import { string } from 'prop-types';
 import api from './axiosInstanse';
 
 
-interface Drive {
+export interface Drive {
     id:string,
     name:string,
     url:string
 }
 
-interface Ecotaxa {
+export interface Ecotaxa {
     id:string
 }
 
-interface Project {
+export interface Project {
     id:string,
     name:string,
     drive:Drive,
@@ -26,24 +26,24 @@ interface Project {
 }
 
 
-interface Metadata {
+export interface Metadata {
     key: string
     value: string
     type: string
 }
 
-interface SubSample {
+export interface SubSample {
   id: string
   metadata: Array<Metadata>
   scan: Array<Scan>
 }
 
-interface Scan {
+export interface Scan {
   id: string
   url: string
   metadata: Array<Metadata>
 }
-interface Sample {
+export interface Sample {
     id: string,
     name: string,
     metadata: Array<Metadata>
@@ -70,11 +70,11 @@ interface Sample {
 //   ]
 
 
-interface Projects {
+export interface Projects {
     data:Array<Project>
 }
 
-interface Samples {
+export interface Samples {
     data:Array<Sample>
 }
 
@@ -127,7 +127,7 @@ export async function addProject(data:Project){
 
 
   export async function getDrives(){
-    const response = await api.get<Drive>(`/drives`);
+    const response = await api.get<Array<Drive>>(`/drives`);
     
     console.log("getDrives response: ", response);
 
