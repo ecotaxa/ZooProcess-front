@@ -11,6 +11,8 @@ import { MyTextField } from "./myTextField"
 // import { DatePicker } from "@mui/x-date-pickers"
 import { MyDatePicker } from "./myDatePicker"
 import { TextareaAutosize } from "@mui/material"
+import { Input, Textarea } from "@nextui-org/input";
+import { Select, SelectItem } from "@nextui-org/react";
 // import { DateTimeField, LocalizationProvider, deDE } from "@mui/x-date-pickers";
 // import {  DateTimePicker, LocalizationProvider, deDE } from "@mui/x-date-pickers";
 
@@ -22,20 +24,63 @@ export function FormElements(props) {
     // if (props.onChange){
     //     const onChange = props.onChange
     // }
+    const mui = false;
 
     switch ( props.tag ){
         case "TextField":
-            return <MyTextField {...props} key={props.name}
-                onChange={props.onChange}/>
+            if (mui){
+            return (<MyTextField {...props} key={props.name}
+                onChange={props.onChange}/>)
+            } else {
+                return (
+                    <Input 
+                    isRequired
+                    type={props.type} 
+                    label={props.label} 
+                    placeholder={props.placeholder} />
+                )
+            }
         case "Select":
-            return <MySelect {...props}  key={props.name}
-                onChange={props.onChange}/>
+            if (mui) {
+                return (<MySelect {...props}  key={props.name}
+                onChange={props.onChange}/>)
+            } else {
+                console.log("SELECT props:" , props);
+                return (
+                    <Select
+                    isRequired
+                    items={props.choice}
+                    label={props.name}
+                    placeholder={props.placeholder}
+                    className="max-w-xs"
+                    onChange={props.onChange}
+                  >
+                    {(animal) => <SelectItem key={props.choice.id}>{props.choice.name}</SelectItem>}
+                  </Select>
+                )
+            }
         case "DateField":
             <MyDatePicker {...props}  key={props.name}
                 onChange={props.onChange}/>
         case "TextArea":
-            return <TextareaAutosize {...props}   key={props.name}
-                onChange={props.onChange}/>
+            if (mui){
+                return (
+                <TextareaAutosize {...props}   key={props.name}
+                    onChange={props.onChange}
+                />)
+            } else {
+                return (
+                <Textarea  onChange={props.onChange}
+                    isInvalid={false}
+                    isRequired
+                    // variant="bordered"
+                    label={props.label}
+                    placeholder={props.placeholder}
+                    defaultValue={props.defaultValue}
+                    // errorMessage="The description should be at least 255 characters long."
+                    className="max-w-xs"
+                />)
+            }
     }
 
     return (

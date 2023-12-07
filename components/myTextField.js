@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 // import {  FormControl, InputLabel, FormHelperText, TextField, InputAdornment, Input } from "@mui/material"
 import {   TextField, InputAdornment } from "@mui/material"
+import { Textarea } from "@nextui-org/input";
 
 export function MyTextField(props) {
     // let state = {
@@ -205,6 +206,38 @@ export function MyTextField(props) {
         return {}
     }
 
+    const MUI_Text = () => {
+        <TextField {...field_props} 
+            // <Input {...field_props} InputLabelProps={{ shrink: true }}
+                onChange={event => handleChange(event.target.value)}
+                onFocus={handleFocus}
+                // {typeField} === "date" && }
+                // InputLabelProps={{ shrink: true }}  - à mettre pour date seul
+                InputLabelProps={shrinked()}
+                // endAdornment={<InputAdornment position="end">Kg</InputAdornment>}
+                // endAdornment={props.endAdornment && "<InputAdornment position='"+props.endAdornment.pos+"'>"+props.endAdornment.text+"</InputAdornment>"}
+                // endAdornment={props.endAdornment && <InputAdornment position='end'>Kg</InputAdornment>}
+                // InputProps={ props.endAdornment && { startAdornment: <InputAdornment position='end'>Kg</InputAdornment> } }
+                // InputProps={ props.endAdornment && { endAdornment: <InputAdornment position={props.endAdornment.pos}>{props.endAdornment.text}</InputAdornment> } }
+                InputProps={adornment()}
+                error={hasError}
+                helperText={hasError ? (props.helperText ? props.helperText : "Error - not an acceptable value") : '' }
+            />
+    }
+
+    // return (
+    //     <MUI_Text/>
+    // )
+
+
+    // return (
+    //     <Textarea
+    //     label="Description"
+    //     placeholder="Enter your description"
+    //     className="max-w-xs"
+    //   />
+    // )
+
     return (
         // <FormControl  error={hasError} {...form_props} autoComplete="off" >
         //   {/* <InputLabel htmlFor="name">{props.name}</InputLabel> */}
@@ -230,6 +263,7 @@ export function MyTextField(props) {
             // {hasError && <FormHelperText>This is required!</FormHelperText>}
         // </FormControl>
     );
+
     // onSelect={handleSelect}
 
   }

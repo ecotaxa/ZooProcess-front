@@ -474,7 +474,7 @@ export const sampleid_formElements=[
                 variant:"outlined",  required:true, 
                 xs:12, sm:6, size:"small"
                 },
-                { name:"description", placeholder:"Project description", label:'Project description',
+                { name:"description", placeholder:"Describe your project here", label:'Project description',
                 tag:"TextArea", type:"text",
                 variant:"outlined",  
                 required:false, disabled:false,

@@ -84,6 +84,7 @@ const NewProject = (params:any) => {
 
     const prepareData = (data:any) => {
         const drive = convertionTable.filter((drive: Drive) => {  return drive.id == data.drive})
+        console.log("prepareData: ")
         if ( drive.length && drive[0].name == undefined) { throw("No drive") }
         let newData = {
             name: data.name,
@@ -231,22 +232,19 @@ const NewProject = (params:any) => {
             Metadata | ZooProcess
             </title>
         </Head>
-        <Box
-            component="main"
-            sx={{
-            flexGrow: 1,
-            py: 8
-            }}
-        >
-            <Container maxWidth="lg">
+        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+
+        <div className="text-center justify-center">
             <Stack spacing={3}>
-                <Typography variant="h4">
+            <h1>Metadata</h1>
+
+                {/* <Typography variant="h4">
                     Metadata
-                </Typography>
+                </Typography> */}
                 <ProjectForm/>
             </Stack>
-            </Container>
-        </Box>
+            </div>
+        </section>
         </>
     );
 }
