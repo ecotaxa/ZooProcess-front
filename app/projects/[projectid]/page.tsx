@@ -38,10 +38,12 @@ const Project : FC<pageProps> = ({ params }) => {
             <Debug params={params}/>
         {/* <div className="flex w-full flex-col"> */}
             <Tabs aria-label="Options">
-                <Tab key="stats" title="Stats">
+                {/* <Tab key="stats" title="Stats" href={`/projects/${projectid}/stats`}> */}
+                <Tab key="stats" title="Stats" >
                     <Stats/>
                 </Tab>
-                <Tab key="metadata" title="Metadata" href={`/projects/${projectid}/metadata`}>
+                {/* <Tab key="metadata" title="Metadata" href={`/projects/${projectid}/metadata`}> */}
+                <Tab key="metadata" title="Metadata" >
                     <Metadata/>
                 </Tab>
                 <Tab key="samples" title="Samples">
