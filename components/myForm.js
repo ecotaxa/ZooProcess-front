@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 // import { FormElements, fraction_inputFormElments, inputFormElements, inputFormElements_tow_type_vertical, sampleid_formElements } from '../services/formElements';
 import { useState, useMemo } from "react";
-import { FormElements } from "src/components/myFormElements";
+import { FormElements } from "@/components/myFormElements";
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
 // MyForm
