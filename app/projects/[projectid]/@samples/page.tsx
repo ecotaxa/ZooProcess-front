@@ -111,7 +111,7 @@ const Samples : FC<pageProps> = ({params}) => {
                   >
                   <CardHeader className="flex flex-row-reverse py-3">
                       <Button 
-                          href="projects/new"
+                          href={`/projects/${params.projectid}/new`}
                           as={Link}
                           color="primary"
                           // showAnchorIcon
