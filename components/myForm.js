@@ -1,8 +1,11 @@
-import {  Card, CardContent, Grid, Typography } from "@mui/material";
+// import {  Card, CardContent, Grid, Typography } from "@mui/material";
+import {   Grid , Typography} from "@mui/material";
+
 // import { FormElements, fraction_inputFormElments, inputFormElements, inputFormElements_tow_type_vertical, sampleid_formElements } from '../services/formElements';
 import { useState, useMemo } from "react";
 import { FormElements } from "@/components/myFormElements";
 import { Button } from "@nextui-org/button";
+import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
 // MyForm
@@ -65,12 +68,7 @@ export function MyForm(props){
     const formElements = (myJsonForm=[]) => {
         return (       
             myJsonForm.map(input => 
-                <Grid container 
-                  spacing={0} 
-                  rowSpacing={0} 
-                  border={0} 
-                  marginBottom={1} 
-                  marginTop={1}
+                <div className="grid"
                   key={input.title}
                 >
                   <Grid xs={12} item
@@ -91,7 +89,7 @@ export function MyForm(props){
                     >
                     {input.section.map(item => myElement(item))}
                   </Grid>
-                </Grid>
+                </div>
             )
         );
     }
@@ -161,31 +159,61 @@ export function MyForm(props){
     return (
         // <ThemeProvider theme={theme}>
         // <div className="App">
-          <Grid style={{padding: "80px 5px 5px"}}>
-            <Card style={{ maxWidth: 800, margin: "0 auto"}}>
-              <CardContent>
-                <h4
+          // <div className="grid">
+          <form onSubmit={onSubmitHandler}>
+
+            <Card>
+              <CardHeader className="flex flex-col">
+              <h1
                   color="primary">
                     {title}
-                </h4>
-                <Typography variant="subtitle1" 
+                </h1>
+                <h4 variant="subtitle1" 
                   color="textSecondary">
                     {subtitle}
-                </Typography>
-                <form onSubmit={onSubmitHandler}>
-                  <Grid key="form">
+                </h4>
+              </CardHeader>
+              <CardBody>
+
+                  <div className="grid" key="form">
                     {
                       forms.map( input => formElements(input) )
                     }
     
-                    <Grid key="button"
-                        item={true} 
-                        xs={12} 
-                        marginTop={2} 
-                        align="right" 
-                        margin={2}  
+                  
+    
+                  </div>
+    
+              </CardBody>
+              <CardFooter>
+              <div className="gridjustify-items-end"
                       >
-                      <Button style={margin} key="refill"
+                        <div className="flex flex-row-reverse">
+                      <Button 
+                        type="submit" 
+                        variant="solid" 
+                        color="primary"
+                      >Submit</Button>
+                      <Spacer x={2}/>
+
+                      <Button
+                        type="reset" 
+                        variant="flat" 
+                        color="primary" 
+                        onClick={reset}
+                      >Cancel</Button>
+     
+                      <Spacer x={2}/>
+
+                      <Button
+                        type="reset" 
+                        variant="faded" 
+                        color="primary" 
+                        onClick={init}
+                      >Refill</Button>
+                      </div>
+
+                      {/* <Button style={margin} key="refill"
                         type="reset" 
                         variant="outlined" 
                         color="primary" 
@@ -200,25 +228,13 @@ export function MyForm(props){
                       <Button type="submit"  key="submit"
                         variant="contained" 
                         color="primary"
-                      >Submit</Button>
-                    </Grid>
-    
-                  </Grid>
-                </form>
-    
-              </CardContent>
+                      >Submit</Button> */}
+                    </div>
+              </CardFooter>
             </Card>
-            {/* <Card>
-              <Grid item={true} sm={6}>
-                <Typography variant={'h4'}>
-                  Bound data
-                </Typography>
-                <div>
-                  <pre id='boundData'>{stringifiedData}</pre>
-                </div>
-              </Grid>
-            </Card> */}
-          </Grid>
+            </form>
+
+          // </div>
         // </div>
         // </ThemeProvider>
       );
