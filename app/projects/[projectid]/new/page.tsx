@@ -2,6 +2,7 @@
 
 import Head from 'next/head';
 import { Box, Container, Stack, Typography } from '@mui/material';
+import { FC } from "react";
 
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 // import { ProjectsTable } from 'src/sections/projects/projects-table';
@@ -10,14 +11,16 @@ import { inputFormElements } from '@/config/formElements';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { addSample } from '@/app/api/samples';
+import { Debug } from '@/Components/Debug';
  
 
 
 
 
 const testData = {
-    "sample_id": "b",
-    "scientific_program": "dyfamed_wp2_2023_biotom_sn001",
+    //"sample_name":"dyfamed_wp2_2023_biotom_sn001",
+    "sample_id": "dyfamed_wp2_2023_biotom_sn001",
+    "scientific_program": "ZooProcess",
     "latitude_ns": 1,
     "station_id": "dyfamed",
     "bottom_depth": "2400",
@@ -49,14 +52,19 @@ const forms = [
     // fraction_inputFormElments
 ]
 
+interface pageProps {
+    // params: {
+        projectid: string
+    // }
+}
 
-const NewSample = (params:any) => {
+const NewSample : FC<pageProps> = (params) => {
 
     const router = useRouter()
     console.log("NewSample params: ", params);
 
     // const projectid = router.query.projectid //as string
-    const projectid = params.projectid;
+    const projectId = params.projectid;
 
     const form : any = []
         form['forms']=forms
@@ -74,7 +82,7 @@ const NewSample = (params:any) => {
 
         let newData = {
             ...data,
-            projectId:projectid
+            projectId:projectId
         }
         console.log("newData: " , newData);
         return newData;
@@ -91,13 +99,30 @@ const NewSample = (params:any) => {
         // const newData = prepareData(value)
 
         const data = {
-            name:"Sample XXXX",
+            name:value.sample_id, //"Sample XXXX",
             metadataModelId:"6565df171af7a84541c48b20",
             data:value,
         }
 
         console.log("newData: ", data);
-        addSample(projectid, data)
+        try {
+
+            console.log("----- projectId : ",projectId);
+            // console.log("----- params.projectid : ",params.projectid);
+            // console.log("----- params : ",params);
+            // console.log("----- params.params : ",params.params);
+
+            // addSample(projectId, data)
+            addSample({
+                projectId, // : params.params.projectid, 
+                data
+            })
+
+        }
+        catch (e:any){
+            console.log(e);
+            
+        }
     }
 
     const onCancel = () => {
@@ -115,12 +140,13 @@ const NewSample = (params:any) => {
             New Sample Metadata | ZooProcess
             </title>
         </Head>
+        <Debug {...params}/>
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
 
             <div className="text-center justify-center">
                 <Stack spacing={3}>
                     <Typography variant="h4">
-                    Sample Metadata for project {projectid}
+                    Sample Metadata to project {projectId}
                     </Typography>
                     <MyForm 
                         {...form} 
