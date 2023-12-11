@@ -48,7 +48,7 @@ const Projects = () => {
     const router = useRouter()
     
     useEffect( () => { 
-        console.log("projects has changed", projects);
+        console.log("projects have changed", projects);
         const data = formatData(projects)
         setProjectList(data);
       } , [projects])
