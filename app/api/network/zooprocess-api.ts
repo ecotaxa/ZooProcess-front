@@ -136,6 +136,9 @@ export async function addProject(data:Project){
 
 export async function addSample(projectId:string, data:Sample){
 
+    console.log("api addSmaple projectId:", projectId);
+    console.log("api addSmaple data:", data);
+
     return await api.post(`/projects/${projectId}/samples`, data)
       .then(function (response) {
         console.log("addSample response: ", response);
