@@ -16,17 +16,20 @@ import { useSamples } from '@/app/api/samples';
 
 
 interface pageProps {
-  params: {projectid: string}
+  // params: {
+    projectid: string
+  // }
 }
 
-const Samples : FC<pageProps> = ({params}) => {
+const Samples : FC<pageProps> = (params) => {
     // const router = useRouter()
     // const projectid = router.query.projectid //as string
     // const sampleid = router.query.sampleid //as string
 
   console.log("Samples params: ", params);
+  console.log("Samples params: ", params.projectid);
 
-  const sampleName = "mon Sample";
+  // const sampleName = "mon Sample";
 
     // const sampleid = 10;
     const projectId = params.projectid ;
@@ -111,7 +114,7 @@ const Samples : FC<pageProps> = ({params}) => {
                   >
                   <CardHeader className="flex flex-row-reverse py-3">
                       <Button 
-                          href={`/projects/${params.projectid}/new`}
+                          href={`/projects/${projectId}/new`}
                           as={Link}
                           color="primary"
                           // showAnchorIcon

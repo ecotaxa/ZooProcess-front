@@ -12,11 +12,15 @@ import { FC } from "react";
 import { Debug } from "@/Components/Debug";
 
 interface pageProps {
-    params: {projectid: string}
+    params: {
+        projectid: string
+    }
 }
 
 // const Project = ({ params }: { params: { projectid: string; }} ) => {
-const Project : FC<pageProps> = ({ params }) => {
+const Project : FC<pageProps> = ({params}) => {
+
+
 
     const projectid = params.projectid
 
@@ -35,7 +39,7 @@ const Project : FC<pageProps> = ({ params }) => {
                 </CardBody>
             </Card>
             <Spacer y={20}/>
-            <Debug params={params}/>
+            <Debug {...params}/>
         {/* <div className="flex w-full flex-col"> */}
             <Tabs aria-label="Options">
                 {/* <Tab key="stats" title="Stats" href={`/projects/${projectid}/stats`}> */}
@@ -47,7 +51,7 @@ const Project : FC<pageProps> = ({ params }) => {
                     <Metadata/>
                 </Tab>
                 <Tab key="samples" title="Samples">
-                    <Samples params={params}/>
+                    <Samples {...params}/>
                     <Debug params={params}/>
                 </Tab>
                 <Tab key="scans" title="Scans">
