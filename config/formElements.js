@@ -23,19 +23,34 @@ export const sampleid_formElements=[
     
     export const inputFormElements=[
     {
-        title:"Scientific Program",
+
+        title:"General",
         section:
         [
-            { tag:"TextField", name:"scientific_program", type:"text",
-                placeholder:"Scientific Program", label:'Scientific Program',
+            { tag:"TextField", name:"sample_id", type:"text",
+                placeholder:"Sample id", label:'Sample id',
                 variant:"outlined", required:true, 
                 xs:12, sm:12, fullWidth:true, size:"regular",
+                minLength:3
+            },
+            { tag:"Empty", xs:0, xm:6 },
+            { tag:"TextField", name:"barcode", type:"text",
+                placeholder:"Barcode", label:'Barcode',
+                variant:"outlined", required:false, 
+                xs:12, sm:6, fullWidth:true, size:"regular",
+                minLength:3
+            },
+            { tag:"TextField", name:"scientific_program", type:"text",
+                placeholder:"Scientific Program", label:'Scientific Program',
+                value:"ZooProcess",
+                variant:"outlined", required:true, disabled:true,
+                xs:12, sm:6, fullWidth:true, size:"regular",
                 minLength:3
             },
             { tag:"TextField", name:"station_id", type:"text",
                 placeholder:"Station Id", label:'Station Id',
                 variant:"outlined", required:true, 
-                xs:12, sm:12, fullWidth:true,
+                xs:12, sm:6, fullWidth:true,
                 minLength:3
             },
             { tag:"TextField", name:"bottom_depth", type:"number", 
@@ -51,6 +66,24 @@ export const sampleid_formElements=[
                 fullWidth:true, xs:12, sm:6
             }
         ]
+    },
+    {
+        title:"Sample Quality",
+        section:
+        [
+            { tag:"TextField", name:"ctd_reference", type:"text",
+                placeholder:"CTD Reference", label:'CTD Reference',
+                variant:"outlined", required:false, 
+                xs:12, sm:6, fullWidth:true,
+                minLength:3
+            },
+            { tag:"TextField", name:"other_reference", type:"text",
+                placeholder:"Other reference", label:'Other reference',
+                variant:"outlined", required:false, 
+                xs:12, sm:6, fullWidth:true,
+                minLength:3
+            },        
+        ],
     },
     {
         title:"Latitude & Longitude",
@@ -159,7 +192,11 @@ export const sampleid_formElements=[
                     {id:3, value:"ESTIMATED from cable length"}
                 ]
             },
-            { tag:"TextField", name:"ship_speed", type:"number", 
+            { tag:"TextField", name:"ship_name", type:"text",
+                placeholder:"Enter Ship name", label:'Ship Name',
+                variant:"outlined", fullWidth:true, required:true, xs:12, sm:6, 
+            },
+            { tag:"TextField", name:"ship_speed", type:"number",
                 placeholder:"Enter Ship speed (knots) - 9999 if not documented", label:'Ship Speed',
                 variant:"outlined", fullWidth:true, required:true, xs:12, sm:6, 
                 endAdornment:{pos:'end', text:'knots'},
