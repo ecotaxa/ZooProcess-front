@@ -4,6 +4,10 @@ import * as api from '@/app/api/network/zooprocess-api'
 
 export function useSamples(projectId) {
 
+    if ( projectId == undefined ){
+      throw "projectId == undefined"
+    }
+
     // const { data=[], error=false, isLoading=true } = useSWR(`${projectid}`, api.getSamples ,
     const { data=[], error=false, isLoading=true } = useSWR(`/projects/${projectId}/samples`, api.getSamples ,
       {
@@ -28,20 +32,32 @@ export function useSamples(projectId) {
 
 
 
-export function addSample(projectId, data){
+  export function addSample({projectId, data}){
+  // export function addSample({params, data}){
 
-  console.log("adding Sample...");
+    console.log("adding Sample...projectId: ", projectId);
+    // console.log("adding Sample...projectId: ", params.projectId);
+    // console.log("params: ", params);
+    console.log("adding Sample...data: ", data);
 
-  // TODO added info box
+    // TODO added info box
 
-  api.addSample(projectId, data).then(() => {
-    console.log("Sample added OK");
-  })
-  .catch ((error) =>  {
-    console.error("Sample added NOK: ", error);
-  })
+    api.addSample(projectId, data).then(() => {
+      console.log("Sample added OK");
+    })
+    .catch ((error) =>  {
+      console.error("Sample added NOK: ", error);
+      console.log("projectid: ", projectId);
+      console.log("data:", data);
+      throw ({
+        message:"Cannot add sample",
+        error,
+        data,
+        projectId,
+      })
+    })
 
-}
+  }
 
 // module.exports = 'useProjects'
 
