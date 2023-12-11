@@ -71,6 +71,8 @@ export function FormElements(props) {
                 onChange={props.onChange}/>)
             } else {   
                 console.log("SELECT props:", props);
+                let opt = {}
+                if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
                 return (
                     <Select
                     isRequired
@@ -80,7 +82,8 @@ export function FormElements(props) {
                     className="max-w-xs"
                     onChange={props.onChange}
                     // defaultValue={props.value}
-                    defaultSelectedKeys={[props.value]}
+                    // defaultSelectedKeys={[props.value]}
+                    {...opt}
                   >
                     {(item) => <SelectItem key={item.id}>{item.value}</SelectItem>}
                   </Select>
