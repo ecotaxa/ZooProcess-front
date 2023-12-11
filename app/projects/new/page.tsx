@@ -171,7 +171,7 @@ const NewProject = (params:any) => {
         //     return [{ id:drive.index, name:drive.name }, { id:drive.index,origid:drive.id} ]
         // })
 
-        console.log("updateDrive: ",drives);
+        console.log("updateDrive: ", drives);
 
         const driveList 
         // const [driveList, conversion] 
@@ -179,7 +179,7 @@ const NewProject = (params:any) => {
             console.log("drive: ", drive);
             // return { id:index, name:drive.name }, { id:index, origid:drive.id}
             // return { id:drive.index, name:drive.name };
-            return { id:index+1, name:drive.name };
+            return { id:index+1, value:drive.name };
             // return { id:drive.index, name:drive.name };
         })
 
