@@ -36,13 +36,14 @@ export function FormElements(props) {
 
                 let opt = {
                     type: props.type,
-                    value: props.value,
+                    defaultValue: props.value,
                     label: props.label,
                     placeholder: props.placeholder,
                 }
                 if (props.required == true) { opt['isRequired'] = true}
                 if (props.prefix) { opt['startContent'] = props.prefix }
                 if (props.endAdornment?.text) { opt['endContent'] = props.endAdornment.text}
+                if (props.readonly) { opt['isReadOnly'] = true}
 
                 console.log("opt: ", opt);
 
@@ -65,19 +66,10 @@ export function FormElements(props) {
                 )
             }
         case "Select":
-            if (true) {
+            if (mui) {
                 return (<MySelect {...props}  key={props.name}
                 onChange={props.onChange}/>)
-            } else {
-                if (true){
-
-                    return(
-                        <MyInput  
-                            props
-                        /> 
-                    )
-
-                }else{
+            } else {   
                 console.log("SELECT props:", props);
                 return (
                     <Select
@@ -87,11 +79,13 @@ export function FormElements(props) {
                     placeholder={props.placeholder}
                     className="max-w-xs"
                     onChange={props.onChange}
+                    // defaultValue={props.value}
+                    defaultSelectedKeys={[props.value]}
                   >
-                    {(item) => <SelectItem key={item.id}>{item.name}</SelectItem>}
+                    {(item) => <SelectItem key={item.id}>{item.value}</SelectItem>}
                   </Select>
                 )
-            }}
+            }
         case "DateField":
             <MyDatePicker {...props}  key={props.name}
                 onChange={props.onChange}/>
@@ -114,6 +108,10 @@ export function FormElements(props) {
                     className="max-w-xs"
                 />)
             }
+        case "Empty":
+            return (
+                <div></div> 
+            )
     }
 
     return (
