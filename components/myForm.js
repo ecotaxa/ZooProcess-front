@@ -29,6 +29,8 @@ export function MyForm(props){
     // const {forms,onChange,onCancel} = props;
     const {forms} = props;
 
+
+    console.log("MyForm : " , forms);
     // const [myform, setMyForm] = useState({});
     // setMyForm(props.value)
 
@@ -49,9 +51,29 @@ export function MyForm(props){
 
     // inject the values given in parameter in the form
     const myElement = (formitem) => {
-        const v = myform[formitem.name]
-        formitem['value']= v
-    
+        const value = myform[formitem.name];
+
+        console.log("FORM VALUE for ", formitem.name, " = " , value , " <=> " , formitem['value'] );
+
+        if ( value != undefined ){
+          formitem['value'] = value;
+        } else {
+          console.log("UNDEFINED");
+          if ( formitem['value'] != undefined) {
+            console.log("OVERRIDE")
+            myform[formitem.name] = formitem['value']
+            let form = myform
+            form[formitem.name] = formitem['value']
+            setMyForm(form)
+          }
+        }
+
+        console.log("-+-+-+---------------------------------");
+        console.log("myform: ", myform);
+        console.log("formitem: ", formitem);
+        console.log("-+-+-+---------------------------------");
+
+
         return (
             <Grid key={formitem.name}
               xs={formitem.xs} 
@@ -66,31 +88,34 @@ export function MyForm(props){
     }
 
     const formElements = (myJsonForm=[]) => {
+
+      console.log("formElements: ", myJsonForm);
+
         return (       
-            myJsonForm.map(input => 
-                <div className="grid"
-                  key={input.title}
+          myJsonForm.map(input => 
+            <div className="grid"
+              key={input.title}
+            >
+              <Grid xs={12} item
+                marginTop={6} 
+                marginBottom={2}
+                key="title"
+              >
+                <Typography variant='subtitle1' 
+                  align='center' 
+                  gutterBottom
+                >{input.title}</Typography>
+              </Grid>
+              <Grid container 
+                  spacing={0} 
+                  rowSpacing={3} 
+                  columnSpacing={1} 
+                  xs={12} item
                 >
-                  <Grid xs={12} item
-                    marginTop={6} 
-                    marginBottom={2}
-                    key="title"
-                  >
-                    <Typography variant='subtitle1' 
-                      align='center' 
-                      gutterBottom
-                    >{input.title}</Typography>
-                  </Grid>
-                  <Grid container 
-                      spacing={0} 
-                      rowSpacing={3} 
-                      columnSpacing={1} 
-                      xs={12} item
-                    >
-                    {input.section.map(item => myElement(item))}
-                  </Grid>
-                </div>
-            )
+                {input.section.map(item => myElement(item))}
+              </Grid>
+            </div>
+          )
         );
     }
 

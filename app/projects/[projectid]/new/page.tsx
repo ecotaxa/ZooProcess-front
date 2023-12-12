@@ -66,9 +66,13 @@ const NewSample : FC<pageProps> = (params) => {
     // const projectid = router.query.projectid //as string
     const projectId = params.projectid;
 
+    const emptyData = {
+        "scientific_program": "ZooProcess",
+    }
+
     const form : any = []
         form['forms']=forms
-        form['value']=testData
+        form['value']=testData//emptyData
         form['title']='Sample metadata'
         form['subtitle']='Fill all the mandatory fields.'
 

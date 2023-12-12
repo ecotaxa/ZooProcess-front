@@ -17,6 +17,7 @@ import { Select, SelectItem } from "@nextui-org/react";
 // import {  DateTimePicker, LocalizationProvider, deDE } from "@mui/x-date-pickers";
 
 import {MyInput}from "@/components/mySelect4.js"
+import Drives from "./drives";
 
 export function FormElements(props) {
 
@@ -65,28 +66,35 @@ export function FormElements(props) {
                     // />
                 )
             }
+        case "Drives":
+            return ( <Drives {...props}/>)
+
         case "Select":
             if (mui) {
                 return (<MySelect {...props}  key={props.name}
                 onChange={props.onChange}/>)
             } else {   
                 console.log("SELECT props:", props);
-                let opt = {}
+                let opt = {
+                    id: props.name,
+                    items: props.choice,
+                    label: props.label,
+                    placeholder: props.placeholder,
+                    className:"max-w-xs",
+                }
+                console.log("")
                 if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
+                if (props.required == true) { opt['isRequired'] = true; }
+
                 return (
                     <Select
-                    isRequired
-                    items={props.choice}
-                    label={props.name}
-                    placeholder={props.placeholder}
-                    className="max-w-xs"
-                    onChange={props.onChange}
-                    // defaultValue={props.value}
-                    // defaultSelectedKeys={[props.value]}
-                    {...opt}
-                  >
-                    {(item) => <SelectItem key={item.id}>{item.value}</SelectItem>}
-                  </Select>
+                        onChange={props.onChange}
+                        // defaultValue={props.value}
+                        // defaultSelectedKeys={[props.value]}
+                        {...opt}
+                    >
+                        {(item) => <SelectItem key={item.id}>{item.value}</SelectItem>}
+                    </Select>
                 )
             }
         case "DateField":

@@ -96,15 +96,15 @@ export const sampleid_formElements=[
             endAdornment:{pos:'end', text:'deg'},
             helperText:"de 0 à 90°"
         },
-        { tag:"TextField",name:"latitude_minute", type:"number",
+        { tag:"TextField", name:"latitude_minute", type:"number",
             placeholder:"Enter Latitude (minute)", label:'Latitude (minute',
             variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
             minValue:0,maxValue:60, helperText:"de 0 à 59",
             endAdornment:{pos:'end', text:'min'}
         },
-        { tag:"Select",name:"latitude_ns", type:"select", 
+        { tag:"Select", name:"latitude_ns", type:"select", 
             placeholder:"N/S", label:'Latitude (N/S)',
-            variant:"outlined",  required:true,
+            variant:"outlined", required:true,
             fullWidth:true, xs:12, sm:3, sx:{m:0,minWith:150},
             choice:[
                 {id:1,value:"North"},
@@ -492,19 +492,32 @@ export const sampleid_formElements=[
                 prefix:"zooscan_", minLength:"zooscan_".length,
                 xs:12, sm:6, size:"small"
                 },
-                { name:"drive", placeholder:"Project thematic (tara, archives_lov, ...)", label:'Project Drive',
-                tag:"Select",  type:"select", 
+                // { name:"drive", placeholder:"Project thematic (tara, archives_lov, ...)", label:'Project Drive',
+                // tag:"Select",  type:"select", 
+                // variant:"outlined",  required:true, 
+                // xs:12, sm:6, size:"small",
+                // choice:[
+                //     {id:1, value:"archives_lov"},
+                //     {id:2, value:"archives_monitoring"},
+                //     {id:3, value:"archives_tara"},
+                //     {id:4, value:"lov"},
+                //     {id:5, value:"microplastik"},
+                //     {id:6, value:"monitoring"},
+                //     {id:7, value:"tara"},
+                // ]
+               { name:"drive", placeholder:"Project thematic (tara, archives_lov, ...)", label:'Project Drive',
+                tag:"Drives",  type:"select", 
                 variant:"outlined",  required:true, 
                 xs:12, sm:6, size:"small",
-                choice:[
-                    {id:1, value:"archives_lov"},
-                    {id:2, value:"archives_monitoring"},
-                    {id:3, value:"archives_tara"},
-                    {id:4, value:"lov"},
-                    {id:5, value:"microplastik"},
-                    {id:6, value:"monitoring"},
-                    {id:7, value:"tara"},
-                ]
+                // choice:[
+                //     {id:1, value:"archives_lov"},
+                //     {id:2, value:"archives_monitoring"},
+                //     {id:3, value:"archives_tara"},
+                //     {id:4, value:"lov"},
+                //     {id:5, value:"microplastik"},
+                //     {id:6, value:"monitoring"},
+                //     {id:7, value:"tara"},
+                // ]
                 },
                 { name:"acronym", placeholder:"Project acronym (a quick name for you)", label:'Project Acronym',
                 tag:"TextField", type:"text",
@@ -550,11 +563,25 @@ export const sampleid_formElements=[
         }
     ]
     
-    export const projectForm = [
-        projectElements,
-        projectEcotaxaElements
+
+    export const scanningOptions = [
+        {
+            title:"Scanning Option",
+            section:
+            [
+                { name: "scanningOptions", placeholder: "Frame Type", label: 'Frame Type',
+                tag: "Select",  type: "select", 
+                variant:"outlined",  required: true, 
+                xs:12, sm:6, size: "small",
+                choice:[
+                    {id:1, value: "LARGE (2400dpi)"},
+                ],
+                value:"1"
+                },
+            ]
+        }
     ]
-    
+
     export const scannerElements= [
         {
             title:"Scanner Metadata",
@@ -622,10 +649,20 @@ export const sampleid_formElements=[
     ]
     
     export const scannerForm=[
+        scanningOptions,
+        // scannerElements,
+        // scannerCalibrationElements
+    ]
+
+    export const projectForm = [
+        projectElements,
+        scanningOptions,
         scannerElements,
-        scannerCalibrationElements
+        projectEcotaxaElements,
+        // scannerForm
     ]
     
+
     /*
     Dialog.create("Project  : "+proj+"              Image  : "+titrered);
     Dialog.addString("Sample Id ",SampleId);
