@@ -61,7 +61,7 @@ const NewProject = (params:any) => {
     
     console.log("NewProject params: ", params);
 
-    const { drives, isLoading, isError } = useDrives();
+    // const { drives, isLoading, isError } = useDrives();
     // const [ driveList, setDrivesList ] = useState([drives]);
 
     // useEffect( () => { 
@@ -82,22 +82,22 @@ const NewProject = (params:any) => {
     // var stringifiedData = "" ;
 
 
-    const prepareData = (data:any) => {
-        const drive = convertionTable.filter((drive: Drive) => {  return drive.id == data.drive})
-        console.log("prepareData: ")
-        if ( drive.length && drive[0].name == undefined) { throw("No drive") }
-        let newData = {
-            name: data.name,
-            drive:{
-                name:drive[0].name
-            },
-            ecotaxa_project: data.ecotaxa_project,
-            description: data.description,
-            acronym: data.acronym
-        };
-        console.log("newData: " , newData);
-        return newData;
-    }
+    // const prepareData = (data:any) => {
+    //     const drive = convertionTable.filter((drive: Drive) => {  return drive.id == data.drive})
+    //     console.log("prepareData: ")
+    //     if ( drive.length && drive[0].name == undefined) { throw("No drive") }
+    //     let newData = {
+    //         name: data.name,
+    //         drive:{
+    //             name:drive[0].name
+    //         },
+    //         ecotaxa_project: data.ecotaxa_project,
+    //         description: data.description,
+    //         acronym: data.acronym
+    //     };
+    //     console.log("newData: " , newData);
+    //     return newData;
+    // }
 
     // onSubmit
     const onChange = (value:any) => {
@@ -109,10 +109,10 @@ const NewProject = (params:any) => {
         setData(JSON.stringify(value, null, 2))
         console.log("App onChange:", stringifiedData)
 
-        const newData = prepareData(value)
 
-        // addProject(value)
-        addProject(newData)
+        addProject(value)
+        // const newData = prepareData(value)
+        // addProject(newData)
         // router.back()
     }
 
@@ -128,33 +128,33 @@ const NewProject = (params:any) => {
     //     addProject(data)
     // }
 
-    const updateDriveProject = (project:any, drives:Array<Drive>) => {
-        // for 
-        console.log(project)
+    // const updateDriveProject = (project:any, drives:Array<Drive>) => {
+    //     // for 
+    //     console.log(project)
 
-        for (let iproject = 0 ; iproject < Object.keys(project).length ; iproject++ ){
-            const section = project[iproject];
-            console.log("section: ", iproject , " = ", section)
-            for (let isection = 0 ; isection < Object.keys(section).length ; isection++ ){
-                const elements = section[isection].section
-                console.log("elements: ", isection , " = " , elements)
-                for (let ielement = 0; ielement < Object.keys(elements).length ; ielement++ ){
-                    console.log("key: ", ielement , " = " , elements[ielement].name)
-                    if ( elements[ielement].name == 'drive' ) {
-                        console.log("update drive", drives)
-                        // project[iproject].section[isection].section[ielement].choice = drives;
-                        elements[ielement].choice = drives;
-                        break;
-                    }
-                }
-            }
-        }
+    //     for (let iproject = 0 ; iproject < Object.keys(project).length ; iproject++ ){
+    //         const section = project[iproject];
+    //         console.log("section: ", iproject , " = ", section)
+    //         for (let isection = 0 ; isection < Object.keys(section).length ; isection++ ){
+    //             const elements = section[isection].section
+    //             console.log("elements: ", isection , " = " , elements)
+    //             for (let ielement = 0; ielement < Object.keys(elements).length ; ielement++ ){
+    //                 console.log("key: ", ielement , " = " , elements[ielement].name)
+    //                 if ( elements[ielement].name == 'drive' ) {
+    //                     console.log("update drive", drives)
+    //                     // project[iproject].section[isection].section[ielement].choice = drives;
+    //                     elements[ielement].choice = drives;
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        console.log("----------------------------------------")
-        console.log(project)
-        console.log("----------------------------------------")
-        return project
-    }
+    //     console.log("----------------------------------------")
+    //     console.log(project)
+    //     console.log("----------------------------------------")
+    //     return project
+    // }
 
     interface IDrive {
         id: string
@@ -199,23 +199,23 @@ const NewProject = (params:any) => {
     
 
     const ProjectForm = () => {
-        if (isLoading) return <MySpinner />
-        if (isError) return <ErrorComponent error={isError}/>
+        // if (isLoading) return <MySpinner />
+        // if (isError) return <ErrorComponent error={isError}/>
 
         // return ( <><h1>ProjectForm</h1></>)
 
         // const dataproject = emptyProject
         // form['value']= updateDriveProject ( emptyProject , drives )
         // let dataproject = driveList
-        let dataproject = projectForm
+        // let dataproject = projectForm
         // form['forms']= updateDriveProject (  dataproject , drives );
-        const driveList = updateDrive(drives)
-        console.log("driveList: ", driveList);
-        form['forms']= updateDriveProject (  dataproject , driveList );
+        // const driveList = updateDrive(drives)
+        // console.log("driveList: ", driveList);
+        // form['forms']= updateDriveProject (  dataproject , driveList );
 
-        console.log("+++++++++++++++++++++++++++++++")
-        console.log("form: ", form);
-        console.log("+++++++++++++++++++++++++++++++")
+        // console.log("+++++++++++++++++++++++++++++++")
+        // console.log("form: ", form);
+        // console.log("+++++++++++++++++++++++++++++++")
 
         return (
             <MyForm {...form} 
