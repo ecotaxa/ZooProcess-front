@@ -110,10 +110,35 @@ export async function getProject(url:string){
   return response.data; 
 }
 
+// export async function getProjectMetadata(url:string){
+
+//   const response = await api.get<Project>(url);
+
+//   console.log("getProject response: ", response);
+
+//   return response.data; 
+// }
 
 export async function addProject(data:Project){
 
     return await api.post('/projects', data)
+      .then(function (response) {
+        console.log("addProject response: ",response);
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log("addProject Error: ", error);
+        throw(error);
+      });
+
+  }
+
+  
+  export async function updateProject(data:Project){
+
+    if (data.id == undefined) throw("Cannot update, project has no id defined");
+
+    return await api.put(`/projects/${data.id}`, data)
       .then(function (response) {
         console.log(response);
         return response.data;
@@ -125,11 +150,10 @@ export async function addProject(data:Project){
 
   }
 
-
   export async function getDrives(){
     const response = await api.get<Array<Drive>>(`/drives`);
     
-    console.log("getDrives response: ", response);
+    // console.log("getDrives response: ", response);
 
     return response.data; 
 }
