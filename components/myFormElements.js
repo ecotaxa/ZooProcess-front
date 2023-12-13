@@ -1,7 +1,8 @@
 // import { TextField, Select, MenuItem } from "@mui/material"
 // import { TextField } from "@mui/material"
 // import { FormControl } from "@mui/material"
-import { MySelect } from "./mySelect"
+// import { MySelect } from "./mySelect" // MUI
+import { MySelect } from "./mySelect5"
 import { MyTextField } from "./myTextField2"
 // import SimpleSelect from "./SimpleSelect"
   
@@ -77,33 +78,36 @@ export function FormElements(props) {
             />)
 
         case "Select":
-            if (mui) {
                 return (<MySelect {...props}  key={props.name}
-                onChange={props.onChange}/>)
-            } else {   
-                // console.log("SELECT props:", props);
-                let opt = {
-                    id: props.name,
-                    items: props.choice,
-                    label: props.label,
-                    placeholder: props.placeholder,
-                    className:"max-w-xs",
-                }
-                // console.log("")
-                if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
-                if (props.required == true) { opt['isRequired'] = true; }
+                    onChange={props.onChange}/>)
+            
+            // if (mui) {
+            //     return (<MySelect {...props}  key={props.name}
+            //     onChange={props.onChange}/>)
+            // } else {   
+            //     // console.log("SELECT props:", props);
+            //     let opt = {
+            //         id: props.name,
+            //         items: props.choice,
+            //         label: props.label,
+            //         placeholder: props.placeholder,
+            //         className:"max-w-xs",
+            //     }
+            //     // console.log("")
+            //     if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
+            //     if (props.required == true) { opt['isRequired'] = true; }
 
-                return (
-                    <Select
-                        onChange={props.onChange}
-                        // defaultValue={props.value}
-                        // defaultSelectedKeys={[props.value]}
-                        {...opt}
-                    >
-                        {(item) => <SelectItem key={item.id}>{item.value}</SelectItem>}
-                    </Select>
-                )
-            }
+            //     return (
+            //         <Select
+            //             onChange={props.onChange}
+            //             // defaultValue={props.value}
+            //             // defaultSelectedKeys={[props.value]}
+            //             {...opt}
+            //         >
+            //             {(item) => <SelectItem key={item.id}>{item.value}</SelectItem>}
+            //         </Select>
+            //     )
+            // }
         case "DateField":
             <MyDatePicker {...props}  key={props.name}
                 onChange={props.onChange}/>

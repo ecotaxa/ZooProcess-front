@@ -34,11 +34,11 @@ export function MySelect(props){
         return sx
     }
 
-    const renderValue = () =>{
-        if (value===''){return ''} 
+    // const renderValue = () =>{
+    //     if (value===''){return ''} 
         
-        return props.choice[value]
-    }
+    //     return props.choice[value]
+    // }
 
     return (
     <FormControl {...opts} 
