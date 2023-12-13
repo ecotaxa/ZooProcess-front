@@ -3,6 +3,7 @@
 import useSWR from 'swr'
 
 import * as api from '@/app/api/network/zooprocess-api' 
+// import { da } from 'date-fns/locale'
 
 export function useProjects() {
     const { data=[], error=false, isLoading=true } = useSWR('/projects/', api.getProjects ,
@@ -87,13 +88,38 @@ export function addProject(data){
 
 }
 
+
+
+const convertData2api = (data) => {
+
+  const date = new Date();
+
+  let dataConverted = {
+    id:data.id,
+    name:data.name,
+    acronym:data.acronym,
+    driveId:data.driveId,
+    description:data.description,
+
+    // only manager options
+    scanningOptions:data.scanningOptions.currentKey,
+    updateAt:date.toISOString(), 
+  }
+
+  return dataConverted
+}
+
 export function updateProject(data){
 
   console.log("updating Project... with: ", data);
 
   // TODO added info box
 
-  api.updateProject(data).then(() => {
+
+  const dataConverted = convertData2api(data);
+
+
+  api.updateProject(dataConverted).then(() => {
     console.log("Project updated OK");
   })
   .catch ((error) =>  {
