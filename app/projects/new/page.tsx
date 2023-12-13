@@ -19,6 +19,7 @@ import { ErrorComponent } from '@/components/ErrorComponent';
 import { da } from 'date-fns/locale';
 import { SWRResponse } from 'swr';
 import { Drive } from '@/app/api/network/zooprocess-api';
+import { Debug } from '@/Components/Debug';
  
 
 
@@ -78,7 +79,7 @@ const NewProject = (params:any) => {
 
 
     // const [stringifiedData,setData] = useState(JSON.stringify(testData, null, 2))
-    const [stringifiedData,setData] = useState("")
+    const [stringifiedData, setData] = useState("")
     // var stringifiedData = "" ;
 
 
@@ -102,15 +103,21 @@ const NewProject = (params:any) => {
     // onSubmit
     const onChange = (value:any) => {
         console.log("App onChange:", value)
+
         // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
         // stringifiedData = JSON.stringify(value, null, 2);
 
         // POUR AFFICHAGE DEBUG
-        setData(JSON.stringify(value, null, 2))
-        console.log("App onChange:", stringifiedData)
+        // setData(JSON.stringify(value, null, 2))
+        // console.log("App onChange:", stringifiedData);
 
 
-        addProject(value)
+        try {
+            addProject(value);
+        } 
+        catch (e){
+
+        }
         // const newData = prepareData(value)
         // addProject(newData)
         // router.back()
@@ -233,15 +240,18 @@ const NewProject = (params:any) => {
             </title>
         </Head>
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-
-        <div className="text-center justify-center">
+            <div className="text-center justify-center">
             <Stack spacing={3}>
             <h1>Metadata</h1>
-
                 {/* <Typography variant="h4">
                     Metadata
                 </Typography> */}
-                <ProjectForm/>
+                {/* <ProjectForm/> */}
+                <Debug params={stringifiedData} />
+                <MyForm {...form} 
+                    onChange={onChange} 
+                    onCancel={onCancel}
+                />
             </Stack>
             </div>
         </section>
