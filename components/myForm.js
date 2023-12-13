@@ -6,6 +6,9 @@ import { useState, useMemo } from "react";
 import { FormElements } from "@/components/myFormElements";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
+
+// import { Debug } from "@/components/Debug";
+
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
 // MyForm
@@ -30,7 +33,7 @@ export function MyForm(props){
     const {forms} = props;
 
 
-    console.log("MyForm : " , forms);
+    // console.log("MyForm : " , forms);
     // const [myform, setMyForm] = useState({});
     // setMyForm(props.value)
 
@@ -53,14 +56,14 @@ export function MyForm(props){
     const myElement = (formitem) => {
         const value = myform[formitem.name];
 
-        console.log("FORM VALUE for ", formitem.name, " = " , value , " <=> " , formitem['value'] );
+        // console.log("FORM VALUE for ", formitem.name, " = " , value , " <=> " , formitem['value'] );
 
         if ( value != undefined ){
           formitem['value'] = value;
         } else {
-          console.log("UNDEFINED");
+          // console.log("UNDEFINED");
           if ( formitem['value'] != undefined) {
-            console.log("OVERRIDE")
+            // console.log("OVERRIDE")
             myform[formitem.name] = formitem['value']
             let form = myform
             form[formitem.name] = formitem['value']
@@ -68,10 +71,10 @@ export function MyForm(props){
           }
         }
 
-        console.log("-+-+-+---------------------------------");
-        console.log("myform: ", myform);
-        console.log("formitem: ", formitem);
-        console.log("-+-+-+---------------------------------");
+        // console.log("-+-+-+---------------------------------");
+        // console.log("myform: ", myform);
+        // console.log("formitem: ", formitem);
+        // console.log("-+-+-+---------------------------------");
 
 
         return (
@@ -89,7 +92,7 @@ export function MyForm(props){
 
     const formElements = (myJsonForm=[]) => {
 
-      console.log("formElements: ", myJsonForm);
+      // console.log("formElements: ", myJsonForm);
 
         return (       
           myJsonForm.map(input => 
@@ -121,19 +124,19 @@ export function MyForm(props){
 
     // Search the type of an element
     const searchtypeof = (name) => { 
-        var found = false
-        var type = undefined
+        var found = false;
+        var type = undefined;
     
         forms.map((form) => {
-          console.log("form",form)
+          // console.log("form",form);
             form.map(group => 
               group.section.map(element => {
-                console.log("name:", name , " === " , element.name , "=", element.type)
+                // console.log("name:", name , " === " , element.name , "=", element.type);
                 if ( element.name == name ) { 
-                  console.log("found",name)
-                  found = true
-                  type = element.type
-                  return element.type 
+                  // console.log("found",name);
+                  found = true;
+                  type = element.type;
+                  return element.type; 
                 }    
               })
             )
@@ -142,51 +145,50 @@ export function MyForm(props){
     }
 
     const onChangeElement = (name,value) => {
-        console.log("onChange:",name,value)    
-        const type = searchtypeof(name)
-        console.log("type:",type)
+        console.log("onChangeElement:",name, "-- value: ", value);
+        const type = searchtypeof(name);
+        console.log("type:",type);
     
         if (type === "number" ) {
-          setMyForm({...myform, [name]: Number(value)})
+          setMyForm({...myform, [name]: Number(value)});
         } else {
-          setMyForm({...myform, [name]: value})
+          setMyForm({...myform, [name]: value});
         }
-    
-        console.log("form",myform)
+        console.log("onChangeElement form values", myform);
       }
 
     const reset = () => {
-        const data = {}
+        const data = {};
         const keys = Object.keys(myform);
-        console.log(keys)
+        // console.log(keys)
         keys.forEach(element => {
             data[element]=''
         });
-        console.log("data",data)
-        setMyForm(data)
-        props.onCancel()
+        // console.log("data", data)
+        setMyForm(data);
+        props.onCancel();
     }
     
     const onSubmitHandler = (event /*: React.FormEvent<HTMLFormElement>*/) => {
         event.preventDefault(); // 👈️ prevent page refresh
 
-        console.log("event", event)
-        console.log("event.timeStamp", event.timeStamp)
-        console.log("submit form", myform)
-        props.onChange(myform)
+        console.log("onSubmitHandler event", event);
+        console.log("event.timeStamp", event.timeStamp);
+        console.log("onSubmitHandler submit form", myform);
+        props.onChange(myform);
         // setMyForm(props.value?props.value:{})
-        reset()
+        reset();
     }  
 
     // to print the debug json
-    const stringifiedData = useMemo(() => JSON.stringify(myform, null, 2), [myform]);
+    // const stringifiedData = useMemo(() => JSON.stringify(myform, null, 2), [myform]);
 
     return (
         // <ThemeProvider theme={theme}>
         // <div className="App">
           // <div className="grid">
-          <form onSubmit={onSubmitHandler}>
 
+          <form onSubmit={onSubmitHandler}>
             <Card>
               <CardHeader className="flex flex-col">
               <h1
@@ -258,11 +260,14 @@ export function MyForm(props){
               </CardFooter>
             </Card>
             </form>
-
+    
+    
+ 
+ 
           // </div>
         // </div>
         // </ThemeProvider>
-      );
+        );
 }
 
 

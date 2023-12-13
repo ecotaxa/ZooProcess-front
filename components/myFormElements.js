@@ -2,7 +2,7 @@
 // import { TextField } from "@mui/material"
 // import { FormControl } from "@mui/material"
 import { MySelect } from "./mySelect"
-import { MyTextField } from "./myTextField"
+import { MyTextField } from "./myTextField2"
 // import SimpleSelect from "./SimpleSelect"
   
 // import dayjs from "dayjs";
@@ -30,6 +30,9 @@ export function FormElements(props) {
 
     switch ( props.tag ){
         case "TextField":
+            return (<MyTextField {...props} key={props.name}
+                onChange={props.onChange}/>)
+
             if (mui ){ //|| props.minLength){
                 return (<MyTextField {...props} key={props.name}
                     onChange={props.onChange}/>)
@@ -40,13 +43,14 @@ export function FormElements(props) {
                     defaultValue: props.value,
                     label: props.label,
                     placeholder: props.placeholder,
+                    onValueChange: props.onChange
                 }
                 if (props.required == true) { opt['isRequired'] = true}
                 if (props.prefix) { opt['startContent'] = props.prefix }
                 if (props.endAdornment?.text) { opt['endContent'] = props.endAdornment.text}
                 if (props.readonly) { opt['isReadOnly'] = true}
 
-                console.log("opt: ", opt);
+                // console.log("opt: ", opt);
 
                 return (
                     <Input 
@@ -67,14 +71,17 @@ export function FormElements(props) {
                 )
             }
         case "Drives":
-            return ( <Drives {...props}/>)
+            return ( <Drives 
+                {...props}
+                onChange={props.onChange}
+            />)
 
         case "Select":
             if (mui) {
                 return (<MySelect {...props}  key={props.name}
                 onChange={props.onChange}/>)
             } else {   
-                console.log("SELECT props:", props);
+                // console.log("SELECT props:", props);
                 let opt = {
                     id: props.name,
                     items: props.choice,
@@ -82,7 +89,7 @@ export function FormElements(props) {
                     placeholder: props.placeholder,
                     className:"max-w-xs",
                 }
-                console.log("")
+                // console.log("")
                 if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
                 if (props.required == true) { opt['isRequired'] = true; }
 
@@ -108,7 +115,8 @@ export function FormElements(props) {
                 />)
             } else {
                 return (
-                <Textarea  onChange={props.onChange}
+                <Textarea  
+                    onChange={props.onChange}
                     isInvalid={false}
                     isRequired
                     // variant="bordered"

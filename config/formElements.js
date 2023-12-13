@@ -489,7 +489,8 @@ export const sampleid_formElements=[
                 { name:"name", placeholder:"Project name", label:'Project Name',
                 tag:"TextField", type:"text",
                 variant:"outlined",  required:true, 
-                prefix:"zooscan_", minLength:"zooscan_".length,
+                prefix:"zooscan_", 
+                // minLength:"zooscan_".length, no need I added prefix in endorment
                 xs:12, sm:6, size:"small"
                 },
                 // { name:"drive", placeholder:"Project thematic (tara, archives_lov, ...)", label:'Project Drive',
@@ -506,7 +507,7 @@ export const sampleid_formElements=[
                 //     {id:7, value:"tara"},
                 // ]
                { name:"drive", placeholder:"Project thematic (tara, archives_lov, ...)", label:'Project Drive',
-                tag:"Drives",  type:"select", 
+                tag:"Drives", // type:"select", 
                 variant:"outlined",  required:true, 
                 xs:12, sm:6, size:"small",
                 // choice:[

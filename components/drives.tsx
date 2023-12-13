@@ -29,7 +29,7 @@ const Drives = (props:FormItem) => {
     const [ driveList , setDriveList ] = useState(drives);
 
     useEffect( () => { 
-        console.log("drives have changed", drives);
+        // console.log("drives have changed", drives);
         // const data = samples
         setDriveList(drives);
       } , [drives])
@@ -37,9 +37,9 @@ const Drives = (props:FormItem) => {
     if (isLoading) return <MySpinner />
     if (isError) return <ErrorComponent error={isError}/>
 
-    console.log("Drives: ", drives);
+    // console.log("Drives: ", drives);
 
-    console.log("SELECT props:", props);
+    // console.log("SELECT props:", props);
     let opt : any = {
         id: props.name,
         items: drives,
@@ -48,7 +48,7 @@ const Drives = (props:FormItem) => {
         className:"max-w-xs",
     }
 
-    console.log("added props")
+    // console.log("added props");
     if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
     if (props.required == true) { opt['isRequired'] = true; }
 
