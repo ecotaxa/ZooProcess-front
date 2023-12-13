@@ -8,6 +8,11 @@ import { ErrorComponent } from '@/components/ErrorComponent'
 import { ProjectsTableNextUI as ProjectsTable } from '@/components/projects-table'
 import { Button, Card, CardBody, CardFooter, CardHeader, Link, Spacer } from '@nextui-org/react';
 
+// import { Projects } from "@/app/api/network/zooprocess-api"
+
+
+// const castArray = (value:Array<any>) => Array.isArray(value) ? value : [value];
+
 const Projects = () => {
 
     const formatData = (data:any) => {
@@ -27,6 +32,7 @@ const Projects = () => {
                 updatedAt = createdAt;
             }
 
+            // ici les colonnes qui m'interresse pour mon tableau
             return {
                 id: project.id,
                 name: project.name,
@@ -35,6 +41,8 @@ const Projects = () => {
                 scan:0,
                 createdAt,
                 updatedAt,
+                // description: project.description,
+                // scanningOptions: project.scanningOptions,
                 qc: project.qc || "TODO"  
             }
         });
@@ -48,7 +56,9 @@ const Projects = () => {
     const router = useRouter()
     
     useEffect( () => { 
-        console.log("projects have changed", projects);
+        if ( Object.keys(projects).length == 0) return;
+
+        console.log("projects have changed (only useful columns for the table)", projects);
         const data = formatData(projects)
         setProjectList(data);
       } , [projects])
