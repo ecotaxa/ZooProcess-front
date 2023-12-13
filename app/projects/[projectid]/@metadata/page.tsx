@@ -35,18 +35,20 @@ const Metadata : FC<pageProps> = (params) => {
         let proj = {
             "id":project.id,
             "name": project.name,
-            "drive": project.driveId,
-            "description": project.description,
-            "acronym": "",
-            "ecotaxa_project_title": "",
-            "ecotaxa_project": ""
+            "cdrive":project.drive,
+            "drive": project.drive.id,
+            "description": project.description || "",
+            "acronym": project.acronym || "",
+            "ecotaxa_project_title": project.ecotaxa?.name || "",
+            "ecotaxa_project": project.ecotaxa?.projectId || "",
+            "scanningOptions":project.scanningOptions || 0
       }
 
-      if (project.acronym ) { proj["acronym"] = project.acronym;}
-      if (project.ecotaxa) {
-        proj["ecotaxa_project_title"] = "" //project.ecotaxa.acronym;
-        proj["ecotaxa_project"] = "" // project.acronym;
-      }
+      // if (project.acronym ) { proj["acronym"] = project.acronym;}
+      // if (project.ecotaxa) {
+      //   proj["ecotaxa_project_title"] = "" //project.ecotaxa.acronym;
+      //   proj["ecotaxa_project"] = "" // project.acronym;
+      // }
 
       form['value'] = proj;
       // return proj;
@@ -73,8 +75,11 @@ const Metadata : FC<pageProps> = (params) => {
     if (isError) return <ErrorComponent error={isError}/>
     // return <SamplesTable projectId={projectId} samples={sampleList}/>
     
-    const projectMetadata = fillProject(project)
+    //const projectMetadata = 
+    fillProject(project)
     // form['value'] = projectMetadata;
+
+    console.log("projectMetadata: ",form);
 
     return (
         <MyForm {...form} 
@@ -94,7 +99,7 @@ const Metadata : FC<pageProps> = (params) => {
       // POUR AFFICHAGE DEBUG
       // setData(JSON.stringify(value, null, 2))
       // console.log("App onChange:", stringifiedData)
-      console.log("App onChange:", JSON.stringify(value, null, 2));
+      // console.log("App onChange:", JSON.stringify(value, null, 2));
 
       updateProject(value);
     }

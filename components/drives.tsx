@@ -26,6 +26,8 @@ interface FormItem {
 
 const Drives = (props:FormItem) => {
 
+    //console.log("Drives props: ",props);
+
     const { drives, isLoading, isError} = useDrives();    
     // const [ driveList , setDriveList ] = useState(drives);
     const [value, setValue] = useState(
@@ -54,6 +56,7 @@ const Drives = (props:FormItem) => {
         if (props.onChange){
             props.onChange(props.name, value)
         }
+        //console.log("setValue:", value)
         setValue(value);
     }
 
@@ -70,19 +73,19 @@ const Drives = (props:FormItem) => {
     }
 
     // console.log("added props");
-    // if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
+    if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
     if (props.required == true) { opt['isRequired'] = true; }
 
 
     return (
         <Select
             // onChange={props.onChange}
-            selectedKeys={value}
-            // onChange={(event) => handleChange(event.target.value)}
+            // selectedKeys={value}
+            onChange={(event) => handleChange(event.target.value)}
             // onChange={handleChange}
             // defaultValue={props.value}
             // defaultSelectedKeys={[props.value]}
-            onSelectionChange={handleChange}
+            // onSelectionChange={handleChange}
             {...opt}
         >
             {(item:Item) => <SelectItem key={item.id}>{item.name}</SelectItem>}

@@ -48,14 +48,14 @@ const Project : FC<pageProps> = ({params}) => {
                 </Tab>
                 {/* <Tab key="metadata" title="Metadata" href={`/projects/${projectid}/metadata`}> */}
                 <Tab key="metadata" title="Metadata" >
-                    <Metadata/>
+                    <Metadata  {...params}/>
                 </Tab>
                 <Tab key="samples" title="Samples">
                     <Samples {...params}/>
                     <Debug params={params}/>
                 </Tab>
                 <Tab key="scans" title="Scans">
-                    <Scans/>
+                    <Scans  {...params}/>
                 </Tab>
             </Tabs>
         {/* </div> */}
