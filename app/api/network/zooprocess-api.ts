@@ -140,11 +140,11 @@ export async function addProject(data:Project){
 
     return await api.put(`/projects/${data.id}`, data)
       .then(function (response) {
-        console.log(response);
+        console.log("updateProject response:", response);
         return response.data;
       })
       .catch(function (error) {
-        console.log(error);
+        console.log("updateProject error:", error);
         throw(error);
       });
 

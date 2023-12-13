@@ -1,6 +1,6 @@
 
 export const formatDate = (date /*:string | number | Date */ ) => {
-    console.log("--- date:",date);
+    // console.log("--- date:",date);
     let localdate = "date";
     const locale /*: LocalesArgument*/ = "fr-FR";
     try {
@@ -15,7 +15,7 @@ export const formatDate = (date /*:string | number | Date */ ) => {
         // let time=new Date(date).toLocaleTimeString();
         // localdate = day+"<br/>"+time
         localdate = new Date(date).toLocaleString(locale,dayoptions);
-        console.log("formatDate date:",localdate);
+        // console.log("formatDate date:",localdate);
     } catch (error) {
         console.error(error);
         localdate = "NaN";
@@ -25,13 +25,13 @@ export const formatDate = (date /*:string | number | Date */ ) => {
 
 
 export const formatTime = (date /*:string | number | Date */) => {
-    console.log("--- time:",date);
+    // console.log("--- time:",date);
     let localdate = "time";
     const locale /*: LocalesArgument*/ = "fr-FR";
     try {
         
         localdate=new Date(date).toLocaleTimeString();
-        console.log("formatTime time:",localdate);
+        // console.log("formatTime time:",localdate);
     } catch (error) {
         console.error(error);
         localdate = "NaN";

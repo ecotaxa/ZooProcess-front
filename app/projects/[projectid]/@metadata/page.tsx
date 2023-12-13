@@ -22,15 +22,15 @@ interface pageProps {
 const Metadata : FC<pageProps> = (params) => {
   const router = useRouter();
 
-    const projectId = params.projectid ;
-    console.log("Metadata params: ", params);
-    console.log("Metadata params projectid: ", params.projectid);
+  const projectId = params.projectid ;
+  console.log("Metadata params: ", params);
+  console.log("Metadata params projectid: ", params.projectid);
 
-    const { project, isLoading, isError } = useProject(projectId)
-    // const [ sampleList, setSampleList ] = useState(project)
+  const { project, isLoading, isError } = useProject(projectId)
+  // const [ sampleList, setSampleList ] = useState(project)
 
-    const fillProject = (project:any) : any => { 
-        console.log("project has changed", project);
+  const fillProject = (project:any) : any => { 
+        console.log("fillProject: ", project);
         
         let proj = {
             "id":project.id,
@@ -79,7 +79,7 @@ const Metadata : FC<pageProps> = (params) => {
     fillProject(project)
     // form['value'] = projectMetadata;
 
-    console.log("projectMetadata: ",form);
+    console.log("projectMetadata: ", form);
 
     return (
         <MyForm {...form} 
@@ -121,6 +121,7 @@ const Metadata : FC<pageProps> = (params) => {
             Metadata | ZooProcess
             </title>
         </Head>
+        <h1>{projectId}</h1>
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
 
         <div className="text-center justify-center">

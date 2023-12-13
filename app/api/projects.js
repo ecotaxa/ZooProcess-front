@@ -89,7 +89,7 @@ export function addProject(data){
 
 export function updateProject(data){
 
-  console.log("updating Project...");
+  console.log("updating Project... with: ", data);
 
   // TODO added info box
 
