@@ -4,6 +4,7 @@
 // import { MySelect } from "./mySelect" // MUI
 import { MySelect } from "./mySelect5"
 import { MyTextField } from "./myTextField2"
+import { MyTextArea } from "./myTextArea"
 // import SimpleSelect from "./SimpleSelect"
   
 // import dayjs from "dayjs";
@@ -112,25 +113,34 @@ export function FormElements(props) {
             <MyDatePicker {...props}  key={props.name}
                 onChange={props.onChange}/>
         case "TextArea":
-            if (mui){
-                return (
-                <TextareaAutosize {...props}   key={props.name}
-                    onChange={props.onChange}
-                />)
-            } else {
-                return (
-                <Textarea  
-                    onChange={props.onChange}
-                    isInvalid={false}
-                    isRequired
-                    // variant="bordered"
-                    label={props.label}
-                    placeholder={props.placeholder}
-                    defaultValue={props.defaultValue}
-                    // errorMessage="The description should be at least 255 characters long."
-                    className="max-w-xs"
-                />)
-            }
+
+        return (
+            <MyTextArea 
+                {...props}   
+                key={props.name}
+                onChange={props.onChange}
+            />
+            )
+
+            // if (mui){
+            //     return (
+            //     <TextareaAutosize {...props}   key={props.name}
+            //         onChange={props.onChange}
+            //     />)
+            // } else {
+            //     return (
+            //     <Textarea  
+            //         onChange={props.onChange}
+            //         isInvalid={false}
+            //         isRequired
+            //         // variant="bordered"
+            //         label={props.label}
+            //         placeholder={props.placeholder}
+            //         defaultValue={props.defaultValue}
+            //         // errorMessage="The description should be at least 255 characters long."
+            //         className="max-w-xs"
+            //     />)
+            // }
         case "Empty":
             return (
                 <div></div> 
