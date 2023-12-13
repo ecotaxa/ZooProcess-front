@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export function MySelect(props){
 
-    // console.log("MySelect props: ",props);
+    //console.log("MySelect props: ",props);
     const [value, setValue] = useState(
             props.value || 0
         );
@@ -36,7 +36,7 @@ export function MySelect(props){
 
     return (
         <Select
-            // selectedKeys={[value]}
+            selectedKeys={[value]}
             // onChange={(event) => handleChange(event.target.value)}
             // onChange={handleChange}
             onSelectionChange={handleChange}

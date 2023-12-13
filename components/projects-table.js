@@ -25,15 +25,15 @@ export function ProjectsTableNextUI(props) {
     const {projects=[]} = props
     const router = useRouter();
 
-    console.log("ProjectsTable( projects= ",projects,")")
+    // console.log("ProjectsTable( projects= ",projects,")")
 
     const updateddata = projects.map( (project) => { project['key']=project.id ; return project;} )
-    console.log("updateddata: ",updateddata)
+    // console.log("updateddata: ",updateddata)
     const [rows, setRows] = useState(updateddata)
 
 
     const QCString = (qc) => {
-        console.log("QC: ", qc);
+        // console.log("QC: ", qc);
         switch (qc) {
             case "TODO":
             case undefined:
@@ -48,7 +48,7 @@ export function ProjectsTableNextUI(props) {
 
     const renderCell = React.useCallback((project, columnKey) => {
 
-        console.log("render cell :columnKey ", columnKey); 
+        // console.log("render cell :columnKey ", columnKey); 
 
         const cellValue = project[columnKey];
 
@@ -87,7 +87,7 @@ export function ProjectsTableNextUI(props) {
             );
             
         case "createdAt":
-            console.log("createdAt - createdAt")
+            // console.log("createdAt - createdAt")
             return (
                 <div className="flex flex-col" >
                     <p className="text-bold text-sm capitalize">{formatDate(cellValue)}<br/>{formatTime(cellValue)}</p>
@@ -109,7 +109,7 @@ export function ProjectsTableNextUI(props) {
             );              
 
         case "actions":
-            console.log("build action: ", project)
+            // console.log("build action: ", project)
             return (
             <div className="relative flex items-center gap-2" key={key(project.id,'action')}>
                 <Button 
