@@ -73,7 +73,7 @@ export function FormElements(props) {
                 )
             }
         case "Drives":
-            return ( <Drives 
+            return ( <Drives key={props.name}
                 {...props}
                 onChange={props.onChange}
             />)
