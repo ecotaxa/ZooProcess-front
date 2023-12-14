@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import {   TextField, InputAdornment } from "@mui/material"
-import { Textarea } from "@nextui-org/input";
+// import {   TextField, InputAdornment } from "@mui/material"
+// import { Textarea } from "@nextui-org/input";
+
 import {Input} from "@nextui-org/react";
+// import { Debug } from "./Debug";
+import { Debug } from "@/Components/Debug";
+
 
 export function MyTextField(props) {
-
-    const [hasError, setHasError] = useState(false)
-
-    // console.log("MyTextField: ", props);
-
-    var field_props = {}
-
 
 
     var handleChange = (value) => {
@@ -24,7 +21,7 @@ export function MyTextField(props) {
             if (props.maxValue){
                 if (props.maxValue < value) {
 
-                    field_props.value = props.maxValue
+                    // field_props.value = props.maxValue
                     error = true
                     // return
                 }
@@ -32,7 +29,7 @@ export function MyTextField(props) {
             if (props.minValue !== undefined ){
                 if (props.minValue > value) { 
 
-                    field_props.value = props.minValue
+                    // field_props.value = props.minValue
                     error = true
                 }
             } 
@@ -88,9 +85,32 @@ export function MyTextField(props) {
     if (props.prefix) { opt['startContent'] = props.prefix }
     if (props.endAdornment?.text) { opt['endContent'] = props.endAdornment.text}
     if (props.readonly) { opt['isReadOnly'] = true}
-    if (props.helperText) { opt['errorMessage']=props.helperText }
+    
+    // if (props.helperText) { opt['errorMessage'] = props.helperText }
 
-    field_props['helperText'] = ''
+    // setOpts(opt);
+    const [hasError, setHasError] = useState(false);
+    const [opts, setOpts] = useState(opt);
+
+    useEffect(()=>{
+        console.log("useEffect hasError", hasError);
+        if ( hasError ){
+            if (props.helperText) { opt['errorMessage'] = props.helperText }
+        } else {
+            //if (props.helperText) { 
+            delete opt.errorMessage;
+        }
+        setOpts(opt);
+    },[hasError]);
+
+    // console.log("MyTextField: ", props);
+
+    // var field_props = {}
+
+
+
+
+    // field_props['helperText'] = ''
 
     // console.log("opt: ", opt);
 
@@ -99,18 +119,21 @@ export function MyTextField(props) {
     // }
 
 
-    if (props.shrink){
-        field_props['InputLabelProps']={ shrink: true }
-    }
+    // if (props.shrink){
+    //     field_props['InputLabelProps']={ shrink: true }
+    // }
 
 
 
     return (
+        <>
+        <Debug params={[{props:props},{opts:opts},{hasError:hasError}]} />
         <Input 
-            {...opt}
+            {...opts}
             isInvalid={hasError}
             // onChange={props.onChange}
         />       
+        </>
     )
 
     // const MUI_Text = () => {
