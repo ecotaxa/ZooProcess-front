@@ -31,6 +31,7 @@ export const Debug = ({params,title="debug"}) => {
                 isSelected={isSelected} 
                 onValueChange={setIsSelected} 
                 size="sm"
+                color="secondary"
             >
                 {title}
             </Switch>
