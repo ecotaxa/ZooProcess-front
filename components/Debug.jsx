@@ -5,7 +5,7 @@ export const Debug = ({params,title="debug"}) => {
 
 
 
-    const [isSelected, setIsSelected] = useState(true);
+    const [isSelected, setIsSelected] = useState(false);
 
     // return (
     //     <div>
@@ -15,7 +15,7 @@ export const Debug = ({params,title="debug"}) => {
 
     const ShowError = () => {
 
-        if (isSelected) { return (<></>) }
+        if (!isSelected) { return (<></>) }
 
         return (
             <div>
