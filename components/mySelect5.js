@@ -1,11 +1,12 @@
 import { Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
+import { Debug } from "@/Components/Debug";
 
 export function MySelect(props){
 
     //console.log("MySelect props: ",props);
     const [value, setValue] = useState(
-            props.value || 0
+            String(props.value) || "0"
         );
 
 
@@ -35,6 +36,8 @@ export function MySelect(props){
     // console.log("OPT:" , opt);
 
     return (
+        <>
+        <Debug params={[{props:props},{opt:opt}]} />
         <Select
             selectedKeys={[value]}
             // onChange={(event) => handleChange(event.target.value)}
@@ -44,6 +47,7 @@ export function MySelect(props){
         >
             {(item) => <SelectItem key={item.id}>{item.value}</SelectItem>}
         </Select>
+        </>
     )
 
 }
