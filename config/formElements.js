@@ -105,7 +105,10 @@ export const sampleid_formElements=[
         { tag:"Select", name:"latitude_ns", type:"select", 
             placeholder:"N/S", label:'Latitude (N/S)',
             variant:"outlined", required:true,
-            fullWidth:true, xs:12, sm:3, sx:{m:0,minWith:150},
+            fullWidth:true, xs:12, 
+            sm:3, 
+            // sm:12, // to debug easely
+            sx:{m:0,minWith:150},
             choice:[
                 {id:1,value:"North"},
                 {id:2,value:"South"}
@@ -146,7 +149,7 @@ export const sampleid_formElements=[
                     {id:1,value:"Oblique"},
                     {id:2,value:"Horizontal"},
                     {id:3,value:"Vertical"},
-                    {id:0, value:"Other sampling method"}
+                    {id:4,value:"Other sampling method"}
                 ]
             },
             { tag:"TextField", name:"net_sampling_type", 
