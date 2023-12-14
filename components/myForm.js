@@ -6,6 +6,7 @@ import { useState, useMemo } from "react";
 import { FormElements } from "@/components/myFormElements";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
+import { Debug } from "@/Components/Debug";
 
 // import { Debug } from "@/components/Debug";
 
@@ -30,10 +31,11 @@ export function MyForm(props){
     //   ]      
     // const forms = props.forms;
     // const {forms,onChange,onCancel} = props;
-    const {forms} = props;
+    const {forms,project} = props;
 
+    console.log("MyForm(props): ", props );
 
-    // console.log("MyForm : " , forms);
+    console.log("MyForm : " , forms);
     // const [myform, setMyForm] = useState({});
     // setMyForm(props.value)
 
@@ -83,7 +85,9 @@ export function MyForm(props){
               sm={formitem.sm} 
               item={true}
             >
+              <Debug params={forms}/>
               <FormElements {...formitem} 
+                project={props.project}
                 onChange={onChangeElement}
               />
             </Grid>

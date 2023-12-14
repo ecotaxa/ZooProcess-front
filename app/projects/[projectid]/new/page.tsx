@@ -62,9 +62,12 @@ const NewSample : FC<pageProps> = (params) => {
 
     const router = useRouter()
     console.log("NewSample params: ", params);
+    console.log("NewSample params projectid: ", params.params.projectid);
+    // console.log("NewSample params projectid: ", params.projectid);
 
     // const projectid = router.query.projectid //as string
-    const projectId = params.projectid;
+    const projectId = params.params.projectid;
+    // const projectId = params.projectid;
 
     const emptyData = {
         "scientific_program": "ZooProcess",
@@ -144,7 +147,7 @@ const NewSample : FC<pageProps> = (params) => {
             New Sample Metadata | ZooProcess
             </title>
         </Head>
-        <Debug {...params}/>
+        <Debug params={params}/>
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
 
             <div className="text-center justify-center">
@@ -154,6 +157,7 @@ const NewSample : FC<pageProps> = (params) => {
                     </Typography>
                     <MyForm 
                         {...form} 
+                        project={projectId}
                         onChange={onChange} 
                         onCancel={onCancel}/>
                 </Stack>

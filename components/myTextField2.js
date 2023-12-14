@@ -85,6 +85,17 @@ export function MyTextField(props) {
     if (props.prefix) { opt['startContent'] = props.prefix }
     if (props.endAdornment?.text) { opt['endContent'] = props.endAdornment.text}
     if (props.readonly) { opt['isReadOnly'] = true}
+
+    if (props.fn2 && props.project) { 
+        opt['TOTOT'] = 'TOTO' 
+
+        const param = { project : props.project }
+
+        const prefix = new Function( props.fn2.params , props.fn2.func );
+        opt['prefix'] = prefix(param) // ("Toto");
+        opt['startContent'] = prefix(param)
+
+    }
     
     // if (props.helperText) { opt['errorMessage'] = props.helperText }
 

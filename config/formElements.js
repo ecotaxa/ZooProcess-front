@@ -31,7 +31,12 @@ export const sampleid_formElements=[
                 placeholder:"Sample id", label:'Sample id',
                 variant:"outlined", required:true, 
                 xs:12, sm:12, fullWidth:true, size:"regular",
-                minLength:3
+                minLength:3,
+                // params:"{projectId}",
+                // fn: (params) => {
+                //     return {prefix:String(params.project)+"_"}
+                // },
+                fn2: { params:"{project}", func:'return String(project)+"_"' }
             },
             { tag:"Empty", xs:0, xm:6 },
             { tag:"TextField", name:"barcode", type:"text",

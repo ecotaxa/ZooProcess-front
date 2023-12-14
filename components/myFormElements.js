@@ -33,6 +33,7 @@ export function FormElements(props) {
     switch ( props.tag ){
         case "TextField":
             return (<MyTextField {...props} key={props.name}
+                project={props.project}
                 onChange={props.onChange}/>)
 
             if (mui ){ //|| props.minLength){
