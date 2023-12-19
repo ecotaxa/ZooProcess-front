@@ -1,8 +1,10 @@
+"use client"
+
 // import {  Card, CardContent, Grid, Typography } from "@mui/material";
 import {   Grid , Typography} from "@mui/material";
 
 // import { FormElements, fraction_inputFormElments, inputFormElements, inputFormElements_tow_type_vertical, sampleid_formElements } from '../services/formElements';
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { FormElements } from "@/components/myFormElements";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
@@ -44,10 +46,25 @@ export function MyForm(props){
 
     // const testData2 = {sample_id:'b', scientific_program:'dyfamed_wp2_2023_biotom_sn001', latitude_ns:2}
     // const [myform, setMyForm] = useState(props.value?props.value:{});
-    const [myform, setMyForm] = useState(defaultValue?defaultValue:{});
+    // const [myform, setMyForm] = useState(defaultValue?defaultValue:{});
+    const [myform, setMyForm] = useState({});
     // setMyForm(testData2)
     const [title, setTitle] = useState(props.title?props.title:"Title");
     const [subtitle, setSubTitle] = useState(props.subtitle?props.subtitle:"subTitle");
+
+    // const [isLoading, setIsLoading] = useState<boolean>(false)
+    // const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
+
+    const [values, setValues] = useState(defaultValue?defaultValue:{});
+
+
+    useEffect(()=>{
+      console.log("myForm has change:", myform);
+      setValues(myform)
+
+    },[myform])
 
     const margin={margin:"0 5px"}
 
@@ -79,15 +96,15 @@ export function MyForm(props){
         // console.log("formitem: ", formitem);
         // console.log("-+-+-+---------------------------------");
 
-
         return (
             <Grid key={formitem.name}
               xs={formitem.xs} 
               sm={formitem.sm} 
               item={true}
             >
-              <Debug params={forms}/>
-              <FormElements {...formitem} 
+              <Debug params={forms} title="form"/>
+              <Debug params={myform} title="myform"/>
+              <FormElements {...formitem} key={formitem.name}
                 project={props.project}
                 onChange={onChangeElement}
               />
@@ -96,7 +113,6 @@ export function MyForm(props){
     }
 
     const formElements = (myJsonForm=[]) => {
-
       // console.log("formElements: ", myJsonForm);
 
         return (       
@@ -157,6 +173,7 @@ export function MyForm(props){
         if (type === "number" ) {
           const newForm = {...myform, [name]: Number(value)};
           // setMyForm({...myform, [name]: Number(value)});
+          // const nform = { ...form
           setMyForm({...newForm});
         } else {
           const newForm = {...myform, [name]: value};
@@ -179,15 +196,31 @@ export function MyForm(props){
         props.onCancel();
     }
     
-    const onSubmitHandler = (event /*: React.FormEvent<HTMLFormElement>*/) => {
+  const onSubmitHandler = async (event /*: React.FormEvent<HTMLFormElement>*/) => {
         event.preventDefault(); // 👈️ prevent page refresh
+        setIsLoading(true) // Set loading to true when the request starts
+        setError(null) // Clear previous errors when a new request starts
+
+        const formData = new FormData(event.currentTarget)
+        console.log("formData: ",formData)
+
 
         console.log("onSubmitHandler event", event);
         console.log("event.timeStamp", event.timeStamp);
         console.log("onSubmitHandler submit form", myform);
-        props.onChange(myform);
-        // setMyForm(props.value?props.value:{})
-        reset();
+        
+        try {
+          // await props.onChange(myform);
+          await props.onChange(values);
+          // setMyForm(props.value?props.value:{})
+          reset();  
+        } catch (error) {
+          // Handle error if necessary
+          setError(error)
+          console.error(error)
+        } finally {
+          setIsLoading(false) // Set loading to false when the request completes
+        }
     }  
 
     // to print the debug json
@@ -225,13 +258,19 @@ export function MyForm(props){
               <CardFooter>
               <div className="gridjustify-items-end"
                       >
+                        {error && <div style={{ color: 'red' }}>{error}</div>}
+
                         <div className="flex flex-row-reverse">
                       <Button 
                         type="submit" 
                         variant="solid" 
                         color="primary"
                         // onClick={props.onChange}
-                      >Submit</Button>
+
+                        disabled={isLoading}
+                      >
+                        {isLoading ? 'Loading...' : 'Submit'}
+                      </Button>
                       <Spacer x={2}/>
 
                       <Button
