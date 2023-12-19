@@ -40,10 +40,11 @@ export function MyForm(props){
     // setMyForm(props.value)
 
     // keep value to reset it
-    const defaultValue = props.value
+    let defaultValue = {...props.value}
 
     // const testData2 = {sample_id:'b', scientific_program:'dyfamed_wp2_2023_biotom_sn001', latitude_ns:2}
-    const [myform, setMyForm] = useState(props.value?props.value:{});
+    // const [myform, setMyForm] = useState(props.value?props.value:{});
+    const [myform, setMyForm] = useState(defaultValue?defaultValue:{});
     // setMyForm(testData2)
     const [title, setTitle] = useState(props.title?props.title:"Title");
     const [subtitle, setSubTitle] = useState(props.subtitle?props.subtitle:"subTitle");
@@ -154,9 +155,14 @@ export function MyForm(props){
         console.log("type:",type);
     
         if (type === "number" ) {
-          setMyForm({...myform, [name]: Number(value)});
+          const newForm = {...myform, [name]: Number(value)};
+          // setMyForm({...myform, [name]: Number(value)});
+          setMyForm({...newForm});
         } else {
-          setMyForm({...myform, [name]: value});
+          const newForm = {...myform, [name]: value};
+          setMyForm({...newForm});
+          // setMyForm({...myform, name: value});
+          
         }
         console.log("onChangeElement form values", myform);
       }
@@ -224,6 +230,7 @@ export function MyForm(props){
                         type="submit" 
                         variant="solid" 
                         color="primary"
+                        // onClick={props.onChange}
                       >Submit</Button>
                       <Spacer x={2}/>
 
