@@ -33,7 +33,7 @@ export function MyForm(props){
     //   ]      
     // const forms = props.forms;
     // const {forms,onChange,onCancel} = props;
-    const {forms,project} = props;
+    const {forms,value,title,subtitle} = props;
 
     console.log("MyForm(props): ", props );
 
@@ -46,11 +46,11 @@ export function MyForm(props){
 
     // const testData2 = {sample_id:'b', scientific_program:'dyfamed_wp2_2023_biotom_sn001', latitude_ns:2}
     // const [myform, setMyForm] = useState(props.value?props.value:{});
-    // const [myform, setMyForm] = useState(defaultValue?defaultValue:{});
-    const [myform, setMyForm] = useState({});
+    const [myValues, setMyForm] = useState(props.value || {});
+    // const [myform, setMyForm] = useState({});
     // setMyForm(testData2)
-    const [title, setTitle] = useState(props.title?props.title:"Title");
-    const [subtitle, setSubTitle] = useState(props.subtitle?props.subtitle:"subTitle");
+    // const [title, setTitle] = useState(props.title?props.title:"Title");
+    // const [subtitle, setSubTitle] = useState(props.subtitle?props.subtitle:"subTitle");
 
     // const [isLoading, setIsLoading] = useState<boolean>(false)
     // const [error, setError] = useState<string | null>(null)
@@ -61,10 +61,10 @@ export function MyForm(props){
 
 
     useEffect(()=>{
-      console.log("myForm has change:", myform);
-      setValues(myform)
+      console.log("myForm has change:", myValues);
+      setValues(myValues)
 
-    },[myform])
+    },[myValues])
 
     const margin={margin:"0 5px"}
 
@@ -74,7 +74,7 @@ export function MyForm(props){
 
     // inject the values given in parameter in the form
     const myElement = (formitem) => {
-        const value = myform[formitem.name];
+        const value = myValues[formitem.name];
 
         // console.log("FORM VALUE for ", formitem.name, " = " , value , " <=> " , formitem['value'] );
 
@@ -84,8 +84,8 @@ export function MyForm(props){
           // console.log("UNDEFINED");
           if ( formitem['value'] != undefined) {
             // console.log("OVERRIDE")
-            myform[formitem.name] = formitem['value']
-            let form = myform
+            myValues[formitem.name] = formitem['value']
+            let form = myValues
             form[formitem.name] = formitem['value']
             setMyForm(form)
           }
@@ -102,8 +102,6 @@ export function MyForm(props){
               sm={formitem.sm} 
               item={true}
             >
-              <Debug params={forms} title="form"/>
-              <Debug params={myform} title="myform"/>
               <FormElements {...formitem} key={formitem.name}
                 project={props.project}
                 onChange={onChangeElement}
@@ -171,22 +169,22 @@ export function MyForm(props){
         console.log("type:",type);
     
         if (type === "number" ) {
-          const newForm = {...myform, [name]: Number(value)};
+          const newForm = {...myValues, [name]: Number(value)};
           // setMyForm({...myform, [name]: Number(value)});
           // const nform = { ...form
           setMyForm({...newForm});
         } else {
-          const newForm = {...myform, [name]: value};
+          const newForm = {...myValues, [name]: value};
           setMyForm({...newForm});
           // setMyForm({...myform, name: value});
           
         }
-        console.log("onChangeElement form values", myform);
+        console.log("onChangeElement form values", myValues);
       }
 
     const reset = () => {
         const data = {};
-        const keys = Object.keys(myform);
+        const keys = Object.keys(myValues);
         // console.log(keys)
         keys.forEach(element => {
             data[element]=''
@@ -207,7 +205,7 @@ export function MyForm(props){
 
         console.log("onSubmitHandler event", event);
         console.log("event.timeStamp", event.timeStamp);
-        console.log("onSubmitHandler submit form", myform);
+        console.log("onSubmitHandler submit form", myValues);
         
         try {
           // await props.onChange(myform);
@@ -242,6 +240,11 @@ export function MyForm(props){
                   color="textSecondary">
                     {subtitle}
                 </h4>
+              
+              <Debug params={forms} title="forms"/>
+              <Debug params={value} title="value"/>
+              <Debug params={myValues} title="myform"/>
+
               </CardHeader>
               <CardBody>
 

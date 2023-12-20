@@ -5,9 +5,7 @@ import { Debug } from "@/Components/Debug";
 export function MySelect(props){
 
     console.log("MySelect props: ", props);
-    const [value, setValue] = useState(
-            String(props.value) || 0
-        );
+    const [value, setValue] = useState(String(props.value) || 0 );
 
 
     const handleChange = (value  /* event: SelectChangeEvent*/) => {

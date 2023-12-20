@@ -9,8 +9,8 @@ import { projectForm } from "@/config/formElements";
 import { FC, useEffect, useState } from 'react';
 import { Stack } from '@mui/material';
 
-import { Project as IProject } from '@/app/api/network/zooprocess-api';
-import { useRouter } from 'next/navigation';
+// import { Project as IProject } from '@/app/api/network/zooprocess-api';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MyForm } from '@/components/myForm';
 
 interface pageProps {
@@ -50,15 +50,24 @@ const Metadata : FC<pageProps> = (params) => {
       //   proj["ecotaxa_project"] = "" // project.acronym;
       // }
 
-      form['value'] = proj;
-      // return proj;
+      //form['value'] = proj;
+      return proj;
     }
 
-    let form : any = {}
-    form['forms'] = projectForm; //driveList
-    form['value'] = {};
-    form['title'] = 'New Project';
-    form['subtitle'] = 'Fill metadata about your new project';
+    // const [form, setForm] = useState({})
+
+    const initForm = () => {
+      let localform : any = {}
+      localform['forms'] = projectForm; //driveList
+      localform['value'] = {};
+      localform['title'] = 'Update Project';
+      localform['subtitle'] = 'Modify your project metadata';
+
+      // setForm(localform)
+      return localform
+    }
+
+    let form = initForm()
 
   //   let emptyProject = {
   //     // "project_id": null,
@@ -76,7 +85,10 @@ const Metadata : FC<pageProps> = (params) => {
     // return <SamplesTable projectId={projectId} samples={sampleList}/>
     
     //const projectMetadata = 
-    fillProject(project)
+
+    form = { ...form , value:fillProject(project)}
+    // form['value'] = fillProject(project)
+    // setForm(f)
     // form['value'] = projectMetadata;
 
     console.log("projectMetadata: ", form);
@@ -105,7 +117,7 @@ const Metadata : FC<pageProps> = (params) => {
     }
 
   const onCancel = () => {
-      router.back()
+      //router.back()
       // router.push({
       //     pathname: '/projects/',
       //     // query: { pid: params.id },                                         
