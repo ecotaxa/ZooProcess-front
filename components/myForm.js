@@ -54,10 +54,15 @@ export function MyForm(props){
 
     // const [isLoading, setIsLoading] = useState<boolean>(false)
     // const [error, setError] = useState<string | null>(null)
-    const [isLoading, setIsLoading] = useState(false)
+
+    // const [defaultValue,setDefaultValue] = useState(props.value)
+    const [isDataModified, setIsDataModified] = useState(false)
     const [error, setError] = useState(null)
+    const [isUpdating, setIsUpdating] = useState(false)
+    const [isDataUpdated, setIsDataUpdated] = useState(false)
 
     const [values, setValues] = useState(defaultValue?defaultValue:{});
+    // const [values, setValues] = useState(props.value || {});
 
 
     useEffect(()=>{
@@ -179,24 +184,27 @@ export function MyForm(props){
           // setMyForm({...myform, name: value});
           
         }
+        setIsDataModified(true)
+        setIsDataUpdated(false)
         console.log("onChangeElement form values", myValues);
       }
 
-    const reset = () => {
-        const data = {};
-        const keys = Object.keys(myValues);
+    const cancel = () => {
+        // const data = {};
+        // const keys = Object.keys(myValues);
         // console.log(keys)
-        keys.forEach(element => {
-            data[element]=''
-        });
+        // keys.forEach(element => {
+        //     data[element]=''
+        // });
         // console.log("data", data)
-        setMyForm(data);
+        // setMyForm(data);
+        setMyForm(defaultValue)
         props.onCancel();
     }
     
   const onSubmitHandler = async (event /*: React.FormEvent<HTMLFormElement>*/) => {
         event.preventDefault(); // 👈️ prevent page refresh
-        setIsLoading(true) // Set loading to true when the request starts
+        setIsDataModified(false) // Set loading to true when the request starts
         setError(null) // Clear previous errors when a new request starts
 
         const formData = new FormData(event.currentTarget)
@@ -207,18 +215,42 @@ export function MyForm(props){
         console.log("event.timeStamp", event.timeStamp);
         console.log("onSubmitHandler submit form", myValues);
         
-        try {
-          // await props.onChange(myform);
-          await props.onChange(values);
-          // setMyForm(props.value?props.value:{})
-          reset();  
-        } catch (error) {
-          // Handle error if necessary
+        // try {
+        //   // await props.onChange(myform);
+        //   setIsUpdating(true)
+        //   // setIsDataModified(false)
+        //   await props.onChange(values);
+        //   // setMyForm(props.value?props.value:{})
+        //   //reset();  
+        //   console.log("Data Updated")
+        //   defaultValue = values;
+        //   setIsDataUpdated(true)
+
+        // } catch (error) {
+        //   // Handle error if necessary
+        //   setError(error)
+        //   console.error(error)
+        
+        // } finally {
+        //   setIsUpdating(false)
+        //   // setIsLoading(false) // Set loading to false when the request completes
+        // }
+
+        setIsUpdating(true)
+        props.onChange(values).then( () => {
+          console.log("Project updated OK");
+          // console.log("Data Updated")
+          defaultValue = values;
+          setIsDataUpdated(true)
+          setIsUpdating(false)
+        })
+        .catch( (error) => {
+          setIsUpdating(false)
+          setIsDataModified(true)
           setError(error)
           console.error(error)
-        } finally {
-          setIsLoading(false) // Set loading to false when the request completes
-        }
+        })
+
     }  
 
     // to print the debug json
@@ -242,8 +274,8 @@ export function MyForm(props){
                 </h4>
               
               <Debug params={forms} title="forms"/>
-              <Debug params={value} title="value"/>
-              <Debug params={myValues} title="myform"/>
+              <Debug params={myValues} title="value"/>
+              {/* <Debug params={myValues} title="myform"/> */}
 
               </CardHeader>
               <CardBody>
@@ -262,6 +294,7 @@ export function MyForm(props){
               <div className="gridjustify-items-end"
                       >
                         {error && <div style={{ color: 'red' }}>{error}</div>}
+                        {isDataUpdated && <div>Data have been updated</div>}
 
                         <div className="flex flex-row-reverse">
                       <Button 
@@ -270,9 +303,9 @@ export function MyForm(props){
                         color="primary"
                         // onClick={props.onChange}
 
-                        disabled={isLoading}
+                        disabled={!isDataModified}
                       >
-                        {isLoading ? 'Loading...' : 'Submit'}
+                        {isUpdating ? 'Updating...' : 'Submit'}
                       </Button>
                       <Spacer x={2}/>
 
@@ -280,17 +313,17 @@ export function MyForm(props){
                         type="reset" 
                         variant="flat" 
                         color="primary" 
-                        onClick={reset}
+                        onClick={cancel}
                       >Cancel</Button>
      
                       <Spacer x={2}/>
 
-                      <Button
+                      {/* <Button
                         type="reset" 
                         variant="faded" 
                         color="primary" 
                         onClick={init}
-                      >Refill</Button>
+                      >Refill</Button> */}
                       </div>
 
                       {/* <Button style={margin} key="refill"

@@ -119,11 +119,15 @@ export function updateProject(data){
   const dataConverted = convertData2api(data);
 
 
-  api.updateProject(dataConverted).then(() => {
+  return api.updateProject(dataConverted)
+  
+  .then(() => {
     console.log("Project updated OK");
+    new Promise(()=>{return "Project updated"})
   })
   .catch ((error) =>  {
     console.error("Project updated NOK: ", error);
+    throw(error.message)
   })
 
 }

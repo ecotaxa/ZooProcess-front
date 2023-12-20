@@ -113,7 +113,7 @@ const Metadata : FC<pageProps> = (params) => {
       // console.log("App onChange:", stringifiedData)
       // console.log("App onChange:", JSON.stringify(value, null, 2));
 
-      updateProject(value);
+      return updateProject(value);
     }
 
   const onCancel = () => {
