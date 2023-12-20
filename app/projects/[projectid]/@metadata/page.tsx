@@ -104,7 +104,7 @@ const Metadata : FC<pageProps> = (params) => {
        
     // onSubmit
     const onChange = (value:any) => {
-      console.log("App onChange:", value)
+      console.log("Project metadata onChange:", value)
       // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
       // stringifiedData = JSON.stringify(value, null, 2);
 
