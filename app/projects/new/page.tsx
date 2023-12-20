@@ -102,7 +102,7 @@ const NewProject = (params:any) => {
 
     // onSubmit
     const onChange = (value:any) => {
-        console.log("App onChange:", value)
+        console.log("New project onChange:", value)
 
         // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
         // stringifiedData = JSON.stringify(value, null, 2);
@@ -112,12 +112,12 @@ const NewProject = (params:any) => {
         // console.log("App onChange:", stringifiedData);
 
 
-        try {
-            addProject(value);
-        } 
-        catch (e){
+        // try {
+        return addProject(value);
+        // } 
+        // catch (e){
 
-        }
+        // }
         // const newData = prepareData(value)
         // addProject(newData)
         // router.back()

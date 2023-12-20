@@ -79,11 +79,13 @@ export function addProject(data){
 
   // TODO added info box
 
-  api.addProject(data).then(() => {
+  return api.addProject(data).then(() => {
     console.log("Project added OK");
+    return new Promise(()=> {return "Project added"}) 
   })
   .catch ((error) =>  {
     console.error("Project added NOK: ", error);
+    throw(error.message)
   })
 
 }
