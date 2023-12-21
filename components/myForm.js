@@ -9,6 +9,7 @@ import { FormElements } from "@/components/myFormElements";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
 import { Debug } from "@/Components/Debug";
+import { randomInt } from "crypto";
 
 // import { Debug } from "@/components/Debug";
 
@@ -79,6 +80,8 @@ export function MyForm(props){
 
     // inject the values given in parameter in the form
     const myElement = (formitem) => {
+
+      if ( formitem.name ){
         const value = myValues[formitem.name];
 
         // console.log("FORM VALUE for ", formitem.name, " = " , value , " <=> " , formitem['value'] );
@@ -95,7 +98,9 @@ export function MyForm(props){
             setMyForm(form)
           }
         }
-
+      } else {
+        formitem['name']="empty_"+String(randomInt(100))
+      }
         // console.log("-+-+-+---------------------------------");
         // console.log("myform: ", myform);
         // console.log("formitem: ", formitem);
@@ -214,6 +219,7 @@ export function MyForm(props){
         console.log("onSubmitHandler event", event);
         console.log("event.timeStamp", event.timeStamp);
         console.log("onSubmitHandler submit form", myValues);
+        console.log("onChange(", values);
         
         // try {
         //   // await props.onChange(myform);
@@ -237,18 +243,21 @@ export function MyForm(props){
         // }
 
         setIsUpdating(true)
-        props.onChange(values).then( () => {
-          console.log("Project updated OK");
+        props.onChange(values).then( (message) => {
+          console.log("onChange OK");
+          console.log(message);
           // console.log("Data Updated")
           defaultValue = values;
           setIsDataUpdated(true)
           setIsUpdating(false)
         })
         .catch( (error) => {
+          const message = error
+          console.error("onChange Error", message);
           setIsUpdating(false)
           setIsDataModified(true)
-          setError(error)
-          console.error(error)
+          setError(message)
+          // console.error(error)
         })
 
     }  

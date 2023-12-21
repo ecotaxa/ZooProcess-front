@@ -76,8 +76,13 @@ export function useProjects() {
 export function addProject(data){
 
   console.log("adding Project...");
+  console.info(data);
 
   // TODO added info box
+  if (data.scanningOptions == null) 
+  {
+    throw("scanningOptions is null")
+  }
 
   return api.addProject(data).then(() => {
     console.log("Project added OK");
