@@ -112,7 +112,7 @@ const NewSample : FC<pageProps> = (params) => {
         }
 
         console.log("newData: ", data);
-        try {
+        // try {
 
             console.log("----- projectId : ",projectId);
             // console.log("----- params.projectid : ",params.projectid);
@@ -120,16 +120,16 @@ const NewSample : FC<pageProps> = (params) => {
             // console.log("----- params.params : ",params.params);
 
             // addSample(projectId, data)
-            addSample({
+            return addSample({
                 projectId, // : params.params.projectid, 
                 data
             })
 
-        }
-        catch (e:any){
-            console.log(e);
+        // }
+        // catch (e:any){
+        //     console.log(e);
             
-        }
+        // }
     }
 
     const onCancel = () => {

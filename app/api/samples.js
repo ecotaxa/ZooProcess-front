@@ -42,8 +42,9 @@ export function useSamples(projectId) {
 
     // TODO added info box
 
-    api.addSample(projectId, data).then(() => {
+    return api.addSample(projectId, data).then(() => {
       console.log("Sample added OK");
+      return new Promise( () => { return ("Sample have been added") })
     })
     .catch ((error) =>  {
       console.error("Sample added NOK: ", error);
