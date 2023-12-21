@@ -112,15 +112,16 @@ const NewProject = (params:any) => {
         // console.log("App onChange:", stringifiedData);
 
 
-        // try {
-        return addProject(value);
-        // } 
-        // catch (e){
+        return addProject(value)
+        .then((response) => {
+            console.log("Go To the project page" )
+            router.push(`${response.data.id}`)
+        })
+        .catch((error) => {
+            return Promise.reject(error)
+        })
 
-        // }
-        // const newData = prepareData(value)
-        // addProject(newData)
-        // router.back()
+
     }
 
     const onCancel = () => {

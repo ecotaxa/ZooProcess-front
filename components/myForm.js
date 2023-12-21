@@ -221,31 +221,11 @@ export function MyForm(props){
         console.log("onSubmitHandler submit form", myValues);
         console.log("onChange(", values);
         
-        // try {
-        //   // await props.onChange(myform);
-        //   setIsUpdating(true)
-        //   // setIsDataModified(false)
-        //   await props.onChange(values);
-        //   // setMyForm(props.value?props.value:{})
-        //   //reset();  
-        //   console.log("Data Updated")
-        //   defaultValue = values;
-        //   setIsDataUpdated(true)
-
-        // } catch (error) {
-        //   // Handle error if necessary
-        //   setError(error)
-        //   console.error(error)
-        
-        // } finally {
-        //   setIsUpdating(false)
-        //   // setIsLoading(false) // Set loading to false when the request completes
-        // }
-
         setIsUpdating(true)
-        props.onChange(values).then( (message) => {
+        props.onChange(values)
+        .then( (response) => {
           console.log("onChange OK");
-          console.log(message);
+          console.log(response);
           // console.log("Data Updated")
           defaultValue = values;
           setIsDataUpdated(true)

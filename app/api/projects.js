@@ -84,9 +84,10 @@ export function addProject(data){
     throw("scanningOptions is null")
   }
 
-  return api.addProject(data).then(() => {
+  return api.addProject(data)
+  .then((response) => {
     console.log("Project added OK");
-    return new Promise(()=> {return "Project added"}) 
+    return Promise.resolve({data:response, message:"Project added"}) 
   })
   .catch ((error) =>  {
     console.error("Project added NOK: ", error);
@@ -127,10 +128,9 @@ export function updateProject(data){
 
 
   return api.updateProject(dataConverted)
-  
-  .then(() => {
-    console.log("Project updated OK");
-    new Promise(()=>{return "Project updated"})
+  .then((response) => {
+    console.log("Project updated OK", response);
+    return Promise.resolve({data:response, message:"Project updated"} )
   })
   .catch ((error) =>  {
     console.error("Project updated NOK: ", error);
