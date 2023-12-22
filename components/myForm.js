@@ -9,7 +9,6 @@ import { FormElements } from "@/components/myFormElements";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
 import { Debug } from "@/Components/Debug";
-import { randomInt } from "crypto";
 
 // import { Debug } from "@/components/Debug";
 
@@ -99,7 +98,7 @@ export function MyForm(props){
           }
         }
       } else {
-        formitem['name']="empty_"+String(randomInt(100))
+        formitem['name']="empty_"+String(Math.floor(Math.random() * 100)) // j'aime pas mais j'ai pas mieux pour le moment
       }
         // console.log("-+-+-+---------------------------------");
         // console.log("myform: ", myform);
@@ -292,7 +291,7 @@ export function MyForm(props){
                         color="primary"
                         // onClick={props.onChange}
 
-                        disabled={!isDataModified}
+                        isDisabled={!isDataModified}
                       >
                         {isUpdating ? 'Updating...' : 'Submit'}
                       </Button>
