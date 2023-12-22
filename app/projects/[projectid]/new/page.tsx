@@ -107,7 +107,7 @@ const NewSample : FC<pageProps> = (params) => {
 
         const data = {
             name:value.sample_id, //"Sample XXXX",
-            metadataModelId:"6565df171af7a84541c48b20",
+            metadataModelId: "6565df171af7a84541c48b20",
             data:value,
         }
 

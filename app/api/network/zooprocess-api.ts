@@ -1,5 +1,6 @@
 import { string } from 'prop-types';
 import api from './axiosInstanse';
+import Samples from '@/app/projects/[projectid]/@samples/page';
 
 
 export interface Drive {
@@ -213,8 +214,34 @@ export async function addSample(projectId:string, data:Sample){
         console.log("addSample response: ", response);
         return response.data;
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        console.log("addProject Error: ", error.toJSON());
+        if (error.response) {
+
+          if (error.response.status == "409"){
+            const msg = {
+              //error:{
+                message: error.response.data || "Duplicate value"
+              //}
+            }
+            throw(msg)
+          }
+
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
         throw(error);
       });
 
@@ -236,4 +263,51 @@ export async function addSample(projectId:string, data:Sample){
     console.log("getSamples response: ", response);
 
     return response.data; 
+}
+
+
+export async function getSample(url:string){
+
+  console.log("getSample(",url,")")
+
+  const response = await api.get<Sample>(url);
+
+  console.log("getSample response: ", response);
+
+  return response.data; 
+}
+
+
+export async function updateSample(projectId:string, sampleId:string, data:Samples){
+
+  console.log("api addSmaple projectId:", projectId);
+  console.log("api addSmaple sampleId:", sampleId);
+  console.log("api addSmaple data:", data);
+
+  return await api.put(`/projects/${projectId}/samples/${sampleId}`, data)
+      .then(function (response) {
+        console.log("updateSample response:", response);
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log("updateSample error:", error.toJSON());
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+        throw(error);
+      });
+
 }
