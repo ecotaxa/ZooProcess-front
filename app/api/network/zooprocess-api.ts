@@ -35,6 +35,7 @@ export interface Metadata {
 
 export interface SubSample {
   id: string
+  name: string
   metadata: Array<Metadata>
   scan: Array<Scan>
 }
@@ -45,11 +46,12 @@ export interface Scan {
   metadata: Array<Metadata>
 }
 export interface Sample {
-    id: string,
-    name: string,
+    id: string
+    name: string
     metadata: Array<Metadata>
     subSamples: Array<SubSample>
 }
+
 
 // [
 //     {
@@ -77,6 +79,10 @@ export interface Projects {
 
 export interface Samples {
     data:Array<Sample>
+}
+
+export interface SubSamples {
+  data:Array<SubSample>
 }
 
 // export async function getProject(id:string){
@@ -265,6 +271,22 @@ export async function addSample(projectId:string, data:Sample){
     return response.data; 
 }
 
+export async function getSubSamples(url:string){
+
+  // console.log("getSamples(",projectId,")")
+  console.log("getSamples(",url,")")
+
+  // throw (projectId)
+
+  // const pageSize = 12;
+  // const response = await api.get<Projects>(`/projects?limit=${pageSize}&offset=${pageSize * (page - 1)}`);
+  // const response = await api.get<Samples>(`/projects/${projectId}/samples`);
+  const response = await api.get<SubSamples>(url);
+
+  console.log("getSamples response: ", response);
+
+  return response.data; 
+}
 
 export async function getSample(url:string){
 
