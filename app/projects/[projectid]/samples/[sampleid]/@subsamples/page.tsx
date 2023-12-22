@@ -38,7 +38,7 @@ const SubSamples : FC<pageProps> = (params) => {
     const sampleId = params.sampleid ;
 
     const { subsamples, isLoading, isError } = useSubSamples(projectId,sampleId)
-    const [ subsampleList, setSampleList ] = useState(subsamples)
+    const [ subsampleList, setSubSampleList ] = useState(subsamples)
 
     // const formatData = (data:any) => {
     //   console.log("formatData: ",data);
@@ -95,7 +95,7 @@ const SubSamples : FC<pageProps> = (params) => {
       console.log("samples has changed", subsamples);
       const data = formatData(subsamples)
       // const data = samples
-      setSampleList(data);
+      setSubSampleList(data);
     } , [subsamples])
 
 
