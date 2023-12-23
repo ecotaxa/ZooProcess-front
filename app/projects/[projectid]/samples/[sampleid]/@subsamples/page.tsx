@@ -19,6 +19,7 @@ interface pageProps {
   // params: {
     projectid: string,
     sampleid: string
+    subsampleid: string
   // }
 }
 
@@ -30,12 +31,14 @@ const SubSamples : FC<pageProps> = (params) => {
   console.log("Samples params: ", params);
   console.log("Samples params: ", params.projectid);
   console.log("Samples params: ", params.sampleid);
+  console.log("SubSamples params: ", params.subsampleid);
 
   // const sampleName = "mon Sample";
 
     // const sampleid = 10;
     const projectId = params.projectid ;
     const sampleId = params.sampleid ;
+    const subsampleId = params.subsampleid ;
 
     const { subsamples, isLoading, isError } = useSubSamples(projectId,sampleId)
     const [ subsampleList, setSubSampleList ] = useState(subsamples)
@@ -117,13 +120,13 @@ const SubSamples : FC<pageProps> = (params) => {
                   >
                   <CardHeader className="flex flex-row-reverse py-3">
                       <Button 
-                          href={`/projects/${projectId}/new`}
+                          href={`/projects/${projectId}/samples/${sampleId}/subsamples/new`}
                           as={Link}
                           color="primary"
                           // showAnchorIcon
                           variant="solid"
-                          data-testid="newProjectBtn"
-                          >Add new sample</Button>
+                          data-testid="newSubSampleBtn"
+                          >Scan sub sample</Button>
                   </CardHeader>
                   <CardBody>
                       <ShowData/>

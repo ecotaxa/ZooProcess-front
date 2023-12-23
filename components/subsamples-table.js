@@ -13,45 +13,39 @@ const columns = [
     // {name: "DRIVE", uid: "drive"},
     {name: "NAME", uid: "name"},
     // {name: "SAMPLE", uid: "sample"},
-    {name: "SCAN", uid: "scan"},
-    {name: "FRACTION/SUBSAMPLE", uid:"fraction"},
-    {name: "CREATE AT", uid: "createdAt"},
-    {name: "UPDATED AT", uid: "updatedAt"},
-    {name: "STATUS", uid: "status"},
+    {name: "SCAN OPERATOR", uid: "operator"},
+    {name: "FRACTION ID", uid:"fractionId"},
+    {name: "FRAC MIN", uid: "fracmin"},
+    {name: "FRAC SUP", uid: "fracsup"},
+    {name: "OBSERVATION", uid: "obs"},
+    {name: "QC", uid: "qc"},
     {name: "ACTIONS", uid: "actions"},
   ];
 
 export function SamplesTableNextUI(props) {
-    const {projectId, samples=[]} = props
+    const {projectId, sampleId, subsamples=[]} = props
 
     console.log("SamplesTable projectId= ", projectId);
-    console.log("SamplesTable samples= ", samples);
+    console.log("SamplesTable sampleId= ", sampleId);
+    console.log("SamplesTable subsamples= ", subsamples);
 
     const updateddata = samples.map( (sample) => { sample['key']=sample.id ; return sample;} )
-    console.log("SamplesTableNextUI updateddata: ",updateddata)
+    console.log("SubSamplesTableNextUI updateddata: ",updateddata)
     const [rows, setRows] = useState(updateddata)
 
 
-    const StatusString = (status) => {
-        console.log("Status: ", status);
+
+    const QCString = (status) => {
+        console.log("QC: ", status);
         switch (status) {
             case "TODO":
-            case undefined: return "Not Done";
-            case "FULLY_SCANNED": return "fully scanned";
-            case "NOT_FULLY_SCANNED": return "not fully scanned";
-            case "PROCESS": return "process";
-            case "PROPORTION_OF_MULTIPLE": return "proportion of multiple";
+            case "UNPROCESSED":
+            case undefined: return "Unprocesssed";
+            case "HIGHN#MULTIPLE": return "High number of multiple";
             default: return "Error";
         }
     }
 
-
-    // const onDetail = (projectId,sampleid) => {
-    //     router.push({
-    //         pathname: '/projects/[pid]/samples/[sid]',
-    //             query: { pid: projectId , sid: sampleid },                                         
-    //     })
-    // }
 
 
     const renderCell = React.useCallback((sample, columnKey) => {
@@ -67,12 +61,6 @@ export function SamplesTableNextUI(props) {
                 <p className="text-bold text-sm capitalize">{cellValue}</p>
             </div>
             );
-        // case "drive":
-        //     return (
-        //     <div className="flex flex-col">
-        //         <p className="text-bold text-sm capitalize">{cellValue}</p>
-        //     </div>
-        //     );
             
         case "name":
             return (
@@ -81,41 +69,23 @@ export function SamplesTableNextUI(props) {
                 </div>
             );
             
-        // case "sample":
-        //         return (
-        //             <div className="flex flex-col" >
-        //                 <p className="text-bold text-sm capitalize">{cellValue}</p>
-        //             </div>
-        //         );        
-        // case "scan":
-        //     return (
-        //         <div className="flex flex-col" >
-        //             <p className="text-bold text-sm capitalize">{cellValue}</p>
-        //         </div>
-        //     );
-            
-        // case "createdAt":
-        //             console.log("createdAt - createdAt")
-        //         return (
-        //             <div className="flex flex-col" >
-        //                 <p className="text-bold text-sm capitalize">{formatDate(cellValue)}<br/>{formatTime(cellValue)}</p>
-        //             </div>
-        //         );
+        case "fractionid":
+        case "fracsup":
+        case "fracmin":
+        case "obs":
+        return (
+                <div className="flex flex-col" >
+                    <p className="text-bold text-sm capitalize">{cellValue}</p>
+                </div>
+            );
+  
 
-        // case "updatedAt":
-        // return (
-        //     <div className="flex flex-col" >
-        //         <p className="text-bold text-sm capitalize">{formatDate(cellValue)}<br/>{formatTime(cellValue)}</p>
-
-        //     </div>
-        // );    
-
-        // case "status":
-        //     return (
-        //         <div className="flex flex-col" >
-        //             <p className="text-bold text-sm capitalize">{StatusString(cellValue)}</p>
-        //         </div>
-        //     );   
+        case "qc":
+            return (
+                <div className="flex flex-col" >
+                    <p className="text-bold text-sm capitalize">{QCString(cellValue)}</p>
+                </div>
+            );   
 
         case "actions":
             return (

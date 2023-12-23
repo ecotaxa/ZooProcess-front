@@ -397,29 +397,51 @@ export const sampleid_formElements=[
     
     export const fraction_inputFormElments=[
     {
-        title:"Fraction",
-        section:
-        [
-    
+        title:"Metadata",
+        section:[
         { tag:"TextField", name:"scan_id", type:"text", placeholder:"Scan ID", label:'Scan ID',
             variant:"outlined", disabled:true,
             xs:12, sm:6, fullWidth:true, value:1
         },
+        { tag:"TextField", name:"sample_id", type:"text", placeholder:"Sample ID", label:'Sample ID',
+            variant:"outlined", disabled:true,
+            xs:12, sm:6, fullWidth:true, value:1
+        },
+        { tag:"TextField", name:"scanning_operator", type:"text", 
+            placeholder:"Scanning operator", label:'Scanning operator',
+            variant:"outlined", required:true, 
+            xs:12, sm:12, fullWidth:true
+        },
+        { tag:"TextField", name:"observation", type:"text", 
+            placeholder:"Observation", label:'Observation',
+            variant:"outlined", required:true, 
+            xs:12, sm:12, fullWidth:true
+        },
+        ]
+    },
+    {
+        title:"Fraction",
+        section:
+        [
         { tag:"TextField", name:"fraction_id", type:"text", 
-            placeholder:"Fraction ID", label:'Fraction ID',
+            placeholder:"Could be d1,d2, tot...", label:'Fraction ID',
             variant:"outlined", required:false, disabled:true,
             xs:12, sm:6, fullWidth:true, value:1
         },
-    
+        { tag:"TextField", name:"fraction_number", type:"text", 
+            placeholder:"Fraction Number", label:'Fraction Number',
+            variant:"outlined", required:false, disabled:true,
+            xs:12, sm:6, fullWidth:true, value:1
+        },
         { tag:"TextField", name:"fraction_min_mesh", type:"number", 
-            placeholder:"Fraction min mesh (um)", label:'min mesh',
+            placeholder:"Fraction min mesh", label:'min mesh',
             variant:"outlined", required:true, 
             xs:12, sm:6, fullWidth:true,
             endAdornment:{pos:'end', text:'µm'},
             minValue:0, helperText:'value greather than or equal to zero'
         },
         { tag:"TextField", name:"fraction_max_mesh", type:"number", 
-            placeholder:"Fraction max mesh (um)", label:'max mesh',
+            placeholder:"Fraction max mesh", label:'Max meshsubmethod',
             variant:"outlined", required:true,
             xs:12, sm:6, fullWidth:true,
             endAdornment:{pos:'end', text:'µm'},
@@ -445,11 +467,7 @@ export const sampleid_formElements=[
             xs:12, sm:6, fullWidth:true
         },
     
-        { tag:"TextField", name:"scanning_operator", type:"text", 
-            placeholder:"Scanning operator", label:'Scanning operator',
-            variant:"outlined", required:true, 
-            xs:12, sm:12, fullWidth:true
-        },
+
         ]
     }
     ]
