@@ -113,10 +113,10 @@ export const sampleid_formElements=[
             fullWidth:true, xs:12, 
             sm:3, 
             // sm:12, // to debug easely
-            sx:{m:0,minWith:150},
+            sx:{m:0, minWith:150},
             choice:[
-                {id:1,value:"North"},
-                {id:2,value:"South"}
+                {id:1, value:"North"},
+                {id:2, value:"South"}
             ]
         },
         { tag:"TextField",name:"longitude_degree", type:"number", 
@@ -135,10 +135,10 @@ export const sampleid_formElements=[
         { tag:"Select",name:"longitude_ew", type:"select", 
             placeholder:"E/O", label:'Longitude (N/S)',
             variant:"outlined", fullWidth:true, required:true, 
-            xs:12, sm:3, sx:{m:0,minWith:150},
+            xs:12, sm:3, sx:{m:0, minWith:150},
             choice:[
-                {id:1,value:"East"},
-                {id:2,value:"West"}
+                {id:1, value:"East"},
+                {id:2, value:"West"}
             ]
         },
     ]
@@ -149,12 +149,12 @@ export const sampleid_formElements=[
             { tag:"Select", name:"tow_type", type:"select", 
                 placeholder:"Choose Tow type", label:'Tow type',
                 variant:"outlined", required:true, 
-                fullWidth:true, xs:12, sm:12, sx:{m:0,minWith:150},
+                fullWidth:true, xs:12, sm:12, sx:{m:0, minWith:150},
                 choice:[
-                    {id:1,value:"Oblique"},
-                    {id:2,value:"Horizontal"},
-                    {id:3,value:"Vertical"},
-                    {id:4,value:"Other sampling method"}
+                    {id:1, value:"Oblique"},
+                    {id:2, value:"Horizontal"},
+                    {id:3, value:"Vertical"},
+                    {id:4, value:"Other sampling method"}
                 ]
             },
             { tag:"TextField", name:"net_sampling_type", 
@@ -287,8 +287,8 @@ export const sampleid_formElements=[
             variant:"outlined", required:true, 
             xs:12, sm:3, sx:{m:0,minWith:150}, fullWidth:true,
             choice:[
-                {id:1,value:"East"},
-                {id:2,value:"West"}
+                {id:1, value:"East"},
+                {id:2, value:"West"}
             ]
         },
         ]
@@ -447,14 +447,14 @@ export const sampleid_formElements=[
             endAdornment:{pos:'end', text:'µm'},
             minValue:0, helperText:'value greather than or equal to zero'
         },
-        { tag:"TextField", name:"other_reference", type:"number", 
+        { tag:"TextField", name:"spliting_ratio", type:"number", 
             placeholder:"Fraction spliting ratio x (1/x)", label:'Spliting ratio',
             variant:"outlined", required:true, 
             xs:12, sm:12, fullWidth:true,
             endAdornment:{pos:'end', text:'1/x'},
             minValue:0, helperText:'value greather than or equal to zero'
         },    
-        { tag:"TextField", name:"other_reference", type:"text", 
+        { tag:"TextField", name:"remark_on_fraction", type:"text", 
             placeholder:"Remark on fraction (no special char !)", label:'Remark on fraction',
             variant:"outlined", required:true, 
             xs:12, sm:6, fullWidth:true,
