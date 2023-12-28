@@ -1,17 +1,18 @@
 "use client"
 
 import Head from 'next/head';
-import { Box, Container, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { FC } from "react";
 
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 // import { ProjectsTable } from 'src/sections/projects/projects-table';
 import { MyForm } from '@/components/myForm';
-import { fraction_inputFormElments, inputFormElements } from '@/config/formElements';
+import { fraction_inputFormElments } from '@/config/formElements';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { addSample } from '@/app/api/samples';
+// import { addSample } from '@/app/api/samples';
 import { Debug } from '@/Components/Debug';
+import { addSubSample } from '@/app/api/subsamples';
  
 
 
@@ -85,7 +86,7 @@ const NewSubSample : FC<pageProps> = (params) => {
 
 
     // const [stringifiedData,setData] = useState(JSON.stringify(testData, null, 2))
-    const [stringifiedData,setData] = useState("")
+    const [stringifiedData, setData] = useState("")
     // var stringifiedData = "" ;
 
     const prepareData = (data:any) => {
@@ -94,7 +95,7 @@ const NewSubSample : FC<pageProps> = (params) => {
             ...data,
             sampleId
         }
-        console.log("newData: " , newData);
+        console.log("newData: ", newData);
         return newData;
     }
 
@@ -109,25 +110,32 @@ const NewSubSample : FC<pageProps> = (params) => {
         // const newData = prepareData(value)
 
         const data = {
-            name:value.subsample_id, //"Sample XXXX",
+            name: value.scan_id, //"Sample XXXX",
             metadataModelId: "", //"6565df171af7a84541c48b20",
-            data:value,
+            data: value,
         }
 
         console.log("newData: ", data);
         // try {
 
-            console.log("----- projectId : ",projectId);
-            console.log("----- sampleId : ",sampleId);
+            console.log("----- projectId: ", projectId);
+            console.log("----- sampleId: ", sampleId);
             // console.log("----- params.projectid : ",params.projectid);
             // console.log("----- params : ",params);
             // console.log("----- params.params : ",params.params);
 
             // addSample(projectId, data)
-            return addSample({
+            return addSubSample({
                 projectId, // : params.params.projectid,
                 sampleId, 
                 data
+            })
+            .then((response) => {
+                console.log("Go To the scan page" )
+                router.push(`${response.data.id}`)
+            })
+            .catch((error) => {
+                return Promise.reject(error)
             })
 
         // }
