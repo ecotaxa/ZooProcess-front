@@ -124,6 +124,13 @@ const NewSample : FC<pageProps> = (params) => {
                 projectId, // : params.params.projectid, 
                 data
             })
+            .then((response) => {
+                console.log("Go To the sample page" )
+                router.push(`${response.data.id}`)
+            })
+            .catch((error) => {
+                return Promise.reject(error)
+            })
 
         // }
         // catch (e:any){
