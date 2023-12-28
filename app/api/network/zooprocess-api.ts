@@ -221,7 +221,51 @@ export async function addSample(projectId:string, data:Sample){
         return response.data;
       })
       .catch((error) => {
-        console.log("addProject Error: ", error.toJSON());
+        console.log("addSample Error: ", error.toJSON());
+        if (error.response) {
+
+          if (error.response.status == "409"){
+            const msg = {
+              //error:{
+                message: error.response.data || "Duplicate value"
+              //}
+            }
+            throw(msg)
+          }
+
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+        throw(error);
+      });
+
+  }
+
+  export async function addSubSample(projectId:string, sampleId: string, data:Sample){
+
+    console.log("api addSubSmaple projectId:", projectId);
+    console.log("api addSubSmaple sampleId:", sampleId);
+    console.log("api addSubSample data:", data);
+
+    return await api.post(`/projects/${projectId}/samples/${sampleId}/subsamples`, data)
+      .then(function (response) {
+        console.log("addSubSample response: ", response);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log("addSubSample Error: ", error.toJSON());
         if (error.response) {
 
           if (error.response.status == "409"){
