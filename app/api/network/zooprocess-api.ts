@@ -27,6 +27,14 @@ export interface Project {
 }
 
 
+export interface MetadataTemplate {
+  id: string
+  name: string
+  description: string
+  // countSample: number
+  // countSubSample: number 
+}
+
 export interface Metadata {
     key: string
     value: string
@@ -116,6 +124,18 @@ export async function getProject(url:string){
 
   return response.data; 
 }
+
+
+export async function getMetadata(url:string){
+
+  const response = await api.get<MetadataTemplate>(url);
+
+  console.log("getMetadata response: ", response);
+
+  return response.data; 
+}
+
+
 
 // export async function getProjectMetadata(url:string){
 
