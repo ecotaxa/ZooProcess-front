@@ -3,8 +3,8 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button
 // import { useRouter } from "next/navigation";
 // import { Button } from "@mui/material";
 
-import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
-import { key } from '@/app/api/key';
+// import { formatDate , formatTime }  from '@/api/formatDateAndTime.js';
+import { key } from '@/api/key';
 
 import { Debug } from '@/Components/Debug';
 
@@ -22,15 +22,15 @@ const columns = [
     {name: "ACTIONS", uid: "actions"},
   ];
 
-export function SamplesTableNextUI(props) {
+export function SubSamplesTable(props) {
     const {projectId, sampleId, subsamples=[]} = props
 
-    console.log("SamplesTable projectId= ", projectId);
-    console.log("SamplesTable sampleId= ", sampleId);
-    console.log("SamplesTable subsamples= ", subsamples);
+    console.log("SubSamplesTable projectId= ", projectId);
+    console.log("SubSamplesTable sampleId= ", sampleId);
+    console.log("SubSamplesTable subsamples= ", subsamples);
 
-    const updateddata = samples.map( (sample) => { sample['key']=sample.id ; return sample;} )
-    console.log("SubSamplesTableNextUI updateddata: ",updateddata)
+    const updateddata = subsamples.map( (sample) => { sample['key']=sample.id ; return sample;} )
+    console.log("SubSamplesTable updateddata: ",updateddata)
     const [rows, setRows] = useState(updateddata)
 
 
@@ -96,7 +96,7 @@ export function SamplesTableNextUI(props) {
                     size="sm" 
                     color="primary" 
                     as={Link}
-                    href={`/projects/${projectId}/samples/${sample.id}`}
+                    href={`/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}`}
                     // onPress={ (projectid,sampleid=sample.id) => onDetail(projectid,sampleid) }                
                 >
                     Scan Sub-Sample
@@ -122,7 +122,7 @@ export function SamplesTableNextUI(props) {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={samples}>
+      <TableBody items={subsamples}>
         {(item) => (
           <TableRow key={key(item.id,"tr")}>
             {(columnKey) => <TableCell key={key(item.id,columnKey)}>{renderCell(item, columnKey)}</TableCell>}

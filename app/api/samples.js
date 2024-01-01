@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 
-import * as api from '@/app/api/network/zooprocess-api' 
+import * as api from '@/network/zooprocess-api' 
 
 export function useSamples(projectId) {
 

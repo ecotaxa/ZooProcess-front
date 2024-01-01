@@ -5,13 +5,13 @@ import Head from 'next/head';
 // import { Box, Button, Card, CardActions, CardContent, Container, Divider, Stack, Typography } from '@mui/material';
 
 
-import { SamplesTableNextUI as SamplesTable } from '@/components/samples-table'
+import { SubSamplesTable } from '@/components/subsamples-table'
 import { Button, Card, CardBody, CardHeader, Spacer, Link } from '@nextui-org/react';
 import { MySpinner } from '@/components/mySpinner';
 import { ErrorComponent } from '@/components/ErrorComponent';
 import { FC, useEffect, useState } from 'react';
 
-import { useSubSamples } from '@/app/api/subsamples';
+import { useSubSamples } from '@/api/subsamples';
 // import Project from '../page';
 
 
@@ -19,7 +19,7 @@ interface pageProps {
   // params: {
     projectid: string,
     sampleid: string
-    subsampleid: string
+    //subsampleid: string
   // }
 }
 
@@ -31,16 +31,16 @@ const SubSamples : FC<pageProps> = (params) => {
   console.log("Samples params: ", params);
   console.log("Samples params: ", params.projectid);
   console.log("Samples params: ", params.sampleid);
-  console.log("SubSamples params: ", params.subsampleid);
+  // console.log("SubSamples params: ", params.subsampleid);
 
   // const sampleName = "mon Sample";
 
     // const sampleid = 10;
     const projectId = params.projectid ;
     const sampleId = params.sampleid ;
-    const subsampleId = params.subsampleid ;
+    // const subsampleId = params.subsampleid ;
 
-    const { subsamples, isLoading, isError } = useSubSamples(projectId,sampleId)
+    const { subsamples, isLoading, isError } = useSubSamples(projectId, sampleId)
     const [ subsampleList, setSubSampleList ] = useState(subsamples)
 
     // const formatData = (data:any) => {
@@ -95,7 +95,7 @@ const SubSamples : FC<pageProps> = (params) => {
     }
 
     useEffect( () => { 
-      console.log("samples has changed", subsamples);
+      console.log("sub samples has changed", subsamples);
       const data = formatData(subsamples)
       // const data = samples
       setSubSampleList(data);
@@ -105,7 +105,7 @@ const SubSamples : FC<pageProps> = (params) => {
     const ShowData = () => {
       if (isLoading) return <MySpinner />
       if (isError) return <ErrorComponent error={isError}/>
-      return <SamplesTable projectId={projectId} samples={subsampleList}/>
+      return <SubSamplesTable projectId={projectId} sampleId={sampleId} subsamples={subsampleList}/>
     }
 
   return (

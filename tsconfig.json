@@ -20,7 +20,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/api/*" : ["./app/api/*"],
+      "@/network/*" : ["./app/api/network/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/formatDateAndTime.js"],

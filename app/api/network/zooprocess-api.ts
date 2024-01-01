@@ -1,5 +1,5 @@
 import { string } from 'prop-types';
-import api from './axiosInstanse';
+import api from '@/network/axiosInstanse';
 import Samples from '@/app/projects/[projectid]/@samples/page';
 
 
@@ -338,7 +338,7 @@ export async function addSample(projectId:string, data:Sample){
 export async function getSubSamples(url:string){
 
   // console.log("getSamples(",projectId,")")
-  console.log("getSamples(",url,")")
+  console.log("getSubSamples(",url,")")
 
   // throw (projectId)
 
@@ -347,7 +347,7 @@ export async function getSubSamples(url:string){
   // const response = await api.get<Samples>(`/projects/${projectId}/samples`);
   const response = await api.get<SubSamples>(url);
 
-  console.log("getSamples response: ", response);
+  console.log("getSubSamples response: ", response);
 
   return response.data; 
 }

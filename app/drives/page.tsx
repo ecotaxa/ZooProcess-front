@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { MySpinner } from '@/components/mySpinner'
 import { ErrorComponent } from '@/components/ErrorComponent'
-import { DrivesTable } from '@/components/drives-table'
+import { DrivesTable } from './drives-table'
 import { Button, Card, CardBody, CardHeader, Link, Spacer } from '@nextui-org/react';
-import { useDrives } from '../api/drives';
+import { useDrives } from '@/api/drives';
 
 // import { Projects } from "@/app/api/network/zooprocess-api"
 
@@ -59,7 +59,7 @@ const { drives, isLoading, isError } = useDrives()
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
             <div className="text-center justify-center">
                 <h4 data-testid="title">
-                    Projects
+                    Drives
                 </h4>
                 <Spacer y={5}/>
                 <Card className="inline-block "
