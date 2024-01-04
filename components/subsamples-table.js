@@ -99,7 +99,7 @@ export function SubSamplesTable(props) {
                     href={`/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}`}
                     // onPress={ (projectid,sampleid=sample.id) => onDetail(projectid,sampleid) }                
                 >
-                    Scan Sub-Sample
+                    Sub-Sample Detail
                 </Button>
             </div>
             );
