@@ -35,6 +35,14 @@ export function MyForm(props){
     // const {forms,onChange,onCancel} = props;
     const {forms,value,title,subtitle} = props;
 
+    const button = props.button
+
+    const btn = {
+      cancel:button?.cancel||"Cancel",
+      submit:button?.submit||"Submit",
+      submitting:button?.updating||'Updating...',
+    }
+
     console.log("MyForm(props): ", props );
 
     console.log("MyForm : " , forms);
@@ -293,7 +301,7 @@ export function MyForm(props){
 
                         isDisabled={!isDataModified}
                       >
-                        {isUpdating ? 'Updating...' : 'Submit'}
+                        {isUpdating ? btn.updating : btn.submit }
                       </Button>
                       <Spacer x={2}/>
 
@@ -302,7 +310,7 @@ export function MyForm(props){
                         variant="flat" 
                         color="primary" 
                         onClick={cancel}
-                      >Cancel</Button>
+                      >{btn.cancel}</Button>
      
                       <Spacer x={2}/>
 

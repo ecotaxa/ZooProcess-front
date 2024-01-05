@@ -153,6 +153,10 @@ const NewSubSample : FC<pageProps> = (params) => {
         // })
     }
 
+    const formButtons = {
+        submit:'Scan'
+    }
+
     return (
         <>
         <Head>
@@ -173,7 +177,8 @@ const NewSubSample : FC<pageProps> = (params) => {
                         project={projectId}
                         sample={sampleId}
                         onChange={onChange} 
-                        onCancel={onCancel}/>
+                        onCancel={onCancel}
+                        button={formButtons}/>
                 </Stack>
             </div>
         </section>
