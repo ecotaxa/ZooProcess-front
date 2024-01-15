@@ -34,6 +34,8 @@ export function FormElements(props) {
         case "TextField":
             return (<MyTextField {...props} key={props.name}
                 project={props.project}
+                sample={props.sample}
+                subsample={props.subsample}
                 onChange={props.onChange}/>)
 
             if (mui ){ //|| props.minLength){

@@ -86,15 +86,45 @@ export function MyTextField(props) {
     if (props.endAdornment?.text) { opt['endContent'] = props.endAdornment.text}
     if (props.readonly) { opt['isReadOnly'] = true}
 
-    if (props.fn2 && props.project) { 
-        opt['TOTOT'] = 'TOTO' 
+    // if (props.fn2 && props.project) { 
+    if (props.fn2) { 
+            // opt['TOTOT'] = 'TOTO' 
 
-        const param = { project : props.project }
+        console.log("props: ", props)
+
+        console.log("props.fn2.params:", props.fn2.params)
+        console.log("props.project:", props.project)
+        console.log("props.sample:", props.sample)
+        console.log("props['project']:", props['project'])
+
+        // try {
+        //     const json = JSON.parse(props.fn2.params)
+        //     console.log("json:",json)
+        // }
+        // catch(e){
+        //     console.log("json error:",e)
+        // }
+
+        console.log("slice(-1): ",props.fn2.params.slice(0,-1))
+        console.log("slice(1): ",props.fn2.params.slice(1).slice(0,-1))
+
+        const params = props.fn2.params.slice(1).slice(0,-1).split(',')
+        console.log("params: ",params)
+
+        // const param = { project: props.project }
+        let param = {}
+        params.forEach(element => {
+            if (  ! element in props ){
+                throw (`params error in fn2. ${element} don't exist`)
+            }
+            param[element] = props[element]
+        });
+        console.log("param:", param)
+
 
         const prefix = new Function( props.fn2.params , props.fn2.func );
         opt['prefix'] = prefix(param) // ("Toto");
         opt['startContent'] = prefix(param)
-
     }
     
     // if (props.helperText) { opt['errorMessage'] = props.helperText }

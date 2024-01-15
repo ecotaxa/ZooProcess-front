@@ -121,6 +121,8 @@ export function MyForm(props){
             >
               <FormElements {...formitem} key={formitem.name}
                 project={props.project}
+                sample={props.sample}
+                subsample={props.subsample}
                 onChange={onChangeElement}
               />
             </Grid>

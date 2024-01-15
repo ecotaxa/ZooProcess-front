@@ -124,9 +124,14 @@ const Metadata : FC<pageProps> = (params) => {
     // return <SamplesTable projectId={projectId} samples={sampleList}/>
     
     //const projectMetadata = 
-    console.log("Sample: ",sample)
+    console.log("Sample: ", sample)
 
-    form = { ...form , value: fillSample(sample)}
+    form = { 
+      ...form,
+      value: fillSample(sample),
+      project: projectId,
+      sample: sampleId
+    }
     // form['value'] = fillProject(project)
     // setForm(f)
     // form['value'] = projectMetadata;

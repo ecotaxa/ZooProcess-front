@@ -401,11 +401,13 @@ export const sampleid_formElements=[
         section:[
         { tag:"TextField", name:"scan_id", type:"text", placeholder:"Scan ID", label:'Scan ID',
             variant:"outlined", disabled:true,
-            xs:12, sm:6, fullWidth:true, value:1
+            xs:12, sm:12, fullWidth:true, value:1,
+            fn2: { params:"{project,sample}", func:'return String(project)+"_"+String(sample)+"_"' }
         },
         { tag:"TextField", name:"sample_id", type:"text", placeholder:"Sample ID", label:'Sample ID',
             variant:"outlined", disabled:true,
-            xs:12, sm:6, fullWidth:true, value:1
+            xs:12, sm:12, fullWidth:true, value:1,
+            fn2: { params:"{project}", func:'return String(project)+"_"' }
         },
         { tag:"TextField", name:"scanning_operator", type:"text", 
             placeholder:"Scanning operator", label:'Scanning operator',

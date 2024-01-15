@@ -86,7 +86,11 @@ const Metadata : FC<pageProps> = (params) => {
     
     //const projectMetadata = 
 
-    form = { ...form , value:fillProject(project)}
+    form = { 
+      ...form, 
+      value:fillProject(project),
+      project:{projectId}
+    }
     // form['value'] = fillProject(project)
     // setForm(f)
     // form['value'] = projectMetadata;
