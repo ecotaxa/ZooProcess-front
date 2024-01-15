@@ -106,7 +106,7 @@ const NewSample : FC<pageProps> = (params) => {
         // const newData = prepareData(value)
 
         const data = {
-            name:value.sample_id, //"Sample XXXX",
+            name: `${projectId}_${value.sample_id}`, //"Sample XXXX",
             metadataModelId: "6565df171af7a84541c48b20",
             data:value,
         }
@@ -115,6 +115,7 @@ const NewSample : FC<pageProps> = (params) => {
         // try {
 
             console.log("----- projectId : ",projectId);
+            console.log("----- name : ", data.name);
             // console.log("----- params.projectid : ",params.projectid);
             // console.log("----- params : ",params);
             // console.log("----- params.params : ",params.params);
@@ -126,7 +127,7 @@ const NewSample : FC<pageProps> = (params) => {
             })
             .then((response) => {
                 console.log("Go To the sample page" )
-                router.push(`${response.data.id}`)
+                router.push(`samples/${response.data.id}`)
             })
             .catch((error) => {
                 return Promise.reject(error)

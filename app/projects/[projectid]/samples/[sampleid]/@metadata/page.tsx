@@ -31,21 +31,59 @@ const Metadata : FC<pageProps> = (params) => {
   const { sample, isLoading, isError } = useSample(projectId, sampleId)
   // const [ sampleList, setSampleList ] = useState(project)
 
-  const fillSample = (sample:any) : any => { 
+
+  type MetadataType = {
+    id: String
+    name: string
+    type: String
+    value: String
+    sample_id: String
+  }
+
+  type MetadataModel = {
+    id: string
+    description: String
+    name: String
+    value:String
+  }
+
+  type Sample = {
+    id: string
+    metadata: Array<MetadataType>
+    metadataModel: MetadataModel
+    name: string
+    projectID: string
+    subsample: Array<any>
+  }
+
+  type DataReturn = Map<string,any>
+
+  const fillSample = (sample:Sample) : DataReturn => { 
         console.log("fillSample: ", sample);
         
-        let proj = {
-          //...sample
-            //"sample_id":sample.id,
-            "sample_id": sample.name,
-            // "cdrive":sample.drive,
-            // "drive": sample.drive.id,
-            // "description": sample.description || "",
-            // "acronym": sample.acronym || "",
-            // "ecotaxa_project_title": sample.ecotaxa?.name || "",
-            // "ecotaxa_project": sample.ecotaxa?.projectId || "",
-            // "scanningOptions":sample.scanningOptions || 0
-      }
+
+        // let proj = {
+        //   //...sample
+        //     //"sample_id":sample.id,
+        //     "sample_id": sample.name,
+        //     // "cdrive":sample.drive,
+        //     // "drive": sample.drive.id,
+        //     // "description": sample.description || "",
+        //     // "acronym": sample.acronym || "",
+        //     // "ecotaxa_project_title": sample.ecotaxa?.name || "",
+        //     // "ecotaxa_project": sample.ecotaxa?.projectId || "",
+        //     // "scanningOptions":sample.scanningOptions || 0
+        // }
+
+        let proj: any = {}
+
+        sample.metadata.forEach((element:MetadataType) => {
+          if ( element.type == 'number'){
+            proj[element.name] = Number(element.value)
+          } else {
+            proj[element.name] = element.value
+          }
+        });
 
       return proj;
     }
