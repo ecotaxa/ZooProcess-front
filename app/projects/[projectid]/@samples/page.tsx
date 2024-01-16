@@ -114,6 +114,7 @@ const Samples : FC<pageProps> = (params) => {
                   >
                   <CardHeader className="flex flex-row-reverse py-3">
                       <Button 
+                          // href={`/projects/${projectId}/samples/new`} cannot open this page ????
                           href={`/projects/${projectId}/new`}
                           as={Link}
                           color="primary"
