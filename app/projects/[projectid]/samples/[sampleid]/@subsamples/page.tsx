@@ -115,23 +115,23 @@ const SubSamples : FC<pageProps> = (params) => {
                   Samples {projectId}
               </h1>
               <Spacer y={5}/>
-              <Card className="inline-block "
+              <Card 
+                  className="inline-block "
                   data-testid="projectCard" 
-                  >
-                  <CardHeader className="flex flex-row-reverse py-3">
-                      <Button 
-                          href={`/projects/${projectId}/samples/${sampleId}/subsamples/new`}
-                          as={Link}
-                          color="primary"
-                          // showAnchorIcon
-                          variant="solid"
-                          data-testid="newSubSampleBtn"
-                          >Scan sub sample</Button>
-                  </CardHeader>
-                  <CardBody>
-                      <ShowData/>
-                  </CardBody>
-
+                >
+                <CardHeader className="flex flex-row-reverse py-3">
+                    <Button 
+                      href={`/projects/${projectId}/samples/${sampleId}/subsamples/new`}
+                      as={Link}
+                      color="primary"
+                      // showAnchorIcon
+                      variant="solid"
+                      data-testid="newSubSampleBtn"
+                      >Scan sub sample</Button>
+                </CardHeader>
+                <CardBody>
+                  <ShowData/>
+                </CardBody>
               </Card> 
           </div>
       </section>
