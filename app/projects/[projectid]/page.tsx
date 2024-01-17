@@ -39,7 +39,7 @@ const Project : FC<pageProps> = ({params}) => {
                 </CardBody>
             </Card>
             <Spacer y={20}/>
-            <Debug {...params}/>
+            <Debug params={params}/>
         {/* <div className="flex w-full flex-col"> */}
             <Tabs aria-label="Options">
                 {/* <Tab key="stats" title="Stats" href={`/projects/${projectid}/stats`}> */}
