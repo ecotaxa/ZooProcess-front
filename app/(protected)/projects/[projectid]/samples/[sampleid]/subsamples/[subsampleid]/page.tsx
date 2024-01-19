@@ -1,3 +1,4 @@
+import { Image } from "@nextui-org/react";
 import { FC } from "react";
 
 
@@ -33,6 +34,16 @@ const SubsamplePage : FC<pageProps> = ({params}) => {
             <div><b>project Id: </b> {projectid}</div>
             <div><b>sample Id: </b> {sampleid}</div>
             <div><b>subsample Id: </b> {subsampleid}</div>
+
+            <Image
+    //   width={300}
+      alt="NextUI hero Image"
+    // src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+    // src="/images/hero-card-complete.jpeg"
+    src="/images/background.jpg"
+    // src="/images/Sipho.jpg"
+    />   
+
         </>
 
     )

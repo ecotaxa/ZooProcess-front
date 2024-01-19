@@ -132,7 +132,9 @@ const NewSubSample : FC<pageProps> = (params) => {
             })
             .then((response) => {
                 console.log("Go To the scan page" )
-                router.push(`${response.data.id}`)
+                // router.push(`${response.data.id}`)
+                const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
+                router.push(path)
             })
             .catch((error) => {
                 return Promise.reject(error)

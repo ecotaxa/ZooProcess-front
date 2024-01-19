@@ -96,6 +96,19 @@ const NewSample : FC<pageProps> = (params) => {
     }
 
     const onChange = (value:any) => {
+
+        const changeValue = (value:Map<string,string>) : Map<string,string> => {
+
+            if ("sample_id" in value.keys && "project" in value.keys){
+                const project = value.get("project") || ""
+                const sample_id = value.get("sample_id") || ""
+                value.set("sample_id", project + sample_id)
+            }
+
+            return value
+
+        }
+
         console.log("App onChange:", value)
         // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
         // stringifiedData = JSON.stringify(value, null, 2);
@@ -106,7 +119,7 @@ const NewSample : FC<pageProps> = (params) => {
         // const newData = prepareData(value)
 
         const data = {
-            name:value.sample_id, //"Sample XXXX",
+            name: `${projectId}_${value.sample_id}`, //"Sample XXXX",
             metadataModelId: "6565df171af7a84541c48b20",
             data:value,
         }
@@ -115,6 +128,7 @@ const NewSample : FC<pageProps> = (params) => {
         // try {
 
             console.log("----- projectId : ", projectId);
+            console.log("----- name : ", data.name);
             // console.log("----- params.projectid : ",params.projectid);
             // console.log("----- params : ",params);
             // console.log("----- params.params : ",params.params);
