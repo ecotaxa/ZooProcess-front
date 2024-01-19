@@ -28,10 +28,11 @@ export default function LoginForm() {
   );
 
   return (
+    <> FORMULAIRE
     <form action={dispatch} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
         {/* <h1 className={`${lusitana.className} mb-3 text-2xl`}> */}
-        <h1 className={`mb-3 text-2xl`}>
+        <h1 className={`mb-3 text-2xl text-black`}>
           Please log in to continue.
         </h1>
         <div className="w-full">
@@ -90,14 +91,25 @@ export default function LoginForm() {
         </div>
       </div>
     </form>
+    </>
   );
 }
  
 function LoginButton() {
   const { pending } = useFormStatus();
  
+  console.log("LoginButton")
+  console.log("pending useFormStatus: ", pending)
+
+
+
   return (
-    <Button className="mt-4 w-full" aria-disabled={pending}>
+    <Button 
+      className="mt-4 w-full" 
+      aria-disabled={pending} 
+      onClick={()=>{console.log("clicked")}}
+      type="submit"
+    >
       Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
     </Button>
   );
