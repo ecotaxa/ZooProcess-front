@@ -28,11 +28,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
-	dashboard,
+	// dashboard,
 	login
 }: {
 	children: React.ReactNode;
-	dashboard: React.ReactNode;
+	// dashboard: React.ReactNode;
 	login: React.ReactNode;
 }) {
 
@@ -41,7 +41,7 @@ export default function RootLayout({
 
 	const Home = () => {
 		// return <>{login}</>
-		return userLogged ? <>{children}{dashboard}</> : <>LOGIN{dashboard}{login}</>
+		return userLogged ? <>{children}</> : <>LOGIN{login}</>
 	}	
 
 	return (
