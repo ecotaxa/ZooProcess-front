@@ -12,13 +12,13 @@ import { MyTextArea } from "./myTextArea"
 // import { TextField, InputAdornment } from "@mui/material"
 // import { DatePicker } from "@mui/x-date-pickers"
 import { MyDatePicker } from "./myDatePicker"
-import { TextareaAutosize } from "@mui/material"
-import { Input, Textarea } from "@nextui-org/input";
-import { Select, SelectItem } from "@nextui-org/react";
+// import { TextareaAutosize } from "@mui/material"
+// import { Input, Textarea } from "@nextui-org/input";
+// import { Select, SelectItem } from "@nextui-org/react";
 // import { DateTimeField, LocalizationProvider, deDE } from "@mui/x-date-pickers";
 // import {  DateTimePicker, LocalizationProvider, deDE } from "@mui/x-date-pickers";
 
-import {MyInput}from "@/components/mySelect4.js"
+// import {MyInput}from "@/components/mySelect4.js"
 import Drives from "./drives";
 
 export function FormElements(props) {
@@ -38,43 +38,43 @@ export function FormElements(props) {
                 subsample={props.subsample}
                 onChange={props.onChange}/>)
 
-            if (mui ){ //|| props.minLength){
-                return (<MyTextField {...props} key={props.name}
-                    onChange={props.onChange}/>)
-            } else {
+            // if (mui ){ //|| props.minLength){
+            //     return (<MyTextField {...props} key={props.name}
+            //         onChange={props.onChange}/>)
+            // } else {
 
-                let opt = {
-                    type: props.type,
-                    defaultValue: props.value,
-                    label: props.label,
-                    placeholder: props.placeholder,
-                    onValueChange: props.onChange
-                }
-                if (props.required == true) { opt['isRequired'] = true}
-                if (props.prefix) { opt['startContent'] = props.prefix }
-                if (props.endAdornment?.text) { opt['endContent'] = props.endAdornment.text}
-                if (props.readonly) { opt['isReadOnly'] = true}
+            //     let opt = {
+            //         type: props.type,
+            //         defaultValue: props.value,
+            //         label: props.label,
+            //         placeholder: props.placeholder,
+            //         onValueChange: props.onChange
+            //     }
+            //     if (props.required == true) { opt['isRequired'] = true}
+            //     if (props.prefix) { opt['startContent'] = props.prefix }
+            //     if (props.endAdornment?.text) { opt['endContent'] = props.endAdornment.text}
+            //     if (props.readonly) { opt['isReadOnly'] = true}
 
-                // console.log("opt: ", opt);
+            //     // console.log("opt: ", opt);
 
-                return (
-                    <Input 
-                        {...opt}
-                        onChange={props.onChange}
-                    />
-                    // <Input 
-                    //     isRequired={true}
-                    //     //value={props.value}
-                    //     type={props.type} 
-                    //     label={props.label} 
-                    //     placeholder={props.placeholder} 
-                    //     endContent={props.endAdornment?.text || ""}
-                    //     startContent="Zooscan_"
-                    //     onChange={props.onChange}
-                    //     //minLength={props.minLength}
-                    // />
-                )
-            }
+            //     return (
+            //         <Input 
+            //             {...opt}
+            //             onChange={props.onChange}
+            //         />
+            //         // <Input 
+            //         //     isRequired={true}
+            //         //     //value={props.value}
+            //         //     type={props.type} 
+            //         //     label={props.label} 
+            //         //     placeholder={props.placeholder} 
+            //         //     endContent={props.endAdornment?.text || ""}
+            //         //     startContent="Zooscan_"
+            //         //     onChange={props.onChange}
+            //         //     //minLength={props.minLength}
+            //         // />
+            //     )
+            // }
         case "Drives":
             return ( <Drives key={props.name}
                 {...props}
