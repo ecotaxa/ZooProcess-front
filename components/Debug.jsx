@@ -13,6 +13,8 @@ export const Debug = ({params,title="debug"}) => {
     //     </div>
     // )
 
+    return (<></>)
+
     const ShowError = () => {
 
         if (!isSelected) { return (<></>) }
