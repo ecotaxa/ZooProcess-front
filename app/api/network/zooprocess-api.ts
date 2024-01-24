@@ -1,6 +1,7 @@
 import { string } from 'prop-types';
 import api from '@/network/axiosInstanse';
 import Samples from '@/app/projects/[projectid]/@samples/page';
+import { AuthError } from 'next-auth';
 
 
 export interface Drive {
@@ -26,6 +27,13 @@ export interface Project {
     ecotaxa?: Ecotaxa
 }
 
+export interface User {
+  id: string,
+  name?: string,
+  email?: string,
+  image?: string,
+  token?: string
+}
 
 export interface MetadataTemplate {
   id: string
@@ -125,6 +133,52 @@ export async function getProject(url:string){
   return response.data; 
 }
 
+
+export async function getUserByEmail(url:string){
+
+  const response = await api.get<User>(url);
+
+  console.log("getUserByEmail response: ", response);
+
+  return response.data; 
+}
+
+import axios from 'axios';
+
+export async function getUserById(url:string, token:string){
+
+  const api = axios.create({
+    baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
+    timeout: 5000,
+    headers:{
+      Authorization: 'Bearer ' + token
+    }
+});
+
+  const response = await api.get<User>(url);
+
+  console.log("getUserByEmail response: ", response);
+
+  return response.data; 
+}
+
+
+export interface Login {
+  email:string,
+  password:string
+}
+
+export async function login(data:Login){
+  return await api.post('/login', data)
+      .then(function (response) {
+        console.log("login response: ", response);
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log(`Login by ${data.email} with error: ${error}`)
+        throw new AuthError({errorOptions:{type:"CredentialsSignin"}})
+      })
+}
 
 export async function getMetadata(url:string){
 

@@ -1,7 +1,9 @@
 import NextAuth from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
 import { authConfig } from '@/auth.config';
-import { z } from 'zod';
+
+
+// import Credentials from 'next-auth/providers/credentials';
+// import { z } from 'zod';
 // import { sql } from '@vercel/postgres';
 // import type { User } from '@/app/lib/definitions';
 // import bcrypt from 'bcrypt';
@@ -45,6 +47,8 @@ import { z } from 'zod';
 export const {
   handlers: { GET, POST },
   auth,
+  signIn, 
+  signOut
 } = NextAuth({
   session: { strategy: "jwt" },
   ...authConfig,

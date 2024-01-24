@@ -4,7 +4,7 @@ import { RegisterSchema } from "@/schemas";
 import { unique } from "next/dist/build/utils";
 import { DevBundlerService } from "next/dist/server/lib/dev-bundler-service";
 import * as z from "zod"
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 import { getUserByEmail } from "@/data/user";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
