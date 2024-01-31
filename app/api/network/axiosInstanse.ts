@@ -2,10 +2,14 @@
 
 // import { auth } from '@/auth';
 import axios, { AxiosHeaderValue, AxiosInstance, CreateAxiosDefaults } from 'axios';
+
 // import { serverHooks } from 'next/dist/server/app-render/entry-base';
 // import { getToken } from './token';
 // import { useSession } from 'next-auth/react';
 // import { cookies } from 'next/headers';
+
+
+import {getSession} from 'next-auth/react'
 
 const axiosInstancev = axios.create({
     baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
@@ -40,7 +44,9 @@ const axiosInstancev = axios.create({
 
 
 
-const axiosInstance = async (token : string|undefined = undefined): Promise<AxiosInstance> => {
+
+
+const axiosInstance = async ({useAuth = true, token = undefined}:{useAuth?:boolean,token?:string|undefined}): Promise<AxiosInstance> => {
 
     // "use server"
 
@@ -52,30 +58,43 @@ const axiosInstance = async (token : string|undefined = undefined): Promise<Axio
         // }
     }
 
-    // const { data : session } = useSession()
 
     // const token2 = cookies().get("currentUser")
 
     // const token =  getToken()
 
     // console.log("axiosInstance token", globalThis.token)
-    // const session = auth()
 
-//     // arg ne fonctionne pas, se mord encore la queue
-    if (token) {
-        // const token = await auth()
-        // const token = ""
-        if (token) {
-            const header : AxiosHeaderValue = "bearer " + token;
-            params = {
-                ...params,
-                headers: {
-                    Authorization: header
-                }
-            }
-        }
+    let token2 = undefined
+    if (useAuth ) {
+        console.log("++ useAuth")
+        const session = await getSession()
+        console.log("-- session: ", session)
+        token2 = session?.user?.token    
+        console.log("token2: ", token2)
     }
 
+    console.log("mes couilles")
+
+    // let tokenToUse = token || token2
+    let tokenToUse = undefined
+    if ( token) tokenToUse = token
+    console.log("mes couilles")
+    if ( token2 ) tokenToUse = token2
+    // console.log("token: ", tokenToUse)
+    if (tokenToUse) {
+        console.log("token: ", tokenToUse)
+
+        const header : AxiosHeaderValue = "bearer " + tokenToUse;
+        params = {
+            ...params,
+            headers: {
+                Authorization: header
+            }
+        }
+    }    
+    console.log("axiosInstance params", params)
+    
     let api = axios.create(params);
     return api
 
