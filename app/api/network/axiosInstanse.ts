@@ -53,39 +53,17 @@ const axiosInstance = async ({useAuth = true, token = undefined}:{useAuth?:boole
     let params : CreateAxiosDefaults<any> = {
         baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
         timeout: 5000,
-        // headers: {
-        //     Authorization: ""
-        // }
     }
 
-
-    // const token2 = cookies().get("currentUser")
-
-    // const token =  getToken()
-
-    // console.log("axiosInstance token", globalThis.token)
-
-    let token2 = undefined
     if (useAuth ) {
-        console.log("++ useAuth")
         const session = await getSession()
-        console.log("-- session: ", session)
-        token2 = session?.user?.token    
-        console.log("token2: ", token2)
+        token = session?.user?.token    
     }
 
-    console.log("mes couilles")
+    if (token) {
+        console.log("token: ", token)
 
-    // let tokenToUse = token || token2
-    let tokenToUse = undefined
-    if ( token) tokenToUse = token
-    console.log("mes couilles")
-    if ( token2 ) tokenToUse = token2
-    // console.log("token: ", tokenToUse)
-    if (tokenToUse) {
-        console.log("token: ", tokenToUse)
-
-        const header : AxiosHeaderValue = "bearer " + tokenToUse;
+        const header : AxiosHeaderValue = "bearer " + token;
         params = {
             ...params,
             headers: {
@@ -97,8 +75,6 @@ const axiosInstance = async ({useAuth = true, token = undefined}:{useAuth?:boole
     
     let api = axios.create(params);
     return api
-
-    // return axiosInstancev
 }
 
 
