@@ -1,4 +1,4 @@
-
+// "use client"
 
 import { auth, signOut } from "@/auth"
 import { Button } from "@nextui-org/button";
@@ -6,7 +6,7 @@ import { Button } from "@nextui-org/button";
 const SettingsPage = async () => {
 
     const session = await auth()
-
+ 
     return (
         <div>
             <p>Settings Page</p>

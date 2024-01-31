@@ -7,13 +7,14 @@ import { MySpinner } from '@/components/mySpinner'
 import { ErrorComponent } from '@/components/ErrorComponent'
 import { ProjectsTableNextUI as ProjectsTable } from '@/components/projects-table'
 import { Button, Card, CardBody, CardFooter, CardHeader, Link, Spacer } from '@nextui-org/react';
+// import { auth } from '@/auth';
 
 // import { Projects } from "@/app/api/network/zooprocess-api"
 
 
 // const castArray = (value:Array<any>) => Array.isArray(value) ? value : [value];
 
-const Projects = () => {
+const ProjectsPage = () => {
 
     const formatData = (data:any) => {
         const projects = data.map( (project:any) => {
@@ -50,6 +51,10 @@ const Projects = () => {
         console.log(projects);
         return projects;
     }
+
+    // const session = auth()
+    // console.log("project pages globalThis.token :", globalThis.token)
+
 
     const { projects, isLoading, isError } = useProjects()
     const [ projectList, setProjectList ] = useState([projects])
@@ -108,4 +113,4 @@ const Projects = () => {
     );
 };
 
-export default Projects;
+export default ProjectsPage;

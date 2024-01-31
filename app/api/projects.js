@@ -3,9 +3,16 @@
 import useSWR from 'swr'
 
 import * as api from '@/app/api/network/zooprocess-api' 
+// import { auth } from '@/auth'
 // import { da } from 'date-fns/locale'
 
+// const getProjectsFetcher = (url) => { api.getProjects(url,globalThis.token) }
+
 export function useProjects() {
+
+    // console.log("globalThis.token :", globalThis.token)
+
+
     const { data=[], error=false, isLoading=true } = useSWR('/projects/', api.getProjects ,
       {
         revalidateIfStale: false,

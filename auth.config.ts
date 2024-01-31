@@ -1,13 +1,22 @@
-import bcrypt from 'bcryptjs';
+// import bcrypt from 'bcryptjs';
 import type { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-
+// import { cookies } from 'next/headers'
 
 import { LoginSchema } from '@/schemas';
 // import { getUserByEmail } from '@/data/user';
 import { login } from '@/data/user';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
+// import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
+
+
+
+// declare 
+declare global {
+  var token: string|undefined
+}
+
+
 
 export const authConfig = {
   // pages: {
@@ -43,11 +52,23 @@ export const authConfig = {
           // );
           // if (passwordsMatch) return user;
 
-          const user = await login(email, password)
-
-          console.log("user: ", user)
+          // const user = await login(email, password)
+          const token = await login(email, password)
+          // token = user.token
+          // console.log("-------------- user: ", user)
+          // console.log("-------------- token: ", user.token)
   
-          return user;          
+          // { 
+          //   "user server";
+          //   console.log("user: ", user)
+          // }
+
+          // if ( token.token){
+          //   cookies().set("currentUser", token.token)
+          // }
+
+          return token
+          // return user;          
         }
 
         return null;

@@ -1,6 +1,8 @@
+// "use server"
+
 import { string } from 'prop-types';
-import api from '@/network/axiosInstanse';
-import Samples from '@/app/projects/[projectid]/@samples/page';
+import axiosInstanse from '@/network/axiosInstanse';
+// import Samples from '@/app/projects/[projectid]/@samples/page';
 import { AuthError } from 'next-auth';
 
 
@@ -32,7 +34,8 @@ export interface User {
   name?: string,
   email?: string,
   image?: string,
-  token?: string
+  token?: string,
+  role?: string
 }
 
 export interface MetadataTemplate {
@@ -114,9 +117,12 @@ export interface SubSamples {
 // export async function getProjects(page: number){
 export async function getProjects(){
 
+    console.log("getProjects");
+
+    const api = await axiosInstanse()
     // const pageSize = 12;
     // const response = await api.get<Projects>(`/projects?limit=${pageSize}&offset=${pageSize * (page - 1)}`);
-    const response = await api.get<Projects>(`/projects`);
+    const response = await  api.get<Projects>(`/projects`);
 
     console.log("getProjects response: ", response);
 
@@ -125,6 +131,7 @@ export async function getProjects(){
 
 
 export async function getProject(url:string){
+  const api = await axiosInstanse()
 
   const response = await api.get<Project>(url);
 
@@ -135,6 +142,7 @@ export async function getProject(url:string){
 
 
 export async function getUserByEmail(url:string){
+  const api = await axiosInstanse()
 
   const response = await api.get<User>(url);
 
@@ -144,16 +152,24 @@ export async function getUserByEmail(url:string){
 }
 
 import axios from 'axios';
+import { auth } from '@/auth';
+import { da } from 'date-fns/locale';
 
 export async function getUserById(url:string, token:string){
+// export async function getUserById(url:string){
 
-  const api = axios.create({
-    baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
-    timeout: 5000,
-    headers:{
-      Authorization: 'Bearer ' + token
-    }
-});
+//   const token = await auth();
+//   console.log("getUserById token: ", token);
+
+//   const api = axios.create({
+//     baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
+//     timeout: 5000,
+//     headers:{
+//       Authorization: 'Bearer ' + token
+//     }
+// });
+  // const token = await auth()
+  const api = await axiosInstanse(token)
 
   const response = await api.get<User>(url);
 
@@ -168,10 +184,14 @@ export interface Login {
   password:string
 }
 
+var token = ""
+
 export async function login(data:Login){
+  const api = await axiosInstanse()
   return await api.post('/login', data)
       .then(function (response) {
         console.log("login response: ", response);
+        token = response.data
         return response.data;
       })
       .catch(function (error) {
@@ -181,6 +201,7 @@ export async function login(data:Login){
 }
 
 export async function getMetadata(url:string){
+  const api = await axiosInstanse()
 
   const response = await api.get<MetadataTemplate>(url);
 
@@ -205,6 +226,7 @@ export async function addProject(data:Project){
     console.log("POST /projects")
     console.log(data)
 
+    const api = await axiosInstanse()
     return await api.post('/projects', data)
       .then(function (response) {
         console.log("addProject response: ",response);
@@ -248,6 +270,7 @@ export async function addProject(data:Project){
 
     if (data.id == undefined) throw("Cannot update, project has no id defined");
 
+    const api = await axiosInstanse()
     return await api.put(`/projects/${data.id}`, data)
       .then(function (response) {
         console.log("updateProject response:", response);
@@ -277,6 +300,7 @@ export async function addProject(data:Project){
   }
 
   export async function getDrives(){
+    const api = await axiosInstanse()
     const response = await api.get<Array<Drive>>(`/drives`);
     
     // console.log("getDrives response: ", response);
@@ -289,6 +313,7 @@ export async function addSample(projectId:string, data:Sample){
     console.log("api addSmaple projectId:", projectId);
     console.log("api addSmaple data:", data);
 
+    const api = await axiosInstanse()
     return await api.post(`/projects/${projectId}/samples`, data)
       .then(function (response) {
         console.log("addSample response: ", response);
@@ -333,6 +358,7 @@ export async function addSample(projectId:string, data:Sample){
     console.log("api addSubSmaple sampleId:", sampleId);
     console.log("api addSubSample data:", data);
 
+    const api = await axiosInstanse()
     return await api.post(`/projects/${projectId}/samples/${sampleId}/subsamples`, data)
       .then(function (response) {
         console.log("addSubSample response: ", response);
@@ -382,6 +408,7 @@ export async function addSample(projectId:string, data:Sample){
     // const pageSize = 12;
     // const response = await api.get<Projects>(`/projects?limit=${pageSize}&offset=${pageSize * (page - 1)}`);
     // const response = await api.get<Samples>(`/projects/${projectId}/samples`);
+    const api = await axiosInstanse()
     const response = await api.get<Samples>(url);
 
     console.log("getSamples response: ", response);
@@ -399,6 +426,7 @@ export async function getSubSamples(url:string){
   // const pageSize = 12;
   // const response = await api.get<Projects>(`/projects?limit=${pageSize}&offset=${pageSize * (page - 1)}`);
   // const response = await api.get<Samples>(`/projects/${projectId}/samples`);
+  const api = await axiosInstanse()
   const response = await api.get<SubSamples>(url);
 
   console.log("getSubSamples response: ", response);
@@ -410,6 +438,7 @@ export async function getSample(url:string){
 
   console.log("getSample(",url,")")
 
+  const api = await axiosInstanse()
   const response = await api.get<Sample>(url);
 
   console.log("getSample response: ", response);
@@ -424,6 +453,7 @@ export async function updateSample(projectId:string, sampleId:string, data:Sampl
   console.log("api addSmaple sampleId:", sampleId);
   console.log("api addSmaple data:", data);
 
+  const api = await axiosInstanse()
   return await api.put(`/projects/${projectId}/samples/${sampleId}`, data)
       .then(function (response) {
         console.log("updateSample response:", response);

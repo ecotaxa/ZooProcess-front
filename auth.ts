@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import { authConfig } from '@/auth.config';
+// import { getUserByiD } from '@/data/user';
 
 
 // import Credentials from 'next-auth/providers/credentials';
@@ -43,6 +44,11 @@ import { authConfig } from '@/auth.config';
 //   ],
 // });
 
+import * as api from '@/app/api/network/zooprocess-api' 
+import { UserRole } from '@/next-auth';
+// import { string } from 'zod';
+
+
 
 export const {
   handlers: { GET, POST },
@@ -53,19 +59,49 @@ export const {
   callbacks: {
     async session({ token, session }) {
       console.log({
-        sessionToken : token,
-        session 
+        token,
+        session
       })
+      // const t : Session
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+      }
 
-      if (session.user){
-        session.user.customField = token.customField
+      if ( token.role && session.user ) {
+        session.user.role = token.role as UserRole
       }
 
       return session
     },
-    async jwt({ token }) {
-      console.log(token)
-      token.customField = "test"
+    async jwt({ token , user }) {
+      console.log({
+        token,
+        user
+      })
+      if (!token.sub) return token;
+
+      // console.log(" ++++++++++++++++ : ", user)
+
+      // token.token = user.token
+
+      if ( globalThis.token ) {
+        console.log(globalThis.token)
+        token.token = globalThis.token
+  
+        // const existingUser = await getUserByiD(token.sub, globalThis.token);
+        const existingUser = await api.getUserById(`/users/${token.sub}`, globalThis.token )
+        if (!existingUser) return token;
+        token.role = existingUser.role
+      }
+
+      // console.log("existingUser: ", existingUser)
+
+      // token.existingUser = existingUser
+
+      // if (!existingUser) return token;
+
+      // token.role = existingUser.user. .role;
+
       return token
     }
   },
