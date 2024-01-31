@@ -1,6 +1,7 @@
 
 
-import { auth } from "@/auth"
+import { auth, signOut } from "@/auth"
+import { Button } from "@nextui-org/button";
 
 const SettingsPage = async () => {
 
@@ -10,6 +11,14 @@ const SettingsPage = async () => {
         <div>
             <p>Settings Page</p>
             {JSON.stringify(session)}
+            <form action={async () => {
+                 "use server";
+                 await signOut();   
+            }}>
+                <Button color="primary" type="submit">
+                    Sign Out
+                </Button>
+            </form>
         </div>
     )
 
