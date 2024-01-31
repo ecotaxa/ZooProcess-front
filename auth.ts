@@ -71,6 +71,10 @@ export const {
         session.user.role = token.role as UserRole
       }
 
+      if ( token.token && session.user ) {
+        session.user.token = token.token as string
+      }
+
       return session
     },
     async jwt({ token , user }) {

@@ -15,6 +15,7 @@ export type UserRole = "USER" | "ADMIN"
 
 export type ExtendedUser = DefaultSession["user"] & {
   role: UserRole;
+  token: string
 //   isTwoFactorEnabled: boolean;
 //   isOAuth: boolean;
 };
