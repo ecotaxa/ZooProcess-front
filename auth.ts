@@ -50,6 +50,25 @@ export const {
   signIn, 
   signOut
 } = NextAuth({
+  callbacks: {
+    async session({ token, session }) {
+      console.log({
+        sessionToken : token,
+        session 
+      })
+
+      if (session.user){
+        session.user.customField = token.customField
+      }
+
+      return session
+    },
+    async jwt({ token }) {
+      console.log(token)
+      token.customField = "test"
+      return token
+    }
+  },
   session: { strategy: "jwt" },
   ...authConfig,
 });
