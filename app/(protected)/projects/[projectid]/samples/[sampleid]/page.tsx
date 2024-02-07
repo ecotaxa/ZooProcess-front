@@ -9,6 +9,7 @@ import Metadata from "./@metadata/page";
 
 import { FC } from "react";
 import { Debug } from "@/Components/Debug";
+import { ProjectBreadcrumbs } from "@/components/ProjectBreadcrumbs";
 
 interface pageProps {
     params: {
@@ -25,7 +26,7 @@ const Project : FC<pageProps> = ({params}) => {
     const projectid = params.projectid
     const sampleid = params.sampleid
 
-    const projectName = "MOCK ;) Zooscan_ptb_wp2_2021_journee";
+    // const projectName = "MOCK ;) Zooscan_ptb_wp2_2021_journee";
 
     return (
         <div>
@@ -35,9 +36,11 @@ const Project : FC<pageProps> = ({params}) => {
                     <h1>Project</h1>
                 </CardHeader>
                 <CardBody>
-                    <h1>{projectName}</h1>
+                    {/* <h1>{projectName}</h1>
                     <h3>{projectid}</h3>
-                    <h3>{sampleid}</h3>
+                    <h3>{sampleid}</h3> */}
+                    <ProjectBreadcrumbs list={[projectid, sampleid]}  separator="/"/>
+
                 </CardBody>
             </Card>
             <Spacer y={20}/>
