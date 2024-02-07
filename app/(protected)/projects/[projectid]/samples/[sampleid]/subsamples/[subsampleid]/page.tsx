@@ -1,7 +1,12 @@
-import { Image } from "@nextui-org/react";
+"use client";
+
+
+import SingleFileUploadForm from "@/app/(components)/SingleFileUploadForm";
+import { ProjectBreadcrumbs } from "@/components/ProjectBreadcrumbs";
+// import { /*Image,*/ Input } from "@nextui-org/react";
+// import Image from "next/image"
+import { Image, Input } from "@nextui-org/react";
 import { FC } from "react";
-
-
 
 
 interface pageProps {
@@ -14,7 +19,6 @@ interface pageProps {
 
 // const SubsamplePage : FC<pageProps> = ({projectid,sampleid,subsampleid}) => {
 const SubsamplePage : FC<pageProps> = ({params}) => {
-
     // console.log("NewSample params: ", params);
     // console.log("NewSample params projectid: ", params.params.projectid);
     // console.log("NewSample params sampleid: ", params.params.sampleid);
@@ -28,19 +32,54 @@ const SubsamplePage : FC<pageProps> = ({params}) => {
     console.log("NewSample params sampleid: ", subsampleid);
 
 
+  
+
+    
+    
     return (
-        <>
-            SubSample Scan Preview
+
+      <div className="w-full max-w-3xl px-3 mx-auto">
+      <h1 className="mb-10 text-3xl font-bold text-gray-900">
+        Upload your files
+      </h1>
+
+      <h1>SubSample Scan Preview</h1>
             <div><b>project Id: </b> {projectid}</div>
             <div><b>sample Id: </b> {sampleid}</div>
             <div><b>subsample Id: </b> {subsampleid}</div>
+
+            <ProjectBreadcrumbs list={[projectid, sampleid]} separator="/"/>
+
+            <SingleFileUploadForm/>
+      
+    </div>
+
+    )
+
+
+
+
+    return (
+        <>
+            <h1>SubSample Scan Preview</h1>
+            <div><b>project Id: </b> {projectid}</div>
+            <div><b>sample Id: </b> {sampleid}</div>
+            <div><b>subsample Id: </b> {subsampleid}</div>
+
+            <ProjectBreadcrumbs list={[projectid, sampleid]} separator="/"/>
+            {/* <ProjectBreadcrumbs list={[projectid,sampleid,subsampleid]} separator="/" /> */}
+
+            <form action="">
+              <Input type="file" name="file" placeholder="Your scan" />
+            </form>
 
             <Image
     //   width={300}
       alt="NextUI hero Image"
     // src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+    src="http://photos.galvagno.info/images/paroxantus.jpg"
     // src="/images/hero-card-complete.jpeg"
-    src="/images/background.jpg"
+    // src="/images/background.jpg"
     // src="/images/Sipho.jpg"
     />   
 
