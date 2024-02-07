@@ -89,11 +89,12 @@ export const {
       // token.token = user.token
 
       if ( globalThis.token ) {
-        console.log(globalThis.token)
+        console.log("globalThis.token: ", globalThis.token)
         token.token = globalThis.token
   
         // const existingUser = await getUserByiD(token.sub, globalThis.token);
         const existingUser = await api.getUserById(`/users/${token.sub}`, globalThis.token )
+        // const existingUser = await api.getUserById(`/users/me`, globalThis.token )
         if (!existingUser) return token;
         token.role = existingUser.role
       }
