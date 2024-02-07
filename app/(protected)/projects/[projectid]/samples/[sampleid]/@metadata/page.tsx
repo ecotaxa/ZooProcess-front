@@ -61,31 +61,17 @@ const Metadata : FC<pageProps> = (params) => {
   const fillSample = (sample:Sample) : DataReturn => { 
         console.log("fillSample: ", sample);
         
-
-        // let proj = {
-        //   //...sample
-        //     //"sample_id":sample.id,
-        //     "sample_id": sample.name,
-        //     // "cdrive":sample.drive,
-        //     // "drive": sample.drive.id,
-        //     // "description": sample.description || "",
-        //     // "acronym": sample.acronym || "",
-        //     // "ecotaxa_project_title": sample.ecotaxa?.name || "",
-        //     // "ecotaxa_project": sample.ecotaxa?.projectId || "",
-        //     // "scanningOptions":sample.scanningOptions || 0
-        // }
-
-        let proj: any = {}
+        let form: any = {}
 
         sample.metadata.forEach((element:MetadataType) => {
           if ( element.type == 'number'){
-            proj[element.name] = Number(element.value)
+            form[element.name] = Number(element.value)
           } else {
-            proj[element.name] = element.value
+            form[element.name] = element.value
           }
         });
 
-      return proj;
+      return form;
     }
 
   //   const forms = [
@@ -99,8 +85,8 @@ const Metadata : FC<pageProps> = (params) => {
       let localform : any = {}
       localform['forms'] = [inputFormElements]; //driveList
       localform['value'] = {};
-      localform['title'] = 'Update Project';
-      localform['subtitle'] = 'Modify your project metadata';
+      localform['title'] = 'Update Sample';
+      localform['subtitle'] = 'Modify your sample metadata';
 
       // setForm(localform)
       return localform
