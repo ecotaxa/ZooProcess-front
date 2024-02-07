@@ -46,11 +46,11 @@ const axiosInstancev = axios.create({
 
 
 
-const axiosInstance = async ({useAuth = true, token = undefined}:{useAuth?:boolean,token?:string|undefined}): Promise<AxiosInstance> => {
+const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{useAuth?:boolean,token?:string|undefined, params?:any}): Promise<AxiosInstance> => {
 
     // "use server"
 
-    let params : CreateAxiosDefaults<any> = {
+    let _params : CreateAxiosDefaults<any> = {
         baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
         timeout: 5000,
     }
@@ -64,16 +64,16 @@ const axiosInstance = async ({useAuth = true, token = undefined}:{useAuth?:boole
         console.log("token: ", token)
 
         const header : AxiosHeaderValue = "bearer " + token;
-        params = {
-            ...params,
+        _params = {
+            ..._params,
             headers: {
                 Authorization: header
             }
         }
     }    
-    console.log("axiosInstance params", params)
+    console.log("axiosInstance params", _params)
     
-    let api = axios.create(params);
+    let api = axios.create(_params);
     return api
 }
 
