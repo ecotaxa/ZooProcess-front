@@ -13,14 +13,14 @@ export const Debug = ({params,title="debug"}) => {
     //     </div>
     // )
 
-    return (<></>)
+    //return (<></>)
 
     const ShowError = () => {
 
         if (!isSelected) { return (<></>) }
 
         return (
-            <div>
+            <div className="xm-sm-max-100">
                 {JSON.stringify(params)}
             </div>
         )
