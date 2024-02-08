@@ -70,7 +70,8 @@ export async function login(email:string, password : string) {
 
                 globalThis.token = token
 
-                const user = await api.getUserById(`/users/${decoded.id}`, token )
+                // const user = await api.getUserById(`/users/${decoded.id}`, token )
+                const user = await api.getUserById(`/users/me`, token )
                 // const user = await api.getUserById(`/users/${decoded.id}` )
                 console.log(`user "${user.name || email}" logged`)
                 user.token = token

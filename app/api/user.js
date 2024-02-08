@@ -1,3 +1,5 @@
+"use client";
+
 // import { parseJSON } from 'date-fns'
 // import useSWR, { Fetcher } from 'swr'
 
