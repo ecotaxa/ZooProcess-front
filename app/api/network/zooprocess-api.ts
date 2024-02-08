@@ -435,12 +435,12 @@ export async function getSubSamples(url:string){
   return response.data; 
 }
 
-export async function getSample(url:string){
+export async function getSample(url:string, options?: any){
 
-  console.log("getSample(",url,")")
+  console.log("getSample(",url,",",options,")")
 
   const api = await axiosInstanse({})
-  const response = await api.get<Sample>(url);
+  const response = await api.get<Sample>(url, options);
 
   console.log("getSample response: ", response);
 

@@ -2,6 +2,8 @@ import useSWR from 'swr'
 
 import * as api from '@/network/zooprocess-api' 
 
+// declare maxRetry = 1
+
 export function useSamples(projectId) {
 
   if ( projectId == undefined ){
@@ -24,19 +26,54 @@ export function useSamples(projectId) {
   }
 }
 
-export function useSample(projectId, sampleId) {
+export function useSample(projectId, sampleId, retry=1) {
   // const { data=[], error=false, isLoading=true } = useSWR(`${projectid}`, api.getSamples ,
 
-  console.log("useSample ", projectId, sampleId )
+  console.log("useSample ", projectId, sampleId, retry )
+
+  const url = `/projects/${projectId}/samples/${sampleId}`
+
+  // if (retry == globalThis.maxRetry){
+  //   params = {}
+  // } else {
+  //   params = {
+  //     revalidateIfStale: false,
+  //     revalidateOnFocus: false,
+  //     revalidateOnReconnect: false
+  //   }
+  // }
+
+  let headers = {}
+  if (retry == 0) {
+    headers = { headers: {
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate"
+      // 'Cache-Control' : 'no-cache'
+      }
+    };
+  }
 
   const { data=[], error=false, isLoading=true } = useSWR(
-    `/projects/${projectId}/samples/${sampleId}`, 
-    api.getSample ,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false
-  })
+    url,
+    url => api.getSample(url, headers) ,
+  //   {
+  //     revalidateIfStale: false,
+  //     revalidateOnFocus: false,
+  //     revalidateOnReconnect: false
+  // }
+  )
+
+  if (retry > 0) {
+    console.log("retry > 0")
+    if ( error==false && isLoading==false ){
+      console.log("no errror, no wait")
+      if (data==undefined || data==[]){
+        console.log("useSample() retrying... ", projectId, sampleId )
+        // mutate(url)
+        revalidate(url)
+        useSample(projectId, sampleId, retry-1)
+      }
+    }
+  }
 
   return {
     sample: data,
