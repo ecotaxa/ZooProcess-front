@@ -27,7 +27,7 @@ const BoxMessage : FC<IBoxMessage> = (props) => {
                 </div>
             </div>
         </CardBody>
-    </Card>
+        </Card>
     )
 }
 
