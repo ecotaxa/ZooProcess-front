@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 // import { addSample } from '@/app/api/samples';
 import { Debug } from '@/Components/Debug';
 import { addSubSample } from '@/app/api/subsamples';
+import { Timeline_scan } from '@/components/timeline-scan';
  
 
 
@@ -174,6 +175,7 @@ const NewSubSample : FC<pageProps> = (params) => {
                     <Typography variant="h4">
                     Sub Sample Metadata to sample {sampleId} from project {projectId}
                     </Typography>
+                    <Timeline_scan current={0.5} />
                     <MyForm 
                         {...form} 
                         project={projectId}

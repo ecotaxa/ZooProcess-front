@@ -3,6 +3,10 @@
 
 import SingleFileUploadForm from "@/app/(components)/SingleFileUploadForm";
 import { ProjectBreadcrumbs } from "@/components/ProjectBreadcrumbs";
+
+// import { auth } from "@/auth"
+
+
 // import { /*Image,*/ Input } from "@nextui-org/react";
 // import Image from "next/image"
 import { Image, Input } from "@nextui-org/react";
@@ -12,6 +16,7 @@ import React, { SyntheticEvent } from "react"
 import axios from "axios"
 
 import FileUploader from "@/components/FileUploader";
+import { Timeline_scan } from "@/components/timeline-scan";
 
 
 interface pageProps {
@@ -23,7 +28,8 @@ interface pageProps {
   }
 
 // const SubsamplePage : FC<pageProps> = ({projectid,sampleid,subsampleid}) => {
-const SubsamplePage : FC<pageProps> = ({params}) => {
+// const SubsamplePage : FC<pageProps> = async ({params}) => {
+const SubsamplePage : FC<pageProps> =  ({params}) => {
     // console.log("NewSample params: ", params);
     // console.log("NewSample params projectid: ", params.params.projectid);
     // console.log("NewSample params sampleid: ", params.params.sampleid);
@@ -64,8 +70,8 @@ const SubsamplePage : FC<pageProps> = ({params}) => {
         setFile(event.target.files[0])
       }
     
-    
-    
+
+    // const session = await auth()
     
     return (
 
@@ -74,10 +80,12 @@ const SubsamplePage : FC<pageProps> = ({params}) => {
         Upload your files
       </h1>
 
+      <Timeline_scan current={2} />
       <h1>SubSample Scan Preview</h1>
             <div><b>project Id: </b> {projectid}</div>
             <div><b>sample Id: </b> {sampleid}</div>
             <div><b>subsample Id: </b> {subsampleid}</div>
+            {/* <div><b>user Id: </b> {session?.user}</div> */}
 
             <ProjectBreadcrumbs list={[projectid, sampleid]} separator="/"/>
 
