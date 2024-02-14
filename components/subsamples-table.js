@@ -14,7 +14,7 @@ const columns = [
     {name: "NAME", uid: "name"},
     // {name: "SAMPLE", uid: "sample"},
     {name: "SCAN OPERATOR", uid: "operator"},
-    {name: "FRACTION ID", uid:"fractionId"},
+    {name: "FRACTION ID", uid:"fractionid"},
     {name: "FRAC MIN", uid: "fracmin"},
     {name: "FRAC SUP", uid: "fracsup"},
     {name: "OBSERVATION", uid: "obs"},
@@ -69,13 +69,21 @@ export function SubSamplesTable(props) {
                 </div>
             );
             
+                    
+        case "operator":
+          return (
+              <div className="flex flex-col" >
+                  <p className="text-bold text-sm capitalize">{cellValue}</p>
+              </div>
+          );
+          
         case "fractionid":
         case "fracsup":
         case "fracmin":
         case "obs":
         return (
                 <div className="flex flex-col" >
-                    <p className="text-bold text-sm capitalize">{cellValue}</p>
+                    <p className="text-bold text-sm">{cellValue}</p>
                 </div>
             );
   

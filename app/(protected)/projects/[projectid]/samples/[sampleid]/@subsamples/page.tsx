@@ -12,6 +12,7 @@ import { ErrorComponent } from '@/components/ErrorComponent';
 import { FC, useEffect, useState } from 'react';
 
 import { useSubSamples } from '@/api/subsamples';
+import { Metadata } from '@/app/api/network/zooprocess-api';
 // import Project from '../page';
 
 
@@ -70,6 +71,14 @@ const SubSamples : FC<pageProps> = (params) => {
   
         console.log("subsample: ", subsamples);
 
+        function getMetadata(data:Array<Metadata>, name:String) {
+          console.log("getMetadata: ", data);
+          const value = data.find( (m:Metadata) => m.name == name)
+          console.log("getMetadata value: ",  value);
+          return value?.value || null
+          // return 1
+        }
+
         if ( sample == "key"){
             console.error("ARRGG indey == key");
             console.log("ARRGG indey == key")
@@ -77,14 +86,20 @@ const SubSamples : FC<pageProps> = (params) => {
             console.log("pfffff")
         } else {
           const s = data[sample]
+          console.log("sssssss: ", typeof(s), s);
 
           return {
             id: data[sample].id,
             name: data[sample].name,
-            fraction:s.nbFractions,
-            scans:s.nbScans,
+            // fraction:s.nbFractions,
+            // scans:s.nbScans,
             createdAt:s.createdAt,
             updatedAt:s.updatedAt,
+            operator:s.user.name,
+            fractionid:getMetadata(s.metadata, "fraction_id"),
+            fracmin:getMetadata(s.metadata,"fraction_min_mesh"),
+            fracsup:getMetadata(s.metadata,"fraction_max_mesh"),
+            obs:getMetadata(s.metadata,"observation"),
           }  
         }
 
