@@ -2,7 +2,7 @@
 
 import { Card, CardBody, CardHeader, Spacer } from "@nextui-org/react";
 import { Tab, Tabs } from "@nextui-org/tabs";
-import Samples from "./@samples/page";
+import SamplesTab from "./@samples/page";
 import Stats from "./@stats/page";
 import Scans from "./@scans/page";
 import Metadata from "./@metadata/page";
@@ -19,7 +19,7 @@ interface pageProps {
 }
 
 // const Project = ({ params }: { params: { projectid: string; }} ) => {
-const Project : FC<pageProps> = ({params}) => {
+const ProjectPage : FC<pageProps> = ({params}) => {
 
 
 
@@ -57,7 +57,7 @@ const Project : FC<pageProps> = ({params}) => {
                     <Metadata  {...params}/>
                 </Tab>
                 <Tab key="samples" title="Samples">
-                    <Samples {...params}/>
+                    <SamplesTab {...params}/>
                     <Debug params={params}/>
                 </Tab>
                 <Tab key="scans" title="Scans">
@@ -70,4 +70,4 @@ const Project : FC<pageProps> = ({params}) => {
     );
 };
 
-export default Project;
+export default ProjectPage;

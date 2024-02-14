@@ -21,7 +21,7 @@ interface pageProps {
   // }
 }
 
-const Samples : FC<pageProps> = (params) => {
+const SamplesTab : FC<pageProps> = (params) => {
     // const router = useRouter()
     // const projectid = router.query.projectid //as string
     // const sampleid = router.query.sampleid //as string
@@ -133,4 +133,4 @@ const Samples : FC<pageProps> = (params) => {
   );
 };
 
-export default Samples;
+export default SamplesTab;
