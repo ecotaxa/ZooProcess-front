@@ -1,5 +1,5 @@
 
-import {Switch} from "@nextui-org/react";
+import {Switch, Tooltip} from "@nextui-org/react";
 import { useState } from "react";
 export const Debug = ({params,title="debug"}) => {
 
@@ -28,6 +28,13 @@ export const Debug = ({params,title="debug"}) => {
 
     return (
     <>
+        <Tooltip
+            content={
+                <div className="xm-sm-max-100">
+                    {JSON.stringify(params)}
+                </div>
+            }
+            >
         <div className="flex flex-col gap-2">
             <Switch 
                 isSelected={isSelected} 
@@ -39,8 +46,10 @@ export const Debug = ({params,title="debug"}) => {
             </Switch>
             {/* <p className="text-small text-default-500">Selected: {isSelected ? "true" : "false"}</p> */}
         </div>
+        </Tooltip>
 
         <ShowError/>
+        
     </>
     );
 }
