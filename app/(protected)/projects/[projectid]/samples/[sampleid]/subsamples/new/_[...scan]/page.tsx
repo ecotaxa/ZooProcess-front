@@ -19,18 +19,17 @@ const scan : FC<pageProps> = ({params}) => {
     const {projectid,sampleid,scan} = params
 
     console.log("scan: ", scan)
-    const [scantxt, id, action] = scan
+    // const [scantxt, id, action] = scan
+    const [scantxt, id, actionpath] = scan
 
-    const currentStep = actions.filter((action)=>is)
+    let action = "preview"
 
-    const defineImagePath = (id:string) => {
-        return "/public/Sipho.png"
-        return "./background.tif"
-        return `${id}.tif`
+    if ( actionpath != undefined){
+        action = actionpath
+    }else{
+        
     }
 
-    // const actions : Map<string,string> = {"preview":"Preview","background":"Background","scan":"Scan","finish":"Finish"}
-    
     type Step = {
         step: string,
         text: string
@@ -51,6 +50,18 @@ const scan : FC<pageProps> = ({params}) => {
             text:"Finish"
         }
     ]
+
+    const currentStep = actions.filter((action)=>action.step)
+
+    // const defineImagePath = (id:string) => {
+    //     return "/public/Sipho.png"
+    //     return "./background.tif"
+    //     return `${id}.tif`
+    // }
+
+    // const actions : Map<string,string> = {"preview":"Preview","background":"Background","scan":"Scan","finish":"Finish"}
+    
+
     
     const isThisStep = (element:Step) => { return element.step == action }
     const nextAction = (action:string) : string => {
