@@ -38,3 +38,18 @@ npm run dev
 ## License
 
 Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+
+
+
+# Issues
+
+https://github.com/vercel/next.js/issues/58295
+
+`x-forwarded-host` header with value `localhost:3001` does not match `origin` header with value `imev:3001` from a forwarded Server Actions request. Aborting the action.
+
+
+serverActions: { allowedOrigins: ["xxxx.com", "localhost:3001"], }
+
+
+
+
