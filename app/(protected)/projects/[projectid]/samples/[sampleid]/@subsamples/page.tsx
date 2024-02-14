@@ -97,9 +97,9 @@ const SubSamples : FC<pageProps> = (params) => {
             updatedAt:s.updatedAt,
             operator:s.user.name,
             fractionid:getMetadata(s.metadata, "fraction_id"),
-            fracmin:getMetadata(s.metadata,"fraction_min_mesh"),
-            fracsup:getMetadata(s.metadata,"fraction_max_mesh"),
-            obs:getMetadata(s.metadata,"observation"),
+            fracmin:getMetadata(s.metadata, "fraction_min_mesh"),
+            fracsup:getMetadata(s.metadata, "fraction_max_mesh"),
+            obs:getMetadata(s.metadata, "observation"),
           }  
         }
 
