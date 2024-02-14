@@ -17,6 +17,9 @@ export async function POST(request: NextRequest) {
 
   const buffer = Buffer.from(await file.arrayBuffer());
   const relativeUploadDir = `/uploads/${dateFn.format(Date.now(), "dd-MM-Y")}`;
+
+  ///TODO change to 
+  const dir = process.env.UPLOADS_FOLDER
   const uploadDir = join(process.cwd(), "public", relativeUploadDir);
 
   try {
@@ -42,8 +45,14 @@ export async function POST(request: NextRequest) {
       /\.[^/.]+$/,
       ""
     )}-${uniqueSuffix}.${mime.getExtension(file.type)}`;
-    await writeFile(`${uploadDir}/${filename}`, buffer);
-    return NextResponse.json({ fileUrl: `${relativeUploadDir}/${filename}` });
+    const destinationFile = `${uploadDir}/${filename}`;
+    await writeFile(destinationFile, buffer);
+
+    console.log("File wrote at : ", destinationFile);
+
+    const res = { fileUrl: `${relativeUploadDir}/${filename}`, filename:destinationFile }
+
+    return NextResponse.json(res);
   } catch (e) {
     console.error("Error while trying to upload a file\n", e);
     return NextResponse.json(
