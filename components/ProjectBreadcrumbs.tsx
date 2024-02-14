@@ -38,11 +38,11 @@ export const ProjectBreadcrumbs : FC<BreadcrumbsProps> = ({list/*,name*/, separa
 
       let breadcrumbItems : Array<any> = []
 
-      console.log("makeBreadcrumbItems: ", list)
+      // console.log("makeBreadcrumbItems: ", list)
 
       for (const item in list) {
 
-        console.log("item: ", list[item])
+        // console.log("item: ", list[item])
 
         if ( mode == "ID" )  {
           url = "/projects/" + list[item]
@@ -53,7 +53,7 @@ export const ProjectBreadcrumbs : FC<BreadcrumbsProps> = ({list/*,name*/, separa
         // const elem = `<BreadcrumbItem><Link href="${url}">${list[item]}</Link></BreadcrumbItem>`
         const elem =  makeBreadItem(url, list[item])
 
-        console.log("elem: ", elem)
+        // console.log("elem: ", elem)
 
         breadcrumbItems.push(elem)
       }

@@ -90,12 +90,12 @@ export function MyTextField(props) {
     if (props.fn2) { 
             // opt['TOTOT'] = 'TOTO' 
 
-        console.log("props: ", props)
+        // console.log("props: ", props)
 
-        console.log("props.fn2.params:", props.fn2.params)
-        console.log("props.project:", props.project)
-        console.log("props.sample:", props.sample)
-        console.log("props['project']:", props['project'])
+        // console.log("props.fn2.params:", props.fn2.params)
+        // console.log("props.project:", props.project)
+        // console.log("props.sample:", props.sample)
+        // console.log("props['project']:", props['project'])
 
         // try {
         //     const json = JSON.parse(props.fn2.params)
@@ -105,11 +105,11 @@ export function MyTextField(props) {
         //     console.log("json error:",e)
         // }
 
-        console.log("slice(-1): ",props.fn2.params.slice(0,-1))
-        console.log("slice(1): ",props.fn2.params.slice(1).slice(0,-1))
+        // console.log("slice(-1): ",props.fn2.params.slice(0,-1))
+        // console.log("slice(1): ",props.fn2.params.slice(1).slice(0,-1))
 
         const params = props.fn2.params.slice(1).slice(0,-1).split(',')
-        console.log("params: ",params)
+        // console.log("params: ",params)
 
         // const param = { project: props.project }
         let param = {}
@@ -119,7 +119,7 @@ export function MyTextField(props) {
             }
             param[element] = props[element]
         });
-        console.log("param:", param)
+        // console.log("param:", param)
 
 
         const prefix = new Function( props.fn2.params , props.fn2.func );
