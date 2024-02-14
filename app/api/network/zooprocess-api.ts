@@ -26,7 +26,8 @@ export interface Project {
     createdAt: Date,
     driveId: string,
     ecotaxaId: string,
-    ecotaxa?: Ecotaxa
+    ecotaxa?: Ecotaxa,
+    instrumentId?: string,
 }
 
 export interface User {
