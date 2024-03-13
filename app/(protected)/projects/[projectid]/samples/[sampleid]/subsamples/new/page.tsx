@@ -61,18 +61,23 @@ interface pageProps {
     // }
 }
 
-const NewSubSample : FC<pageProps> = (params) => {
+const NewSubSample : FC<pageProps> = (params ) => {
 
     const router = useRouter()
+    // const { projectid, sampleid } = params
+
     console.log("NewSample params: ", params);
-    console.log("NewSample params projectid: ", params.params.projectid);
-    console.log("NewSample params sampleid: ", params.params.sampleid);
+    // console.log("NewSample params projectid: ", params.projectid);
+    // console.log("NewSample params sampleid: ", params.sampleid);
     // console.log("NewSample params projectid: ", params.projectid);
 
     // const projectid = router.query.projectid //as string
-    const projectId = params.params.projectid;
-    const sampleId = params.params.sampleid;
-    // const projectId = params.projectid;
+    const projectid = params.params.projectid;
+    const sampleid = params.params.sampleid;
+    const projectId = params.projectid;
+
+    console.log("NewSample params projectid: ", projectid);
+    console.log("NewSample params sampleid: ", sampleid);
 
     const emptyData = {
      //   "scientific_program": "ZooProcess",
@@ -94,7 +99,7 @@ const NewSubSample : FC<pageProps> = (params) => {
 
         let newData = {
             ...data,
-            sampleId
+            sampleId: sampleid
         }
         console.log("newData: ", newData);
         return newData;
@@ -119,22 +124,23 @@ const NewSubSample : FC<pageProps> = (params) => {
         console.log("newData: ", data);
         // try {
 
-            console.log("----- projectId: ", projectId);
-            console.log("----- sampleId: ", sampleId);
+            console.log("----- projectId: ", projectid);
+            console.log("----- sampleId: ", sampleid);
             // console.log("----- params.projectid : ",params.projectid);
             // console.log("----- params : ",params);
             // console.log("----- params.params : ",params.params);
 
             // addSample(projectId, data)
             return addSubSample({
-                projectId, // : params.params.projectid,
-                sampleId, 
+                projectId: projectid, // : params.params.projectid,
+                sampleId: sampleid, 
                 data
             })
             .then((response) => {
-                console.log("Go To the scan page" )
+                console.log("Go To the infos page" )
                 // router.push(`${response.data.id}`)
-                const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
+                // const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
+                const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}/infos`
                 router.push(path)
             })
             .catch((error) => {
@@ -173,13 +179,13 @@ const NewSubSample : FC<pageProps> = (params) => {
             <div className="text-center justify-center">
                 <Stack spacing={3}>
                     <Typography variant="h4">
-                    Sub Sample Metadata to sample {sampleId} from project {projectId}
+                    Sub Sample Metadata to sample {sampleid} from project {projectid}
                     </Typography>
-                    <Timeline_scan current={0.5} />
+                    <Timeline_scan current={0} />
                     <MyForm 
                         {...form} 
-                        project={projectId}
-                        sample={sampleId}
+                        project={projectid}
+                        sample={sampleid}
                         onChange={onChange} 
                         onCancel={onCancel}
                         button={formButtons}/>

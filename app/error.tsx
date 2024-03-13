@@ -17,6 +17,7 @@ export default function Error({
   return (
     <div>
       <h2>Something went wrong!</h2>
+      <img src="public/images/404.jpg" alt="404 error" />
       <button
         onClick={
           // Attempt to recover by trying to re-render the segment

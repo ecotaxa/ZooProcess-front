@@ -66,11 +66,41 @@ export interface Scan {
   url: string
   metadata: Array<Metadata>
 }
+
+
+export interface Background {
+  id: string
+  name: string
+  url: string
+  user: User
+  instrument: Instrument
+  createdAt: string // Date
+}
+
+export interface Instrument {
+  id: string
+  model: string
+  name: string
+  sn: string
+}
+
 export interface Sample {
     id: string
     name: string
     metadata: Array<Metadata>
     subSamples: Array<SubSample>
+}
+
+export interface Vignette {
+  id: string
+  url: string
+  type: string
+}
+
+export interface Separator {
+  id: string
+  scanId?: string
+  vignette: Array<Vignette>
 }
 
 
@@ -119,7 +149,7 @@ export interface SubSamples {
 // export async function addBackground(instrumentId:string, image: {url:string, userId:string}) {
 export async function addBackground(image: {url:string, instrumentId:string}) {
   
-  console.log("addBackground:" , image)
+  console.log("addBackground:", image)
   const api = await axiosInstanse({})
 
   const data = {
@@ -165,6 +195,20 @@ export async function addBackground(image: {url:string, instrumentId:string}) {
 
 }
 
+export async function getBackgrounds(url:string){
+  console.log("getBackgrounds");
+  const api = await axiosInstanse({})
+
+  const response = await api.get<Array<Background>>(url)
+  // .then(function (response) {
+    // console.log("getBackgrounds response: ", response);
+    return response.data;
+  // })
+  // .catch((error) => {
+  //   console.log("getBackgrounds Error: ", error.toJSON());
+  //   // if (error.response) {
+      // if
+}
 
 // export async function getProjects(page: number){
 export async function getProjects(){
@@ -203,9 +247,9 @@ export async function getUserByEmail(url:string){
   return response.data; 
 }
 
-import axios from 'axios';
-import { auth } from '@/auth';
-import { da } from 'date-fns/locale';
+// import axios from 'axios';
+// import { auth } from '@/auth';
+// import { da } from 'date-fns/locale';
 
 export async function getUserById(url:string, token:string){
 // export async function getUserById(url:string){
@@ -229,6 +273,7 @@ export async function getUserById(url:string, token:string){
 
   return response.data; 
 }
+
 
 
 export interface Login {
@@ -534,3 +579,72 @@ export async function updateSample(projectId:string, sampleId:string, data:Sampl
       });
 
 }
+
+
+
+export async function getVignettes(url:string){
+  console.log("getVignettes(", url, ")")
+  const api = await axiosInstanse({})
+  // const response = await api.get<Separator>(url);
+  // console.log("getVignettes response: ", response);
+  // return response.data;
+
+  return await api.get<Separator>(url)
+  .then(function (response) {
+    console.log("getVignettes response: ", response);
+    return response.data;
+  })
+  .catch(function (error) {
+    console.log("getVignettes error:", error.toJSON());
+    throw(error);
+  })
+
+
+}
+
+
+export enum TaskType {
+  separate = "separate",
+  background = "background",
+  vignette = "vignette"
+}
+
+// export async function addTask(subsampleid:string, task:TaskType ){
+export async function addTask(data:any){
+
+  console.log("api - addTask(data:", data);
+  const api = await axiosInstanse({})
+  // const data = {
+  //   "subsample_id": subsampleid,
+  //   "type": task
+  // }
+  // const taskId = await api.post(`/separate`, data)
+  // const taskId = 
+  return await api.post(`/task`, data)
+  .then((response) => {
+    console.log("addTask response: ", response);
+    return response.data;
+  })
+  .catch((error) => {
+    console.log("addTask Error: ", error.toJSON());
+    // return undefined
+    throw(error);
+  })
+  // return taskId  
+}
+
+export async function runTask(taskId:string){
+
+  console.log("runTask(",taskId,")")
+  const api = await axiosInstanse({})
+  // api.post(`/separate/${taskId}/run`, {})
+  const data = { taskId }
+
+  // l'api lance la tache ou pas
+  // et l'indique en retour
+
+  return await api.post(`/task/${taskId}/run`, data )
+
+  // return Promise.resolve(`task ${taskId} is running`)
+}
+

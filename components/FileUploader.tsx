@@ -2,7 +2,7 @@
 
 import { Input } from "@nextui-org/input";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { Debug } from "@/Components/Debug";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "@nextui-org/button";
@@ -12,24 +12,43 @@ import { auth } from "@/auth";
 import { add } from "date-fns";
 // import styles from "./FileUploader.module.scss";
 
-export default function FileUploader() {
+type pageProps = {
+  // props:{
+      // projectid: string,
+      // sampleid: string,
+      // subsampleid: string,  
+      instrumentId: string,
+  // },
+  onChange: (data:any) => void,
+}
+
+// const FileUploader: FC<pageProps> = ({props,onChange}) => {
+  const FileUploader: FC<pageProps> = ({instrumentId, onChange}) => {
+
+  // const {projectid, sampleid, subsampleid, instrumentId} = props;
+  // const {instrumentId} = props;
+
+  // console.log("FileUploader: ", props);
+  // console.log("projectid: ", projectid);
+  // console.log("sampleid: ", sampleid);
+  // console.log("subsampleid: ", subsampleid);
+  console.log("instrumentId: ", instrumentId);
+
   const imagePlaceholder = "/images/placeholder-image.jpg";
   const [imageUrl, setImageUrl] = useState(imagePlaceholder);
   const [isUploading, setIsUploading] = useState<boolean>(false)
 
+  const transmit = async (image: {url:string, instrumentId:string}) => {
+    console.log("transmitting: ", image.url );
+    // addBackground(image)   
+    // à mettre dans la fonction qui appelle  plus besoin de passer project, sample et subsample
+    // instrumentId oui pour quand il faudra attaquer le scanner avec l'API
+    onChange(image)
+  };
+
+
   const onImageFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target;
-
-    const transmit = async (image: {url:string, instrumentId:string}) => {
-      console.log("transmitting: ", image.url );
-      // const instrumentId = "65c4e0994653afb2f69b11ce"
-      // const url = process.env.API_SERVER + "/api/background/" + instrumentId
-      // await fetch( url , {
-      //   method: "POST"
-      // })
-      // addBackground(instrumentId, image)
-      addBackground(image)
-    };
 
     if (!fileInput.files) {
       console.warn("no file was chosen");
@@ -69,7 +88,7 @@ export default function FileUploader() {
       //   console.error("no user id found")
       //   throw new Error("no user id found")
       // }
-      const instrumentId = "65c4e0994653afb2f69b11ce"
+      // const instrumentId = "65c4e0994653afb2f69b11ce"
 
       const data2api = {
         url: data.fileUrl,
@@ -87,7 +106,7 @@ export default function FileUploader() {
     }
 
     /** Reset file input */
-    e.target.type = "text";
+    // e.target.type = "text";
     e.target.type = "file";
   };
 
@@ -116,7 +135,7 @@ export default function FileUploader() {
         </div>
         <div className="flex-row">
           { ! isUploading && (
-            <Image
+            <Image className="height-auto"
               src={imageUrl}
               alt="uploaded image"
               width={720}
@@ -158,3 +177,6 @@ export default function FileUploader() {
     </label>
   );
 }
+
+
+export default FileUploader

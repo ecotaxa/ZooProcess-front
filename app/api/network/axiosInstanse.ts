@@ -61,7 +61,7 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
     }
 
     if (token) {
-        console.log("token: ", token)
+        // console.info("token: ", token)
 
         const header : AxiosHeaderValue = "bearer " + token;
         _params = {
@@ -71,7 +71,7 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
             }
         }
     }    
-    console.log("axiosInstance params", _params)
+    // console.info("axiosInstance params", _params)
     
     let api = axios.create(_params);
     return api

@@ -34,6 +34,8 @@ export function useProjects() {
     }
   }
 
+
+  
   export function useProject(projectId) {
     const { data={}, error=false, isLoading=true } = useSWR(`/projects/${projectId}`, api.getProject ,
       {
@@ -80,6 +82,7 @@ export function useProjects() {
   // }
 
 
+
 export function addProject(data){
 
   console.log("adding Project...");
@@ -123,6 +126,8 @@ const convertData2api = (data) => {
 
   return dataConverted
 }
+
+
 
 export function updateProject(data){
 

@@ -20,24 +20,24 @@ import { Timeline_scan } from "@/components/timeline-scan";
 
 
 interface pageProps {
-    params: {
+    // params: {
       projectid: string,
       sampleid: string
       subsampleid: string
-    }
+    // }
   }
 
 // const SubsamplePage : FC<pageProps> = ({projectid,sampleid,subsampleid}) => {
 // const SubsamplePage : FC<pageProps> = async ({params}) => {
-const SubsamplePage : FC<pageProps> =  ({params}) => {
+const SubsamplePage : FC<pageProps> =  ({projectid, sampleid, subsampleid}) => {
     // console.log("NewSample params: ", params);
     // console.log("NewSample params projectid: ", params.params.projectid);
     // console.log("NewSample params sampleid: ", params.params.sampleid);
     // console.log("NewSample params sampleid: ", params.params.subsampleid);
 
-    const {projectid,sampleid,subsampleid} = params
+    // const {projectid,sampleid,subsampleid} = params //.params
 
-    console.log("NewSample params: ", params);
+    // console.log("NewSample params: ", params);
     console.log("NewSample params projectid: ", projectid);
     console.log("NewSample params sampleid: ", sampleid);
     console.log("NewSample params sampleid: ", subsampleid);
@@ -77,19 +77,19 @@ const SubsamplePage : FC<pageProps> =  ({params}) => {
 
       <div className="w-full max-w-3xl px-3 mx-auto">
       <h1 className="mb-10 text-3xl font-bold text-gray-900">
-        Upload your files
+        SubSample Info
       </h1>
 
       <Timeline_scan current={2} />
-      <h1>SubSample Scan Preview</h1>
+      <h1>SubSample Info</h1>
             <div><b>project Id: </b> {projectid}</div>
             <div><b>sample Id: </b> {sampleid}</div>
             <div><b>subsample Id: </b> {subsampleid}</div>
             {/* <div><b>user Id: </b> {session?.user}</div> */}
 
-            <ProjectBreadcrumbs list={[projectid, sampleid]} separator="/"/>
+            {/* <ProjectBreadcrumbs list={[projectid, sampleid]} separator="/"/> */}
 
-            <FileUploader />
+            {/* <FileUploader /> */}
         
       </div>
     )

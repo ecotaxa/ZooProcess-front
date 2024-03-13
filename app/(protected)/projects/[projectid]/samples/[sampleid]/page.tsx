@@ -19,7 +19,7 @@ interface pageProps {
 }
 
 // const Project = ({ params }: { params: { projectid: string; }} ) => {
-const Project : FC<pageProps> = ({params}) => {
+const SamplePage : FC<pageProps> = ({params}) => {
 
 
 
@@ -66,4 +66,4 @@ const Project : FC<pageProps> = ({params}) => {
     );
 };
 
-export default Project;
+export default SamplePage;
