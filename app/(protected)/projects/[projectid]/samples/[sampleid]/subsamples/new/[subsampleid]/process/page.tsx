@@ -80,7 +80,7 @@ const ProcessPage : FC<pageProps> = ({params, searchParams}) => {
                 const taskId = response.data.id 
                 console.log('Go To the "check" page with taskId: ', taskId)
                 const path = `/projects/${projectid}/samples/${sampleid}/subsamples/${subsampleid}/check/${taskId}`
-                // router.push(path) 
+                router.push(path) 
             }
         })
         .catch((error) => {
