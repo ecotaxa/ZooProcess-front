@@ -9,7 +9,9 @@ import { Button } from "@nextui-org/button";
 import { CameraIcon } from "@radix-ui/react-icons";
 import { addBackground } from "@/app/api/network/zooprocess-api";
 import { auth } from "@/auth";
+// import { add, set } from "date-fns";
 import { add } from "date-fns";
+// import { image } from "@nextui-org/theme";
 // import styles from "./FileUploader.module.scss";
 
 type pageProps = {
@@ -20,10 +22,12 @@ type pageProps = {
       instrumentId: string,
   // },
   onChange: (data:any) => void,
+  // imageRGB: string,
 }
 
 // const FileUploader: FC<pageProps> = ({props,onChange}) => {
-  const FileUploader: FC<pageProps> = ({instrumentId, onChange}) => {
+  const FileUploader: FC<pageProps> = ({instrumentId, onChange }) => {
+  // const FileUploader: FC<pageProps> = ({instrumentId, onChange, imageRGB}) => {
 
   // const {projectid, sampleid, subsampleid, instrumentId} = props;
   // const {instrumentId} = props;
@@ -32,10 +36,23 @@ type pageProps = {
   // console.log("projectid: ", projectid);
   // console.log("sampleid: ", sampleid);
   // console.log("subsampleid: ", subsampleid);
+  
   console.log("instrumentId: ", instrumentId);
-
+  
   const imagePlaceholder = "/images/placeholder-image.jpg";
+  // const [imageUrl, setImageUrl] = useState(imagePlaceholder);
   const [imageUrl, setImageUrl] = useState(imagePlaceholder);
+
+  // // let backgroundImage = undefined
+  // if ( imageRGB ) { 
+  //   // backgroundImage = image
+  //   setImageUrl(imageRGB)
+  // } 
+  // // else {
+  // //   // backgroundImage = imagePlaceholder
+  // //   setImageUrl(imagePlaceholder)
+  // // }
+
   const [isUploading, setIsUploading] = useState<boolean>(false)
 
   const transmit = async (image: {url:string, instrumentId:string}) => {
@@ -46,6 +63,45 @@ type pageProps = {
     onChange(image)
   };
 
+  // const isTiff = (fileUrl:string) : boolean => {
+  //   console.log("fileUrl: ", fileUrl)
+  //   return fileUrl.endsWith(".tif") || fileUrl.endsWith(".tiff")
+  // }
+
+
+  // ne marche pas car le fileUrl est une url locale au server que je ne peux pas transmettre au convertisseur :(
+  // function printImage(fileUrl:string){
+
+  //   setImageUrl(fileUrl);
+
+  //   if (isTiff(fileUrl) ){
+  //     const data = {
+  //       src: fileUrl,
+  //     }
+  //     console.log("data: ", data)
+
+  //     const server = "http://localhost:8000"
+  //     const url = server + "/convert/"
+  //     const response = fetch( url , {
+  //       method: "POST",
+  //       body: JSON.stringify(data),
+  //       headers: {
+  //         "Content-Type": "application/text",
+  //       },
+  //     })
+  //     .then((response) => {
+  //       console.log("response: ", response)
+  //       response.text()
+  //         .then((imageUrl) => {
+  //           setImageUrl(imageUrl);
+  //         })
+  //         .catch((error) => {
+  //           console.log("Cannot convert Tiff to Jpg error: ", error)
+  //         })
+  //     })
+  //   }
+
+  // }
 
   const onImageFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target;
@@ -99,6 +155,7 @@ type pageProps = {
       await transmit(data2api);
 
       setImageUrl(data.fileUrl);
+      // printImage(data.fileUrl)
     } catch (error) {
       console.error("something went wrong, check your server console. (2)");
     } finally {
@@ -180,3 +237,4 @@ type pageProps = {
 
 
 export default FileUploader
+
