@@ -1,5 +1,5 @@
 
-function pathToRealStorage(path) {
+function pathToRealStorage(path:string) : string {
     console.log("pathToRealStorage() | path :", path)
 
     // path.substring(0, 1) == '/'? path.substring(1) : path
@@ -12,7 +12,7 @@ function pathToRealStorage(path) {
 }
 
 
-function pathToSessionStorage(path) {
+function pathToSessionStorage(path:string) : string {
     console.log("pathToSessionStorage() | path :", path)
 
     // path.substring(0, 1) == '/'? path.substring(1) : path

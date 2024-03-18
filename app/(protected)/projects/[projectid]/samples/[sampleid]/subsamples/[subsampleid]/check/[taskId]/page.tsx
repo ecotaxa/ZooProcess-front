@@ -10,6 +10,10 @@ import { MySpinner } from "@/components/mySpinner";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { sep } from "path";
 import { Vignette } from "@/app/api/network/zooprocess-api";
+import { pathToSessionStorage } from "@/lib/gateway";
+import { Image } from "@nextui-org/react";
+import { BorderDottedIcon } from "@radix-ui/react-icons";
+import { Debug } from "@/Components/Debug";
 
 type pageProps = {
     params:{
@@ -25,24 +29,59 @@ type pageProps = {
 const CheckPage: FC<pageProps> = ({ params }) => {
   const { separatorTask, isLoading, isError } = useVignettes(params.taskId);
   const [vignetteList, setVignetteList] = useState(separatorTask?.vignette);
+
+  const [vignetteMaskList, setVignetteMaskList] = useState([]);
+  const [vignetteRawList, setVignetteRawList] = useState([]);
+  const [vignetteResultList, setVignetteResultList] = useState([]);
+
+
+
   const router = useRouter();
 
   const formatData = (data: any) => {
-    return data;
+
+    // export interface Vignette {
+    //   id: string
+    //   url: string
+    //   type: string
+    // }
+
+    const formatted = data.map((vignette:any)=>{return {
+      id:vignette.id,
+      url:vignette.url,
+      type:vignette.type
+    }})
+
+    return formatted; // data;
   };
 
   useEffect(() => {
     console.log("separatorTask changed", separatorTask);
     if (separatorTask == null) return;
-    const vignettes = separatorTask.vignette;
-    if (Object.keys(vignettes).length == 0) return;
+    const vignettes = separatorTask; //.vignette;
+    console.log("vignettes:", vignettes)
+    if (vignettes){
+      if (Object.keys(vignettes).length == 0) return;
+      console.log("vignettes have changed sort them to display them", vignettes);
+      const data = formatData(vignettes);
+      setVignetteList(data);
 
-    console.log("vignettes have changed sort them to display them", vignettes);
-    const data = formatData(vignettes);
-    setVignetteList(data);
+      const raw = data.filter( (vignette:Vignette) => vignette.type == "raw" )
+      const mask = data.filter( (vignette:Vignette) => vignette.type == "mask" )
+      const result = data.filter( (vignette:Vignette) => vignette.type == "merge" )
+
+      setVignetteMaskList(mask)
+      setVignetteRawList(raw)
+      setVignetteResultList(result)
+
+      // setVignetteList(vignettes)
+    } else {
+      setVignetteList([])
+    }
   }, [separatorTask]);
 
   const ShowData = () => {
+
     if (isLoading) return <MySpinner />;
     if (isError) return <ErrorComponent error={isError} />;
 
@@ -59,8 +98,20 @@ const CheckPage: FC<pageProps> = ({ params }) => {
     // console.log("tab",tab)
 
     const image = (vignette:Vignette) => {
+
+      console.log("vignette.url", vignette.url)
+      const localPath = pathToSessionStorage(vignette.url)
+      console.log("localPath", localPath)
+      const sep = "/"
+      const name = vignette.url.split(sep).pop()
+
       return (
-        <img key={vignette.id} src={vignette.url}/>
+        <div  key={vignette.id} className="border-2 background-color: rgb(226 232 240);">
+          {/* <img key={vignette.id} src={localPath}/> */}
+          <Image src={localPath} className="border-2" />
+          <p>{name}</p>
+          <Debug params={vignette.url} /> 
+        </div>
       )
     }
 
@@ -80,11 +131,22 @@ const CheckPage: FC<pageProps> = ({ params }) => {
                 <p>li</p>
             })
         } */}
-
-              <div className="grid" key="form">
+              <div className="grid grid-cols-2 gap-4" key="form">
+                <div className="h-screen flex items-center justify-center">
                     {
-                      vignetteList.map( vignette => image(vignette) )
+                      vignetteList.map( (vignette:any) =>  image(vignette))
+                      // vignetteList.map( (vignette:any) => {
+                      //   return ( 
+                      //     <>
+                      //       image(vignette) 
+                      //       <Debug params={vignette} /> 
+                      //     </>
+
+                      //   )
+                      // }
+                      //   )
                     }
+                  </div>
               </div>
 
       </>
@@ -93,9 +155,9 @@ const CheckPage: FC<pageProps> = ({ params }) => {
 
   return (
     <div className="grid">
-      Vignettes
+      {/* Vignettes */}
       <ShowData />
-      Vignettes fin
+      {/* Vignettes fin */}
     </div>
   );
 };
