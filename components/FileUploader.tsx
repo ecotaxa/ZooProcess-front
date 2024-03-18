@@ -190,7 +190,7 @@ type pageProps = {
           {/* <button className="border p-2" type="submit">Upload</button> */}
           <ShowURL/>
         </div>
-        <div className="flex-row">
+        {/* <div className="flex-row">
           { ! isUploading && (
             <Image className="height-auto"
               src={imageUrl}
@@ -206,7 +206,7 @@ type pageProps = {
               uploading
             </div>
           )}
-        </div>
+        </div> */}
         <Debug params={{ imageUrl }} />
 
       </div>

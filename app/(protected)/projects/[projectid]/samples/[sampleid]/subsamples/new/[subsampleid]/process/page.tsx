@@ -2,7 +2,7 @@
 
 import { Debug } from "@/Components/Debug"
 import { Timeline_scan } from "@/components/timeline-scan";
-import { Button, Card, CardBody, CardFooter, Spinner } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, Slider, Spinner } from "@nextui-org/react";
 import { FC, useState } from "react"
 // import FileUploader from "@/components/FileUploader";
 import { useRouter } from "next/navigation";
@@ -49,6 +49,7 @@ const ProcessPage : FC<pageProps> = ({params, searchParams}) => {
                 projectid,
                 sampleid,
                 subsampleid,
+                scanId: image
                 // folder:{
                 //     src:"",
                 //     dst:""
@@ -77,9 +78,10 @@ const ProcessPage : FC<pageProps> = ({params, searchParams}) => {
         .then((response) => {
             console.log("addSeparateTask() response: ", response)
             if ( response?.status == 200 ){
-                const taskId = response.data.id 
+                const taskId = response.data.taskId 
                 console.log('Go To the "check" page with taskId: ', taskId)
                 const path = `/projects/${projectid}/samples/${sampleid}/subsamples/${subsampleid}/check/${taskId}`
+                // const path = `/projects/${projectid}/samples/${sampleid}/subsamples/${subsampleid}/check/${scanId}`
                 router.push(path) 
             }
         })
@@ -110,6 +112,8 @@ const ProcessPage : FC<pageProps> = ({params, searchParams}) => {
         }
     }
 
+    let label = "Processing"
+
     return (
         <>
 
@@ -117,8 +121,19 @@ const ProcessPage : FC<pageProps> = ({params, searchParams}) => {
 
         <div className="text-start w-">
             <h1>Processing your scan</h1>
-            <h3>{image}</h3>
+            <div><b>project Id: </b> {projectid}</div>
+            <div><b>sample Id: </b> {sampleid}</div>
+            <div><b>subsample Id: </b> {subsampleid}</div>
+            <div><b>Image Id: </b>{image}</div>
             <Spinner/>
+            <Slider 
+                label={label} 
+                step={10} 
+                maxValue={100} 
+                minValue={0} 
+                // defaultValue={0.4}
+                className="max-w-md"
+            />
         </div>
         <ErrorMsg />  
         <div>
