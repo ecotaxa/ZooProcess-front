@@ -78,7 +78,7 @@ export const {
       return session
     },
     async jwt({ token , user }) {
-      console.log({
+      console.log("jwt: ", {
         token,
         user
       })
@@ -93,8 +93,13 @@ export const {
         token.token = globalThis.token
   
         // const existingUser = await getUserByiD(token.sub, globalThis.token);
-        const existingUser = await api.getUserById(`/users/${token.sub}`, globalThis.token )
-        // const existingUser = await api.getUserById(`/users/me`, globalThis.token )
+
+
+        // const existingUser = await api.getUserById(`/users/${token.sub}`, globalThis.token )
+        const existingUser = await api.getUserById(`/users/me`, globalThis.token )
+        
+        
+      
         if (!existingUser) return token;
         token.role = existingUser.role
       }

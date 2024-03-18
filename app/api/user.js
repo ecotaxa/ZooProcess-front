@@ -33,7 +33,7 @@ export function useUserByEmail(email) {
 
 export async function useUserById(userId) {
 
-
+  console.log("useUserById() | userId :", userId)
     // const user = await api.getUserById(`/users/${userId}`)
     // return user
 
