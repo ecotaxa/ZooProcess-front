@@ -1,10 +1,17 @@
 // import { Card, CardContent, Typography } from "@mui/material"
 import { Card , CardBody } from "@nextui-org/react"
+import { useRouter } from "next/navigation"
 
 
 export const ErrorComponent = ({error}) => {
 
     console.log("ErrorComponent: error", error)
+
+  const router = useRouter()
+
+  if (error.status === 401) {
+    router.push('/auth/login')
+  }
 
     return (
     <Card>
