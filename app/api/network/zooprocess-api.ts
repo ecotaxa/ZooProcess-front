@@ -195,6 +195,55 @@ export async function addBackground(image: {url:string, instrumentId:string}) {
 
 }
 
+export async function addScan(image: {url:string, instrumentId:string, subsampleid:string}) {
+  
+  console.log("addScan:", image)
+  const api = await axiosInstanse({})
+
+  const data = {
+    url: image.url
+  }
+
+  return await api.post(`/scan/${image.instrumentId}/url`, data )
+      .then(function (response) {
+        console.log("addScan response: ", response);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log("addScan Error: ", error.toJSON());
+        if (error.response) {
+
+          if (error.response.status == "409"){
+            const msg = {
+              //error:{
+                message: error.response.data || "Duplicate value"
+              //}
+            }
+            throw(msg)
+          }
+
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+        throw(error);
+      });
+
+
+}
+
+
 export async function getBackgrounds(url:string){
   console.log("getBackgrounds");
   const api = await axiosInstanse({})
