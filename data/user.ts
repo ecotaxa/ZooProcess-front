@@ -1,6 +1,7 @@
 
 
-import {useUserByEmail, useUserById} from '@/api/user'
+// import {useUserByEmail, useUserById} from '@/api/user'
+import {useUserByEmail } from '@/api/user'
 
 export const getUserByEmail = async (email: string) => {
     // try {
