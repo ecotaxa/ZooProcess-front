@@ -596,9 +596,9 @@ export async function getSample(url:string, options?: any){
 
 export async function updateSample(projectId:string, sampleId:string, data:Samples){
 
-  console.log("api addSmaple projectId:", projectId);
-  console.log("api addSmaple sampleId:", sampleId);
-  console.log("api addSmaple data:", data);
+  console.log("api addSample projectId:", projectId);
+  console.log("api addSample sampleId:", sampleId);
+  console.log("api addSample data:", data);
 
   const api = await axiosInstanse({})
   return await api.put(`/projects/${projectId}/samples/${sampleId}`, data)
@@ -638,16 +638,20 @@ export async function getVignettes(url:string){
   // console.log("getVignettes response: ", response);
   // return response.data;
 
-  return await api.get<Separator>(url)
-  .then(function (response) {
-    console.log("getVignettes response: ", response);
-    return response.data;
-  })
-  .catch(function (error) {
-    console.log("getVignettes error:", error.toJSON());
-    throw(error);
-  })
+  // return await api.get<Separator>(url)
+  // .then(function (response) {
+  //   console.log("getVignettes response: ", response);
+  //   return response.data;
+  // })
+  // .catch(function (error) {
+  //   console.log("getVignettes error:", error.toJSON());
+  //   return error
+  //   // throw(error);
+  // })
 
+  const response = await api.get<Separator>(url)
+  console.debug("getVignettes return ", response)
+  return response//.data;
 
 }
 

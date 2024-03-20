@@ -15,6 +15,9 @@ import { Image } from "@nextui-org/react";
 import { BorderDottedIcon } from "@radix-ui/react-icons";
 import { Debug } from "@/Components/Debug";
 
+//import path from "path/posix";
+import path from "path";
+
 type pageProps = {
     params:{
         projectid: string,
@@ -27,18 +30,34 @@ type pageProps = {
 
 
 const CheckPage: FC<pageProps> = ({ params }) => {
+// const CheckPage: FC<pageProps> = ({ projectid, sampleid,subsampleid, taskId }) => {
+
   const { separatorTask, isLoading, isError } = useVignettes(params.taskId);
-  const [vignetteList, setVignetteList] = useState(separatorTask?.vignette);
+  const [ vignetteList, setVignetteList] = useState(separatorTask?.vignette);
+  // const [ vignetteList, setVignetteList] = useState(separatorTask?.data);
+  // const [ vignetteList, setVignetteList] = useState([]);
 
-  const [vignetteMaskList, setVignetteMaskList] = useState([]);
-  const [vignetteRawList, setVignetteRawList] = useState([]);
-  const [vignetteResultList, setVignetteResultList] = useState([]);
-
-
+  // const [vignetteMaskList, setVignetteMaskList] = useState([]);
+  // const [vignetteRawList, setVignetteRawList] = useState([]);
+  // const [vignetteResultList, setVignetteResultList] = useState([]);
 
   const router = useRouter();
 
-  const formatData = (data: any) => {
+  // const formatData = (data: any) => {
+    const getName = (url:string):string => {
+
+      // const p = path.join(url)//  .resolve(url)
+      // const nam = p.
+
+      const split = url.split(sep);
+      const name = split[split.length-1];
+
+      console.log("get name: ", name)
+
+      return name;
+    }
+
+  const formatData2 = (data: any) => {
 
     // export interface Vignette {
     //   id: string
@@ -46,11 +65,61 @@ const CheckPage: FC<pageProps> = ({ params }) => {
     //   type: string
     // }
 
-    const formatted = data.map((vignette:any)=>{return {
-      id:vignette.id,
-      url:vignette.url,
-      type:vignette.type
-    }})
+
+    const raw = data.filter( (vignette:Vignette) => vignette.type == "raw" )
+    const mask = data.filter( (vignette:Vignette) => vignette.type == "mask" )
+    const result = data.filter( (vignette:Vignette) => vignette.type == "merge" )
+
+    // setVignetteMaskList(mask)
+    // setVignetteRawList(raw)
+    // setVignetteResultList(result)
+
+    
+    // const p = path.resolve(vignette.url)
+
+    const formatted = raw.map((vignette:any)=>{
+
+ 
+      
+      // (url:string):string => { 
+      //    return url;
+      // }
+
+      const vign_mask = mask.filter( (vignet:any) => getName(vignet.url) )
+      const vign_result = result.filter( (vignet:any) => getName(vignet.url) )
+
+      let vignettes = {
+        raw : {
+          id:vignette.id,
+          url:vignette.url,
+          type:vignette.type
+        },
+        mask:vign_mask,
+        result:vign_result
+      } 
+      
+      return vignettes
+    })
+
+    // const formatted = data.map((vignette:any)=>{return {
+    //   id:vignette.id,
+    //   url:vignette.url,
+    //   type:vignette.type
+    // }})!
+
+    return formatted; // data;
+  };
+
+
+  const formatData = (data: Array<any>) => {
+    console.log("formatData")
+    const formatted = data.map((vignette:any) => {
+      return {
+        id:vignette.id,
+        url:vignette.url,
+        type:vignette.type
+      }
+    })
 
     return formatted; // data;
   };
@@ -66,18 +135,11 @@ const CheckPage: FC<pageProps> = ({ params }) => {
       const data = formatData(vignettes);
       setVignetteList(data);
 
-      const raw = data.filter( (vignette:Vignette) => vignette.type == "raw" )
-      const mask = data.filter( (vignette:Vignette) => vignette.type == "mask" )
-      const result = data.filter( (vignette:Vignette) => vignette.type == "merge" )
-
-      setVignetteMaskList(mask)
-      setVignetteRawList(raw)
-      setVignetteResultList(result)
-
       // setVignetteList(vignettes)
-    } else {
-      setVignetteList([])
     }
+    //  else {
+    //   setVignetteList([])
+    // }
   }, [separatorTask]);
 
   const ShowData = () => {
@@ -85,7 +147,7 @@ const CheckPage: FC<pageProps> = ({ params }) => {
     if (isLoading) return <MySpinner />;
     if (isError) return <ErrorComponent error={isError} />;
 
-    if ( vignetteList == null) return <div>No vignette</div>;
+    if ( vignetteList == null || vignetteList.length == 0) return <div>No vignette</div>;
 
     console.log("vignetteList", vignetteList);
 
@@ -160,9 +222,9 @@ const CheckPage: FC<pageProps> = ({ params }) => {
       {/* Vignettes fin */}
     </div>
   );
-};
+
+}
 
 
 export default CheckPage;
-
 

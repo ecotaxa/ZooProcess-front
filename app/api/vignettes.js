@@ -13,9 +13,9 @@ export function useVignettes(taskId) {
 
     const { data, error=false, isLoading=true } = useSWR(`/separator/${taskId}`, api.getVignettes ,
       {
-        revalidateIfStale: false,
+        revalidateIfStale: true,
         revalidateOnFocus: false,
-        revalidateOnReconnect: false
+        revalidateOnReconnect: true
       })
 
     // if ( isLoading==false && error==false ){
@@ -24,9 +24,13 @@ export function useVignettes(taskId) {
     //   console.log("  isLoading -> ", isLoading )
     //   console.log("  error     -> ", error )
     // }
+      console.debug("useVignettes got", data, error, isLoading)
+      if ( error ) {
+        console.error(error)  
+      }
 
     return {
-      separatorTask: data,
+      separatorTask: data?.data,
       isLoading,
       isError: error
     }
