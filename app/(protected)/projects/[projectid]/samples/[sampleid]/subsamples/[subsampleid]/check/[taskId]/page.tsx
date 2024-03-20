@@ -9,7 +9,7 @@ import { useVignettes } from '@/api/vignettes';
 import { MySpinner } from "@/components/mySpinner";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { sep } from "path";
-import { Vignette } from "@/app/api/network/zooprocess-api";
+import { Separator, Vignette } from "@/app/api/network/zooprocess-api";
 import { pathToSessionStorage } from "@/lib/gateway";
 import { Image } from "@nextui-org/react";
 import { BorderDottedIcon } from "@radix-ui/react-icons";
@@ -57,6 +57,39 @@ const CheckPage: FC<pageProps> = ({ params }) => {
       return name;
     }
 
+    const changeExtension = (url:string, ext="png") : string => {
+
+      // const split = url.split(".");
+      // const name = split[split.length-1];
+
+      let name = url.substring( 0, url.length-3 )
+      console.log("changeExtension: ", name)
+      name +=  ext
+      console.log("changeExtension: ", name)
+
+      return name;
+
+    }
+
+    // const formatData3 = (data:any) => {
+
+    //   const raw = data.filter( (vignette:Vignette) => vignette.type == "raw" )
+    //   const formatted = raw.map((vignette:any)=>{
+    //     const name = getName(vignette.url)
+    //     let vignettes = {
+    //       raw : {
+    //         id:vignette.id,
+    //         url:vignette.url,
+    //         type:vignette.type
+    //       },
+    //       mask:{
+    //         vign_mask,
+    //       merge:vign_merge
+    //     }
+    //   }
+
+    // }
+
   const formatData2 = (data: any) => {
 
     // export interface Vignette {
@@ -68,7 +101,11 @@ const CheckPage: FC<pageProps> = ({ params }) => {
 
     const raw = data.filter( (vignette:Vignette) => vignette.type == "raw" )
     const mask = data.filter( (vignette:Vignette) => vignette.type == "mask" )
-    const result = data.filter( (vignette:Vignette) => vignette.type == "merge" )
+    const merge = data.filter( (vignette:Vignette) => vignette.type == "merge" )
+
+    console.debug("raw:" , raw)
+    console.debug("mask:" , mask)
+    console.debug("merge:" , merge)
 
     // setVignetteMaskList(mask)
     // setVignetteRawList(raw)
@@ -78,26 +115,40 @@ const CheckPage: FC<pageProps> = ({ params }) => {
     // const p = path.resolve(vignette.url)
 
     const formatted = raw.map((vignette:any)=>{
-
- 
       
       // (url:string):string => { 
       //    return url;
       // }
 
-      const vign_mask = mask.filter( (vignet:any) => getName(vignet.url) )
-      const vign_result = result.filter( (vignet:any) => getName(vignet.url) )
+      const name = getName(vignette.url)
+      const maskname = changeExtension(name)
+      console.debug("name:", name)
+      console.debug("maskname:", maskname)
+
+      const vign_mask = mask.filter( (vignet:any) => maskname==getName(vignet.url))
+      const vign_merge = merge.filter( (vignet:any) => name==getName(vignet.url))
+
+      console.debug("vign_mask: ", vign_mask)
+      console.debug("vign_merge: ", vign_merge)
+
 
       let vignettes = {
         raw : {
           id:vignette.id,
           url:vignette.url,
-          type:vignette.type
         },
-        mask:vign_mask,
-        result:vign_result
-      } 
+        mask:{
+          id: vign_mask[0].id,
+          url: vign_mask[0].url,
+        },
+        merge:{
+          id: vign_merge[0].id,
+          url: vign_merge[0].url
+        }
+      }
       
+      console.debug("formatData2: ", vignettes)
+
       return vignettes
     })
 
@@ -111,7 +162,7 @@ const CheckPage: FC<pageProps> = ({ params }) => {
   };
 
 
-  const formatData = (data: Array<any>) => {
+  const formatData = (data: any) => {
     console.log("formatData")
     const formatted = data.map((vignette:any) => {
       return {
@@ -132,7 +183,7 @@ const CheckPage: FC<pageProps> = ({ params }) => {
     if (vignettes){
       if (Object.keys(vignettes).length == 0) return;
       console.log("vignettes have changed sort them to display them", vignettes);
-      const data = formatData(vignettes);
+      const data = formatData2(vignettes);
       setVignetteList(data);
 
       // setVignetteList(vignettes)
@@ -159,18 +210,27 @@ const CheckPage: FC<pageProps> = ({ params }) => {
 
     // console.log("tab",tab)
 
-    const image = (vignette:Vignette) => {
+    const image = (vignette:any) => {
 
-      console.log("vignette.url", vignette.url)
-      const localPath = pathToSessionStorage(vignette.url)
-      console.log("localPath", localPath)
+      console.log("image vignette", vignette)
+
+      // return (<p>image</p>)
+
+      const rawPath = pathToSessionStorage(vignette.raw.url)
+      const maskPath = pathToSessionStorage(vignette.mask.url)
+      const mergePath = pathToSessionStorage(vignette.merge.url)
+      console.log("rawPath", rawPath)
+      console.log("maskPath", maskPath)
+      console.log("mergePath", mergePath)
       const sep = "/"
-      const name = vignette.url.split(sep).pop()
+      const name = vignette.raw.url.split(sep).pop()
 
       return (
         <div  key={vignette.id} className="border-2 background-color: rgb(226 232 240);">
           {/* <img key={vignette.id} src={localPath}/> */}
-          <Image src={localPath} className="border-2" />
+          <Image src={rawPath} className="border-2" />
+          <Image src={maskPath} className="border-2" />
+          <Image src={mergePath} className="border-2" />
           <p>{name}</p>
           <Debug params={vignette.url} /> 
         </div>
@@ -194,7 +254,7 @@ const CheckPage: FC<pageProps> = ({ params }) => {
             })
         } */}
               <div className="grid grid-cols-2 gap-4" key="form">
-                <div className="h-screen flex items-center justify-center">
+                <div className="v-screen flex items-center justify-center">
                     {
                       vignetteList.map( (vignette:any) =>  image(vignette))
                       // vignetteList.map( (vignette:any) => {
