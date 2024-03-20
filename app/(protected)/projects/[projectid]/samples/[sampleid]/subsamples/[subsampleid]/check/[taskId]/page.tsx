@@ -226,13 +226,15 @@ const CheckPage: FC<pageProps> = ({ params }) => {
       const name = vignette.raw.url.split(sep).pop()
 
       return (
-        <div  key={vignette.id} className="border-2 background-color: rgb(226 232 240);">
+        <div  key={vignette.id} className="flex flex-col border-2 background-color: rgb(226 232 240);">
+          <div className="v-screen flex items-center justify-center">
+            <Image src={rawPath} className="border-2" />
+            <Image src={maskPath} className="border-2" />
+            <Image src={mergePath} className="border-2" />
+          </div>
           {/* <img key={vignette.id} src={localPath}/> */}
-          <Image src={rawPath} className="border-2" />
-          <Image src={maskPath} className="border-2" />
-          <Image src={mergePath} className="border-2" />
           <p>{name}</p>
-          <Debug params={vignette.url} /> 
+          <Debug params={vignette} /> 
         </div>
       )
     }
@@ -254,7 +256,7 @@ const CheckPage: FC<pageProps> = ({ params }) => {
             })
         } */}
               <div className="grid grid-cols-2 gap-4" key="form">
-                <div className="v-screen flex items-center justify-center">
+                {/* <div className="h-screen flex items-center justify-center"> */}
                     {
                       vignetteList.map( (vignette:any) =>  image(vignette))
                       // vignetteList.map( (vignette:any) => {
@@ -268,7 +270,7 @@ const CheckPage: FC<pageProps> = ({ params }) => {
                       // }
                       //   )
                     }
-                  </div>
+                  {/* </div> */}
               </div>
 
       </>
