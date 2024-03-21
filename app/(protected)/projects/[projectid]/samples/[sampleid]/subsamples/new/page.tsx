@@ -66,7 +66,7 @@ const NewSubSample : FC<pageProps> = (params ) => {
     const router = useRouter()
     // const { projectid, sampleid } = params
 
-    console.log("NewSample params: ", params);
+    console.debug("NewSample params: ", params);
     // console.log("NewSample params projectid: ", params.projectid);
     // console.log("NewSample params sampleid: ", params.sampleid);
     // console.log("NewSample params projectid: ", params.projectid);
