@@ -21,6 +21,18 @@ export const siteConfig = {
 		href: "/tasks",
 		},
 		{
+			label: "Drives",
+			href: "/drives",
+		},
+		{
+			label: "Intruments",
+			href: "/intruments",
+		},
+		{
+			label: "Backgrounds",
+			href: "/background",
+		},
+		{
 			label: "Docs",
 			href: "/docs",
 		},
@@ -40,12 +52,24 @@ export const siteConfig = {
 			href: "/projects",
 		},
 		{
-			label: "Team",
-			href: "/team",
+			label: "Users",
+			href: "/Users",
 		},
 		{
-			label: "Calendar",
-			href: "/calendar",
+		label: "Tasks",
+		href: "/tasks",
+		},
+		{
+			label: "Drives",
+			href: "/drives",
+		},
+		{
+			label: "Intruments",
+			href: "/intruments",
+		},
+		{
+			label: "Backgrounds",
+			href: "/background",
 		},
 		{
 			label: "Settings",
@@ -57,7 +81,7 @@ export const siteConfig = {
 		},
 		{
 			label: "Logout",
-			href: "/logout",
+			href: "/auth/logout",
 		},
 	],
 	links: {
