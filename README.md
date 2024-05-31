@@ -51,5 +51,15 @@ https://github.com/vercel/next.js/issues/58295
 serverActions: { allowedOrigins: ["xxxx.com", "localhost:3001"], }
 
 
+# Connect to the interface
 
+localhost:3001/auth/login
+
+seb@seb.com
+seb1234
+
+
+# docker 
+
+docker build -t zooprocessv10-docker .
 

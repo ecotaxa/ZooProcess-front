@@ -1,20 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: false,
-    serverActions: { allowedOrigins: ["imev:3001", "192.168.1.159:3001", "localhost:3001"], },
+    // serverActions: { allowedOrigins: ["imev:3001", "192.168.1.159:3001", "localhost:3001"], },
     experimental: {
         serverActions: {
-            allowedOrigins: ["imev:3001"],
+            allowedOrigins: ["imev:3001", "192.168.1.159:3001", "localhost:3001"],
         },
     },
+    output: "standalone"
 }
 
 module.exports = nextConfig
 
-module.exports = {
-    experimental: {
-        serverActions: {
-            allowedOrigins: ["demo.example.com:3000"],
-        },
-    },
-}
+// module.exports = {
+//     experimental: {
+//         serverActions: {
+//             allowedOrigins: ["demo.example.com:3000"],
+//         },
+//     },
+// }
