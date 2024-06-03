@@ -21,6 +21,7 @@
     ],
     "paths": {
       "@/*": ["./*"],
+      "@/components/*" : ["./app/components/*"],
       "@/api/*" : ["./app/api/*"],
       "@/network/*" : ["./app/api/network/*"]
     }

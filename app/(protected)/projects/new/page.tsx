@@ -19,7 +19,7 @@ import { ErrorComponent } from '@/components/ErrorComponent';
 import { da } from 'date-fns/locale';
 import { SWRResponse } from 'swr';
 import { Drive } from '@/app/api/network/zooprocess-api';
-import { Debug } from '@/Components/Debug';
+import { Debug } from '@/components/Debug';
  
 
 

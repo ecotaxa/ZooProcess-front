@@ -6,7 +6,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button
 // import { formatDate , formatTime }  from '@/api/formatDateAndTime.js';
 import { key } from '@/api/key';
 
-import { Debug } from '@/Components/Debug';
+import { Debug } from '@/components/Debug';
 
 const columns = [
     // {name: "ID", uid: "id"},

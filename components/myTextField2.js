@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 
 import {Input} from "@nextui-org/react";
 // import { Debug } from "./Debug";
-import { Debug } from "@/Components/Debug";
+import { Debug } from "@/components/Debug";
 
 
 export function MyTextField(props) {

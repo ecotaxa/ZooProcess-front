@@ -8,7 +8,7 @@ import { useState, useMemo, useEffect } from "react";
 import { FormElements } from "@/components/myFormElements";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
-import { Debug } from "@/Components/Debug";
+import { Debug } from "@/components/Debug";
 
 // import { Debug } from "@/components/Debug";
 

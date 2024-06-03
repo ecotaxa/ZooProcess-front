@@ -3,7 +3,7 @@
 import { Input } from "@nextui-org/input";
 import Image from "next/image";
 import { ChangeEvent, FC, useState } from "react";
-import { Debug } from "@/Components/Debug";
+import { Debug } from "@/components/Debug";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "@nextui-org/button";
 import { CameraIcon } from "@radix-ui/react-icons";

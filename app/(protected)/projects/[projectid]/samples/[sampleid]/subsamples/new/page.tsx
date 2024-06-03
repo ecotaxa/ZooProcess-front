@@ -11,7 +11,7 @@ import { fraction_inputFormElments } from '@/config/formElements';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 // import { addSample } from '@/app/api/samples';
-import { Debug } from '@/Components/Debug';
+import { Debug } from '@/components/Debug';
 import { addSubSample } from '@/app/api/subsamples';
 import { Timeline_scan } from '@/components/timeline-scan';
  

@@ -1,6 +1,6 @@
 "use client";
 
-import { Debug } from "@/Components/Debug"
+import { Debug } from "@/components/Debug"
 import { Timeline_scan } from "@/components/timeline-scan";
 import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
 import { FC } from "react"

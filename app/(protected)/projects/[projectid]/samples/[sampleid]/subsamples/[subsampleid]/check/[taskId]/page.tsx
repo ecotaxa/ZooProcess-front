@@ -13,7 +13,7 @@ import { Separator, Vignette } from "@/app/api/network/zooprocess-api";
 import { pathToSessionStorage } from "@/lib/gateway";
 import { Image } from "@nextui-org/react";
 import { BorderDottedIcon } from "@radix-ui/react-icons";
-import { Debug } from "@/Components/Debug";
+import { Debug } from "@/components/Debug";
 
 //import path from "path/posix";
 import path from "path";

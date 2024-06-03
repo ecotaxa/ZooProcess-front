@@ -8,7 +8,7 @@ import Metadata from "./@metadata/page";
 // import Samples from "./@samples/page";
 
 import { FC } from "react";
-import { Debug } from "@/Components/Debug";
+import { Debug } from "@/components/Debug";
 import { ProjectBreadcrumbs } from "@/components/ProjectBreadcrumbs";
 
 interface pageProps {

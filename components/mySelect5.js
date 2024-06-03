@@ -1,6 +1,6 @@
 import { Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
-import { Debug } from "@/Components/Debug";
+import { Debug } from "@/components/Debug";
 
 export function MySelect(props){
 

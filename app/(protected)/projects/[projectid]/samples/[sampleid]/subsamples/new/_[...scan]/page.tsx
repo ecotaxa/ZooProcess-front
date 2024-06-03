@@ -1,6 +1,6 @@
 "use client"
 
-import { Debug } from "@/Components/Debug"
+import { Debug } from "@/components/Debug"
 import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react"
 import Link from "next/link"
 import { FC } from "react"

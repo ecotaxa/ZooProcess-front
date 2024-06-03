@@ -11,7 +11,7 @@ import { inputFormElements } from '@/config/formElements';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { addSample } from '@/app/api/samples';
-import { Debug } from '@/Components/Debug';
+import { Debug } from '@/components/Debug';
  
 
 
