@@ -6,7 +6,7 @@
 import * as api from '@/app/api/network/zooprocess-api' 
 import useSWR from 'swr'
 
-export function useUserByEmail(email) {
+export async function useUserByEmail(email) {
 
     // const res = await fetch()
 
