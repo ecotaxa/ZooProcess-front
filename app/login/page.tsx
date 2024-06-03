@@ -1,6 +1,6 @@
 // import AcmeLogo from '@/app/ui/acme-logo';
 // import AcmeLogo from '@/public/vercel.svg';
-import LoginForm from '@/app/ui/login-form';
+import {LoginForm} from '@/components/auth/login-form';
  
 export default function LoginPage() {
   return (
