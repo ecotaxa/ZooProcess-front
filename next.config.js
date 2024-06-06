@@ -4,7 +4,7 @@ const nextConfig = {
     // serverActions: { allowedOrigins: ["imev:3001", "192.168.1.159:3001", "localhost:3001"], },
     experimental: {
         serverActions: {
-            allowedOrigins: ["imev:3001", "192.168.1.159:3001", "localhost:3001"],
+            allowedOrigins: ["imev:3001", "192.168.1.159:3001", "localhost:3001", "zooprocess.imev-mer.fr:3001", "localhost:8000" ],
         },
     },
     output: "standalone"
