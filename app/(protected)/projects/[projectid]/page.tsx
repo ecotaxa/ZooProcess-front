@@ -50,7 +50,7 @@ const ProjectPage : FC<pageProps> = ({params}) => {
             <Tabs aria-label="Options">
                 {/* <Tab key="stats" title="Stats" href={`/projects/${projectid}/stats`}> */}
                 <Tab key="stats" title="Stats" >
-                    <Stats/>
+                    <Stats  {...params}/>
                 </Tab>
                 {/* <Tab key="metadata" title="Metadata" href={`/projects/${projectid}/metadata`}> */}
                 <Tab key="metadata" title="Metadata" >

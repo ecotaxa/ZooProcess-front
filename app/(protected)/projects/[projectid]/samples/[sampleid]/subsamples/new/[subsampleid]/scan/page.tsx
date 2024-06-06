@@ -59,6 +59,7 @@ const ScanPage : FC<pageProps> = ({params}) => {
         if (isTiff(fileUrl.url)){
             const data = {
                 src: pathToRealStorage(fileUrl.url),
+                dst: pathToRealStorage(fileUrl.url + ".jpg"),
             }
 
             // const data_test = {
@@ -67,8 +68,11 @@ const ScanPage : FC<pageProps> = ({params}) => {
 
             console.log("data: ", data)
 
-            const server = "http://localhost:8000"
+            // const server = "http://localhost:8000"
+            const server = "http://zooprocess.imev-mer.fr:8000"
             const url = server + "/convert/"
+            console.error("url: ", url)
+            console.error("data: ", data)
             const response = await fetch( url , {
                 method: "POST",
                 body: JSON.stringify(data),
@@ -93,7 +97,13 @@ const ScanPage : FC<pageProps> = ({params}) => {
                         console.log("Cannot convert Tiff to Jpg error: ", error)
                     })
                 } else {
-                    console.error("Cannot convert Tiff to Jpg error: ", response)
+                    console.error("Resp NOK", response.status)
+                    if ( response.status == 422){
+                        console.error("The server do not accept your connection")
+                        console.error("Can't connect: ", response)
+                    } else {
+                        console.error("Cannot convert Tiff to Jpg error: ", response)
+                    }
                 }
             })
         } else {

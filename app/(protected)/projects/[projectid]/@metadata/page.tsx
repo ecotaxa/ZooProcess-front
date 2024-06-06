@@ -106,20 +106,21 @@ const Metadata : FC<pageProps> = (params) => {
   }
 
        
-    // onSubmit
-    const onChange = (value:any) => {
-      console.log("Project metadata onChange:", value)
-      // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
-      // stringifiedData = JSON.stringify(value, null, 2);
+  // onSubmit
+  const onChange = (value:any) => {
+    console.log("Project metadata onChange:", value)
+    // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
+    // stringifiedData = JSON.stringify(value, null, 2);
 
-      // POUR AFFICHAGE DEBUG
-      // setData(JSON.stringify(value, null, 2))
-      // console.log("App onChange:", stringifiedData)
-      // console.log("App onChange:", JSON.stringify(value, null, 2));
+    // POUR AFFICHAGE DEBUG
+    // setData(JSON.stringify(value, null, 2))
+    // console.log("App onChange:", stringifiedData)
+    // console.log("App onChange:", JSON.stringify(value, null, 2));
 
-      return updateProject(value);
-    }
+    return updateProject(value);
+  }
 
+  
   const onCancel = () => {
       //router.back()
       // router.push({
@@ -140,18 +141,17 @@ const Metadata : FC<pageProps> = (params) => {
         <h1>{projectId}</h1>
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
 
-        <div className="text-center justify-center">
+          <div className="text-center justify-center">
             <Stack spacing={3}>
             <h1>Metadata</h1>
                 <ProjectForm/>
             </Stack>
-            </div>
+          </div>
         </section>
         </>
     );
 
 }
-
 
 
 
