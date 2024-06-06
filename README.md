@@ -63,3 +63,30 @@ seb1234
 
 docker build -t zooprocessv10-docker .
 
+
+
+
+
+
+
+
+
+
+# simply Dockerfile
+
+FROM node:18
+  
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD npm run dev
+
+
+docker build -t zooprocess-front .
+docker run -p 3000:3001 zooprocess-front
+
+http://niko.obs-vlfr.fr:3001
+
+
