@@ -75,3 +75,33 @@ export function useBackgrounds(projectId) {
             }
 }
 
+
+
+
+export function useSampleScans(projectId) {
+
+    if ( projectId == undefined ){
+        return {
+            scans: [],
+            isLoading : false,
+            isError: { message: "Cannot determine the project" }
+        }    
+    }
+   
+    const { data=[], error=false, isLoading=true } = useSWR( 
+                `/projects/${projectId}/scans`, 
+                api.getBackgrounds, 
+                {
+                    revalidateIfStale: false,
+                    revalidateOnFocus: false,
+                    revalidateOnReconnect: false
+                }
+    )
+
+    return {
+            scans: data,
+            isLoading,
+            isError: error
+    }
+}
+
