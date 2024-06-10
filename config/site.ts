@@ -56,8 +56,8 @@ export const siteConfig = {
 			href: "/Users",
 		},
 		{
-		label: "Tasks",
-		href: "/tasks",
+			label: "Tasks",
+			href: "/tasks",
 		},
 		{
 			label: "Drives",
@@ -85,11 +85,11 @@ export const siteConfig = {
 		},
 	],
 	links: {
-		github: "https://github.com/nextui-org/nextui",
-		twitter: "https://twitter.com/getnextui",
-		docs: "https://nextui.org",
-		discord: "https://discord.gg/9b6yyZKmH4",
+		// github: "https://github.com/nextui-org/nextui",
+		// twitter: "https://twitter.com/getnextui",
+		// docs: "https://nextui.org",
+		// discord: "https://discord.gg/9b6yyZKmH4",
 		ecotaxa:"https://ecotaxa.obs-vlfr.fr",
-    sponsor: "https://patreon.com/jrgarciadev"
+		// sponsor: "https://patreon.com/jrgarciadev"
 	},
 };
