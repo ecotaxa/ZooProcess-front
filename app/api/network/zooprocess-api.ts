@@ -259,6 +259,21 @@ export async function getBackgrounds(url:string){
       // if
 }
 
+// export async function getBackgrounds(url:string){
+//   console.log("getBackgrounds");
+//   const api = await axiosInstanse({})
+
+//   const response = await api.get<Array<Background>>(url)
+//   // .then(function (response) {
+//     // console.log("getBackgrounds response: ", response);
+//     return response.data;
+//   // })
+//   // .catch((error) => {
+//   //   console.log("getBackgrounds Error: ", error.toJSON());
+//   //   // if (error.response) {
+//       // if
+// }
+
 // export async function getProjects(page: number){
 export async function getProjects(){
 

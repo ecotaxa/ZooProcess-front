@@ -8,11 +8,17 @@ import { key } from '@/app/api/key';
 
 import { Debug } from '@/components/Debug';
 
-const columns = [
-    {name: "ID", uid: "id"},
+interface IColumn {
+    name: string,
+    uid: string
+    allowSorting?: boolean
+}
+
+const columns : Array<IColumn> = [
+    {name: "ID", uid: "id", allowSorting:true },
     // {name: "DRIVE", uid: "drive"},
-    {name: "NAME", uid: "name"},
-    {name: "CREATOR", uid: "creator"},
+    {name: "NAME", uid: "name", allowSorting:true},
+    {name: "CREATOR", uid: "creator", allowSorting:true},
     // {name: "SAMPLE", uid: "scan"},
     // {name: "SCAN", uid: "scan"},
     // {name: "FRACTION/SUBSAMPLE", uid:"fraction"},
@@ -21,13 +27,13 @@ const columns = [
     // {name: "Time", uid: "time"},
     // {name: "DATE", uid: "date"},
 
-    {name: "Fraction id", uid: "fraction_id"},
-    {name: "Frac min", uid: "frac_min"},
-    {name: "Frac sup", uid: "frac_sup"},
-    {name: "Observation", uid: "observation"},
+    {name: "Fraction id", uid: "fraction_id", allowSorting:true},
+    {name: "Frac min", uid: "frac_min", allowSorting:true},
+    {name: "Frac sup", uid: "frac_sup", allowSorting:true},
+    {name: "Observation", uid: "observation", allowSorting:true},
 
-    {name: "QC", uid: "status"},
-    {name: "ACTION", uid: "action"},
+    {name: "QC", uid: "status", allowSorting:true},
+    {name: "ACTION", uid: "action", allowSorting: false},
   ];
 
 export function ScanTable(props:{projectId:String, scans:any}) {
@@ -153,7 +159,7 @@ export function ScanTable(props:{projectId:String, scans:any}) {
     <Table aria-label="Projects">
       <TableHeader columns={columns}>
         {(column) => (
-          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
+          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"} allowsSorting={column.allowSorting}>
             {column.name}
           </TableColumn>
         )}
