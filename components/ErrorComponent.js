@@ -9,7 +9,7 @@ export const ErrorComponent = ({error}) => {
 
   const router = useRouter()
 
-  if (error.status === 401) {
+  if (error.status == 401) {
     router.push('/auth/login')
   }
 
