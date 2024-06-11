@@ -25,8 +25,8 @@ export const siteConfig = {
 			href: "/drives",
 		},
 		{
-			label: "Intruments",
-			href: "/intruments",
+			label: "Instruments",
+			href: "/instruments",
 		},
 		{
 			label: "Backgrounds",
