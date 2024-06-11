@@ -7,36 +7,84 @@ import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key';
 
 import { Debug } from '@/components/Debug';
+import { useAsyncList } from "react-stately";
+
+interface IColumn {
+    name: string,
+    uid: string
+    allowSorting?: boolean
+}
 
 const columns = [
-    {name: "ID", uid: "id"},
+    {name: "ID", uid: "id", allowSorting:true},
     // {name: "DRIVE", uid: "drive"},
-    {name: "NAME", uid: "name"},
-    {name: "CREATOR", uid: "creator"},
+    {name: "NAME", uid: "name", allowSorting:true},
+    {name: "CREATOR", uid: "creator", allowSorting:true},
     // {name: "SAMPLE", uid: "background"},
     // {name: "SCAN", uid: "scan"},
     // {name: "FRACTION/SUBSAMPLE", uid:"fraction"},
     // {name: "CREATE AT", uid: "createdAt"},
     // {name: "UPDATED AT", uid: "updatedAt"},
-    {name: "Time", uid: "time"},
-    {name: "DATE", uid: "date"},
-    {name: "QC", uid: "status"},
-    {name: "ACTION", uid: "action"},
+    {name: "Time", uid: "time", allowSorting:true},
+    {name: "DATE", uid: "date", allowSorting:true},
+    {name: "QC", uid: "status", allowSorting:true},
+    {name: "ACTION", uid: "action", allowSorting:false},
   ];
 
 export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
     const {projectId, backgrounds=[]} = props
+    const stripped = true;
 
     console.log("BackgroundsTable projectId= ", projectId);
     console.log("BackgroundsTable backgrounds= ", backgrounds);
 
-    const updateddata = backgrounds.map( (background) => { 
-        console.debug("background: ",background)    
-        background['key']=background.id ; return background;
-    } )
-    console.log("BackgroundTable updateddata: ",updateddata)
-    const [rows, setRows] = useState(updateddata)
 
+    let list = useAsyncList({
+        async load({signal}) {
+        //   let res = await fetch('https://swapi.py4e.com/api/people/?search', {
+        //     signal,
+        //   });
+        //   let json = await res.json();
+        //   setIsLoading(false);
+    
+        //   return {
+        //     items: json.results,
+        //   };
+            return {
+                items: backgrounds,
+                // items: updateddata,
+            };
+        },
+        async sort({items, sortDescriptor}) {
+            console.debug("sort: ",items, sortDescriptor)
+          return {
+            items: items.sort((a, b) => {
+              let first = a[sortDescriptor.column];
+              let second = b[sortDescriptor.column];
+              let cmp = (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
+    
+              console.debug("sort: ",first, second, cmp)
+
+              if (sortDescriptor.direction === "descending") {
+                cmp *= -1;
+              }
+    
+              return cmp;
+            }),
+          };
+        },
+    });
+
+
+    const updateddata = backgrounds.map( (background:any) => { 
+        console.debug("background: ",background)    
+        background['key']=background.id ; 
+        return background;
+    } )
+
+    console.log("BackgroundTable updateddata: ",updateddata)
+    
+    const [rows, setRows] = useState(updateddata)
 
     const StatusString = (status:string) => {
         console.log("Status: ", status);
@@ -60,7 +108,7 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
     // }
 
 
-    const renderCell = React.useCallback((background, columnKey) => {
+    const renderCell = React.useCallback((background:any, columnKey:any) => {
 
         console.log("render cell :columnKey ", columnKey); 
 
@@ -144,16 +192,21 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
   return (
     <>
     <Debug params={props} />
-    <Table aria-label="Projects">
+    <Table 
+        sortDescriptor={list.sortDescriptor}
+        onSortChange={list.sort} 
+        isStriped={stripped} 
+        aria-label="Background Table">
       <TableHeader columns={columns}>
         {(column) => (
-          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
+          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"} allowsSorting={column.allowSorting}>
             {column.name}
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={backgrounds}>
-        {(item) => (
+      {/* <TableBody items={backgrounds}> */}
+      <TableBody items={list.items}>
+        {(item:any) => (
           <TableRow key={key(item.id,"tr")}>
             {(columnKey) => <TableCell key={key(item.id,columnKey)}>{renderCell(item, columnKey)}</TableCell>}
           </TableRow>

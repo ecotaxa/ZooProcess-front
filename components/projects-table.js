@@ -6,26 +6,68 @@ import { Button, Link, Table, TableHeader, TableColumn, TableBody, TableRow, Tab
 import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key';
 import { useRouter } from "next/navigation";
+import { useAsyncList } from "react-stately";
 
 
+// interface IColumn {
+//   name: string,
+//   uid: string
+//   allowSorting?: boolean
+// }
 
-const columns = [
-    {name: "ID", uid: "id"},
-    {name: "DRIVE", uid: "drive"},
-    {name: "NAME", uid: "name"},
-    {name: "SAMPLE", uid: "sample"},
-    {name: "SCAN", uid: "scan"},
-    {name: "CREATE AT", uid: "createdAt"},
-    {name: "UPDATED AT", uid: "updatedAt"},
-    {name: "QC", uid:"qc"},
-    {name: "ACTIONS", uid: "actions"},
+const columns /*: Array<IColumn>*/ = [
+    {name: "ID", uid: "id", allowSorting:true},
+    {name: "DRIVE", uid: "drive", allowSorting:true},
+    {name: "NAME", uid: "name", allowSorting:true},
+    {name: "SAMPLE", uid: "sample", allowSorting:true},
+    {name: "SCAN", uid: "scan", allowSorting:true},
+    {name: "CREATE AT", uid: "createdAt", allowSorting:true},
+    {name: "UPDATED AT", uid: "updatedAt", allowSorting:true},
+    {name: "QC", uid:"qc", allowSorting:true},
+    {name: "ACTIONS", uid: "actions", allowSorting:false},
   ];
 
 export function ProjectsTableNextUI(props) {
     const {projects=[]} = props
     const router = useRouter();
+    const stripped = true;
 
     // console.log("ProjectsTable( projects= ",projects,")")
+
+    let list = useAsyncList({
+        async load({signal}) {
+        //   let res = await fetch('https://swapi.py4e.com/api/people/?search', {
+        //     signal,
+        //   });
+        //   let json = await res.json();
+        //   setIsLoading(false);
+    
+        //   return {
+        //     items: json.results,
+        //   };
+            return {
+                items: projects,
+            };
+        },
+        async sort({items, sortDescriptor}) {
+            console.debug("sort: ",items, sortDescriptor)
+          return {
+            items: items.sort((a, b) => {
+              let first = a[sortDescriptor.column];
+              let second = b[sortDescriptor.column];
+              let cmp = (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
+    
+              console.debug("sort: ",first, second, cmp)
+  
+              if (sortDescriptor.direction === "descending") {
+                cmp *= -1;
+              }
+    
+              return cmp;
+            }),
+          };
+        },
+      });
 
     const updateddata = projects.map( (project) => { project['key']=project.id ; return project;} )
     // console.log("updateddata: ",updateddata)
@@ -132,23 +174,27 @@ export function ProjectsTableNextUI(props) {
         }
     }, []);
 
-
     return (
-        <Table aria-label="Projects">
-        <TableHeader columns={columns}>
-            {(column) => (
-            <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
-                {column.name}
-            </TableColumn>
-            )}
-        </TableHeader>
-        <TableBody items={projects}>
-            {(item) => (
-            <TableRow key={key(item.id,"tr")}>
-                {(columnKey) => <TableCell key={key(item.id,columnKey)}>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-            )}
-        </TableBody>
+        <Table 
+                sortDescriptor={list.sortDescriptor}
+                onSortChange={list.sort} 
+                isStriped={stripped} 
+                aria-label="Project Table">
+            <TableHeader columns={columns}>
+                {(column) => (
+                <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"} allowsSorting={column.allowSorting}>
+                    {column.name}
+                </TableColumn>
+                )}
+            </TableHeader>
+            {/* <TableBody items={projects}> */}
+            <TableBody items={list.items}>
+                {(item) => (
+                    <TableRow key={key(item.id,"tr")}>
+                        {(columnKey) => <TableCell key={key(item.id,columnKey)}>{renderCell(item, columnKey)}</TableCell>}
+                    </TableRow>
+                )}
+            </TableBody>
         </Table>
     );
 }

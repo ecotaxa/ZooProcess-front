@@ -5,6 +5,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button
 
 import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key';
+import {useAsyncList} from "@react-stately/data";
 
 import { Debug } from '@/components/Debug';
 
@@ -38,15 +39,54 @@ const columns : Array<IColumn> = [
 
 export function ScanTable(props:{projectId:String, scans:any}) {
     const {projectId, scans=[]} = props
+    const stripped = true;
 
     console.log("ScanTable projectId= ", projectId);
     console.log("ScanTable scans= ", scans);
 
-    const updateddata = scans.map( (scan) => { 
+    let list = useAsyncList({
+        async load({signal}) {
+        //   let res = await fetch('https://swapi.py4e.com/api/people/?search', {
+        //     signal,
+        //   });
+        //   let json = await res.json();
+        //   setIsLoading(false);
+    
+        //   return {
+        //     items: json.results,
+        //   };
+            return {
+                items: scans,
+                // items: updateddata,
+            };
+        },
+        async sort({items, sortDescriptor}) {
+            console.debug("sort: ",items, sortDescriptor)
+          return {
+            items: items.sort((a, b) => {
+              let first = a[sortDescriptor.column];
+              let second = b[sortDescriptor.column];
+              let cmp = (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
+    
+              console.debug("sort: ",first, second, cmp)
+
+              if (sortDescriptor.direction === "descending") {
+                cmp *= -1;
+              }
+    
+              return cmp;
+            }),
+          };
+        },
+    });
+
+    const updateddata = scans.map( (scan:any) => { 
         console.debug("scan: ",scan)    
         scan['key']=scan.id ; return scan;
     } )
+
     console.log("ScanTable updateddata: ", updateddata)
+    
     const [rows, setRows] = useState(updateddata)
 
 
@@ -72,7 +112,7 @@ export function ScanTable(props:{projectId:String, scans:any}) {
     // }
 
 
-    const renderCell = React.useCallback((scan, columnKey) => {
+    const renderCell = React.useCallback((scan:any, columnKey:any) => {
 
         console.log("render cell :columnKey ", columnKey); 
 
@@ -151,12 +191,15 @@ export function ScanTable(props:{projectId:String, scans:any}) {
         }
     }, []);
 
-
-
+   
   return (
     <>
     <Debug params={props} />
-    <Table aria-label="Projects">
+    <Table
+          sortDescriptor={list.sortDescriptor}
+          onSortChange={list.sort} 
+        isStriped={stripped} 
+        aria-label="Sample Scan Table">
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"} allowsSorting={column.allowSorting}>
@@ -164,8 +207,9 @@ export function ScanTable(props:{projectId:String, scans:any}) {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={scans}>
-        {(item) => (
+      {/* <TableBody items={scans}> */}
+      <TableBody items={list.items}>
+        {(item:any) => (
           <TableRow key={key(item.id,"tr")}>
             {(columnKey) => <TableCell key={key(item.id,columnKey)}>{renderCell(item, columnKey)}</TableCell>}
           </TableRow>
@@ -175,3 +219,4 @@ export function ScanTable(props:{projectId:String, scans:any}) {
     </>
   );
 }
+
