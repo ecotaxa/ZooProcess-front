@@ -3,11 +3,23 @@
 import { auth, signOut } from "@/auth"
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
+import { useRouter } from "next/navigation";
 
 const SettingsPage = async () => {
 
     const session = await auth()
  
+    if ( session){
+        const date = new Date(session.expires)
+        const now = new Date()
+
+        if ( date < now ){
+            await signOut(); 
+            const router = useRouter()
+            router.push('/auth/login')
+        }
+    }
+    
     return (
         <div>
             <p>Settings Page</p>

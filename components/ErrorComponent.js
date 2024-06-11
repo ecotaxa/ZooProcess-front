@@ -8,10 +8,34 @@ export const ErrorComponent = ({error}) => {
     console.log("ErrorComponent: error", error)
 
   const router = useRouter()
+  // router.push('/auth/login')
 
   if (error.status == 401) {
+    console.debug("ErrorComponent: error.status == test")
     router.push('/auth/login')
   }
+
+  if (error.status === 401) {
+    console.debug("ErrorComponent: error.status === test")
+    router.push('/auth/login')
+  }
+
+  if (error.status == "401") {
+    console.debug("ErrorComponent: error.status = string")
+    router.push('/auth/login')
+  }
+
+  if (error.message.status == "401") {
+    console.debug("ErrorComponent: rror.message.status == 401")
+    router.push('/auth/login')
+  }
+
+  if (error.message == "Request failed with status code 401") {
+    console.debug("ErrorComponent: rror.message.status == 401")
+    router.push('/auth/login')
+  }
+
+  console.debug("typeof(error.status): ", typeof(error.status))
 
     return (
     <Card>
