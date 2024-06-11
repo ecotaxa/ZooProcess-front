@@ -7,30 +7,73 @@ import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key';
 
 import { Debug } from '@/components/Debug';
+import { useAsyncList } from "react-stately";
 
-const columns = [
-    // {name: "ID", uid: "id"},
+// interface IColumn {
+//   name: string,
+//   uid: string
+//   allowSorting?: boolean
+// }
+
+const columns /*: Array<IColumn>*/ = [
+    // {name: "ID", uid: "id", allowSorting:true},
     // {name: "DRIVE", uid: "drive"},
-    {name: "NAME", uid: "name"},
+    {name: "NAME", uid: "name", allowSorting:true},
     // {name: "SAMPLE", uid: "sample"},
-    {name: "SCAN", uid: "scan"},
-    {name: "FRACTION/SUBSAMPLE", uid:"fraction"},
-    {name: "CREATE AT", uid: "createdAt"},
-    {name: "UPDATED AT", uid: "updatedAt"},
-    {name: "STATUS", uid: "status"},
-    {name: "ACTIONS", uid: "actions"},
+    {name: "SCAN", uid: "scan", allowSorting:true},
+    {name: "FRACTION/SUBSAMPLE", uid:"fraction", allowSorting:true},
+    {name: "CREATE AT", uid: "createdAt", allowSorting:true},
+    {name: "UPDATED AT", uid: "updatedAt", allowSorting:true},
+    {name: "STATUS", uid: "status", allowSorting:true},
+    {name: "ACTIONS", uid: "actions", allowSorting:false},
   ];
 
 export function SamplesTableNextUI(props) {
     const {projectId, samples=[]} = props
+    const stripped = true;
 
     console.log("SamplesTable projectId= ", projectId);
     console.log("SamplesTable samples= ", samples);
 
+    let list = useAsyncList({
+      async load({signal}) {
+      //   let res = await fetch('https://swapi.py4e.com/api/people/?search', {
+      //     signal,
+      //   });
+      //   let json = await res.json();
+      //   setIsLoading(false);
+  
+      //   return {
+      //     items: json.results,
+      //   };
+          return {
+              items: samples,
+          };
+      },
+      async sort({items, sortDescriptor}) {
+          console.debug("sort: ",items, sortDescriptor)
+        return {
+          items: items.sort((a, b) => {
+            let first = a[sortDescriptor.column];
+            let second = b[sortDescriptor.column];
+            let cmp = (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
+  
+            console.debug("sort: ",first, second, cmp)
+
+            if (sortDescriptor.direction === "descending") {
+              cmp *= -1;
+            }
+  
+            return cmp;
+          }),
+        };
+      },
+    });
+
+
     const updateddata = samples.map( (sample) => { sample['key']=sample.id ; return sample;} )
     console.log("SamplesTableNextUI updateddata: ",updateddata)
     const [rows, setRows] = useState(updateddata)
-
 
     const StatusString = (status) => {
         console.log("Status: ", status);
@@ -144,15 +187,20 @@ export function SamplesTableNextUI(props) {
   return (
     <>
     <Debug params={props} />
-    <Table aria-label="Projects">
+    <Table 
+        sortDescriptor={list.sortDescriptor}
+        onSortChange={list.sort} 
+        isStriped={stripped} 
+        aria-label="Sample Table">
       <TableHeader columns={columns}>
         {(column) => (
-          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
+          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"} allowsSorting={column.allowSorting}>
             {column.name}
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={samples}>
+      {/* <TableBody items={samples}> */}
+      <TableBody items={list.items}>
         {(item) => (
           <TableRow key={key(item.id,"tr")}>
             {(columnKey) => <TableCell key={key(item.id,columnKey)}>{renderCell(item, columnKey)}</TableCell>}

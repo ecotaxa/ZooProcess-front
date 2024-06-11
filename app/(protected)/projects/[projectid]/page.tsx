@@ -22,13 +22,11 @@ interface pageProps {
 const ProjectPage : FC<pageProps> = ({params}) => {
 
 
-
     const projectid = params.projectid
 
     // const projectName = "MOCK ;) Zooscan_ptb_wp2_2021_journee";
     // const projectName = {name: "MOCK_Zooscan_ptb_wp2_2021_journee"};
     // const projectName : Array<string> = [ "MOCK_Zooscan_ptb_wp2_2021_journee" ]; 
-
 
     return (
         <div>
