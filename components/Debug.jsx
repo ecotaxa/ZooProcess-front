@@ -1,19 +1,24 @@
 
 import {Switch, Tooltip} from "@nextui-org/react";
 import { useState } from "react";
+
+import {debug} from "../config/settings"
+
 export const Debug = ({params,title="debug"}) => {
-
-
 
     const [isSelected, setIsSelected] = useState(false);
 
+    if ( debug == false ){
+        return (<></>)
+    }
+
+    //
     // return (
     //     <div>
     //         {JSON.stringify(params)}
     //     </div>
     // )
 
-    //return (<></>)
 
     const ShowError = () => {
 
