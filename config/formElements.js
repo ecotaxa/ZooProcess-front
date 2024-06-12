@@ -574,7 +574,7 @@ export const sampleid_formElements=[
                 { name:"ecotaxa_project_name", placeholder:"Ecoxata Project name", label:'Ecoxata Project name',
                 tag:"TextField", type:"text",
                 variant:"outlined", fullWidth:true, 
-                required:true, xs:12, sm:12, size:"small"
+                required:false, xs:12, sm:12, size:"small"
                 },
                 { name:"ecotaxa_project_title", placeholder:"Ecoxata Project title", label:'Ecotaxa Project Title',
                 required:false, disabled:true,
@@ -611,19 +611,19 @@ export const sampleid_formElements=[
         }
     ]
 
-    export const scannerElements= [
+    export const scannerElements = [
         {
             title:"Scanner Metadata",
             section:
             [
                 { name:"instrument", placeholder:"Instrument", label:'Intrument',
-                tag:"TextField", type:"text",
+                tag:"TextField", type:"text", value:"Zooscan",
                 required:false, disabled:true,
                 variant:"outlined", fullWidth:true, 
                 xs:12, sm:6, size:"small"
                 },
                 { name:"serial", placeholder:"Instrument serial number", label:'Serial number',
-                tag:"TextField", type:"text",
+                tag:"Instruments", type:"text",
                 required:false, disabled:true,
                 variant:"outlined", fullWidth:true, 
                 xs:12, sm:6, size:"small"
@@ -651,25 +651,25 @@ export const sampleid_formElements=[
                 // },
                 { name:"xoffset_large", placeholder:"XOffset (Large)", label:'XOffset',
                 tag:"TextField", type:"number",
-                required:false, disabled:true,
+                required:false, disabled:false,
                 variant:"outlined", fullWidth:false, 
                 xs:12, sm:6, size:"small"
                 },
                 { name:"yoffset_large", placeholder:"YOffset (Large)", label:'YOffset',
                 tag:"TextField", type:"number",
-                required:false, disabled:true,
+                required:false, disabled:false,
                 variant:"outlined", fullWidth:false, 
                 xs:12, sm:6, size:"small"
                 },
                 { name:"xsize_large", placeholder:"XSize (Large)", label:'XSize',
                 tag:"TextField", type:"number",
-                required:false, disabled:true,
+                required:false, disabled:false,
                 variant:"outlined", fullWidth:false, 
                 xs:12, sm:6, size:"small"
                 },
                 { name:"ysize_large", placeholder:"YSize (Large)", label:'YSize',
                 tag:"TextField", type:"number",
-                required:false, disabled:true,
+                required:false, disabled:false,
                 variant:"outlined", fullWidth:false, 
                 xs:12, sm:6, size:"small"
                 },
@@ -677,16 +677,17 @@ export const sampleid_formElements=[
         }
     ]
     
-    export const scannerForm=[
-        scanningOptions,
-        // scannerElements,
-        // scannerCalibrationElements
+    export const scannerForm= [
+        // scanningOptions,
+        scannerElements,
+        scannerCalibrationElements
     ]
 
     export const projectForm = [
         projectElements,
         scanningOptions,
         scannerElements,
+        scannerCalibrationElements,
         projectEcotaxaElements,
         // scannerForm
     ]
