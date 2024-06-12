@@ -85,6 +85,7 @@ export function MyTextField(props) {
     if (props.prefix) { opt['startContent'] = props.prefix }
     if (props.endAdornment?.text) { opt['endContent'] = props.endAdornment.text}
     if (props.readonly) { opt['isReadOnly'] = true}
+    if (props.disabled) { opt['isReadOnly'] = true}
 
     // if (props.fn2 && props.project) { 
     if (props.fn2) { 
