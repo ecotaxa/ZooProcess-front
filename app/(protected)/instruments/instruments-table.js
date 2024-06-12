@@ -116,7 +116,7 @@ export function InstrumentsTable(props) {
                     color="primary" 
                     disableRipple
                     as={Link}
-                    href={`/drives/${instrument.id}`}
+                    href={`/instruments/${instrument.id}`}
                 >
                     Details
                 </Button>

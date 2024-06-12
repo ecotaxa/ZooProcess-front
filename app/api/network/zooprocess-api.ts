@@ -82,6 +82,13 @@ export interface Instrument {
   model: string
   name: string
   sn: string
+  calibration: {
+    id: string
+    xOffset: number
+    yOffset: number
+    xSize: number
+    ySize: number
+  } | undefined
 }
 
 export interface Sample {
@@ -481,6 +488,14 @@ export async function getInstruments(){
   return response.data; 
 }
 
+export async function getInstrument(url:string){
+  const api = await axiosInstanse({})
+  const response = await api.get<Instrument>(url);
+  
+  console.debug("getInstrument response: ", response);
+
+  return response.data; 
+}
 
 export async function addSample(projectId:string, data:Sample){
 
