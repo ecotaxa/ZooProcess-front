@@ -46,7 +46,7 @@ let emptyProject = {
         "ecotaxa_project":null
     }
 
-const updateProjectForm = (drive:SWRResponse) => {
+const updateProjectForm = (drive: SWRResponse) => {
 
     let form = projectForm
 
@@ -183,7 +183,7 @@ const NewProject = (params:any) => {
 
         const driveList 
         // const [driveList, conversion] 
-        = drives.map((drive,index) => {
+        = drives.map((drive, index) => {
             console.log("drive: ", drive);
             // return { id:index, name:drive.name }, { id:index, origid:drive.id}
             // return { id:drive.index, name:drive.name };
@@ -192,7 +192,7 @@ const NewProject = (params:any) => {
         })
 
         const conversion //: Array<IDrive>
-        = drives.map((drive,index:number) => {
+        = drives.map((drive, index:number) => {
             console.log("drive: ", drive);
             // return { id:index, name:drive.name }, { id:index, origid:drive.id}
             // return { id:drive.index, name:drive.name };
