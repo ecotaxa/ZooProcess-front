@@ -5,6 +5,7 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { MySpinner } from "./mySpinner";
 import { ErrorComponent } from "./ErrorComponent";
+import { Debug } from "./Debug";
 // import { spec } from "node:test/reporters";
 
 
@@ -63,7 +64,7 @@ const Drives = (props:FormItem) => {
     // console.log("Drives: ", drives);
 
     // console.log("SELECT props:", props);
-    let opt : any = {
+    let opts : any = {
         id: props.name,
         items: drives,
         label: props.label || "Drives",
@@ -73,11 +74,14 @@ const Drives = (props:FormItem) => {
     }
 
     // console.log("added props");
-    if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
-    if (props.required == true) { opt['isRequired'] = true; }
+    if (props.value) { opts['defaultSelectedKeys'] = [props.value]; }
+    if (props.required == true) { opts['isRequired'] = true; }
 
 
     return (
+        <>
+        <Debug params={[{props:props},{opts:opts},{hasError:isError}]} />
+
         <Select
             // onChange={props.onChange}
             // selectedKeys={value}
@@ -86,10 +90,11 @@ const Drives = (props:FormItem) => {
             // defaultValue={props.value}
             // defaultSelectedKeys={[props.value]}
             // onSelectionChange={handleChange}
-            {...opt}
+            {...opts}
         >
             {(item:Item) => <SelectItem key={item.id}>{item.name}</SelectItem>}
         </Select>
+        </>
     )
 
 }
