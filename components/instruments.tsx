@@ -81,7 +81,7 @@ const Instruments = (props:FormItem) => {
     return (
 
         <>
-        <Debug params={[{props:props},{opts:opts},{hasError:isError}]} />
+        <Debug params={[{props:props},{opts:opts},{hasError:isError}]} title={props.name} />
 
         <Select
             // onChange={props.onChange}
