@@ -603,7 +603,8 @@ export const sampleid_formElements=[
                 variant:"outlined",  required: true, 
                 xs:12, sm:6, size: "small",
                 choice:[
-                    {id:1, value: "LARGE (2400dpi)"},
+                    {id:1200, value: "LARGE (1200dpi)"},
+                    {id:2400, value: "LARGE (2400dpi)"},
                 ],
                 value:"1"
                 },
