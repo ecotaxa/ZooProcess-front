@@ -12,6 +12,7 @@ import { Stack } from '@mui/material';
 // import { Project as IProject } from '@/app/api/network/zooprocess-api';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MyForm } from '@/components/myForm';
+import { Debug } from '@/components/Debug';
 
 interface pageProps {
     // params: {
@@ -32,29 +33,28 @@ const Metadata : FC<pageProps> = (params) => {
   const fillProject = (project:any) : any => { 
         console.log("fillProject: ", project);
         
-        let proj = {
-            "id":project.id,
-            "name": project.name,
-            "cdrive":project.drive,
-            "drive": project.drive.id,
-            "description": project.description || "",
-            "acronym": project.acronym || "",
-            "ecotaxa_project_title": project.ecotaxa?.name || "",
-            "ecotaxa_project": project.ecotaxa?.projectId || "",
-            "scanningOptions":project.scanningOptions || 0
+      let proj = {
+          "id":project.id,
+          "name": project.name,
+          "cdrive":project.drive,
+          "drive": project.drive.id,
+          "description": project.description || "",
+          "acronym": project.acronym || "",
+          "ecotaxa_project_title": project.ecotaxa?.name || "",
+          "ecotaxa_project": project.ecotaxa?.projectId || "",
+          "scanningOptions": project.scanningOptions || 0,
+          "serial": project.instrument.id || 0,
+          "xoffset_large": project.instrument.calibration.xOffset || 0,
+          "yoffset_large": project.instrument.calibration.yOffset || 0,
+          "xsize_large": project.instrument.calibration.xSize || 0,
+          "ysize_large": project.instrument.calibration.ySize || 0,
       }
 
-      // if (project.acronym ) { proj["acronym"] = project.acronym;}
-      // if (project.ecotaxa) {
-      //   proj["ecotaxa_project_title"] = "" //project.ecotaxa.acronym;
-      //   proj["ecotaxa_project"] = "" // project.acronym;
+      // if (project.instrument.id) {
       // }
 
-      //form['value'] = proj;
       return proj;
     }
-
-    // const [form, setForm] = useState({})
 
     const initForm = () => {
       let localform : any = {}
@@ -144,7 +144,8 @@ const Metadata : FC<pageProps> = (params) => {
           <div className="text-center justify-center">
             <Stack spacing={3}>
             <h1>Metadata</h1>
-                <ProjectForm/>
+            <Debug params={project} title='project'/>
+            <ProjectForm/>
             </Stack>
           </div>
         </section>

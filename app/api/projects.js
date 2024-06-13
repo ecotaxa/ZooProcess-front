@@ -3,6 +3,8 @@
 import useSWR from 'swr'
 
 import * as api from '@/app/api/network/zooprocess-api' 
+import Instruments from '@/components/instruments'
+import { projectEcotaxaElements } from '@/config/formElements'
 // import { auth } from '@/auth'
 // import { da } from 'date-fns/locale'
 
@@ -116,12 +118,25 @@ const convertData2api = (data) => {
     id:data.id,
     name:data.name,
     acronym:data.acronym,
-    driveId:data.driveId,
+    driveId:data.drive, //Id,
     description:data.description,
 
     // only manager options
-    scanningOptions:data.scanningOptions.currentKey,
+    scanningOptions:data.scanningOptions, //.currentKey,
     updateAt:date.toISOString(), 
+
+    // instrument
+    instrumentId: data.serial,
+    // serial: data.serial,
+
+    // ecotaxa
+    ///TODO  copie ecotaxa fields
+    // ecotaxa_project_title: data.ecotaxa_project_title,
+    // ecotaxa_project_name: data.ecotaxa_project_name,
+  }
+
+  if (data.ecotaxa_project){
+    dataConverted.ecotaxaId = data.ecotaxa_project
   }
 
   return dataConverted
