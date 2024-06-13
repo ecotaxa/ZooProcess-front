@@ -58,7 +58,8 @@ export function MySelect(props){
 
     return (
         <>
-        <Debug params={[{props:props},{opt:opt}]} />
+        <Debug params={[{props:props},{opt:opt}]}  title={props.name} />
+
         <Select
             // selectedKeys={[String(value)]}
             selectedKeys={[value]}

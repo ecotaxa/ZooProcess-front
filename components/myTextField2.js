@@ -168,7 +168,8 @@ export function MyTextField(props) {
 
     return (
         <>
-        <Debug params={[{props:props},{opts:opts},{hasError:hasError}]} />
+        <Debug params={[{props:props},{opts:opts},{hasError:hasError}]} title={props.name}/>
+
         <Input 
             {...opts}
             isInvalid={hasError}
