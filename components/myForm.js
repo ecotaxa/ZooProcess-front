@@ -18,6 +18,9 @@ import { Debug } from "@/components/Debug";
 // props.forms must contain a form template or a list of form templates
 // props.value can contain form values if need to prefill the form
 export function MyForm(props){
+
+  console.debug("AAAAAARRRRRRRGGGGGGG  MyForm(props): ", props );
+
 // const Page = () => {
 
     // const router = useRouter()
@@ -52,9 +55,12 @@ export function MyForm(props){
     // keep value to reset it
     let defaultValue = {...props.value}
 
+ 
+
     // const testData2 = {sample_id:'b', scientific_program:'dyfamed_wp2_2023_biotom_sn001', latitude_ns:2}
     // const [myform, setMyForm] = useState(props.value?props.value:{});
     const [myValues, setMyForm] = useState(props.value || {});
+    // const [myValues, setMyForm] = useState();
     // const [myform, setMyForm] = useState({});
     // setMyForm(testData2)
     // const [title, setTitle] = useState(props.title?props.title:"Title");
@@ -72,51 +78,69 @@ export function MyForm(props){
     const [values, setValues] = useState(defaultValue?defaultValue:{});
     // const [values, setValues] = useState(props.value || {});
 
+    // useEffect(()=>{
+    //   console.log("myForm has changed:", value, myValues);
+    //   setValues(myValues)
 
-    useEffect(()=>{
-      console.log("myForm has change:", myValues);
-      setValues(myValues)
+    // // },[myValues])
+    // },[props.value])
 
-    },[myValues])
+    // const margin={margin:"0 5px"}
 
-    const margin={margin:"0 5px"}
-
-    const init = () => {
-        setMyForm(defaultValue)
-    }
+    // const inite = () => {
+    //   console.debug("init() => myValues : ", myValues)
+    //   if ( myValues == undefined)
+    //     setMyForm(defaultValue)
+    // }
+    // inite()
 
     // inject the values given in parameter in the form
     const myElement = (formitem) => {
+      // console.debug("myElement: ", formitem);
 
       if ( formitem.name ){
         const value = myValues[formitem.name];
 
-        // console.log("FORM VALUE for ", formitem.name, " = " , value , " <=> " , formitem['value'] );
 
-        if ( value != undefined ){
-          formitem['value'] = value;
-        } else {
-          // console.log("UNDEFINED");
-          if ( formitem['value'] != undefined) {
-            // console.log("OVERRIDE")
-            myValues[formitem.name] = formitem['value']
-            let form = myValues
-            form[formitem.name] = formitem['value']
-            setMyForm(form)
+        // if ( value !== formitem['value'] ){
+
+          // console.debug("FORM VALUE for ", formitem.name, " = " , value , " <= " , formitem['value'] );
+
+          if ( value != undefined ){
+            formitem['value'] = value;
+            console.debug("setMyForm() => myValues : ", myValues)
+          } else {
+
+            if ( value != formitem['value'] ){
+
+
+              // console.log("UNDEFINED");
+              if ( formitem['value'] != undefined) {
+                // console.log("OVERRIDE")
+                // myValues[formitem.name] = formitem['value']
+                let form = myValues
+                form[formitem.name] = formitem['value']
+                setMyForm(form)
+                console.debug("setMyForm() => myValues : ", myValues)
+              }
+            }
           }
-        }
+        // }
+
       } else {
-        formitem['name']="empty_"+String(Math.floor(Math.random() * 100)) // j'aime pas mais j'ai pas mieux pour le moment
+        console.log("formitem.name is undefined");
+        formitem['name']="empty_" + String(Math.floor(Math.random() * 100)) // j'aime pas mais j'ai pas mieux pour le moment
       }
-        // console.log("-+-+-+---------------------------------");
-        // console.log("myform: ", myform);
-        // console.log("formitem: ", formitem);
-        // console.log("-+-+-+---------------------------------");
+
+      // console.log("-+-+-+---------------------------------");
+      // // console.log("myform: ", myform);
+      // console.log("formitem: ", formitem);
+      // console.log("-+-+-+---------------------------------");
 
         return (
             <Grid key={formitem.name}
-              xs={formitem.xs} 
-              sm={formitem.sm} 
+              xs={formitem.xs}
+              sm={formitem.sm}
               item={true}
             >
               <FormElements {...formitem} key={formitem.name}
@@ -185,25 +209,34 @@ export function MyForm(props){
     const onChangeElement = (name,value) => {
         console.log("onChangeElement:",name, "-- value: ", value);
         const type = searchtypeof(name);
-        console.log("type:",type);
+        // console.debug("type:",type);
     
+        console.debug("MMMMMMM myValues: ", myValues);
+
         if (type === "number" ) {
           const newForm = {...myValues, [name]: Number(value)};
           // setMyForm({...myform, [name]: Number(value)});
           // const nform = { ...form
+          console.log("newForm (n): ", newForm);
           setMyForm({...newForm});
+          console.debug("OOOOOOO myValues: ", myValues);
         } else {
           const newForm = {...myValues, [name]: value};
-          setMyForm({...newForm});
+          console.log("newForm (o): ", newForm);
+          // setMyForm({...newForm});
+          setMyForm(newForm);
+          console.debug("OOOOOOO myValues: ", myValues);
+
           // setMyForm({...myform, name: value});
-          
         }
+        
         setIsDataModified(true)
         setIsDataUpdated(false)
-        console.log("onChangeElement form values", myValues);
+        console.log("onChangeElement form values -- ", myValues);
       }
 
     const cancel = () => {
+      console.debug("cancel()");
         // const data = {};
         // const keys = Object.keys(myValues);
         // console.log(keys)
@@ -217,6 +250,7 @@ export function MyForm(props){
     }
     
   const onSubmitHandler = async (event /*: React.FormEvent<HTMLFormElement>*/) => {
+        console.debug("onSubmitHandler");
         event.preventDefault(); // 👈️ prevent page refresh
         setIsDataModified(false) // Set loading to true when the request starts
         setError(null) // Clear previous errors when a new request starts
@@ -233,10 +267,12 @@ export function MyForm(props){
         setIsUpdating(true)
         props.onChange(values)
         .then( (response) => {
-          console.log("onChange OK");
-          console.log(response);
+          // console.log("onChange OK");
+          console.log("onChange OK " , response);
           // console.log("Data Updated")
-          defaultValue = values;
+          setValues(response)
+          // defaultValue = values;
+          defaultValue = response;
           setIsDataUpdated(true)
           setIsUpdating(false)
         })
@@ -262,7 +298,7 @@ export function MyForm(props){
           <form onSubmit={onSubmitHandler}>
             <Card>
               <CardHeader className="flex flex-col">
-              <h1
+                <h1
                   color="primary">
                     {title}
                 </h1>
@@ -272,7 +308,8 @@ export function MyForm(props){
                 </h4>
               
               <Debug params={forms} title="forms"/>
-              <Debug params={myValues} title="value"/>
+              <Debug params={value} title="value"/>
+              <Debug params={myValues} title="myValues"/>
               {/* <Debug params={myValues} title="myform"/> */}
 
               </CardHeader>
@@ -283,8 +320,7 @@ export function MyForm(props){
                       forms.map( input => formElements(input) )
                     }
     
-                  
-    
+
                   </div>
     
               </CardBody>

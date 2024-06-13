@@ -13,6 +13,7 @@ import { Stack } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MyForm } from '@/components/myForm';
 import { Debug } from '@/components/Debug';
+// import { set } from 'date-fns';
 
 interface pageProps {
     // params: {
@@ -29,6 +30,25 @@ const Metadata : FC<pageProps> = (params) => {
 
   const { project, isLoading, isError } = useProject(projectId)
   // const [ sampleList, setSampleList ] = useState(project)
+  const [ projectData, setProject ] = useState(project)
+
+  function isEmpty(obj:Object) {
+    for (var prop in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+        return false;
+      }
+    }
+  
+    return true
+  }
+
+  useEffect(() => {
+    if (!isEmpty(project)) {
+      console.log("AAAAAAAAAAAAAAAAAAAAAA Metadata useEffect: ", project);
+      setProject(project);
+    }
+  }, [project])
+
 
   const fillProject = (project:any) : any => { 
         console.log("fillProject: ", project);
@@ -86,11 +106,28 @@ const Metadata : FC<pageProps> = (params) => {
     
     //const projectMetadata = 
 
+    // form = { 
+    //   ...form, 
+    //   value:fillProject(project),
+    //   project:{projectId}
+    // }
+
+    const data = {
+      ...project,
+      projectData
+    }
+
+    console.log("projectMetadata: ", data);
+
     form = { 
       ...form, 
-      value:fillProject(project),
+      // value:fillProject(project),
+      // value:fillProject(projectData),
+      value:fillProject(data),
       project:{projectId}
     }
+
+
     // form['value'] = fillProject(project)
     // setForm(f)
     // form['value'] = projectMetadata;
@@ -117,7 +154,18 @@ const Metadata : FC<pageProps> = (params) => {
     // console.log("App onChange:", stringifiedData)
     // console.log("App onChange:", JSON.stringify(value, null, 2));
 
-    return updateProject(value);
+    const project = updateProject(value);
+
+    // project contain only field to do the update
+    // we need to keep old value, some will be false (like calibration data), but not use at the moment on this page
+    // const mergedProject = {
+    //   ...projectData,
+    //   ...project,
+    // }
+
+    // setProject(mergedProject);
+    return project
+    // return  updateProject(value);
   }
 
   
@@ -145,6 +193,7 @@ const Metadata : FC<pageProps> = (params) => {
             <Stack spacing={3}>
             <h1>Metadata</h1>
             <Debug params={project} title='project'/>
+            <Debug params={projectData} title='projectData'/>
             <ProjectForm/>
             </Stack>
           </div>

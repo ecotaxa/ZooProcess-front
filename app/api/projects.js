@@ -112,6 +112,8 @@ export function addProject(data){
 
 const convertData2api = (data) => {
 
+  console.debug(`convertData2api(${data})`)
+
   const date = new Date();
 
   let dataConverted = {
@@ -153,6 +155,7 @@ export function updateProject(data){
 
   const dataConverted = convertData2api(data);
 
+  console.debug("dataConverted: ", dataConverted);
 
   return api.updateProject(dataConverted)
   .then((response) => {
