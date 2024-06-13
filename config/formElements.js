@@ -688,7 +688,7 @@ export const sampleid_formElements=[
         projectElements,
         scanningOptions,
         scannerElements,
-        scannerCalibrationElements,
+        // scannerCalibrationElements,
         projectEcotaxaElements,
         // scannerForm
     ]
