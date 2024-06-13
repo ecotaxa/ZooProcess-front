@@ -78,7 +78,8 @@ export function MyTextField(props) {
         defaultValue: props.value,
         label: props.label,
         placeholder: props.placeholder,
-        onValueChange: handleChange
+        onValueChange: handleChange,
+        isDisabled: props.disabled
         // onChange: handleChange
     }
     if (props.required == true) { opt['isRequired'] = true}

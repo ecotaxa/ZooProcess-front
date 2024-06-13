@@ -47,6 +47,7 @@ export function MySelect(props){
         label: props.label,
         placeholder: props.placeholder,
         className: "max-w-xs",
+        isDisabled: props.disabled
     }
 
     // if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
