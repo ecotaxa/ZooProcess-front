@@ -164,74 +164,74 @@ const NewProject = (params:any) => {
     //     return project
     // }
 
-    interface IDrive {
-        id: string
-        name : string
-    }
+    // interface IDrive {
+    //     id: string
+    //     name : string
+    // }
 
-    let convertionTable : any = {}
+    // let convertionTable : any = {}
 
     
-    const updateDrive = (drives: Array<Drive>) : any /*Array<IDrive>*/ => {
+    // const updateDrive = (drives: Array<Drive>) : any /*Array<IDrive>*/ => {
 
-        // const {driveList, conversion} = Object.keys(drives).map((drive,index=0) => {
-        //     console.log("drive: ", drive);
-        //     return [{ id:drive.index, name:drive.name }, { id:drive.index,origid:drive.id} ]
-        // })
+    //     // const {driveList, conversion} = Object.keys(drives).map((drive,index=0) => {
+    //     //     console.log("drive: ", drive);
+    //     //     return [{ id:drive.index, name:drive.name }, { id:drive.index,origid:drive.id} ]
+    //     // })
 
-        console.log("updateDrive: ", drives);
+    //     console.log("updateDrive: ", drives);
 
-        const driveList 
-        // const [driveList, conversion] 
-        = drives.map((drive, index) => {
-            console.log("drive: ", drive);
-            // return { id:index, name:drive.name }, { id:index, origid:drive.id}
-            // return { id:drive.index, name:drive.name };
-            return { id:index+1, value:drive.name };
-            // return { id:drive.index, name:drive.name };
-        })
+    //     const driveList 
+    //     // const [driveList, conversion] 
+    //     = drives.map((drive, index) => {
+    //         console.log("drive: ", drive);
+    //         // return { id:index, name:drive.name }, { id:index, origid:drive.id}
+    //         // return { id:drive.index, name:drive.name };
+    //         return { id:index+1, value:drive.name };
+    //         // return { id:drive.index, name:drive.name };
+    //     })
 
-        const conversion //: Array<IDrive>
-        = drives.map((drive, index:number) => {
-            console.log("drive: ", drive);
-            // return { id:index, name:drive.name }, { id:index, origid:drive.id}
-            // return { id:drive.index, name:drive.name };
-            return { id:index+1, driveid:drive.id, name:drive.name};
-        })
+    //     const conversion //: Array<IDrive>
+    //     = drives.map((drive, index:number) => {
+    //         console.log("drive: ", drive);
+    //         // return { id:index, name:drive.name }, { id:index, origid:drive.id}
+    //         // return { id:drive.index, name:drive.name };
+    //         return { id:index+1, driveid:drive.id, name:drive.name};
+    //     })
         
 
-        convertionTable = conversion
-        console.log("convertionTable: ", convertionTable);
-        return driveList
-    }
+    //     convertionTable = conversion
+    //     console.log("convertionTable: ", convertionTable);
+    //     return driveList
+    // }
     
 
-    const ProjectForm = () => {
-        // if (isLoading) return <MySpinner />
-        // if (isError) return <ErrorComponent error={isError}/>
+    // const ProjectForm = () => {
+    //     // if (isLoading) return <MySpinner />
+    //     // if (isError) return <ErrorComponent error={isError}/>
 
-        // return ( <><h1>ProjectForm</h1></>)
+    //     // return ( <><h1>ProjectForm</h1></>)
 
-        // const dataproject = emptyProject
-        // form['value']= updateDriveProject ( emptyProject , drives )
-        // let dataproject = driveList
-        // let dataproject = projectForm
-        // form['forms']= updateDriveProject (  dataproject , drives );
-        // const driveList = updateDrive(drives)
-        // console.log("driveList: ", driveList);
-        // form['forms']= updateDriveProject (  dataproject , driveList );
+    //     // const dataproject = emptyProject
+    //     // form['value']= updateDriveProject ( emptyProject , drives )
+    //     // let dataproject = driveList
+    //     // let dataproject = projectForm
+    //     // form['forms']= updateDriveProject (  dataproject , drives );
+    //     // const driveList = updateDrive(drives)
+    //     // console.log("driveList: ", driveList);
+    //     // form['forms']= updateDriveProject (  dataproject , driveList );
 
-        // console.log("+++++++++++++++++++++++++++++++")
-        // console.log("form: ", form);
-        // console.log("+++++++++++++++++++++++++++++++")
+    //     // console.log("+++++++++++++++++++++++++++++++")
+    //     // console.log("form: ", form);
+    //     // console.log("+++++++++++++++++++++++++++++++")
 
-        return (
-            <MyForm {...form} 
-                onChange={onChange} 
-                onCancel={onCancel}
-            />
-        )
-    }
+    //     return (
+    //         <MyForm {...form} 
+    //             onChange={onChange} 
+    //             onCancel={onCancel}
+    //         />
+    //     )
+    // }
 
     return (
         <>

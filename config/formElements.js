@@ -605,7 +605,7 @@ export const sampleid_formElements=[
                 choice:[
                     {id:1, value: "LARGE (2400dpi)"},
                 ],
-                value:"1"
+                value:"2400"
                 },
             ]
         }

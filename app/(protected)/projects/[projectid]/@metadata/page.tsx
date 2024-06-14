@@ -55,11 +55,20 @@ const Metadata : FC<pageProps> = (params) => {
     }
 
     // const [form, setForm] = useState({})
+    let emptyProject = {
+      // "project_id": null,
+      "name": null, // "Zooscan_",
+      "drive": null,
+      "acronym": null,
+      "description": null,
+      "ecotaxa_project_title":null,
+      "ecotaxa_project":null
+    }
 
     const initForm = () => {
       let localform : any = {}
       localform['forms'] = projectForm; //driveList
-      localform['value'] = {};
+      localform['value'] = emptyProject; //{};
       localform['title'] = 'Update Project';
       localform['subtitle'] = 'Modify your project metadata';
 
@@ -69,15 +78,7 @@ const Metadata : FC<pageProps> = (params) => {
 
     let form = initForm()
 
-  //   let emptyProject = {
-  //     // "project_id": null,
-  //     "name": null, // "Zooscan_",
-  //     "drive": null,
-  //     "acronym": null,
-  //     "description": null,
-  //     "ecotaxa_project_title":null,
-  //     "ecotaxa_project":null
-  // }
+   
 
   const ProjectForm = () => {
     if (isLoading) return <MySpinner />

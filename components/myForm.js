@@ -33,7 +33,7 @@ export function MyForm(props){
     //   ]      
     // const forms = props.forms;
     // const {forms,onChange,onCancel} = props;
-    const {forms,value,title,subtitle} = props;
+    const {forms, value, title, subtitle} = props;
 
     const button = props.button
 
@@ -43,7 +43,7 @@ export function MyForm(props){
       submitting:button?.updating||'Updating...',
     }
 
-    console.log("MyForm(props): ", props );
+    console.log("-----------> MyForm(props): ", props );
 
     console.log("MyForm : " , forms);
     // const [myform, setMyForm] = useState({});
@@ -54,7 +54,7 @@ export function MyForm(props){
 
     // const testData2 = {sample_id:'b', scientific_program:'dyfamed_wp2_2023_biotom_sn001', latitude_ns:2}
     // const [myform, setMyForm] = useState(props.value?props.value:{});
-    const [myValues, setMyForm] = useState(props.value || {});
+    const [myValues, setMyValues] = useState(value || {});
     // const [myform, setMyForm] = useState({});
     // setMyForm(testData2)
     // const [title, setTitle] = useState(props.title?props.title:"Title");
@@ -72,17 +72,20 @@ export function MyForm(props){
     const [values, setValues] = useState(defaultValue?defaultValue:{});
     // const [values, setValues] = useState(props.value || {});
 
+    // const [rand,setRand] = useState(Math.random())
 
     useEffect(()=>{
-      console.log("myForm has change:", myValues);
-      setValues(myValues)
+      console.log("myValues has changed:", myValues);
+      // setRand(Math.random())
+      // console.log("rand", rand);
+    //   setValues(myValues)
 
     },[myValues])
 
     const margin={margin:"0 5px"}
 
     const init = () => {
-        setMyForm(defaultValue)
+        setMyValues(defaultValue)
     }
 
     // inject the values given in parameter in the form
@@ -91,6 +94,7 @@ export function MyForm(props){
       if ( formitem.name ){
         const value = myValues[formitem.name];
 
+        // setRand(Math.random())
         // console.log("FORM VALUE for ", formitem.name, " = " , value , " <=> " , formitem['value'] );
 
         if ( value != undefined ){
@@ -102,7 +106,7 @@ export function MyForm(props){
             myValues[formitem.name] = formitem['value']
             let form = myValues
             form[formitem.name] = formitem['value']
-            setMyForm(form)
+            setMyValues(form)
           }
         }
       } else {
@@ -182,25 +186,67 @@ export function MyForm(props){
         return type
     }
 
+    // setRand(Math.random())
+
+    const [valeur,setValeur] = useState({})
+    
+    useEffect(()=>{
+      console.log("valeur has changed:", valeur);
+      //setValues(valeur)
+
+      const name = valeur.name
+      const value = valeur.value
+
+      const type = searchtypeof(name);
+      console.log("type:",type);
+  
+      console.log("onChangeElement myValues", myValues);
+      // console.log("onChangeElement rand", rand);
+
+      if (type === "number" ) {
+        const newForm = {...myValues, [name]: Number(value)};
+        // setMyForm({...myform, [name]: Number(value)});
+        // const nform = { ...form
+        setMyValues({...newForm});
+      } else {
+        const newForm = {...myValues, [name]: value};
+        console.log("newForm",newForm);
+        setMyValues({...newForm});
+        // setMyForm({...myform, name: value});
+        
+      }
+      setIsDataModified(true)
+      setIsDataUpdated(false)
+      console.log("onChangeElement form values", myValues);
+
+    },[valeur])
+
     const onChangeElement = (name,value) => {
         console.log("onChangeElement:",name, "-- value: ", value);
-        const type = searchtypeof(name);
-        console.log("type:",type);
+
+        setValeur({name:name, value:value})
+        
+        // const type = searchtypeof(name);
+        // console.log("type:",type);
     
-        if (type === "number" ) {
-          const newForm = {...myValues, [name]: Number(value)};
-          // setMyForm({...myform, [name]: Number(value)});
-          // const nform = { ...form
-          setMyForm({...newForm});
-        } else {
-          const newForm = {...myValues, [name]: value};
-          setMyForm({...newForm});
-          // setMyForm({...myform, name: value});
+        // console.log("onChangeElement myValues", myValues);
+        // // console.log("onChangeElement rand", rand);
+
+        // if (type === "number" ) {
+        //   const newForm = {...myValues, [name]: Number(value)};
+        //   // setMyForm({...myform, [name]: Number(value)});
+        //   // const nform = { ...form
+        //   setMyValues({...newForm});
+        // } else {
+        //   const newForm = {...myValues, [name]: value};
+        //   console.log("newForm",newForm);
+        //   setMyValues({...newForm});
+        //   // setMyForm({...myform, name: value});
           
-        }
-        setIsDataModified(true)
-        setIsDataUpdated(false)
-        console.log("onChangeElement form values", myValues);
+        // }
+        // setIsDataModified(true)
+        // setIsDataUpdated(false)
+        // console.log("onChangeElement form values", myValues);
       }
 
     const cancel = () => {
@@ -212,7 +258,7 @@ export function MyForm(props){
         // });
         // console.log("data", data)
         // setMyForm(data);
-        setMyForm(defaultValue)
+        setMyValues(defaultValue)
         props.onCancel();
     }
     
@@ -262,7 +308,7 @@ export function MyForm(props){
           <form onSubmit={onSubmitHandler}>
             <Card>
               <CardHeader className="flex flex-col">
-              <h1
+                <h1
                   color="primary">
                     {title}
                 </h1>
@@ -282,8 +328,6 @@ export function MyForm(props){
                     {
                       forms.map( input => formElements(input) )
                     }
-    
-                  
     
                   </div>
     
@@ -344,9 +388,6 @@ export function MyForm(props){
               </CardFooter>
             </Card>
             </form>
-    
-    
- 
  
           // </div>
         // </div>
