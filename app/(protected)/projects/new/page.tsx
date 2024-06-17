@@ -1,24 +1,24 @@
 "use client"
 
 import Head from 'next/head';
-import { Box, Container, Stack, Typography } from '@mui/material';
+// import { Box, Container, Stack, Typography } from '@mui/material';
 
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 // import { ProjectsTable } from 'src/sections/projects/projects-table';
 import { MyForm } from '@/components/myForm';
 // import { inputFormElements } from 'src/services/formElements';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { projectForm } from '@/config/formElements';
 import { useRouter } from 'next/navigation';
 
 import { addProject } from '@/app/api/projects';
-import { useDrives } from '@/app/api/drives';
-import { MySpinner } from '@/components/mySpinner';
-import { ErrorComponent } from '@/components/ErrorComponent';
+// import { useDrives } from '@/app/api/drives';
+// import { MySpinner } from '@/components/mySpinner';
+// import { ErrorComponent } from '@/components/ErrorComponent';
 
-import { da } from 'date-fns/locale';
-import { SWRResponse } from 'swr';
-import { Drive } from '@/app/api/network/zooprocess-api';
+// import { da } from 'date-fns/locale';
+// import { SWRResponse } from 'swr';
+// import { Drive } from '@/app/api/network/zooprocess-api';
 import { Debug } from '@/components/Debug';
  
 
@@ -48,14 +48,14 @@ import { Debug } from '@/components/Debug';
 let emptyProject = {}
 
 
-const updateProjectForm = (drive: SWRResponse) => {
+// const updateProjectForm = (drive: SWRResponse) => {
 
-    let form = projectForm
+//     let form = projectForm
 
-    // TODO update with drive
+//     // TODO update with drive
 
-    return form
-}
+//     return form
+// }
 
 
 
@@ -81,7 +81,7 @@ const NewProject = (params:any) => {
 
 
     // const [stringifiedData,setData] = useState(JSON.stringify(testData, null, 2))
-    const [stringifiedData, setData] = useState("")
+    // const [stringifiedData, setData] = useState("")
     // var stringifiedData = "" ;
 
 
@@ -239,23 +239,24 @@ const NewProject = (params:any) => {
         <>
         <Head>
             <title>
-            Metadata | ZooProcess
+            New Project | ZooProcess
             </title>
         </Head>
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
             <div className="text-center justify-center">
-            <Stack spacing={3}>
-            <h1>Metadata</h1>
+            {/* <Stack spacing={3}>
+            <h1>Metadata</h1> */}
                 {/* <Typography variant="h4">
                     Metadata
                 </Typography> */}
                 {/* <ProjectForm/> */}
-                <Debug params={stringifiedData} />
+                {/* <Debug params={stringifiedData} /> */}
+
                 <MyForm {...form} 
                     onChange={onChange} 
                     onCancel={onCancel}
                 />
-            </Stack>
+            {/* </Stack> */}
             </div>
         </section>
         </>

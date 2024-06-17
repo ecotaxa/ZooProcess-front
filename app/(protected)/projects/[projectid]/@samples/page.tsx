@@ -105,9 +105,9 @@ const SamplesTab : FC<pageProps> = (params) => {
   return (
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
           <div className="text-center justify-center">
-              <h1 data-testid="title">
+              {/* <h1 data-testid="title">
                   Samples {projectId}
-              </h1>
+              </h1> */}
               <Spacer y={5}/>
               <Card className="inline-block "
                   data-testid="projectCard" 

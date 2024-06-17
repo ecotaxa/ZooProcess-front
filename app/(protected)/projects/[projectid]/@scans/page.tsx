@@ -5,7 +5,7 @@ import { ErrorComponent } from "@/components/ErrorComponent";
 import { BackgroundTable } from "@/components/backgrounds-table";
 import { MySpinner } from "@/components/mySpinner";
 import { ScanTable } from "@/components/scans-table";
-import { Card, CardBody, CardHeader, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Spacer} from "@nextui-org/react";
 import { FC, useEffect, useState } from "react";
 
 interface pageProps {
@@ -148,10 +148,10 @@ const Scans : FC<pageProps> = (params) => {
     return (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="text-center justify-center">
-            <h1 data-testid="title">
+            {/* <h1 data-testid="title">
                 {projectId} Scans
             </h1>
-            <Spacer y={5}/>
+            <Spacer y={5}/> */}
             <Card className="inline-block "
                     data-testid="backgroundCard" 
                 >

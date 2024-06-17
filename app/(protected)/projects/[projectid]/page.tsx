@@ -11,6 +11,10 @@ import Metadata from "./@metadata/page";
 import { FC } from "react";
 import { Debug } from "@/components/Debug";
 import { ProjectBreadcrumbs } from "@/components/ProjectBreadcrumbs";
+import { ProjectName } from "@/components/projectName";
+import QC from "./@qc/page";
+import { useProject } from "@/app/api/projects";
+import { Project } from "@/app/api/network/zooprocess-api";
 
 interface pageProps {
     params: {
@@ -19,53 +23,58 @@ interface pageProps {
 }
 
 // const Project = ({ params }: { params: { projectid: string; }} ) => {
-const ProjectPage : FC<pageProps> = ({params}) => {
+const ProjectPage: FC<pageProps> = ({ params }) => {
+  const projectid = params.projectid;
 
+  const { project, isLoading, isError } = useProject(projectid);
 
-    const projectid = params.projectid
+  const selectedKey="stats"
 
-    // const projectName = "MOCK ;) Zooscan_ptb_wp2_2021_journee";
-    // const projectName = {name: "MOCK_Zooscan_ptb_wp2_2021_journee"};
-    // const projectName : Array<string> = [ "MOCK_Zooscan_ptb_wp2_2021_journee" ]; 
+  const p: Project = project;
 
-    return (
-        <div>
+  
+  const isQcTabDisabled = () => {
+    if (p.samples && p.samples.length > 0) {
+      return ;
+    }
 
-            <Card>
-                <CardHeader>
-                    <h1>Project</h1>
-                </CardHeader>
-                <CardBody>
-                    {/* <h1>{projectName.name}</h1> */}
-                    {/* <ProjectBreadcrumbs list={projectName}/> */}
-                    <ProjectBreadcrumbs list={[projectid]}  separator="/"/>
-                    {/* <h3>{projectid}</h3> */}
-                </CardBody>
-            </Card>
-            <Spacer y={20}/>
-            <Debug params={params}/>
-        {/* <div className="flex w-full flex-col"> */}
-            <Tabs aria-label="Options">
-                {/* <Tab key="stats" title="Stats" href={`/projects/${projectid}/stats`}> */}
-                <Tab key="stats" title="Stats" >
-                    <Stats  {...params}/>
-                </Tab>
-                {/* <Tab key="metadata" title="Metadata" href={`/projects/${projectid}/metadata`}> */}
-                <Tab key="metadata" title="Metadata" >
-                    <Metadata  {...params}/>
-                </Tab>
-                <Tab key="samples" title="Samples">
-                    <SamplesTab {...params}/>
-                    <Debug params={params}/>
-                </Tab>
-                <Tab key="scans" title="Scans">
-                    <Scans  {...params}/>
-                </Tab>
-            </Tabs>
-        {/* </div> */}
+    return "qc";
+  };
 
+  return (
+    <div>
+      <ProjectName id={projectid} />
+
+      {/* <Card>
+        <CardHeader>
+          <h1>Project</h1>
+        </CardHeader>
+        <CardBody>
+          <ProjectBreadcrumbs list={[projectid]} separator="/" />
+        </CardBody>
+      </Card>
+      <Spacer y={20} /> */}
+      <Debug params={params} />
+      <Tabs aria-label="Options" disabledKeys={isQcTabDisabled()} defaultSelectedKey={selectedKey}>
+        <Tab key="stats" title="Stats">
+          <Stats {...params} />
+        </Tab>
+        <Tab key="metadata" title="Metadata">
+          <Metadata {...params} />
+        </Tab>
+        <Tab key="samples" title="Samples">
+          <SamplesTab {...params} />
+          <Debug params={params} />
+        </Tab>
+        <Tab key="scans" title="Scans">
+          <Scans {...params} />
+        </Tab>
+        <Tab key="qc" title="QC">
+          <QC {...params} />
+        </Tab>
+      </Tabs>
     </div>
-    );
+  );
 };
 
 export default ProjectPage;

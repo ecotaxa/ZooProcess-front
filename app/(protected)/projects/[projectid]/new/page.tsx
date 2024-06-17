@@ -160,9 +160,9 @@ const NewSample : FC<pageProps> = (params) => {
 
             <div className="text-center justify-center">
                 <Stack spacing={3}>
-                    <Typography variant="h4">
+                    {/* <Typography variant="h4">
                     Sample Metadata to project {projectId}
-                    </Typography>
+                    </Typography> */}
                     <MyForm 
                         {...form} 
                         project={projectId}
