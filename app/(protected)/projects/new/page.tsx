@@ -36,15 +36,17 @@ import { Debug } from '@/components/Debug';
 // }
 
 
-let emptyProject = {
-        // "project_id": null,
-        "name": null, // "Zooscan_",
-        "drive": null,
-        "acronym": null,
-        "description": null,
-        "ecotaxa_project_title":null,
-        "ecotaxa_project":null
-    }
+// let emptyProject = {
+//         // "project_id": null,
+//         "name": null, // "Zooscan_",
+//         "drive": null,
+//         "acronym": null,
+//         "description": null,
+//         "ecotaxa_project_title":null,
+//         "ecotaxa_project":null
+//     }
+let emptyProject = {}
+
 
 const updateProjectForm = (drive: SWRResponse) => {
 

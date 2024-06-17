@@ -75,7 +75,7 @@ const NewSample : FC<pageProps> = (params) => {
 
     const form : any = []
         form['forms']=forms
-        form['value']=testData//emptyData
+        form['value']=emptyData // testData
         form['title']='Sample metadata'
         form['subtitle']='Fill all the mandatory fields.'
 
