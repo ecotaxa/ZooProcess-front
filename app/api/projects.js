@@ -110,19 +110,27 @@ export function addProject(data){
 
 const convertData2api = (data) => {
 
+  console.debug("convertData2api data: ", data)
+
   const date = new Date();
+
+
 
   let dataConverted = {
     id:data.id,
     name:data.name,
     acronym:data.acronym,
-    driveId:data.driveId,
     description:data.description,
 
+    driveId:data.drive, //Id,
+    instrumentId:data.instrument,
+
     // only manager options
-    scanningOptions:data.scanningOptions.currentKey,
+    scanningOptions:data.scanningOptions, // .currentKey,
     updateAt:date.toISOString(), 
   }
+
+  console.debug("convertData2api dataConverted: ", dataConverted)
 
   return dataConverted
 }

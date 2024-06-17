@@ -221,8 +221,8 @@ export function MyForm(props){
 
     },[valeur])
 
-    const onChangeElement = (name,value) => {
-        console.log("onChangeElement:",name, "-- value: ", value);
+    const onChangeElement = (name, value) => {
+        console.log("onChangeElement:", name, "-- value: ", value);
 
         setValeur({name:name, value:value})
         
@@ -268,7 +268,7 @@ export function MyForm(props){
         setError(null) // Clear previous errors when a new request starts
 
         const formData = new FormData(event.currentTarget)
-        console.log("formData: ",formData)
+        console.log("formData: ", formData)
 
 
         console.log("onSubmitHandler event", event);
@@ -277,7 +277,8 @@ export function MyForm(props){
         console.log("onChange(", values);
         
         setIsUpdating(true)
-        props.onChange(values)
+        // props.onChange(values)
+        props.onChange(myValues)
         .then( (response) => {
           console.log("onChange OK");
           console.log(response);
