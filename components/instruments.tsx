@@ -1,6 +1,6 @@
 "use client";
 
-import { useDrives } from "@/app/api/drives";
+import { useInstruments } from "@/app/api/instruments";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { MySpinner } from "./mySpinner";
@@ -25,11 +25,11 @@ interface FormItem {
     onChange: (name:string,value:string)=>{}
 }
 
-const Drives = (props:FormItem) => {
+const Instruments = (props:FormItem) => {
 
-    //console.log("Drives props: ",props);
+    //console.log("Instruments props: ",props);
 
-    const { drives, isLoading, isError} = useDrives();    
+    const { instruments, isLoading, isError} = useInstruments();    
     // const [ driveList , setDriveList ] = useState(drives);
     const [value, setValue] = useState(
         props.value || 0
@@ -39,7 +39,7 @@ const Drives = (props:FormItem) => {
         // console.log("drives have changed", drives);
         // const data = samples
         // setDriveList(drives);
-      } , [drives])
+      } , [instruments])
 
       
     if (isLoading) return <MySpinner />
@@ -61,14 +61,14 @@ const Drives = (props:FormItem) => {
         setValue(value);
     }
 
-    // console.log("Drives: ", drives);
+    // console.log("Instruments: ", drives);
 
     // console.log("SELECT props:", props);
     let opts : any = {
         id: props.name,
-        items: drives,
-        label: props.label || "Drives",
-        placeholder: props.placeholder || "Choose your folder",
+        items: instruments,
+        label: props.label || "Instruments",
+        placeholder: props.placeholder || "Choose your instrument",
         className:"max-w-xs",
         // onSelectionChange:{handleChange}
     }
@@ -79,6 +79,7 @@ const Drives = (props:FormItem) => {
 
 
     return (
+
         <>
         <Debug params={[{props:props},{opts:opts},{hasError:isError}]} title={props.name} />
 
@@ -101,4 +102,4 @@ const Drives = (props:FormItem) => {
 
 
 
-export default Drives;
+export default Instruments;

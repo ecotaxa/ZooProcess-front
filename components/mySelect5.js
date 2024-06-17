@@ -28,17 +28,17 @@ export function MySelect(props){
         }
     }
 
-    console.log("props.choice: ", props.choice)
-    console.log("value: ", value)
+    // console.debug("props.choice: ", props.choice)
+    // console.debug("value: ", value)
     const choice = Object.keys(props.choice).map((key) => {
-        console.log("key: ", key, " => ", props.choice[key])
+        // console.debug("key: ", key, " => ", props.choice[key])
         return { 
             'id': String(props.choice[key].id), 
             'value': props.choice[key].value
         }
     })
 
-    console.log("Choice:", choice)
+    // console.debug("Choice:", choice)
 
     let opt = {
         id: props.name,
@@ -59,7 +59,8 @@ export function MySelect(props){
 
     return (
         <>
-        <Debug params={[{props:props},{opt:opt}]} />
+        <Debug params={[{props:props},{opt:opt}]}  title={props.name} />
+
         <Select
             // selectedKeys={[String(value)]}
             selectedKeys={[value]}

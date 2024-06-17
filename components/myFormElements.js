@@ -20,6 +20,7 @@ import { MyDatePicker } from "./myDatePicker"
 
 // import {MyInput}from "@/components/mySelect4.js"
 import Drives from "./drives";
+import Instruments from "./instruments";
 
 export function FormElements(props) {
 
@@ -77,6 +78,12 @@ export function FormElements(props) {
             // }
         case "Drives":
             return ( <Drives key={props.name}
+                {...props}
+                onChange={props.onChange}
+            />)
+
+        case "Instruments":
+            return ( <Instruments key={props.name}
                 {...props}
                 onChange={props.onChange}
             />)

@@ -1,5 +1,6 @@
 import React from "react";
 import {Textarea} from "@nextui-org/react";
+import { Debug } from "./Debug";
 
 export function MyTextArea(props) {
 
@@ -32,27 +33,31 @@ var handleChange = (value) => {
     }
 }
 
-let opt = {
+let opts = {
     type: props.type,
     // defaultValue: props.value,
     label: props.label,
     placeholder: props.placeholder,
     // onChange: handleChange
 }
-if (props.required == true) { opt['isRequired'] = true}
+if (props.required == true) { opts['isRequired'] = true}
 // if (props.prefix) { opt['startContent'] = props.prefix }
 // if (props.endAdornment?.text) { opt['endContent'] = props.endAdornment.text}
-if (props.readonly) { opt['isReadOnly'] = true}
-if (props.helperText) { opt['errorMessage']=props.helperText }
+if (props.readonly) { opts['isReadOnly'] = true}
+if (props.helperText) { opts['errorMessage']=props.helperText }
 
 
 return (
+    <>
+      <Debug params={[{props:props},{opts:opts}]} title={props.name}/>
+
       <Textarea
-        {...opt}
+        {...opts}
         onValueChange= {handleChange}
 
         value={value}
       />
+    </>
   );
 
 //   return (

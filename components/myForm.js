@@ -18,6 +18,9 @@ import { Debug } from "@/components/Debug";
 // props.forms must contain a form template or a list of form templates
 // props.value can contain form values if need to prefill the form
 export function MyForm(props){
+
+  console.debug("AAAAAARRRRRRRGGGGGGG  MyForm(props): ", props );
+
 // const Page = () => {
 
     // const router = useRouter()
@@ -52,6 +55,8 @@ export function MyForm(props){
     // keep value to reset it
     let defaultValue = {...props.value}
 
+ 
+
     // const testData2 = {sample_id:'b', scientific_program:'dyfamed_wp2_2023_biotom_sn001', latitude_ns:2}
     // const [myform, setMyForm] = useState(props.value?props.value:{});
     const [myValues, setMyValues] = useState(value || {});
@@ -81,8 +86,9 @@ export function MyForm(props){
     //   setValues(myValues)
 
     },[myValues])
+    // },[props.value])
 
-    const margin={margin:"0 5px"}
+    // const margin={margin:"0 5px"}
 
     const init = () => {
         setMyValues(defaultValue)
@@ -90,12 +96,16 @@ export function MyForm(props){
 
     // inject the values given in parameter in the form
     const myElement = (formitem) => {
+      // console.debug("myElement: ", formitem);
 
       if ( formitem.name ){
         const value = myValues[formitem.name];
 
         // setRand(Math.random())
-        // console.log("FORM VALUE for ", formitem.name, " = " , value , " <=> " , formitem['value'] );
+
+        // if ( value !== formitem['value'] ){
+
+          // console.debug("FORM VALUE for ", formitem.name, " = " , value , " <= " , formitem['value'] );
 
         if ( value != undefined ){
           formitem['value'] = value;
@@ -109,18 +119,21 @@ export function MyForm(props){
             setMyValues(form)
           }
         }
+
       } else {
-        formitem['name']="empty_"+String(Math.floor(Math.random() * 100)) // j'aime pas mais j'ai pas mieux pour le moment
+        console.log("formitem.name is undefined");
+        formitem['name']="empty_" + String(Math.floor(Math.random() * 100)) // j'aime pas mais j'ai pas mieux pour le moment
       }
-        // console.log("-+-+-+---------------------------------");
-        // console.log("myform: ", myform);
-        // console.log("formitem: ", formitem);
-        // console.log("-+-+-+---------------------------------");
+
+      // console.log("-+-+-+---------------------------------");
+      // // console.log("myform: ", myform);
+      // console.log("formitem: ", formitem);
+      // console.log("-+-+-+---------------------------------");
 
         return (
             <Grid key={formitem.name}
-              xs={formitem.xs} 
-              sm={formitem.sm} 
+              xs={formitem.xs}
+              sm={formitem.sm}
               item={true}
             >
               <FormElements {...formitem} key={formitem.name}
@@ -250,6 +263,7 @@ export function MyForm(props){
       }
 
     const cancel = () => {
+      console.debug("cancel()");
         // const data = {};
         // const keys = Object.keys(myValues);
         // console.log(keys)
@@ -263,6 +277,7 @@ export function MyForm(props){
     }
     
   const onSubmitHandler = async (event /*: React.FormEvent<HTMLFormElement>*/) => {
+        console.debug("onSubmitHandler");
         event.preventDefault(); // 👈️ prevent page refresh
         setIsDataModified(false) // Set loading to true when the request starts
         setError(null) // Clear previous errors when a new request starts
@@ -280,10 +295,12 @@ export function MyForm(props){
         // props.onChange(values)
         props.onChange(myValues)
         .then( (response) => {
-          console.log("onChange OK");
-          console.log(response);
+          // console.log("onChange OK");
+          console.log("onChange OK " , response);
           // console.log("Data Updated")
-          defaultValue = values;
+          setValues(response)
+          // defaultValue = values;
+          defaultValue = response;
           setIsDataUpdated(true)
           setIsUpdating(false)
         })
@@ -319,7 +336,8 @@ export function MyForm(props){
                 </h4>
               
               <Debug params={forms} title="forms"/>
-              <Debug params={myValues} title="value"/>
+              <Debug params={value} title="value"/>
+              <Debug params={myValues} title="myValues"/>
               {/* <Debug params={myValues} title="myform"/> */}
 
               </CardHeader>

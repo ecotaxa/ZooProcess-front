@@ -3,6 +3,8 @@
 import useSWR from 'swr'
 
 import * as api from '@/app/api/network/zooprocess-api' 
+import Instruments from '@/components/instruments'
+import { projectEcotaxaElements } from '@/config/formElements'
 // import { auth } from '@/auth'
 // import { da } from 'date-fns/locale'
 
@@ -110,7 +112,7 @@ export function addProject(data){
 
 const convertData2api = (data) => {
 
-  console.debug("convertData2api data: ", data)
+  console.debug(`convertData2api(${data})`)
 
   const date = new Date();
 
@@ -120,14 +122,28 @@ const convertData2api = (data) => {
     id:data.id,
     name:data.name,
     acronym:data.acronym,
+    driveId:data.drive, //Id,
     description:data.description,
 
     driveId:data.drive, //Id,
     instrumentId:data.instrument,
 
     // only manager options
-    scanningOptions:data.scanningOptions, // .currentKey,
+    scanningOptions:data.scanningOptions, //.currentKey,
     updateAt:date.toISOString(), 
+
+    // instrument
+    instrumentId: data.serial,
+    // serial: data.serial,
+
+    // ecotaxa
+    ///TODO  copie ecotaxa fields
+    // ecotaxa_project_title: data.ecotaxa_project_title,
+    // ecotaxa_project_name: data.ecotaxa_project_name,
+  }
+
+  if (data.ecotaxa_project){
+    dataConverted.ecotaxaId = data.ecotaxa_project
   }
 
   console.debug("convertData2api dataConverted: ", dataConverted)
@@ -146,6 +162,7 @@ export function updateProject(data){
 
   const dataConverted = convertData2api(data);
 
+  console.debug("dataConverted: ", dataConverted);
 
   return api.updateProject(dataConverted)
   .then((response) => {
