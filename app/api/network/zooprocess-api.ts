@@ -28,7 +28,8 @@ export interface Project {
     ecotaxaId: string,
     ecotaxa?: Ecotaxa,
     instrumentId?: string,
-    samples?: Array<Sample>
+    samples?: Array<Sample>,
+    qc?: string
 }
 
 export interface User {

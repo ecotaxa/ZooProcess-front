@@ -27,7 +27,6 @@ const Scans : FC<pageProps> = (params) => {
     const { scans, isLoading: isScanLoading , isError: isScanError } = useSampleScans(projectId)
     const [ scanList, setScanList ] = useState(backgrounds)
     
-
     // {
     //     "id": "65c3635582772f6fd7ba5bd3",
     //     "url": "Drives/Background/2024_02_07_08_52_10_0001.jpg",
@@ -53,20 +52,22 @@ const Scans : FC<pageProps> = (params) => {
               console.log("pfffff")
           } else {
             const s = data[_scan]
-  
+            console.log("s: ", s);
+
             return {
               id: s.id,
               name: s.url,
               creator: s.user.name,
               time:s.createdAt,
               date:s.createdAt,
-              qc:"",
+            //   qc:"",
+              qc: s.qc || "TODO",  
               action:s.url
-            }  
+            }
           }
         })
 
-        console.log("formated data: ",backgrounds);
+        console.log("formated backgrounds data: ", backgrounds);
         return backgrounds
     }
 
@@ -74,9 +75,9 @@ const Scans : FC<pageProps> = (params) => {
 
         console.log("formatData", data);
     
-        const backgrounds = Object.keys(data).map( (_scan) => {
+        const scans = Object.keys(data).map( (_scan) => {
     
-          console.log("background: ", _scan);
+          console.log("scans: ", _scan);
   
           if ( _scan == "key"){
               console.error("ARRGG indey == key");
@@ -99,7 +100,8 @@ const Scans : FC<pageProps> = (params) => {
               creator: s.user.name,
             //   time:s.createdAt,
             //   date:s.createdAt,
-              qc: "missing",
+            // qc: "missing",
+              qc: s.qc || "TODO",  
               fraction_id,
               frac_min,
               frac_sup,
@@ -109,24 +111,29 @@ const Scans : FC<pageProps> = (params) => {
           }
         })
 
-        console.log("formated data: ",backgrounds);
-        return backgrounds
+        console.log("formated scans data: ", scans);
+        return scans
     }
 
     useEffect( () => { 
-            console.log("background list has changed", backgrounds);
-            const data = formatData(backgrounds)
-            // const data = formatData(backgrounds).filter(item => item !== undefined);
-            // const data = samples
-            setBackgroundList(data);
+            if ( backgrounds.length > 0 ) {
+                console.log("background list has changed", backgrounds);
+                const data = formatData(backgrounds)
+                // const data = formatData(backgrounds).filter(item => item !== undefined);
+                // const data = samples
+                setBackgroundList(data);
+        }
     } , [backgrounds])
     
     useEffect( () => { 
-        console.log("scan list has changed", scans);
-        const data = formatScanSampleData(scans)
-        // const data = formatData(backgrounds).filter(item => item !== undefined);
-        // const data = samples
-        setScanList(data);
+        if ( scans.length > 0 ) 
+            {
+                console.log("scan list has changed", scans);
+                const data = formatScanSampleData(scans)
+                // const data = formatData(backgrounds).filter(item => item !== undefined);
+                // const data = samples
+                setScanList(data);
+            }
     } , [scans])
   
       
@@ -158,7 +165,7 @@ const Scans : FC<pageProps> = (params) => {
                 <CardHeader className="flex flex-row py-3">
                     <div>
                         <h1>Available Back Scans</h1>
-                        <h4>Samples read from file : {projectId}</h4>
+                        <h4>Samples read from file: </h4>
                     </div>
                 </CardHeader>
                 <CardBody>
@@ -175,7 +182,7 @@ const Scans : FC<pageProps> = (params) => {
                 <CardHeader className="flex flex-row py-3">
                     <div>
                         <h1>Available sub sample scans</h1>
-                        <h4>Subsamples read from file : {projectId}</h4>
+                        <h4>Subsamples read from file: </h4>
                     </div>
                 </CardHeader>
                 <CardBody>

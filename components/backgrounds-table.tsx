@@ -27,7 +27,7 @@ const columns = [
     // {name: "UPDATED AT", uid: "updatedAt"},
     {name: "Time", uid: "time", allowSorting:true},
     {name: "DATE", uid: "date", allowSorting:true},
-    {name: "QC", uid: "status", allowSorting:true},
+    {name: "QC", uid: "qc", allowSorting:true},
     {name: "ACTION", uid: "action", allowSorting:false},
   ];
 

@@ -33,7 +33,7 @@ const columns : Array<IColumn> = [
     {name: "Frac sup", uid: "frac_sup", allowSorting:true},
     {name: "Observation", uid: "observation", allowSorting:true},
 
-    {name: "QC", uid: "status", allowSorting:true},
+    {name: "QC", uid: "qc", allowSorting:true},
     {name: "ACTION", uid: "action", allowSorting: false},
   ];
 
