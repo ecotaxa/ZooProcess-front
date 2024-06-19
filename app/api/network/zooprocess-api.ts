@@ -60,7 +60,7 @@ export interface SubSample {
   name: string
   metadata: Array<Metadata>
   // scan: Array<Scan>
-  scan: Scan
+  scan: Array<Scan>
 }
 
 export interface Scan {
@@ -97,7 +97,7 @@ export interface Sample {
     id: string
     name: string
     metadata: Array<Metadata>
-    subSamples: Array<SubSample>
+    subsample: Array<SubSample>
 }
 
 export interface Vignette {

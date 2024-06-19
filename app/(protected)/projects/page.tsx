@@ -7,6 +7,7 @@ import { MySpinner } from '@/components/mySpinner'
 import { ErrorComponent } from '@/components/ErrorComponent'
 import { ProjectsTableNextUI as ProjectsTable } from '@/components/projects-table'
 import { Button, Card, CardBody, CardFooter, CardHeader, Link, Spacer } from '@nextui-org/react';
+import { Project, Sample, Samples, SubSample } from '@/app/api/network/zooprocess-api';
 // import { auth } from '@/auth';
 
 // import { Projects } from "@/app/api/network/zooprocess-api"
@@ -17,7 +18,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader, Link, Spacer } from '@n
 const ProjectsPage = () => {
 
     const formatData = (data:any) => {
-        const projects = data.map( (project:any) => {
+        const projects = data.map( (project:Project) => {
             const createdAt = new Date(project.createdAt)
             console.log("createdAt: ", createdAt)
 
@@ -33,13 +34,24 @@ const ProjectsPage = () => {
                 updatedAt = createdAt;
             }
 
+            // const subsampleids = project.samples?.flatMap( 
+            //     (sample:Sample) => {
+            //         const subsamplesids = sample.subsample?.map( (subsample:SubSample) => subsample.id )
+            //     }
+            // )
+            // console.log("subsampleids: ", subsampleids);
+            // const nbscans = subsampleids?.length || 0;
+
+            const nbscans = project.samples?.flatMap( sample => sample.subsample?.map( (sub:SubSample) => sub.scan.length || 0 ) ).reduce( (a,b) => a + b, 0) || 0;
+            console.log("nbscans: ", nbscans);
+
             // ici les colonnes qui m'interresse pour mon tableau
             return {
                 id: project.id,
                 name: project.name,
                 drive: project.drive.name,
-                sample:0,
-                scan:0,
+                sample:project.samples?.length || 0,
+                scan: nbscans,
                 createdAt,
                 updatedAt,
                 // description: project.description,
