@@ -11,6 +11,8 @@ import { MySpinner } from "@/components/mySpinner";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { Project } from "@/app/api/network/zooprocess-api";
 import { Debug } from "@/components/Debug";
+import { title } from "process";
+import { sub } from "date-fns";
 
 // interface IBoxMessage {
 //     children : any // React.ReactNode //React.RefAttributes<SVGSVGElement>
@@ -78,7 +80,22 @@ const Stats: FC<pageProps> = (params) => {
 
   const ecotaxaLink = (p:Project) => {
     if (p.ecotaxaId) {
-      return <></>;
+      const title = `'Your project is linked to an EcoTaxa project:  ___________________            `
+      const subtitle = p.ecotaxaId
+     return (
+        <>
+      {/* <BoxMessage
+          title={title}
+          subtitle={subtitle}
+          // button={{
+          //   href: "/projects/new",
+          //   text: "Link Project",
+          // }}
+        >
+          <CloudIcon />
+        </BoxMessage> */}
+        </>
+      );
     }
     return (
       <>
