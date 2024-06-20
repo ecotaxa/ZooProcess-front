@@ -34,7 +34,7 @@ type pageProps = {
 
 
 
-const InfoPage : FC<pageProps> = ({params}) => {
+const BackgroundPage : FC<pageProps> = ({params}) => {
 
     const router = useRouter();
     const { projectid, sampleid, subsampleid } = params
@@ -319,7 +319,11 @@ const InfoPage : FC<pageProps> = ({params}) => {
 
     return (
         <>
+
         <Timeline_scan current={0.5} />
+
+        <h1>Page to remove, can't pass projectid</h1>
+        <h2>but add an instrument select, and scan, and let choose later</h2>
 
         <div className="text-start w-">
             <h1>Selectionner le background</h1>
@@ -368,4 +372,4 @@ const InfoPage : FC<pageProps> = ({params}) => {
 }
 
 
-export default InfoPage;
+export default BackgroundPage;

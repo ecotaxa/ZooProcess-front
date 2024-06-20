@@ -21,7 +21,7 @@ type pageProps = {
 
 
 
-const InfoPage : FC<pageProps> = ({params}) => {
+const SubSampleInfoPage : FC<pageProps> = ({params}) => {
 
     const router = useRouter();
     const { projectid, sampleid, subsampleid } = params
@@ -62,4 +62,4 @@ const InfoPage : FC<pageProps> = ({params}) => {
 }
 
 
-export default InfoPage;
+export default SubSampleInfoPage;
