@@ -54,6 +54,8 @@ serverActions: { allowedOrigins: ["xxxx.com", "localhost:3001"], }
 # Connect to the interface
 
 localhost:3001/auth/login
+http://zooprocess.imev-mer.fr:3001/auth/login
+
 
 seb@seb.com
 seb1234
