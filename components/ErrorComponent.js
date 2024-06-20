@@ -26,12 +26,12 @@ export const ErrorComponent = ({error}) => {
   }
 
   if (error.message.status == "401") {
-    console.debug("ErrorComponent: rror.message.status == 401")
+    console.debug("ErrorComponent: error.message.status == 401")
     router.push('/auth/login')
   }
 
   if (error.message == "Request failed with status code 401") {
-    console.debug("ErrorComponent: rror.message.status == 401")
+    console.debug("ErrorComponent: error.message.status == 401")
     router.push('/auth/login')
   }
 
@@ -45,7 +45,7 @@ export const ErrorComponent = ({error}) => {
         <br/>
         <h2>Debug</h2>
         <h4 data-testid="error-code">Code: {error.code}</h4>
-        <h4 data-testid="error-url">URL: {error.config.url}</h4>
+        <h4 data-testid="error-url">URL: {error.config?.url}</h4>
         <h4 data-testid="error-name">Name: {error.name}</h4>
         <h4 data-testid="error-description">Dec: {error.description}</h4>
         <h4 data-testid="error-filename">File: {error.filename}</h4>

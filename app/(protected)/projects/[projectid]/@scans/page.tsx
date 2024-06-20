@@ -5,7 +5,7 @@ import { ErrorComponent } from "@/components/ErrorComponent";
 import { BackgroundTable } from "@/components/backgrounds-table";
 import { MySpinner } from "@/components/mySpinner";
 import { ScanTable } from "@/components/scans-table";
-import { Card, CardBody, CardHeader, Spacer} from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Link, Spacer} from "@nextui-org/react";
 import { FC, useEffect, useState } from "react";
 
 interface pageProps {
@@ -167,6 +167,16 @@ const Scans : FC<pageProps> = (params) => {
                         <h1>Available Back Scans</h1>
                         <h4>Samples read from file: </h4>
                     </div>
+                    <Button 
+                          // href={`/projects/${projectId}/samples/new`} cannot open this page ????
+                          href={`/projects/${projectId}/background/`}
+                          as={Link}
+                          color="primary"
+                          // showAnchorIcon
+                          variant="solid"
+                          data-testid="newBackBtn"
+                          >NEW BACK
+                        </Button>
                 </CardHeader>
                 <CardBody>
                     <ShowData/>

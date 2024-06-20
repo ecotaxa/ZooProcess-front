@@ -72,6 +72,9 @@ const ProjectPage: FC<pageProps> = ({ params }) => {
         <Tab key="qc" title="QC">
           <QC {...params} />
         </Tab>
+        {/* <Tab key="background" title="Scan">
+          <QC {...params} />
+        </Tab> */}
       </Tabs>
     </div>
   );
