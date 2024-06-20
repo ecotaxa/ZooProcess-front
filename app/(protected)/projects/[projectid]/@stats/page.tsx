@@ -80,20 +80,21 @@ const Stats: FC<pageProps> = (params) => {
 
   const ecotaxaLink = (p:Project) => {
     if (p.ecotaxaId) {
-      const title = `'Your project is linked to an EcoTaxa project:  ___________________            `
+      const title = 'Your project is linked to an EcoTaxa project:'
       const subtitle = p.ecotaxaId
      return (
         <>
-      {/* <BoxMessage
+      <BoxMessage
           title={title}
           subtitle={subtitle}
+          button={undefined}
           // button={{
           //   href: "/projects/new",
           //   text: "Link Project",
           // }}
         >
           <CloudIcon />
-        </BoxMessage> */}
+        </BoxMessage>
         </>
       );
     }
