@@ -15,7 +15,7 @@ interface pageProps {
 }
 
 
-const Scans : FC<pageProps> = (params) => {
+const BackgroundScans : FC<pageProps> = (params) => {
 
     const projectId = params.projectid ;
     console.log("Metadata params: ", params);
@@ -159,7 +159,7 @@ const Scans : FC<pageProps> = (params) => {
                 {projectId} Scans
             </h1>
             <Spacer y={5}/> */}
-            {/* <Card className="inline-block "
+            <Card className="inline-block "
                     data-testid="backgroundCard" 
                 >
                 <CardHeader className="flex flex-row py-3">
@@ -184,7 +184,7 @@ const Scans : FC<pageProps> = (params) => {
 
             </Card> 
 
-            <Spacer y={5}/> */}
+            {/* <Spacer y={5}/>
 
             <Card className="inline-block "
                     data-testid="backgroundCard" 
@@ -199,12 +199,12 @@ const Scans : FC<pageProps> = (params) => {
                     <ShowScanData/>
                 </CardBody>
 
-            </Card> 
+            </Card>  */}
         </div>
     </section>
 
     );
 };
 
-export default Scans;
+export default BackgroundScans;
 

@@ -6,6 +6,8 @@ import SamplesTab from "./@samples/page";
 import Stats from "./@stats/page";
 import Scans from "./@scans/page";
 import Metadata from "./@metadata/page";
+import BackgroundScans from "./@background/page";
+
 // import Samples from "./@samples/page";
 
 import { FC } from "react";
@@ -66,12 +68,16 @@ const ProjectPage: FC<pageProps> = ({ params }) => {
           <SamplesTab {...params} />
           <Debug params={params} />
         </Tab>
+        <Tab key="background" title="Background Scans">
+          <BackgroundScans {...params} />
+        </Tab>
         <Tab key="scans" title="Scans">
           <Scans {...params} />
         </Tab>
         <Tab key="qc" title="QC">
           <QC {...params} />
         </Tab>
+
       </Tabs>
     </div>
   );
