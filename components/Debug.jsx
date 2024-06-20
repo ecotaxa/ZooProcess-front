@@ -8,9 +8,9 @@ export const Debug = ({params,title="debug"}) => {
 
     const [isSelected, setIsSelected] = useState(false);
 
-    // if ( debug == false ){
+    if ( debug == false ){
         return (<></>)
-    // }
+    }
 
     //
     // return (
