@@ -427,13 +427,19 @@ export const sampleid_formElements=[
         [
         { tag:"TextField", name:"fraction_id", type:"text", 
             placeholder:"Could be d1,d2, tot...", label:'Fraction ID',
-            variant:"outlined", required:false, disabled:true,
-            xs:12, sm:6, fullWidth:true, value:1
+            variant:"outlined", required:true, disabled:false,
+            xs:8, sm:6, fullWidth:true, value:1
         },
+        { tag:"TextField", name:"fraction_id_suffix", type:"text", 
+            placeholder:"Could be 01,02, ...", label:'Fraction ID Suffix',
+            variant:"outlined", required:false, disabled:false,
+            xs:4, sm:2, fullWidth:true, value:1
+        },
+        // { tag:"Empty", xs:0, xm:6 },
         { tag:"TextField", name:"fraction_number", type:"text", 
             placeholder:"Fraction Number", label:'Fraction Number',
-            variant:"outlined", required:false, disabled:true,
-            xs:12, sm:6, fullWidth:true, value:1
+            variant:"outlined", required:true, disabled:false,
+            xs:12, sm:4, fullWidth:true, value:1
         },
         { tag:"TextField", name:"fraction_min_mesh", type:"number", 
             placeholder:"Fraction min mesh", label:'min mesh',
@@ -603,7 +609,9 @@ export const sampleid_formElements=[
                 variant:"outlined",  required: true, 
                 xs:12, sm:6, size: "small",
                 choice:[
+                    {id:120, value: "NARROW (1200dpi)"},
                     {id:1200, value: "LARGE (1200dpi)"},
+                    {id:240, value: "NARROW (2400dpi)"},
                     {id:2400, value: "LARGE (2400dpi)"},
                 ],
                 value:"2400"
