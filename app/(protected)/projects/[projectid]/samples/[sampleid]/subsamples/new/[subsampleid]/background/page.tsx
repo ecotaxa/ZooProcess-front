@@ -240,7 +240,7 @@ const InfoPage : FC<pageProps> = ({params}) => {
             <ShowData />
         </div>
         <div>
-            <Button onPress={onPress} color="primary">DONE</Button>
+            <Button onPress={onPress} color="primary">SELECT</Button>
         </div>
         </>
     )
