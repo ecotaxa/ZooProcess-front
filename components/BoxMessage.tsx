@@ -46,11 +46,15 @@ export const BoxMessage: FC<IBoxMessage> = (props) => {
     <Card>
       <CardBody>
         <div className="flex">
+          <span>
           <div className="flex-none p-6">{IconElement}</div>
-          <div className="flex flex-wrap">
+          </span>
+          <span >
+          <div className="">
             <h2>{title}</h2>
             <h3>{subtitle}</h3>
           </div>
+          </span>
           {ShowButton(button)}
         </div>
       </CardBody>

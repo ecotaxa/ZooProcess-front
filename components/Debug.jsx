@@ -1,5 +1,5 @@
 
-import {Switch, Tooltip} from "@nextui-org/react";
+import {Code, Switch, Tooltip} from "@nextui-org/react";
 import { useState } from "react";
 
 import {debug} from "../config/settings"
@@ -25,8 +25,10 @@ export const Debug = ({params,title="debug"}) => {
         if (!isSelected) { return (<></>) }
 
         return (
-            <div className="xm-sm-max-100">
-                {JSON.stringify(params)}
+            <div className="xm-sm-max-100 w-50">
+                {/* <Code className="size-sm" color="secondary"> */}
+                    {JSON.stringify(params)}
+                {/* </Code> */}
             </div>
         )
     }
