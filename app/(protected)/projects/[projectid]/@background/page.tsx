@@ -24,8 +24,8 @@ const BackgroundScans : FC<pageProps> = (params) => {
     const { backgrounds, isLoading, isError } = useBackgrounds(projectId)
     const [ backgroundList, setBackgroundList ] = useState(backgrounds)
 
-    const { scans, isLoading: isScanLoading , isError: isScanError } = useSampleScans(projectId)
-    const [ scanList, setScanList ] = useState(backgrounds)
+    // const { scans, isLoading: isScanLoading , isError: isScanError } = useSampleScans(projectId)
+    // const [ scanList, setScanList ] = useState(scans)
     
     // {
     //     "id": "65c3635582772f6fd7ba5bd3",
@@ -125,16 +125,16 @@ const BackgroundScans : FC<pageProps> = (params) => {
         }
     } , [backgrounds])
     
-    useEffect( () => { 
-        if ( scans.length > 0 ) 
-            {
-                console.log("scan list has changed", scans);
-                const data = formatScanSampleData(scans)
-                // const data = formatData(backgrounds).filter(item => item !== undefined);
-                // const data = samples
-                setScanList(data);
-            }
-    } , [scans])
+    // useEffect( () => { 
+    //     if ( scans.length > 0 ) 
+    //         {
+    //             console.log("scan list has changed", scans);
+    //             const data = formatScanSampleData(scans)
+    //             // const data = formatData(backgrounds).filter(item => item !== undefined);
+    //             // const data = samples
+    //             setScanList(data);
+    //         }
+    // } , [scans])
   
       
     const ShowData = () => {
@@ -144,13 +144,12 @@ const BackgroundScans : FC<pageProps> = (params) => {
         return <BackgroundTable projectId={projectId} backgrounds={backgroundList}/>
     }
 
-    const ShowScanData = () => {
-        if (isScanLoading) return <MySpinner />
-        if (isScanError) return <ErrorComponent error={isScanError}/>
-        console.debug(scanList)
-        return <ScanTable projectId={projectId} scans={scanList}/>
-    }
-
+    // const ShowScanData = () => {
+    //     if (isScanLoading) return <MySpinner />
+    //     if (isScanError) return <ErrorComponent error={isScanError}/>
+    //     console.debug(scanList)
+    //     return <ScanTable projectId={projectId} scans={scanList}/>
+    // }
 
     return (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -176,6 +175,16 @@ const BackgroundScans : FC<pageProps> = (params) => {
                           variant="solid"
                           data-testid="newBackBtn"
                           >NEW BACK
+                        </Button>
+                        <Button 
+                          // href={`/projects/${projectId}/samples/new`} cannot open this page ????
+                          href={`/projects/${projectId}/upload/`}
+                          as={Link}
+                          color="primary"
+                          // showAnchorIcon
+                          variant="solid"
+                          data-testid="newBackBtn"
+                          >NEW BACK using upload
                         </Button>
                 </CardHeader>
                 <CardBody>

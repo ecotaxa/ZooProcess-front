@@ -21,11 +21,11 @@ const Scans : FC<pageProps> = (params) => {
     console.log("Metadata params: ", params);
     console.log("Metadata params projectid: ", params.projectid);
 
-    const { backgrounds, isLoading, isError } = useBackgrounds(projectId)
-    const [ backgroundList, setBackgroundList ] = useState(backgrounds)
+    // const { backgrounds, isLoading, isError } = useBackgrounds(projectId)
+    // const [ backgroundList, setBackgroundList ] = useState(backgrounds)
 
     const { scans, isLoading: isScanLoading , isError: isScanError } = useSampleScans(projectId)
-    const [ scanList, setScanList ] = useState(backgrounds)
+    const [ scanList, setScanList ] = useState(scans)
     
     // {
     //     "id": "65c3635582772f6fd7ba5bd3",
@@ -37,39 +37,39 @@ const Scans : FC<pageProps> = (params) => {
     //     "subSampleId": null
     //   },
 
-    const formatData = (data:any) => {
+    // const formatData = (data:any) => {
 
-        console.log("formatData", data);
+    //     console.log("formatData", data);
     
-        const backgrounds = Object.keys(data).map( (_scan) => {
+    //     const backgrounds = Object.keys(data).map( (_scan) => {
     
-          console.log("background: ", _scan);
+    //       console.log("background: ", _scan);
   
-          if ( _scan == "key"){
-              console.error("ARRGG indey == key");
-              console.log("ARRGG indey == key")
-              console.debug(data);
-              console.log("pfffff")
-          } else {
-            const s = data[_scan]
-            console.log("s: ", s);
+    //       if ( _scan == "key"){
+    //           console.error("ARRGG indey == key");
+    //           console.log("ARRGG indey == key")
+    //           console.debug(data);
+    //           console.log("pfffff")
+    //       } else {
+    //         const s = data[_scan]
+    //         console.log("s: ", s);
 
-            return {
-              id: s.id,
-              name: s.url,
-              creator: s.user.name,
-              time:s.createdAt,
-              date:s.createdAt,
-            //   qc:"",
-              qc: s.qc || "TODO",  
-              action:s.url
-            }
-          }
-        })
+    //         return {
+    //           id: s.id,
+    //           name: s.url,
+    //           creator: s.user.name,
+    //           time:s.createdAt,
+    //           date:s.createdAt,
+    //         //   qc:"",
+    //           qc: s.qc || "TODO",  
+    //           action:s.url
+    //         }
+    //       }
+    //     })
 
-        console.log("formated backgrounds data: ", backgrounds);
-        return backgrounds
-    }
+    //     console.log("formated backgrounds data: ", backgrounds);
+    //     return backgrounds
+    // }
 
     const formatScanSampleData = (data:any) => {
 
@@ -115,15 +115,15 @@ const Scans : FC<pageProps> = (params) => {
         return scans
     }
 
-    useEffect( () => { 
-            if ( backgrounds.length > 0 ) {
-                console.log("background list has changed", backgrounds);
-                const data = formatData(backgrounds)
-                // const data = formatData(backgrounds).filter(item => item !== undefined);
-                // const data = samples
-                setBackgroundList(data);
-        }
-    } , [backgrounds])
+    // useEffect( () => { 
+    //         if ( backgrounds.length > 0 ) {
+    //             console.log("background list has changed", backgrounds);
+    //             const data = formatData(backgrounds)
+    //             // const data = formatData(backgrounds).filter(item => item !== undefined);
+    //             // const data = samples
+    //             setBackgroundList(data);
+    //     }
+    // } , [backgrounds])
     
     useEffect( () => { 
         if ( scans.length > 0 ) 
@@ -137,12 +137,12 @@ const Scans : FC<pageProps> = (params) => {
     } , [scans])
   
       
-    const ShowData = () => {
-        if (isLoading) return <MySpinner />
-        if (isError) return <ErrorComponent error={isError}/>
-        console.debug(backgroundList)
-        return <BackgroundTable projectId={projectId} backgrounds={backgroundList}/>
-    }
+    // const ShowData = () => {
+    //     if (isLoading) return <MySpinner />
+    //     if (isError) return <ErrorComponent error={isError}/>
+    //     console.debug(backgroundList)
+    //     return <BackgroundTable projectId={projectId} backgrounds={backgroundList}/>
+    // }
 
     const ShowScanData = () => {
         if (isScanLoading) return <MySpinner />
