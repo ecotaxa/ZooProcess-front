@@ -25,9 +25,14 @@ type pageProps = {
   // imageRGB: string,
 }
 
-// const FileUploader: FC<pageProps> = ({props,onChange}) => {
-  const FileUploader: FC<pageProps> = ({instrumentId, onChange }) => {
-  // const FileUploader: FC<pageProps> = ({instrumentId, onChange, imageRGB}) => {
+// // const FileUploader: FC<pageProps> = ({props,onChange}) => {
+//   const FileUploader: FC<pageProps> = ({instrumentId, onChange }) => {
+//   // const FileUploader: FC<pageProps> = ({instrumentId, onChange, imageRGB}) => {
+    const FileUploader: FC<pageProps> = (props) => {
+
+      console.log("FileUploader(props):", props);
+
+        const {instrumentId, onChange} = props;
 
   // const {projectid, sampleid, subsampleid, instrumentId} = props;
   // const {instrumentId} = props;
@@ -37,7 +42,7 @@ type pageProps = {
   // console.log("sampleid: ", sampleid);
   // console.log("subsampleid: ", subsampleid);
   
-  console.log("instrumentId: ", instrumentId);
+  console.log("FileUploader instrumentId: ", instrumentId);
   
   const imagePlaceholder = "/images/placeholder-image.jpg";
   // const [imageUrl, setImageUrl] = useState(imagePlaceholder);

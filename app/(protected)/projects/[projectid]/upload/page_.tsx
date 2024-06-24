@@ -55,14 +55,8 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             const path = `/projects/${projectid}`
             console.log("path: " , path)
             router.push(path)
-            // router.back()
-
         }
     };
-
-    const onPreviewClick = () => {
-        console.log("onPreviewClick")
-    }
 
     const isTiff = (fileUrl:string) : boolean => {
         console.log("fileUrl: ", fileUrl)
@@ -235,138 +229,59 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
     }
 
     const timelist = [
-        { text: "Scanner Info", checked: false },
-        { text: "Prepare", checked: false },
         { text: "Preview 1", checked: false },
-        { text: "30s", checked: false },
         { text: "Scan 1", checked: false },
-        { text: "30s", checked: false },
+        { text: "Preview 2", checked: false },
         { text: "Scan 2", checked: false },
       ];
 
-    interface MyLoaderProps {
-        // instrumentId: string,
-        project: Project|any,
-        // sampleid: number,
-        // subsampleid: number,
-        onChange: (value: string) => void,
-    }
-
-
-    const Loader : FC<MyLoaderProps> = (props:MyLoaderProps) => {
+    const Loader = (project: Project|any) => {
         if ( isLoading ) { return <MySpinner /> }
         if ( isError ) { return <ErrorComponent error={isError}/> }
 
-        console.log("project: ", props)
-        console.log("project ID: ", props.project.id)
-        console.log("instrumentId: ", props.project.instrumentId)
+        console.log("project: ", project)
 
-        if ( props.project.instrumentId === "undefined" ) {
-            console.log("props.project.instrumentId === undefined")
-            return <div>No instrument</div>
+        const props = {
+            // projectid: projectid,
+            // sampleid: sampleid,
+            // subsampleid: subsampleid,
+            instrumentId: project.instrumentId,
         }
-        const instrumentId : string = props.project.instrumentId + "" //|| "" // + "" to force type string because test it before then existing
-
-        // const props = {
-        //     // projectid: projectid,
-        //     // sampleid: sampleid,
-        //     // subsampleid: subsampleid,
-        //     instrumentId: project.instrumentId,
-        // }
 
         return (
             <>
                 <Debug params={project}/>
-                <div><b>project: </b> {JSON.stringify(project)}</div>
-                <div><b>project Id: </b> {props.project.id}</div>
-                <div><b>instrument Id: </b> {props.project.instrumentId}</div>
-                <div><b>instrument Id JS: </b> {JSON.stringify(props.project.instrumentId)}</div>
-                {/* <Debug params={props}/> */}
-                <FileUploader instrumentId={instrumentId} onChange={onChange} />
+                <div><b>instrument Id: </b> {project.instrumentId}</div>
+                <Debug params={props}/>
+                <FileUploader instrumentId={project.instrumentId} onChange={onChange} />
                 {/* <FileUploader instrumentId={project.instrumentId} image={imageRGB} onChange={onChange} /> */}
             </>
         )
     }
 
     enum state {
-        scannerSettings = 0,
-        info = 1,
-        preview = 2,
-        thirtys1 = 3,
-        scan1 = 4,
-        thirtys1bis = 6,
-        scan2 = 7,
-        end = 8
+        info1 = 0,
+        preview1 = 0,
+        scan1 = 1,
+        info2,
+        preview2 = 2,
+        scan2 = 3,
     }
 
     // let current = state.preview1 // 0 // 0.5
 
-    let [current, setCurrent ] = useState(state.scannerSettings)
+    let [current, setCurrent ] = useState(state.preview1)
 
-    const ScannerSettings = (project: Project|any, nextState: state ) => {
-        if ( current != state.scannerSettings ) {
+    const Preview1 = () => {
+        if ( current != state.preview1 ) {
             return <></>
         }
 
         return (
             <>
-            <Card className="inline-block size-full"
-                data-testid="ScanCard" 
-                >
-                <CardBody className="p-6">
-                    <div  className="bg-100 p-6">
-                        <h1 className="text-center">You are about to scan a background with the Zooscan.</h1>
-                        <br/><br/>
-                        <div >
-                            <Debug params={project} title="project"/>
-                            { project.instrument?.sn && <b>Your project use Zooscan : {project.instrument?.sn}</b>}
-                            <br/>
-                            <b>project.instrumentId: {project.instrumentId}</b>
-                            {/* <b>Your project use Zooscan : {project.instrument?.sn||""}</b> */}
-                            {/* <b>Your project use Zooscan : {project.instrumentId} {project.instrument.serial}</b> */}
-                        </div>
-                    </div>
-                </CardBody>
-
-                <CardFooter className="flex flex-row-reverse py-3">
-
-                    <Button 
-                        disabled={ isError || isLoading || !image }
-                        color="primary"
-                        // showAnchorIcon
-                        variant="solid"
-                        data-testid="newProjectBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
-                        onPress={() =>{ console.debug("go to info");   setCurrent(nextState) }}
-                        // onPress={onClick}
-                    >Continue</Button>
-
-                    <Button 
-                        disabled={ isError || isLoading || !image }
-                        color="secondary"
-                        // showAnchorIcon
-                        variant="solid"
-                        data-testid="newProjectBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
-                        onPress={() =>{ console.debug("cancel scanning"); router.push('/projects'); }}
-                        // onPress={onClick}
-                    >Cancel</Button>
-                </CardFooter>
-            </Card>               
-            </>
-        )
-    }
-
-    const Info = ( nextState: state ) => {
-        if ( current != state.info ) {
-            return <></>
-        }
-
-        return (
-            <>
-            <Card className="inline-block size-full"
-                data-testid="ScanCard" 
-                >
+                <Card className="inline-block size-full"
+                    data-testid="ScanCard" 
+                    >
                 <CardBody className="p-6">
                     <div  className="bg-100 p-6">
                         <h1 className="text-center">You are about to scan a background with the Zooscan.</h1>
@@ -378,8 +293,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                                 <li>Place the suitable frame (LARGE/NARROW) on the glass and adjust its position.</li>
                                 <li>Add the sample</li>
                                 <li>Adjust the water level just above the first step of the transparent frame (the meniscus must be above the step).</li>
-                                <li>Spread the specimens homogeneously, but avoid placing specimens close and parallel to the borders.<br/>
-                                The number of objects will be adapted to their size, and it's important to limit the number of touching objects (multiple).</li>
+                                <li>Spread the specimens homogeneously, but avoid placing specimens close and parallel to the borders.<br/> The number of objects will be adapted to their size, and it's important to limit the number of touching objects (multiple).</li>
                                 <li>Help floating specimens to sink on the glass.</li>
                                 <li>Separate the touching objects.</li>
                             </ul>
@@ -396,62 +310,18 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         variant="solid"
                         data-testid="newProjectBtn"
                         // >Scan {actions[nextAction(action)]}</Button>
-                        onPress={() =>{ console.debug("go to Preview");   setCurrent(nextState) }}
+                        onPress={() =>{ console.debug("go to scan1");   setCurrent(state.scan1) }}
                         // onPress={onClick}
                     >Done - Launch Preview</Button>
                 </CardFooter>
             </Card>
+               
             </>
         )
     }
 
-    const Preview = (nextState: state ) => {
-        if ( current != state.preview ) {
-            return <></>
-        }
-
-        return (
-            <>
-             <Card className="inline-block size-full"
-                    data-testid="ScanCard" 
-                    >
-                <CardBody className="p-6">
-                    <div  className="bg-100 p-6">
-                        <h1 className="text-center">Preview.</h1>
-                    </div>
-                </CardBody>
-
-                <CardFooter className="flex flex-row-reverse py-3">
-
-                <Button 
-                        disabled={ isError || isLoading || !image }
-                        color="secondary"
-                        // showAnchorIcon
-                        variant="solid"
-                        data-testid="newProjectBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
-                        // onPress={onClick}
-                        onPress={() =>{ console.debug("renew Preview");  onPreviewClick()  }}
-                    >Preview</Button>
-
-                    <Button 
-                        disabled={ isError || isLoading || !image }
-                        color="primary"
-                        // showAnchorIcon
-                        variant="solid"
-                        data-testid="newProjectBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
-                        // onPress={onClick}
-                        onPress={() =>{ console.debug("go to wait 30s");   setCurrent(nextState) }}
-                    >Scan</Button>
-                </CardFooter>
-            </Card>
-            </>
-        )
-    }
-
-    const ThirtySeconds = (nextState: state) => {
-        if ( current != state.thirtys1 && current != state.thirtys1bis ) {
+    const Preview2 = () => {
+        if ( current != state.preview2 ) {
             return <></>
         }
 
@@ -476,13 +346,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         data-testid="newProjectBtn"
                         // >Scan {actions[nextAction(action)]}</Button>
                         // onPress={onClick}
-                        onPress={
-                            () =>{ 
-                                console.debug("go to scan " + state.thirtys1?'1':'2'); 
-                                //state.thirtys1 ? setCurrent(state.scan1):setCurrent(nextState) 
-                                setCurrent(nextState) 
-                            }
-                        }
+                        onPress={() =>{ console.debug("go to scan2");   setCurrent(state.scan2) }}
                     >Done - Launch Preview</Button>
                 </CardFooter>
             </Card>
@@ -490,82 +354,65 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         )
     }
 
+    const Scan = (step:number=1) => {
+        
+        if ( (current == state.preview1 || current == state.preview2) && current != step)  {
+        // if ( current < 1 && current >= 2 ) || ( current <= 3 && current > 4 ) {
+            return <></>
+        }
 
-  const Scan = (step: number = 1, nextState: state) => {
-    if (current != state.scan1 && current != state.scan2) {
-      return <></>;
+        return (
+        <>
+            <h3>Scan {step}</h3>
+            <Card className="inline-block size-full"
+                data-testid="ScanCard" 
+                >
+                <CardBody>
+                    <Loader project={project}/>
+                </CardBody>
+
+                <CardFooter className="flex flex-row-reverse py-3">
+                    <div className="flex-row">
+                        <Image className="height-auto"
+                            src={background}
+                            alt="uploaded image"
+                            width={720}
+                            height={446}
+                        />
+                    </div>
+
+                    <Button 
+                        disabled={ isError || isLoading || !image }
+                        color="primary"
+                        // showAnchorIcon
+                        variant="solid"
+                        data-testid="newProjectBtn"
+                        // >Scan {actions[nextAction(action)]}</Button>
+                        // onPress={onClick}
+                        onPress={() =>{ if (current==state.scan1){ console.debug("go to preview2"); setCurrent(state.preview2) } else { onClick()} }}
+                    >Validate</Button>
+                </CardFooter>
+            </Card>
+        </>
+        )
     }
-
-    const loaderProps : MyLoaderProps = {
-      project: project,
-      onChange: onChange,
-    };
-
-    return (
-      <>
-        <h3>Scan {step}</h3>
-        <Card className="inline-block size-full" data-testid="ScanCard">
-          <CardBody>
-              <Loader project={project} onChange={onChange} />
-              {/* <Loader props={loaderProps} /> */}
-          </CardBody>
-
-          <CardFooter className="flex flex-row-reverse py-3">
-            <div className="flex-row">
-              <Image
-                className="height-auto"
-                src={background}
-                alt="uploaded image"
-                height={446}
-              />
-            </div>
-
-            <Button
-              disabled={isError || isLoading || !image}
-              color="primary"
-              variant="solid"
-              data-testid="newProjectBtn"
-              onPress={() => {
-                if (current == state.scan1) {
-                  console.debug("go to 30s bis");
-                  setCurrent(nextState);
-                } else {
-                  console.debug("go to onClick");
-                  onClick();
-                }
-              }}
-            >
-              Validate
-            </Button>
-          </CardFooter>
-        </Card>
-      </>
-    );
-  };
 
     const step = (current:state) => {
         switch (current) {
-            case state.scannerSettings:
-                return ScannerSettings(project, state.info)
-            case state.info:
-                return Info(state.preview)
-            case state.preview:
-                return Preview(state.thirtys1)
-            case state.thirtys1:
-                return ThirtySeconds(state.scan1)
+            case state.preview1:
+                return Preview1()
             case state.scan1:
-                return Scan(1,state.thirtys1bis)
-            case state.thirtys1bis:
-                return ThirtySeconds(state.scan2)
+                return Scan(1)
+                // Scan(1)
+            case state.preview2:
+                return Preview2()
             case state.scan2:
-                return Scan(2,state.end)
+                return Scan(2)
 
             default:
-                return (
-                <>
-                   <Debug params={{current,"error":"Unknown state"}} title="Error"/>
+                return <>
+                <Debug params={{current,"error":"Unknown state"}} title="Error"/>
                 </>
-                )
         }
     }
 

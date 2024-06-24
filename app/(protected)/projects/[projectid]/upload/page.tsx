@@ -237,8 +237,8 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
     const timelist = [
         { text: "Scanner Info", checked: false },
         { text: "Prepare", checked: false },
-        { text: "Preview 1", checked: false },
-        { text: "30s", checked: false },
+        // { text: "Preview 1", checked: false },
+        // { text: "30s", checked: false },
         { text: "Scan 1", checked: false },
         { text: "30s", checked: false },
         { text: "Scan 2", checked: false },
@@ -548,11 +548,11 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             case state.scannerSettings:
                 return ScannerSettings(project, state.info)
             case state.info:
-                return Info(state.preview)
-            case state.preview:
-                return Preview(state.thirtys1)
-            case state.thirtys1:
-                return ThirtySeconds(state.scan1)
+                return Info(state.scan1)
+            // case state.preview:
+            //     return Preview(state.thirtys1)
+            // case state.thirtys1:
+            //     return ThirtySeconds(state.scan1)
             case state.scan1:
                 return Scan(1,state.thirtys1bis)
             case state.thirtys1bis:
