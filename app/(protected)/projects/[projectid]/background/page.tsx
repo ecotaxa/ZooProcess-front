@@ -378,10 +378,10 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                                 <li>Place the suitable frame (LARGE/NARROW) on the glass and adjust its position.</li>
                                 <li>Add the sample</li>
                                 <li>Adjust the water level just above the first step of the transparent frame (the meniscus must be above the step).</li>
-                                <li>Spread the specimens homogeneously, but avoid placing specimens close and parallel to the borders.<br/>
+                                {/* <li>Spread the specimens homogeneously, but avoid placing specimens close and parallel to the borders.<br/>
                                 The number of objects will be adapted to their size, and it's important to limit the number of touching objects (multiple).</li>
                                 <li>Help floating specimens to sink on the glass.</li>
-                                <li>Separate the touching objects.</li>
+                                <li>Separate the touching objects.</li> */}
                             </ul>
                         </div>
                     </div>
