@@ -75,7 +75,34 @@ export function useBackgrounds(projectId) {
             }
 }
 
+export function useGetScan(scanId) {
 
+    console.log("useGetScan: scanId", scanId)
+
+    if ( scanId == undefined ){
+        return {
+            scan: [],
+            isLoading : false,
+            isError: { message: "Cannot determine the scan" }
+        }    
+    }
+
+    const { data=undefined, error=false, isLoading=true } = useSWR(
+        `/scan/${scanId}`,
+        api.getScan, 
+        {
+            revalidateIfStale: false,
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false
+        }    
+    )
+
+    return {
+        scan: data,
+        isLoading,
+        isError: error
+    }  
+}
 
 
 export function useSampleScans(projectId) {

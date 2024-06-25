@@ -15,6 +15,11 @@ function pathToRealStorage(path:string) : string {
 function pathToSessionStorage(path:string) : string {
     console.log("pathToSessionStorage() | path :", path)
 
+    // if ( path.substring(0, 1) != '/' ) {
+    //     // path = path.substring(1)
+    //     path = "/Users/sebastiengalvagno/" + path
+    // }
+
     // path.substring(0, 1) == '/'? path.substring(1) : path
     const realFolder = process.env.REAL_FOLDER || "/Users/sebastiengalvagno/Drives" // NEXT_PUBLIC_FOLDER_STORAGE_IMAGES
     const sessionFolder = process.env.UPLOAD_FOLDER || "/uploads"

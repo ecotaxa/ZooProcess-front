@@ -174,7 +174,7 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
                     size="sm" 
                     color="primary" 
                     as={Link}
-                    href={`/projects/${projectId}/backgrounds/${background.id}`}
+                    href={`/projects/${projectId}/background/${background.id}`}
                     // onPress={ (projectid,sampleid=background.id) => onDetail(projectid,sampleid) }                
                 >
                     EYE

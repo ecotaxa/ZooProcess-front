@@ -496,10 +496,10 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
       return <></>;
     }
 
-    const loaderProps : MyLoaderProps = {
-      project: project,
-      onChange: onChange,
-    };
+    // const loaderProps : MyLoaderProps = {
+    //   project: project,
+    //   onChange: onChange,
+    // };
 
     return (
       <>

@@ -9,6 +9,8 @@ export const ErrorComponent = ({error}) => {
 
   const router = useRouter()
   // router.push('/auth/login')
+  
+  let message = "" //"blabla - TODO replace blabla with API message"
 
   if (error.status == 401) {
     console.debug("ErrorComponent: error.status == test")
@@ -37,11 +39,15 @@ export const ErrorComponent = ({error}) => {
 
   console.debug("typeof(error.status): ", typeof(error.status))
 
+  // if ( error.message ){
+  //   message = error.message
+  // }
+
     return (
     <Card>
       <CardBody>
         <h1 data-testid="error-title">{error.message}</h1>
-        <h4 data-testid="error-message">blabla - TODO replace blabla with API message</h4>
+        <h4 data-testid="error-message">{message}</h4>
         <br/>
         <h2>Debug</h2>
         <h4 data-testid="error-code">Code: {error.code}</h4>

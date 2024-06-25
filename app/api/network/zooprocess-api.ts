@@ -252,6 +252,13 @@ export async function addScan(image: {url:string, instrumentId:string, subsample
 
 }
 
+export async function getScan(url:string) {
+  console.log("getScan");
+  const api = await axiosInstanse({})
+
+  const response = await api.get<Background>(url)
+    return response.data;
+}
 
 export async function getBackgrounds(url:string){
   console.log("getBackgrounds");
