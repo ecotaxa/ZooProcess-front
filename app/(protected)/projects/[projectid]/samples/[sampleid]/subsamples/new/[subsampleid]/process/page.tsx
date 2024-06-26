@@ -114,10 +114,19 @@ const ProcessPage : FC<pageProps> = ({params, searchParams}) => {
 
     let label = "Processing"
 
+    const list = [
+        { text: "Fill Metadata", checked: true },
+        // { text: "Background", checked: false },
+        { text: "Preview", checked: false },
+        { text: "Scan", checked: true },
+        { text: "Process", checked: false },
+        { text: "Check", checked: false },
+      ];
+
     return (
         <>
 
-        <Timeline_scan current={3} />
+        <Timeline_scan list={list} current={3} />
 
         <div className="text-start w-">
             <h1>Processing your scan</h1>
