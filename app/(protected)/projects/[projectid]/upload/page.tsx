@@ -39,7 +39,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
     const [background, setBackground] = useState(imagePlaceholder)
     // const [imageRGB , setImageRGB] = useState("");
     
-    const noError : Array<any>= []
+    const noError : Array<any> = []
     // const [error, setError] = useState(noError);
     // const [error, setError] = useState({});
     // const anyError : any = {}
@@ -53,10 +53,36 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         if ( image ) {
             // const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${subsampleid}/process/?image=${image}`
             const path = `/projects/${projectid}`
-            console.log("path: " , path)
+            console.log("path: ", path)
+
+            // {src: '/Users/sebastiengalvagno/Drives/26-06-2024/20240112_1518_back_large_2-1719398042478-934961769.tif', dst: '/Users/sebastiengalvagno/Drives/26-06-2024/2024011…1518_back_large_2-1719398042478-934961769.tif.jpg'}
+
+
+            // let headersList = {
+            //     "Accept": "*/*",
+            //     "User-Agent": "ZooProcess v10",
+            //     "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OGRkN2VhMjRiYzEwYTRiZjFlMzdlMiIsImlhdCI6MTcxOTIzOTk5NywiZXhwIjoxNzE5NDk5MTk3fQ.pnPXEmeCSOVlJof2eE705tc1AfwrkrKyZn-QA1cd-ro",
+            //     "Content-Type": "application/json"
+            //    }
+               
+            //    let bodyContent = JSON.stringify({
+            //      "url":"/mon/chemin/vers/mon/image"
+            //    });
+               
+            //    let response = await fetch("http://zooprocess.imev-mer.fr:8081/v1/background/65c4e0994653afb2f69b11ce/url?projectId=655d3062983b92b6e29b3369", { 
+            //      method: "POST",
+            //      body: bodyContent,
+            //      headers: headersList
+            //    });
+               
+            //    let data = await response.text();
+            //    console.log(data);
+               
+
+
+
             router.push(path)
             // router.back()
-
         }
     };
 
@@ -75,20 +101,24 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
 
         ///TODO if ancien scan then remove it (because we replace with a new one)
         
+        // const merde = JSON.parse(fileUrl)
 
         console.log("New scan onChange:", fileUrl)
 
         if (isTiff(fileUrl.url)){
             const data = {
                 src: pathToRealStorage(fileUrl.url),
-                dst: pathToRealStorage(fileUrl.url + ".jpg"),
+                //dst: pathToRealStorage(fileUrl.url + ".jpg"),
             }
 
             // const data_test = {
             //     "src": "/Users/sebastiengalvagno/Drives/18-03-2024/medsea_mesocosme_wp220130310_c3_d2_raw_1-1710751210823-978326589.tif"
             // }
 
+            // alert("data: "+ JSON.stringify(data))
+
             console.log("data: ", data)
+            console.log("data src: ", data.src)
 
             try {
 
@@ -113,16 +143,18 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                             // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
                         })
                         .catch((error) => {
+                            console.error("addBackground catch error: ", error)
                             return Promise.reject(error)
                         })
 
                     })
                     .catch((error) => {
-                        console.log("Cannot convert Tiff to Jpg error: ", error)
-                        const errormsg = { message:"Cannot convert Tiff to Jpg error: " + error}
+                        console.error("Cannot convert Tiff to Jpg error: ", error)
+                        const errormsg = { ...error, message:"Cannot convert Tiff to Jpg error"}
                         // setMsg(errormsg.message)
                         // setError(errormsg)
-                        throw new Error("Cannot convert Tiff to Jpg error: " + error)
+                        // throw new Error("Cannot convert Tiff to Jpg error: " + error)
+                        throw errormsg
                     })
 
                 })
@@ -138,7 +170,10 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                     } else {
                         console.error("Cannot convert Tiff to Jpg error: ", response)
                         // setMsg("Cannot convert Tiff to Jpg error:")
-                        throw new Error("Cannot convert Tiff to Jpg error: " + response)
+                        // throw new Error("Cannot convert Tiff to Jpg error: " + response)
+                        // const errormsg = { ...error}
+                        const errormsg = { ...response, message:"Cannot convert Tiff to Jpg error"}
+                        throw errormsg
                     }
                 })
 
@@ -282,7 +317,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                 <div><b>instrument Id: </b> {props.project.instrumentId}</div>
                 <div><b>instrument Id JS: </b> {JSON.stringify(props.project.instrumentId)}</div>
                 {/* <Debug params={props}/> */}
-                <FileUploader instrumentId={instrumentId} onChange={onChange} />
+                <FileUploader instrumentId={instrumentId} projectId={projectid} onChange={onChange} />
                 {/* <FileUploader instrumentId={project.instrumentId} image={imageRGB} onChange={onChange} /> */}
             </>
         )

@@ -8,19 +8,24 @@ import { th } from "date-fns/locale"
 export async function converttiff2jpg ( data) {
             // "use server";
 
+            const bodytext = JSON.stringify(data)
+            console.debug("bodytext: ", bodytext)
+
             // const server = "http://localhost:8000"
             const server = "http://zooprocess.imev-mer.fr:8000"
-            const url = server + "/convert/"
-            console.error("url: ", url)
-            console.error("data: ", data)
+            const url = server + "/convert"
+            console.debug("url: ", url)
+            console.debug("data: ", data)
             // const response = 
             return await fetch( url , {
                 method: "POST",
-                body: JSON.stringify(data),
+                body: bodytext, // JSON.stringify(data),
                 // body: data_test,
                 headers: {
-                    "Content-Type": "application/text",
-                    "Access-Control-Allow-Origin":"no-cors"
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "User-Agent": "Zooprocess v10",
+                    // "Access-Control-Allow-Origin":"no-cors"
                 },
             })
             .then((response) => {
@@ -53,10 +58,12 @@ export async function converttiff2jpg ( data) {
                         console.error("Can't connect: ", response)
                         // setMsg("The server do not accept your connection")
                         throw new Error("The server do not accept your connection")
+                        // throw new Error({message:"The server do not accept your connection"})
                     } else {
                         console.error("Cannot convert Tiff to Jpg error: ", response)
                         // setMsg("Cannot convert Tiff to Jpg error:")
                         throw new Error("Cannot convert Tiff to Jpg error: " + response)
+                        // throw new Error({message:"Cannot convert Tiff to Jpg error: " + response})
                     }
                 }
             })

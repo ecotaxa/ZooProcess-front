@@ -16,9 +16,9 @@ import { add } from "date-fns";
 
 type pageProps = {
   // props:{
-      // projectid: string,
-      // sampleid: string,
-      // subsampleid: string,  
+      projectId: string,
+      sampleId?: string,
+      subsampleId?: string,  
       instrumentId: string,
   // },
   onChange: (data:any) => void,
@@ -32,7 +32,7 @@ type pageProps = {
 
       console.log("FileUploader(props):", props);
 
-        const {instrumentId, onChange} = props;
+        const {instrumentId, projectId, sampleId, subsampleId, onChange} = props;
 
   // const {projectid, sampleid, subsampleid, instrumentId} = props;
   // const {instrumentId} = props;
@@ -60,7 +60,7 @@ type pageProps = {
 
   const [isUploading, setIsUploading] = useState<boolean>(false)
 
-  const transmit = async (image: {url:string, instrumentId:string}) => {
+  const transmit = async (image: {url:string, instrumentId:string, projectId:string, sampleId?:string, subsampleId?:string}) => {
     console.log("transmitting: ", image.url );
     // addBackground(image)   
     // à mettre dans la fonction qui appelle  plus besoin de passer project, sample et subsample
@@ -154,6 +154,9 @@ type pageProps = {
       const data2api = {
         url: data.fileUrl,
         // userId,
+        projectId,
+        sampleId,
+        subsampleId,
         instrumentId
       }
       console.log("data2api: ", data2api)
