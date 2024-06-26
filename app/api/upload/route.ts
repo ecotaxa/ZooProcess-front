@@ -5,6 +5,9 @@ import * as dateFn from "date-fns";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
+
+  console.log("/api/upload POST request: ", request);
+
   const formData = await request.formData();
 
   const file = formData.get("file") as Blob | null;
@@ -24,13 +27,13 @@ export async function POST(request: NextRequest) {
 
   try {
     await stat(uploadDir);
-  } catch (e: any) {
-    if (e.code === "ENOENT") {
+  } catch (err: any) {
+    if (err.code === "ENOENT") {
       await mkdir(uploadDir, { recursive: true });
     } else {
       console.error(
         "Error while trying to create directory when uploading a file\n",
-        e
+        err
       );
       return NextResponse.json(
         { error: "Something went wrong." },
