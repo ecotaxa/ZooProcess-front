@@ -337,9 +337,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         variant="solid"
                         data-testid="newProjectBtn"
                         // >Scan {actions[nextAction(action)]}</Button>
-                        onPress={() =>{ console.debug("go to info");   setCurrent(nextState) }}
+                        onPress={() =>{ console.debug("I'm using " + project.instrument?.sn);   setCurrent(nextState) }}
                         // onPress={onClick}
-                    >Continue</Button>
+                    >Continue - {"I'm using " + project.instrument?.sn}</Button>
 
                     <Button 
                         disabled={ isError || isLoading || !image }
