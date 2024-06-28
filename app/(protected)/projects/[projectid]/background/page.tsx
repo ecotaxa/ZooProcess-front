@@ -282,7 +282,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                 <div><b>instrument Id: </b> {props.project.instrumentId}</div>
                 <div><b>instrument Id JS: </b> {JSON.stringify(props.project.instrumentId)}</div>
                 {/* <Debug params={props}/> */}
-                <FileUploader instrumentId={instrumentId} onChange={onChange} />
+                <FileUploader instrumentId={instrumentId} projectId={props.project.id} onChange={onChange} />
                 {/* <FileUploader instrumentId={project.instrumentId} image={imageRGB} onChange={onChange} /> */}
             </>
         )

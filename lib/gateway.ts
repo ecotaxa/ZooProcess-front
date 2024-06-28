@@ -22,9 +22,9 @@ function pathToSessionStorage(path:string) : string {
 
     // path.substring(0, 1) == '/'? path.substring(1) : path
     // const realFolder = process.env.REAL_FOLDER || "/Users/sebastiengalvagno/Work/test/nextui/zooprocess_v10/public/uploads" 
-    const realFolder = '/Users/sebastiengalvagno/Work/test/nextui/zooprocess_v10/public/uploads'
+    const realFolder = '/Users/sebastiengalvagno/Work/test/nextui/zooprocess_v10/public' ///uploads'
     // "/Users/sebastiengalvagno/Drives" // NEXT_PUBLIC_FOLDER_STORAGE_IMAGES
-    const sessionFolder = process.env.UPLOAD_FOLDER || "/uploads"
+    const sessionFolder = process.env.UPLOAD_FOLDER || "/" // "/uploads"
     console.log("pathToSessionStorage() | realFolder :", realFolder)
     console.log("pathToSessionStorage() | sessionFolder :", sessionFolder)
 
@@ -41,7 +41,7 @@ function pathToSessionStorage(path:string) : string {
 
 
     // .slice(0, -1) magouillage pour enlever un " qui est en fin de chaine. aucune idée d'où il vient  {mad}
-    let newPath = sessionFolder + path.substring(realFolder.length+1).slice(0, -1);
+    let newPath = sessionFolder + path.substring(realFolder.length+1) // .slice(0, -1);
     // str = str.slice(0, -1);
     // let newPath = ""
     // if ( path.substring(0, 1) == '/' ) {

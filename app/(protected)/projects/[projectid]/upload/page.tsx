@@ -133,7 +133,11 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         setBackground(localPath)
                         // return response
 
-                        return await addBackground(fileUrl)
+                        let furl = fileUrl
+                        furl.url = pathToRealStorage(fileUrl.url)
+
+                        // return await addBackground(fileUrl)
+                        return await addBackground(furl)
                         .then((response) => {
                             console.log("response: ", response)
                             setImage(response.id)
@@ -184,7 +188,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                 setMsg(error)
             }
 
-            // // const server = "http://localhost:8000"
+            { // comment
+
+                // // const server = "http://localhost:8000"
             // const server = "http://zooprocess.imev-mer.fr:8000"
             // const url = server + "/convert/"
             // console.error("url: ", url)
@@ -229,10 +235,17 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             //         }
             //     }
             // })
+            }
         } else {
             setBackground(fileUrl.url)
 
-            return await addBackground(fileUrl)
+            let furl = fileUrl
+            furl.url = pathToRealStorage(fileUrl.url)
+
+            console.log("furl:", furl)
+
+            // return await addBackground(fileUrl)
+            return await addBackground(furl)
             .then((response) => {
                 console.log("response: ", response)
                 setImage(response.id)
@@ -312,10 +325,10 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         return (
             <>
                 <Debug params={project}/>
-                <div><b>project: </b> {JSON.stringify(project)}</div>
+                {/* <div><b>project: </b> {JSON.stringify(project)}</div> */}
                 <div><b>project Id: </b> {props.project.id}</div>
                 <div><b>instrument Id: </b> {props.project.instrumentId}</div>
-                <div><b>instrument Id JS: </b> {JSON.stringify(props.project.instrumentId)}</div>
+                <div><b>instrument Id JS: </b> {JSON.stringify(props.project.instrument)}</div>
                 {/* <Debug params={props}/> */}
                 <FileUploader instrumentId={instrumentId} projectId={projectid} onChange={onChange} />
                 {/* <FileUploader instrumentId={project.instrumentId} image={imageRGB} onChange={onChange} /> */}
@@ -536,16 +549,11 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
       onChange: onChange,
     };
 
-    return (
-      <>
-        <h3>Scan {step}</h3>
-        <Card className="inline-block size-full" data-testid="ScanCard">
-          <CardBody>
-              <Loader project={project} onChange={onChange} />
-              {/* <Loader props={loaderProps} /> */}
-          </CardBody>
+    const showImage = () => {
+        if (isError) { return <></> }
 
-          <CardFooter className="flex flex-row-reverse py-3">
+        return (
+        <>
             <div className="flex-row">
               <Image
                 className="height-auto"
@@ -563,15 +571,32 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
               onPress={() => {
                 if (current == state.scan1) {
                   console.debug("go to 30s bis");
+                  setBackground(imagePlaceholder)
                   setCurrent(nextState);
                 } else {
                   console.debug("go to onClick");
+                  setBackground(imagePlaceholder)
                   onClick();
                 }
               }}
             >
               Validate
             </Button>
+        </>
+        )
+    }
+
+    return (
+      <>
+        {/* <h3>Scan {step}</h3> */}
+        <Card className="inline-block size-full" data-testid="ScanCard">
+          <CardBody>
+              <Loader project={project} onChange={onChange} />
+              {/* <Loader props={loaderProps} /> */}
+          </CardBody>
+
+          <CardFooter className="flex flex-row-reverse py-3">
+            { showImage() }
           </CardFooter>
         </Card>
       </>

@@ -166,7 +166,11 @@ export async function addBackground(image: {url:string, instrumentId:string, pro
     projectId:image.projectId
   }
 
-  return await api.post(`/background/${image.instrumentId}/url`, data )
+  const url = `/background/${image.instrumentId}/url?projectId=${image.projectId}`
+  console.log("addBackground url:", url)
+  console.log("addBackground data:", data)
+  
+  return await api.post(url, data )
       .then(function (response) {
         console.log("addBackground response: ", response);
         return response.data;
@@ -176,12 +180,14 @@ export async function addBackground(image: {url:string, instrumentId:string, pro
         if (error.response) {
 
           if (error.response.status == "409"){
+            console.log("Duplicate value")
             const msg = {
               //error:{
                 message: error.response.data || "Duplicate value"
               //}
             }
-            throw(msg)
+            // throw(msg)
+            return Promise.reject(new Error(msg.message))
           }
 
           // The request was made and the server responded with a status code
@@ -199,7 +205,8 @@ export async function addBackground(image: {url:string, instrumentId:string, pro
           console.log('Error', error.message);
         }
         console.log(error.config);
-        throw(error);
+        // throw(error);
+        return Promise.reject(new Error(error.message))
       });
 
 

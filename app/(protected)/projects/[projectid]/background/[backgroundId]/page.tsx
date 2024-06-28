@@ -2,6 +2,7 @@
 
 import { useGetScan } from "@/app/api/background";
 import { Background } from "@/app/api/network/zooprocess-api";
+import { Debug } from "@/components/Debug";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { MySpinner } from "@/components/mySpinner";
 import { pathToSessionStorage } from "@/lib/gateway";
@@ -19,7 +20,7 @@ interface pageProps {
 // const showBackgroundScan : FC<pageProps> = ({projectid, backgroundId}) => {
 const showBackgroundScan : FC<pageProps> = (params) => {
 
-    const projectId = params.projectid ;
+    const projectId = params.params.projectid ;
     const backgroundId = params.params.backgroundId ;
     console.log("Metadata params: ", params);
     console.log("Metadata params projectid: ", params.params.projectid);
@@ -52,9 +53,13 @@ const showBackgroundScan : FC<pageProps> = (params) => {
             path = "/" + path
         }
 
+        const localpath = pathToSessionStorage(path)
+
         return ( 
             <>
-                <Image src={path} />
+                <Image src={localpath} />
+                <h2>path: {path}</h2>
+                <h2>localpath: {localpath}</h2>
             </>
         )
     }
@@ -63,6 +68,10 @@ const showBackgroundScan : FC<pageProps> = (params) => {
 
     return (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+        <Debug params={scan} title="scan" />
+        <h3>params: {JSON.stringify(params)}</h3>
+        <h3>projectId: {projectId}</h3>
+        <h3>backgroundId: {backgroundId}</h3>
         <div className="text-center justify-center">
             <Spacer y={5}/>
             <Card className="inline-block "
