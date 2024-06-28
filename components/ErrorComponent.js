@@ -37,6 +37,12 @@ export const ErrorComponent = ({error}) => {
     router.push('/auth/login')
   }
 
+  if ( error.status == 500 ){
+    if ( error.name == "AxiosError"){
+      message = "Connection to server failed<br/>Please check your internet connection<br/>Call the geeks"
+    }  
+  }
+
   console.debug("typeof(error.status): ", typeof(error.status))
 
   // if ( error.message ){
