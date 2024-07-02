@@ -53,9 +53,9 @@ const showBackgroundScan : FC<pageProps> = (params) => {
             path = "/" + path
         }
 
-        const localpath = pathToSessionStorage(path)
+        const localpath = pathToSessionStorage(path, "/")
 
-        return ( 
+        return (
             <>
                 <Image src={localpath} />
                 <h2>path: {path}</h2>

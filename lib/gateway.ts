@@ -17,7 +17,7 @@ function pathToRealStorage(path:string) : string {
 }
 
 
-function pathToSessionStorage(path:string) : string {
+function pathToSessionStorage(path:string , sessionFolder = process.env.UPLOAD_FOLDER || "") : string {
     console.log( "pathToSessionStorage() | path :", path)
 
     // if ( path.substring(0, 1) != '/' ) {
@@ -29,7 +29,7 @@ function pathToSessionStorage(path:string) : string {
     // const realFolder = process.env.REAL_FOLDER || "/Users/sebastiengalvagno/Work/test/nextui/zooprocess_v10/public/uploads" 
     const realFolder = process.env.REAL_FOLDER || '/Users/sebastiengalvagno/Work/test/nextui/zooprocess_v10/public' ///uploads'
     // "/Users/sebastiengalvagno/Drives" // NEXT_PUBLIC_FOLDER_STORAGE_IMAGES
-    const sessionFolder = process.env.UPLOAD_FOLDER || "" // "/" // "/uploads"
+    // const sessionFolder = process.env.UPLOAD_FOLDER || "" // "/" // "/uploads"
     console.log( "pathToSessionStorage() | realFolder :", realFolder)
     console.log( "pathToSessionStorage() | sessionFolder :", sessionFolder)
 
@@ -59,7 +59,9 @@ function pathToSessionStorage(path:string) : string {
     //     newPath = newPath.substring(1)
     // }
     ///ARRRGGGGGGG 
-    newPath = newPath.slice(0, -1)
+    if ( newPath.slice(-1) == '"'){
+        newPath = newPath.slice(0, -1)
+    }
 
     // str = str.slice(0, -1);
     // let newPath = ""
