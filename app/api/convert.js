@@ -14,8 +14,8 @@ export async function converttiff2jpg ( data) {
             // const server = "http://localhost:8000"
             const server = "http://zooprocess.imev-mer.fr:8000"
             const url = server + "/convert"
-            console.debug("url: ", url)
-            console.debug("data: ", data)
+            console.debug("converttiff2jpg url: ", url)
+            console.debug("converttiff2jpg data: ", data)
             // const response = 
             return await fetch( url , {
                 method: "POST",
@@ -30,7 +30,8 @@ export async function converttiff2jpg ( data) {
             })
             .then((response) => {
                 if (response.ok) {
-                    console.log("response: ", response)
+                    console.log("converttiff2jpg fetch response: ", response)
+                    console.log("converttiff2jpg fetch response.text: ", response.text)
                     return response
 
                     // response.text()

@@ -123,18 +123,38 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             try {
 
                 return await converttiff2jpg(data)
-                .then(response => {
+                .then(async (response:Response) => {
+                    console.log("converttiff2jpg response: ", response)
+
+                    // const imageUrl  = await response.text()
+
+                    // console.log("converttiff2jpg response.text() : ", await response.text() ) 
+                    // console.log("converttiff2jpg response.text() : ", imageUrl ) 
+                    // response.text(
+                    // text
                     response.text()
                     .then(async (imageUrl) => {
+                        // show the converted image
                         // setImageUrl(imageUrl);
                         console.log("imageUrl: ", imageUrl)
+                        // if ( imageUrl[0] == '"' ) {
+                        //     console.error("arrrggggggggg !!!!!")
+                        //     imageUrl=imageUrl.substring(1)
+                        // }
+                        // console.debug("imageUrl[-1]: ", imageUrl[-1])
+                        // if ( imageUrl[-1] == '"'){
+                        //     console.error("arrrggggggggg !!!!!")
+                        //     imageUrl=imageUrl.substring(0,imageUrl.length-1)
+                        // }
                         const localPath = pathToSessionStorage(imageUrl)
                         console.log("localPath: ", localPath)
                         setBackground(localPath)
                         // return response
 
+                        // store the uploaded image 
                         let furl = fileUrl
                         furl.url = pathToRealStorage(fileUrl.url)
+                        console.debug("furl: ", furl)
 
                         // return await addBackground(fileUrl)
                         return await addBackground(furl)

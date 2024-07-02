@@ -12,12 +12,12 @@ const SettingsPage = async () => {
     const session = await auth()
  
 
-    if ( session){
+    if ( session ){
         const date = new Date(session.expires)
         const now = new Date()
 
-        console.log("Session expires: ", date)
-        console.log("Session now: ", now)
+        console.log("Session  expires: ", date)
+        console.log("Session date now: ", now)
 
         if ( date < now ){
             console.log("Session expired")
@@ -30,35 +30,35 @@ const SettingsPage = async () => {
     }
     
 
-    const userInfo = () => {
-        let picture = undefined
-        if ( session?.user.image ){
-            picture = session?.user.image
-        }
+    // const userInfo = () => {
+    //     let picture = undefined
+    //     if ( session?.user.image ){
+    //         picture = session?.user.image
+    //     }
 
-        const date = new Date(session?.expires)
+    //     const date = new Date(session?.expires)
 
-        return (
-            <div>
+    //     return (
+    //         <div>
                 
-                <User 
-                    name={session?.user.image} 
-                    description= ""
-                    // avatarProps={picture}
-                />
-                <div>
-                    <Label htmlFor="name" className="label">email : </Label>
-                    <p>{session?.user.email}</p>
-                </div>
+    //             <User 
+    //                 name={session?.user.image} 
+    //                 description= ""
+    //                 // avatarProps={picture}
+    //             />
+    //             <div>
+    //                 <Label htmlFor="name" className="label">email : </Label>
+    //                 <p>{session?.user.email}</p>
+    //             </div>
 
-                <div>
-                    <Label htmlFor="name" className="label">Session Validity :</Label>
-                    <p>{ session?.expires }</p>
-                </div>
+    //             <div>
+    //                 <Label htmlFor="name" className="label">Session Validity :</Label>
+    //                 <p>{ session?.expires }</p>
+    //             </div>
 
-            </div>
-        )
-    }
+    //         </div>
+    //     )
+    // }
 
     
 
