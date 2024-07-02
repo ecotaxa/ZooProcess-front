@@ -183,7 +183,6 @@ type pageProps = {
   }
 
   return (
-
       
       <div className="flex items-center p-3">
         <div className="">
@@ -219,28 +218,28 @@ type pageProps = {
 
       </div>
 
-
   )
 
-  return (
-    <label
-      // className={styles["file-uploader"]}
-      style={{ paddingTop: `calc(100% * (${446} / ${720}))` }}
-    >
-      <Image
-        src={imageUrl}
-        alt="uploaded image"
-        width={720}
-        height={446}
-        priority={true}
-      />
-      <input
-        style={{ display: "none" }}
-        type="file"
-        onChange={onImageFileChange}
-      />
-    </label>
-  );
+  // return (
+  //   <label
+  //     // className={styles["file-uploader"]}
+  //     style={{ paddingTop: `calc(100% * (${446} / ${720}))` }}
+  //   >
+  //     <Image
+  //       src={imageUrl}
+  //       alt="uploaded image"
+  //       width={720}
+  //       height={446}
+  //       priority={true}
+  //     />
+  //     <input
+  //       style={{ display: "none" }}
+  //       type="file"
+  //       onChange={onImageFileChange}
+  //     />
+  //   </label>
+  // );
+
 }
 
 

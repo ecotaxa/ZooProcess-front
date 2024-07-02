@@ -105,7 +105,7 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
 
     const baseURL = "http://zooprocess.imev-mer.fr:8081/v1"
 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OGRkN2VhMjRiYzEwYTRiZjFlMzdlMiIsImlhdCI6MTcwODA3OTQzNywiZXhwIjoxNzA4MzM4NjM3fQ.TJb59x0v4M6a8Up0pos9sKzjOM6fae6cPxpZ_lS1T9Q"
+    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OGRkN2VhMjRiYzEwYTRiZjFlMzdlMiIsImlhdCI6MTcwODA3OTQzNywiZXhwIjoxNzA4MzM4NjM3fQ.TJb59x0v4M6a8Up0pos9sKzjOM6fae6cPxpZ_lS1T9Q"
 
     let defaultSelectedKeys : Set<string> = new Set()
 
