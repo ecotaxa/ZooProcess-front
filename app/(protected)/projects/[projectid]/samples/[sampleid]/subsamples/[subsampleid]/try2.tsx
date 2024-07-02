@@ -10,6 +10,7 @@ import { FC, useState } from "react";
 
 import React, { SyntheticEvent } from "react"
 import axios from "axios"
+// import Error from "next/error";
 
 interface pageProps {
     params: {
@@ -50,7 +51,7 @@ const SubsamplePage : FC<pageProps> = ({params}) => {
               "Content-Type": "multipart/form-data",
             },
           })
-        } catch (error) {
+        } catch (error:any) {
           console.error('There was an error uploading the file', error.message)
         } finally {
           setIsUploading(false)
