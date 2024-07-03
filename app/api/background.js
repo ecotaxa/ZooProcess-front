@@ -104,7 +104,71 @@ export function useGetScan(scanId) {
     }  
 }
 
+export function useShowScan(scanId) {
 
+    console.log("useGetScan: scanId", scanId)
+
+    if ( scanId == undefined ){
+        return {
+            scan: [],
+            isLoading : false,
+            isError: { message: "Cannot determine the scan" }
+        }    
+    }
+
+    const { data=undefined, error=false, isLoading=true } = useSWR(
+        `/scan/${scanId}?show`,
+        // `/scan/${scanId}`,
+        api.getScan, 
+        {
+            revalidateIfStale: false,
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false
+        }    
+    )
+ 
+    // let locapPath = await converttiff2jpg(path)
+    // .then(async (response/*: Response*/) => {
+    //     console.log("converttiff2jpg response: ", response)
+    //     response.text()
+    //     .then(async (imageUrl) => {
+    //         // show the converted image
+    //         // setImageUrl(imageUrl);
+    //         console.log("imageUrl: ", imageUrl)
+    //         // if ( imageUrl[0] == '"' ) {
+    //         //     console.error("arrrggggggggg !!!!!")
+    //         //     imageUrl=imageUrl.substring(1)
+    //         // }
+    //         // console.debug("imageUrl[-1]: ", imageUrl[-1])
+    //         // if ( imageUrl[-1] == '"'){
+    //         //     console.error("arrrggggggggg !!!!!")
+    //         //     imageUrl=imageUrl.substring(0,imageUrl.length-1)
+    //         // }
+    //         // const
+    //         const locapPath = pathToSessionStorage(imageUrl)
+    //         console.log("localPath: ", locapPath)
+    //         // setBackground(localPath)
+    //         return locapPath
+    //     })
+    //     .catch((error) => {
+    //         console.error("addBackground catch error: ", error)
+    //         // return Promise.reject(error)
+    //         // return <div>Error: {error}</div>
+    //         return undefined
+    //     })
+    // })
+    // .catch(error => {
+    //     return undefined                    
+    // })
+
+
+    return {
+        scan: data,
+        isLoading,
+        isError: error
+    } 
+
+}
 export function useSampleScans(projectId) {
 
     if ( projectId == undefined ){
