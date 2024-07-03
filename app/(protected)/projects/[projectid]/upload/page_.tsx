@@ -92,6 +92,8 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                     .then(async (imageUrl) => {
                         // setImageUrl(imageUrl);
                         console.log("imageUrl: ", imageUrl)
+                        imageUrl = imageUrl.replace(/"/g, "")
+                        console.log("imageUrl cleaned: ", imageUrl)
                         const localPath = pathToSessionStorage(imageUrl)
                         console.log("localPath: ", localPath)
                         setBackground(localPath)
