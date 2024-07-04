@@ -425,10 +425,27 @@ export const sampleid_formElements=[
         title:"Fraction",
         section:
         [
-        { tag:"TextField", name:"fraction_id", type:"text", 
-            placeholder:"Could be d1,d2, tot...", label:'Fraction ID',
+        // { tag:"TextField", name:"fraction_type", type:"text", 
+        //     placeholder:"Could be d1,d2, tot...", label:'Fraction Type',
+        //     variant:"outlined", required:true, disabled:false,
+        //     xs:8, sm:6, fullWidth:true, value:1
+        //     // a passer en non modifiable pour les scans suivant (les number series)
+        // },
+        { tag:"Select", name:"fraction_type", type:"select", 
+            placeholder:"Could be d1,d2, tot...", label:'Fraction Type',
+            variant:"outlined", fullWidth:true, required:true, 
+            xs:12, sm:6, sx:{m:0, minWith:300},
+            choice:[
+                {id:1, value:"Tot"},
+                {id:2, value:"d1"},
+                {id:3, value:"d2"},
+                {id:4, value:"d2_bis"},
+            ]
+        },
+        { tag:"TextField", name:"fraction_number", type:"text", 
+            placeholder:"Number of scans", label:'Fraction of scans',
             variant:"outlined", required:true, disabled:false,
-            xs:8, sm:6, fullWidth:true, value:1
+            xs:12, sm:4, fullWidth:true, value:1
         },
         { tag:"TextField", name:"fraction_id_suffix", type:"text", 
             placeholder:"Could be 01,02, ...", label:'Fraction ID Suffix',
@@ -436,11 +453,12 @@ export const sampleid_formElements=[
             xs:4, sm:2, fullWidth:true, value:1
         },
         // { tag:"Empty", xs:0, xm:6 },
-        { tag:"TextField", name:"fraction_number", type:"text", 
-            placeholder:"Fraction Number", label:'Fraction Number',
-            variant:"outlined", required:true, disabled:false,
-            xs:12, sm:4, fullWidth:true, value:1
-        },
+        // { tag:"TextField", name:"fraction_number", type:"text", 
+        //     placeholder:"Fraction Number", label:'Fraction Number',
+        //     variant:"outlined", required:true, disabled:false,
+        //     xs:12, sm:4, fullWidth:true, value:1
+        // },
+
         { tag:"TextField", name:"fraction_min_mesh", type:"number", 
             placeholder:"Fraction min mesh", label:'min mesh',
             variant:"outlined", required:true, 
@@ -462,19 +480,31 @@ export const sampleid_formElements=[
             endAdornment:{pos:'end', text:'1/x'},
             minValue:0, helperText:'value greather than or equal to zero'
         },    
-        { tag:"TextField", name:"remark_on_fraction", type:"text", 
-            placeholder:"Remark on fraction (no special char !)", label:'Remark on fraction',
-            variant:"outlined", required:true, 
-            xs:12, sm:6, fullWidth:true,
-            helperText:"no special char !",
-            regex:"^[a-zA-Z0-9_ %&°]+$", error:true
+        // { tag:"TextField", name:"remark_on_fraction", type:"text", 
+        //     placeholder:"Remark on fraction (no special char !)", label:'Remark on fraction',
+        //     variant:"outlined", required:true, 
+        //     xs:12, sm:6, fullWidth:true,
+        //     helperText:"no special char !",
+        //     regex:"^[a-zA-Z0-9_ %&°]+$", error:true
+        // },
+        // { tag:"TextField", name:"submethod", type:"text", 
+        //     placeholder:"SubMethod", label:'SubMethod',
+        //     variant:"outlined", required:true, 
+        //     xs:12, sm:6, fullWidth:true
+        //     // liste modifiable
+        //     // motoda
+        //     // a enregistrer pour tout les projets
+        // },
+        { tag:"Select", name:"submethod", type:"select", 
+            placeholder:"SSubMethod", label:'SubMethod',
+            variant:"outlined", fullWidth:true, required:true, 
+            xs:12, sm:6, sx:{m:0, minWith:300},
+            choice:[
+                {id:1, value:"Motoda"},
+                {id:2, value:"Johnson"},
+                {id:3, value:"<NAME>"},
+            ]
         },
-        { tag:"TextField", name:"submethod", type:"text", 
-            placeholder:"SubMethod", label:'SubMethod',
-            variant:"outlined", required:true, 
-            xs:12, sm:6, fullWidth:true
-        },
-    
 
         ]
     }
