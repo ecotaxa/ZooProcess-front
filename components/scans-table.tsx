@@ -8,6 +8,7 @@ import { key } from '@/app/api/key';
 import {useAsyncList} from "@react-stately/data";
 
 import { Debug } from '@/components/Debug';
+import { EyeIcon } from "./auth/EyeIcon";
 
 interface IColumn {
     name: string,
@@ -181,7 +182,8 @@ export function ScanTable(props:{projectId:String, scans:any}) {
                     href={`/projects/${projectId}/scans/${scan.id}`}
                     // onPress={ (projectid,sampleid=scan.id) => onDetail(projectid,sampleid) }                
                 >
-                    EYE
+                    {/* EYE */}
+                    <EyeIcon className="text-2xl text-default-400 pointer-events-none" />
                 </Button>
             </div>
             );

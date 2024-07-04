@@ -8,6 +8,7 @@ import { key } from '@/app/api/key';
 
 import { Debug } from '@/components/Debug';
 import { useAsyncList } from "react-stately";
+import { EyeIcon } from "./auth/EyeIcon";
 
 interface IColumn {
     name: string,
@@ -177,7 +178,8 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
                     href={`/projects/${projectId}/background/${background.id}`}
                     // onPress={ (projectid,sampleid=background.id) => onDetail(projectid,sampleid) }                
                 >
-                    EYE
+                    {/* EYE */}
+                    <EyeIcon className="text-2xl text-default-400 pointer-events-none" />
                 </Button>
             </div>
             );
