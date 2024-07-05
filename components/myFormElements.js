@@ -3,6 +3,7 @@
 // import { FormControl } from "@mui/material"
 // import { MySelect } from "./mySelect" // MUI
 import { MySelect } from "./mySelect5"
+import { MyInputSelect } from "./myInputSelect"
 import { MyTextField } from "./myTextField2"
 import { MyTextArea } from "./myTextArea"
 // import SimpleSelect from "./SimpleSelect"
@@ -119,18 +120,27 @@ export function FormElements(props) {
             //         </Select>
             //     )
             // }
+
+        case "InputSelect":
+            return (
+                <MyInputSelect {...props}  key={props.name}
+                    onChange={props.onChange}
+                />
+            )
+
         case "DateField":
             <MyDatePicker {...props}  key={props.name}
                 onChange={props.onChange}/>
+
         case "TextArea":
 
-        return (
-            <MyTextArea 
-                {...props}   
-                key={props.name}
-                onChange={props.onChange}
-            />
-            )
+            return (
+                <MyTextArea 
+                    {...props}   
+                    key={props.name}
+                    onChange={props.onChange}
+                />
+                )
 
             // if (mui){
             //     return (
@@ -151,10 +161,12 @@ export function FormElements(props) {
             //         className="max-w-xs"
             //     />)
             // }
+
         case "Empty":
             return (
                 <div></div> 
             )
+        
     }
 
     return (

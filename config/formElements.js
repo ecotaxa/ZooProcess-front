@@ -495,7 +495,7 @@ export const sampleid_formElements=[
         //     // motoda
         //     // a enregistrer pour tout les projets
         // },
-        { tag:"Select", name:"submethod", type:"select", 
+        { tag:"InputSelect", name:"submethod", type:"select", 
             placeholder:"SSubMethod", label:'SubMethod',
             variant:"outlined", fullWidth:true, required:true, 
             xs:12, sm:6, sx:{m:0, minWith:300},
