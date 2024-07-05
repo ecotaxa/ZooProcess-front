@@ -59,7 +59,7 @@ const SubsamplePage : FC<pageProps> =  ({projectid, sampleid, subsampleid}) => {
               "Content-Type": "multipart/form-data",
             },
           })
-        } catch (error) {
+        } catch (error:any) {
           console.error('There was an error uploading the file', error.message)
         } finally {
           setIsUploading(false)
