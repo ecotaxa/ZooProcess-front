@@ -374,6 +374,30 @@ export async function getProject(url:string){
 }
 
 
+export async function getUserMe(url:string){
+  // export async function getUserById(url:string){
+  
+  //   const token = await auth();
+    console.log("getUserMe token: ");
+  
+  //   const api = axios.create({
+  //     baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
+  //     timeout: 5000,
+  //     headers:{
+  //       Authorization: 'Bearer ' + token
+  //     }
+  // });
+    // const token = await auth()
+    const api = await axiosInstanse({})
+  
+    const response = await api.get<User>(url);
+  
+    console.log("getUserByEmail response: ", response);
+  
+    return response.data; 
+  }
+
+  
 export async function getUserByEmail(url:string){
   const api = await axiosInstanse({})
 
@@ -410,7 +434,6 @@ export async function getUserById(url:string, token:string){
 
   return response.data; 
 }
-
 
 
 export interface Login {

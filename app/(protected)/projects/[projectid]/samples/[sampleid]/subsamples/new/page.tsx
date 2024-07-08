@@ -14,6 +14,13 @@ import { useRouter } from 'next/navigation';
 import { Debug } from '@/components/Debug';
 import { addSubSample } from '@/app/api/subsamples';
 import { Timeline_scan } from '@/components/timeline-scan';
+// import { useUserMe } from '@/app/api/user';
+import { MySpinner } from '@/components/mySpinner';
+import { ErrorComponent } from '@/components/ErrorComponent';
+import { useUserMe } from '@/app/api/user';
+import { useProject } from '@/app/api/projects';
+// import { useProject } from '@/app/api/projects';
+// import { auth } from '@/auth';
  
 
 
@@ -64,7 +71,20 @@ interface pageProps {
 const NewSubSample : FC<pageProps> = (params ) => {
 
     const router = useRouter()
+    
     // const { projectid, sampleid } = params
+    const { user, isLoading, isError } = useUserMe()
+    // const { project, isLoading:l , isError:err } = useProject()
+
+    // if (isError) {
+    //     // Handle error
+    //     return <div>Error loading user data</div>
+    // }
+
+    // if (isLoading) {
+    //     // Show loading state
+    //     return <div>Loading...</div>
+    // }
 
     console.debug("NewSample params: ", params);
     // console.log("NewSample params projectid: ", params.projectid);
@@ -80,11 +100,13 @@ const NewSubSample : FC<pageProps> = (params ) => {
     console.log("NewSample params sampleid: ", sampleid);
 
     const emptyData = {
-     //   "scientific_program": "ZooProcess",
+        "scanning_operator":user.name, // "Seb"  // 
     }
 
+    const updatedForm = forms
+
     const form : any = []
-        form['forms']=forms
+        form['forms']=updatedForm
         form['value']=emptyData//testData//
         form['title']='Sub Sample metadata'
         form['subtitle']='Fill all the mandatory fields.'
@@ -165,6 +187,24 @@ const NewSubSample : FC<pageProps> = (params ) => {
     const formButtons = {
         submit:'Scan'
     }
+
+    const showForm = () => {
+
+        if (isLoading) return <MySpinner />;
+        if (isError) return <ErrorComponent error={isError} />;
+
+        return (
+            <MyForm 
+                {...form} 
+                project={projectid}
+                sample={sampleid}
+                onChange={onChange} 
+                onCancel={onCancel}
+                button={formButtons}
+            />
+        )
+    }
+
 
     return (
         <>

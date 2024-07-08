@@ -31,6 +31,7 @@ export async function useUserByEmail(email) {
     }
 }
 
+
 export async function useUserById(userId) {
 
   console.log("useUserById() | userId :", userId)
@@ -53,3 +54,27 @@ export async function useUserById(userId) {
     }
 }
 
+
+export function useUserMe() {
+
+  console.log("useUserMe()" )
+    // const user = await api.getUserById(`/users/${userId}`)
+    // return user
+
+    // const res = await fetch()
+
+    const { data={}, error=false, isLoading=true } = useSWR(`/users/me`, api.getUserMe,
+    // const { data=[], error=false, isLoading=true } = useSWR(`/users/me` ,api.getUserMe,
+      {
+          revalidateIfStale: false,
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false
+      }
+    )
+
+    return {
+      user: data,
+      isLoading,
+      isError: error
+    }
+}
