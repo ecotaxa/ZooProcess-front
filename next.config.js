@@ -7,7 +7,11 @@ const nextConfig = {
             allowedOrigins: ["imev:3001", "192.168.1.159:3001", "localhost:3001", "zooprocess.imev-mer.fr:3001", "zooprocess.imev-mer.fr:8000","localhost:8000" ],
         },
     },
-    output: "standalone"
+    output: "standalone",
+
+    // cache options
+    // cacheHandler: require.resolve('./cache-handler.js'),
+    // cacheMaxMemorySize: 0, // disable default in-memory caching
 }
 
 module.exports = nextConfig
