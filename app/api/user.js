@@ -11,11 +11,12 @@ export async function useUserByEmail(email) {
     // const res = await fetch()
 
     const { data=[], error=false, isLoading=true } = useSWR(`/user?email=${email}`, api.getUserByEmail ,
-    {
-        revalidateIfStale: false,
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false
-    })
+      {
+          revalidateIfStale: false,
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false
+      }
+    )
 
     // if ( isLoading==false && error==false ){
     //   console.log("useProjects()")
@@ -40,11 +41,11 @@ export async function useUserById(userId) {
 
     // const res = await fetch()
 
-    const { data=[], error=false, isLoading=true } = useSWR(`/users/${userId}`, api.getUserById ,
+    const { data=[], error=false, isLoading=true } = useSWR(`/users/${userId}`, api.getUserById,
     {
-        revalidateIfStale: false,
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false
     })
 
     return {
@@ -58,13 +59,9 @@ export async function useUserById(userId) {
 export function useUserMe() {
 
   console.log("useUserMe()" )
-    // const user = await api.getUserById(`/users/${userId}`)
-    // return user
 
-    // const res = await fetch()
-
-    const { data={}, error=false, isLoading=true } = useSWR(`/users/me`, api.getUserMe,
-    // const { data=[], error=false, isLoading=true } = useSWR(`/users/me` ,api.getUserMe,
+    // const { data={}, error=false, isLoading=true } = useSWR(`/users/me`, api.getUserMe,
+    const { data=[], error=false, isLoading=true } = useSWR(`/users/me` ,api.getUserMe,
       {
           revalidateIfStale: false,
           revalidateOnFocus: false,
@@ -72,9 +69,15 @@ export function useUserMe() {
       }
     )
 
+    if ( isLoading==false && error==false ){
+      console.log("useUserMe()")
+      console.log("  data      -> ", data )
+    }
+
     return {
       user: data,
       isLoading,
       isError: error
     }
+
 }

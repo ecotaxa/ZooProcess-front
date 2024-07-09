@@ -19,6 +19,7 @@ import { MySpinner } from '@/components/mySpinner';
 import { ErrorComponent } from '@/components/ErrorComponent';
 import { useUserMe } from '@/app/api/user';
 import { useProject } from '@/app/api/projects';
+import { User } from '@/app/api/network/zooprocess-api';
 // import { useProject } from '@/app/api/projects';
 // import { auth } from '@/auth';
  
@@ -99,17 +100,17 @@ const NewSubSample : FC<pageProps> = (params ) => {
     console.log("NewSample params projectid: ", projectid);
     console.log("NewSample params sampleid: ", sampleid);
 
-    const emptyData = {
-        "scanning_operator":user.name, // "Seb"  // 
-    }
+    // const emptyData = {
+    //     "scanning_operator":user.name, // "Seb"  // 
+    // }
 
-    const updatedForm = forms
+    // const updatedForm = forms
 
-    const form : any = []
-        form['forms']=updatedForm
-        form['value']=emptyData//testData//
-        form['title']='Sub Sample metadata'
-        form['subtitle']='Fill all the mandatory fields.'
+    // const form : any = []
+    //     form['forms']=updatedForm
+    //     form['value']=emptyData//testData//
+    //     form['title']='Sub Sample metadata'
+    //     form['subtitle']='Fill all the mandatory fields.'
 
 
 
@@ -188,21 +189,46 @@ const NewSubSample : FC<pageProps> = (params ) => {
         submit:'Scan'
     }
 
-    const showForm = () => {
+    const formatData = (user:User|any) => {
+        console.log("formatData() ");
+
+        const emptyData = {
+            "scanning_operator":user.name, // "Seb"  // 
+        }
+    
+        const updatedForm = forms
+    
+        const form : any = []
+            form['forms']=updatedForm
+            form['value']=emptyData//testData//
+            form['title']='Sub Sample metadata'
+            form['subtitle']='Fill all the mandatory fields.'
+    
+        return form;
+    }
+
+
+    const showForm = (use:User|any) => {
 
         if (isLoading) return <MySpinner />;
         if (isError) return <ErrorComponent error={isError} />;
+
+        // if ( ! user) return <ErrorComponent error={isError} />
+
+        // else {
+        const form = formatData(user)
 
         return (
             <MyForm 
                 {...form} 
                 project={projectid}
                 sample={sampleid}
-                onChange={onChange} 
+                onChange={onChange}
                 onCancel={onCancel}
                 button={formButtons}
             />
         )
+        // }
     }
 
 
@@ -222,13 +248,15 @@ const NewSubSample : FC<pageProps> = (params ) => {
                     Sub Sample Metadata to sample {sampleid} from project {projectid}
                     </Typography>
                     <Timeline_scan current={0} />
-                    <MyForm 
+                    {/* <MyForm 
                         {...form} 
                         project={projectid}
                         sample={sampleid}
                         onChange={onChange} 
                         onCancel={onCancel}
-                        button={formButtons}/>
+                        button={formButtons}/> */}
+
+                        {showForm(user)}
                 </Stack>
             </div>
         </section>

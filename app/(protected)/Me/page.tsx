@@ -1,10 +1,13 @@
-import { useUserMe } from "@/app/api/user"
+"use client";
+
+import { useUserMe } from '@/app/api/user';
 
 
 
 const MePage = () => {
 
     const { user, isLoading, isError } = useUserMe()
+
 
     return (
         <>
