@@ -9,6 +9,7 @@ import { FormElements } from "@/components/myFormElements";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
 import { Debug } from "@/components/Debug";
+// import { el } from "date-fns/locale";
 
 // import { Debug } from "@/components/Debug";
 
@@ -45,6 +46,8 @@ export function MyForm(props){
       submit:button?.submit||"Submit",
       submitting:button?.updating||'Updating...',
     }
+
+    
 
     console.log("-----------> MyForm(props): ", props );
 
@@ -94,36 +97,97 @@ export function MyForm(props){
         setMyValues(defaultValue)
     }
 
+    const updateValue = (update, myValues, value) => {
+      //if (props.fn2) {
+        console.log("updateValue(update)  : ", update );
+        console.log("updateValue(myValues): ", myValues );
+        console.log("updateValue(value)   : ", value );
+
+        const params = update.params.slice(1).slice(0,-1).split(',')
+
+        let param = {}
+        params.forEach(element => {
+          console.log("element: ", element);  
+            if (  ! element in props ){
+                throw (`params error in update. ${element} don't exist`)
+            }
+            param[element] = myValues[element]
+            console.log("myValues[element]: ", myValues[element]);
+        });
+
+        const prefix = new Function( update.params , update.func );
+        // opt['prefix'] = prefix(param)  // mui/material ?
+        // opt['startContent'] = prefix(param) // NextUI
+        const v = prefix(param)
+        return v
+      //}
+    }
+
+
     // inject the values given in parameter in the form
     const myElement = (formitem) => {
       // console.debug("myElement: ", formitem);
 
       if ( formitem.name ){
-        const value = myValues[formitem.name];
+        let value = myValues[formitem.name];
 
         // setRand(Math.random())
-
         // if ( value !== formitem['value'] ){
-
           // console.debug("FORM VALUE for ", formitem.name, " = " , value , " <= " , formitem['value'] );
 
         if ( value != undefined ){
-          formitem['value'] = value;
+
+        // const c = { update: {
+        //     params:"{fraction_number,fraction_id_suffix}",
+        //      func:'return String(fraction_number)+"_"+String(fraction_id_suffix)'
+        // }}
+
+          // if ( formitem.update ){
+          //   console.debug("formitem.update PRESENT")
+          //   const opts = updateValue(formitem.update, myValues, value)
+          //   console.debug("opts: ", opts);
+          //   console.debug("FORM VALUE for ", formitem.name, " = " , value , " <= " , formitem['value'] );
+          // }
+        //   else {
+            // console.log("NO UPDATE fn");
+            // value = formitem['value']
+          // }
+
+          formitem['value'] = value ;
         } else {
           // console.log("UNDEFINED");
           if ( formitem['value'] != undefined) {
             // console.log("OVERRIDE")
             myValues[formitem.name] = formitem['value']
             let form = myValues
-            form[formitem.name] = formitem['value']
+            form[formitem.name] = formitem['value'] ;
             setMyValues(form)
           }
         }
 
+
+        // if ( formitem.update ){
+        //   console.debug("formitem.update PRESENT")
+        //   const valueUpdated = updateValue(formitem.update, myValues, value)
+        //   // console.debug("opts: ", opts);
+        //   console.debug("FORM VALUE for ", formitem.name, " = " , valueUpdated , " <= " , formitem['value'] );
+        //   formitem['value'] = valueUpdated
+        //   // formitem['onChange'](valueUpdated)
+        //   // props.onChangeElement(formitem.name,valueUpdated)
+        //   let copiedValues = myValues
+        //   copiedValues[formitem.name] = valueUpdated
+        //   setMyValues(copiedValues)
+        // }
+
+
       } else {
-        console.log("formitem.name is undefined");
+        console.error("formitem.name is undefined");
         formitem['name']="empty_" + String(Math.floor(Math.random() * 100)) // j'aime pas mais j'ai pas mieux pour le moment
+        //throw ("formitem.name is undefined: ", formitem )
       }
+
+      // injecte les values dans le composant
+      formitem['myValues'] = myValues
 
       // console.log("-+-+-+---------------------------------");
       // // console.log("myform: ", myform);
@@ -234,6 +298,33 @@ export function MyForm(props){
 
     },[valeur])
 
+
+
+    const findElement = (name) => { 
+      // var found = false;
+      // var type = undefined;
+  
+      return forms.flatMap((form) => {
+          console.log("form",form);
+          return form.flatMap(group => 
+            group.section.filter(element => {
+              // console.log("name:", name , " === " , element.name , "=", element.type);
+              if ( element.name == name ) { 
+                console.log("found", name);
+              //   // found = true;
+              //   // type = element.type;
+              //   // return element.type; 
+              //   return element;
+              return true
+              }
+              // element.name == name
+              return false
+            })
+          )
+      })[0];
+      // return type
+  }
+
     const onChangeElement = (name, value) => {
         console.log("onChangeElement:", name, "-- value: ", value);
 
@@ -260,7 +351,116 @@ export function MyForm(props){
         // setIsDataModified(true)
         // setIsDataUpdated(false)
         // console.log("onChangeElement form values", myValues);
+
+
+
+  
+
+        const element = findElement(name)
+        if (element){
+          console.log("element", element);
+          if ( element.refresh ) {
+            console.debug("element.refresh PRESENT")
+            // elementToRefresh = element.refresh
+            console.log("element To Refresh", element.refresh);
+            refresh(element.refresh)
+          }
+          // refresh(element)
+          //update(element)
+        }
+        else {
+          console.log("element not found", name)
+        } 
+
+        // const elements = forms.filter( (form) => form.name == name)
+        // elements.map( (element) => {
+        //   if (element.refresh) {
+        //     forms.map( (element) => {
+        //     console.log("element",element);
+        //     update(element)
+        //     }
+        //   }
+        // })
+
       }
+
+      const refresh = (elementName) => {
+        // if ( formitem.refresh ) {
+          // console.debug("formitem.refresh PRESENT")
+          // elementToRefresh = element.refresh
+          console.log("refresh(", elementName, ")");
+          const element = findElement(elementName)
+          if (element.update){
+            update(element)
+          }
+      }
+
+      const update = (formitem) => {
+        if ( formitem.update ) {
+          console.debug("Element to update PRESENT")
+          const valueUpdated = updateValue(formitem.update, myValues, value)
+          // console.debug("opts: ", opts);
+          console.debug("FORM VALUE for ", formitem.name, " = " , valueUpdated , " <= " , formitem['value'] );
+          formitem['value'] = valueUpdated
+          // formitem['onChange'](valueUpdated)
+          // props.onChangeElement(formitem.name,valueUpdated)
+          let copiedValues = myValues
+          // copiedValues[formitem.name] = valueUpdated
+          // setMyValues(copiedValues)
+          setValeur({ name: formitem.name, value: valueUpdated })
+        }
+
+      }
+
+
+    //   const findElement = (name) => { 
+    //     // var found = false;
+    //     var type = undefined;
+    //     console.debug("findElement(", name,")");
+    
+    //     const element = forms.flatMap((form) => {
+    //       console.log("form", form);
+    //         form.flatMap(group => 
+    //         //   group.section.flatMap(element => {
+    //         //     console.log("name:", name , " === " , element.name , "=", element.type);
+    //         //     if ( element.name == name ) { 
+    //         //       console.log("found",name);
+    //         //       //found = true;
+    //         //       //type = element.type;
+    //         //       return element
+    //         //     }    
+    //         //   })
+    //         // )
+    //         group.section.filter(element => { element.name == name })
+    //       )
+    //     });
+    //     console.log("element", element);
+    //     if ( element ) {
+    //       return element[0]
+    //     }
+    //     console.log("findElement not found",name);
+    //     return undefined
+    // }
+
+
+
+      // const findElement = (name/*:string*/) => {
+      //   console.debug("findElement(", name,")");
+      //   console.debug("forms",forms);
+
+      //   const elements = forms.flatMap( (form) => {
+      //     console.debug("chapter",form);
+      //     return form.flatMap
+      //     return form.filter( (element) => {
+      //         console.debug("element", element);
+      //         return element.name == name
+      //       }
+      //     )
+      //   })
+
+
+      //   return  elements[0]
+      // }
 
     const cancel = () => {
       console.debug("cancel()");

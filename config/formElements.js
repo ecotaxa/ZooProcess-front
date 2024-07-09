@@ -397,33 +397,44 @@ export const sampleid_formElements=[
     
     export const fraction_inputFormElments=[
         {
-            title:"Metadata",
+            title:"Scan ID",
             section:[
             { tag:"TextField", name:"scan_id", type:"text", placeholder:"Scan ID", label:'Scan ID',
                 variant:"outlined", disabled:true,
-                xs:12, sm:12, fullWidth:true, value:1,
-                fn2: { params:"{project,sample}", func:'return String(project)+"_"+String(sample)+"_"' }
+                xs:12, sm:12, fullWidth:true, //value:1,
+                fn2: { 
+                    params:"{project,sample}",
+                     func:'return String(project)+"_"+String(sample)+"_"'
+                    // params:"{project,sample,fraction_number}",
+                    //  func:'return String(project)+"_"+String(sample)+"_"+String(fraction_number)+"_"'
+                    },
+                update: {
+                    params:"{fraction_number,fraction_id_suffix}",
+                     func:'return String(fraction_number)+"_"+String(fraction_id_suffix)'
+                }
             },
-            { tag:"Select", name:"fraction_type", type:"select", 
-                placeholder:"Could be d1,d2, tot...", label:'Fraction Type',
-                variant:"outlined", fullWidth:true, required:true, 
-                xs:12, sm:6, sx:{m:0, minWith:300},
-                choice:[
-                    {id:1, value:"Tot"},
-                    {id:2, value:"d1"},
-                    {id:3, value:"d2"},
-                    {id:4, value:"d2_bis"},
-                ]
-            },
+            // { tag:"Select", name:"fraction_type", type:"select", 
+            //     placeholder:"Could be d1,d2, tot...", label:'Fraction Type',
+            //     variant:"outlined", fullWidth:true, required:true, 
+            //     xs:12, sm:6, sx:{m:0, minWith:300},
+            //     choice:[
+            //         {id:1, value:"Tot"},
+            //         {id:2, value:"d1"},
+            //         {id:3, value:"d2"},
+            //         {id:4, value:"d2_bis"},
+            //     ]
+            // },
             { tag:"TextField", name:"fraction_number", type:"text", 
                 placeholder:"Number of scans", label:'Fraction of scans',
                 variant:"outlined", required:true, disabled:false,
                 xs:12, sm:4, fullWidth:true, value:1
+                , refresh:"scan_id"
             },
             { tag:"TextField", name:"fraction_id_suffix", type:"text", 
                 placeholder:"Could be 01,02, ...", label:'Fraction ID Suffix',
                 variant:"outlined", required:false, disabled:false,
-                xs:4, sm:2, fullWidth:true, value:1
+                xs:4, sm:2, fullWidth:true, value:2
+                , refresh:"scan_id"
             },
 
             // { tag:"TextField", name:"sample_id", type:"text", placeholder:"Sample ID", label:'Sample ID',
@@ -433,7 +444,7 @@ export const sampleid_formElements=[
             // },
             { tag:"TextField", name:"scanning_operator", type:"text", 
                 placeholder:"Scanning operator", label:'Scanning operator',
-                variant:"outlined", required:true, disabled:false,
+                variant:"outlined", required:false, disabled:true,
                 xs:12, sm:12, fullWidth:true
             },
 
@@ -478,16 +489,16 @@ export const sampleid_formElements=[
                 endAdornment:{pos:'end', text:'1/x'},
                 minValue:0, helperText:'value greather than or equal to zero'
             },
-            { tag:"InputSelect", name:"submethod", type:"select", 
-                placeholder:"SSubMethod", label:'SubMethod',
-                variant:"outlined", fullWidth:true, required:true, 
-                xs:12, sm:6, //sx:{m:0, minWith:300},
-                choice:[
-                    {id:1, value:"Motoda"},
-                    {id:2, value:"Johnson"},
-                    {id:3, value:"<NAME>"},
-                ]
-            },
+            // { tag:"InputSelect", name:"submethod", type:"select", 
+            //     placeholder:"SSubMethod", label:'SubMethod',
+            //     variant:"outlined", fullWidth:true, required:true, 
+            //     xs:12, sm:6, //sx:{m:0, minWith:300},
+            //     choice:[
+            //         {id:1, value:"Motoda"},
+            //         {id:2, value:"Johnson"},
+            //         {id:3, value:"<NAME>"},
+            //     ]
+            // },
             { tag:"TextField", name:"observation", type:"text", 
                 placeholder:"Observation", label:'Observation',
                 variant:"outlined", required:true, 
