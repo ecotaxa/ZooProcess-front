@@ -392,7 +392,7 @@ export async function getUserMe(url:string){
   
     const response = await api.get<User>(url);
   
-    console.log("getUserByEmail response: ", response);
+    console.log("getUserMe response: ", response);
   
     return response.data; 
   }
