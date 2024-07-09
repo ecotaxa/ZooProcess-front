@@ -2,6 +2,7 @@
 
 // import { auth } from '@/auth';
 import axios, { AxiosHeaderValue, AxiosInstance, CreateAxiosDefaults } from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
 
 // import { serverHooks } from 'next/dist/server/app-render/entry-base';
 // import { getToken } from './token';
@@ -73,8 +74,11 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
     }    
     // console.info("axiosInstance params", _params)
     
-    let api = axios.create(_params);
-    return api
+    let instance = axios.create(_params);
+
+    const axiosInst = setupCache(instance)
+
+    return axiosInst
 }
 
 
