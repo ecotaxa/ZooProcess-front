@@ -47,7 +47,9 @@ export function MyForm(props){
       submitting:button?.updating||'Updating...',
     }
 
-    
+
+    // const [myForms, setMyForm] = useState(forms);
+
 
     console.log("-----------> MyForm(props): ", props );
 
@@ -88,6 +90,7 @@ export function MyForm(props){
       // console.log("rand", rand);
     //   setValues(myValues)
 
+      // setMyForm(forms)
     },[myValues])
     // },[props.value])
 
@@ -166,18 +169,18 @@ export function MyForm(props){
         }
 
 
-        // if ( formitem.update ){
-        //   console.debug("formitem.update PRESENT")
-        //   const valueUpdated = updateValue(formitem.update, myValues, value)
-        //   // console.debug("opts: ", opts);
-        //   console.debug("FORM VALUE for ", formitem.name, " = " , valueUpdated , " <= " , formitem['value'] );
-        //   formitem['value'] = valueUpdated
-        //   // formitem['onChange'](valueUpdated)
-        //   // props.onChangeElement(formitem.name,valueUpdated)
-        //   let copiedValues = myValues
-        //   copiedValues[formitem.name] = valueUpdated
-        //   setMyValues(copiedValues)
-        // }
+        if ( formitem.update ){
+          console.debug("formitem.update PRESENT")
+          const valueUpdated = updateValue(formitem.update, myValues, value)
+          // console.debug("opts: ", opts);
+          console.debug("FORM VALUE for ", formitem.name, " = " , valueUpdated , " <= " , formitem['value'] );
+          formitem['value'] = valueUpdated
+          // formitem['onChange'](valueUpdated)
+          // props.onChangeElement(formitem.name,valueUpdated)
+          let copiedValues = myValues
+          copiedValues[formitem.name] = valueUpdated
+          // setMyValues(copiedValues)
+        }
 
 
       } else {
@@ -265,7 +268,7 @@ export function MyForm(props){
 
     // setRand(Math.random())
 
-    const [valeur,setValeur] = useState({})
+    const [valeur, setValeur] = useState({})
     
     useEffect(()=>{
       console.log("valeur has changed:", valeur);
@@ -275,7 +278,7 @@ export function MyForm(props){
       const value = valeur.value
 
       const type = searchtypeof(name);
-      console.log("type:",type);
+      console.log("type:", type);
   
       console.log("onChangeElement myValues", myValues);
       // console.log("onChangeElement rand", rand);
@@ -287,17 +290,40 @@ export function MyForm(props){
         setMyValues({...newForm});
       } else {
         const newForm = {...myValues, [name]: value};
-        console.log("newForm",newForm);
+        console.log("newForm", newForm);
         setMyValues({...newForm});
         // setMyForm({...myform, name: value});
-        
       }
       setIsDataModified(true)
       setIsDataUpdated(false)
       console.log("onChangeElement form values", myValues);
 
+      // cascade(name, value)
+
     },[valeur])
 
+
+    // const cascade = ( name, value) => {
+
+    //   console.log("cascade( ", name);
+
+    //   const element = findElement(name)
+    //   if (element){
+    //     console.log("element", element);
+    //     if ( element.refresh ) {
+    //       console.debug("element.refresh PRESENT")
+    //       // elementToRefresh = element.refresh
+    //       console.log("element To Refresh", element.refresh);
+    //       refresh(element.refresh, name , value)
+    //     }
+    //     // refresh(element)
+    //     //update(element)
+    //   }
+    //   else {
+    //     console.log("element not found", name)
+    //   } 
+
+    // }
 
 
     const findElement = (name) => { 
@@ -326,14 +352,14 @@ export function MyForm(props){
   }
 
     const onChangeElement = (name, value) => {
-        console.log("onChangeElement:", name, "-- value: ", value);
+        console.log("onChangeElement before setValeur :", name, "-- value: ", value);
 
         setValeur({name:name, value:value})
         
         // const type = searchtypeof(name);
         // console.log("type:",type);
     
-        // console.log("onChangeElement myValues", myValues);
+        console.log("onChangeElement myValues", myValues);
         // // console.log("onChangeElement rand", rand);
 
         // if (type === "number" ) {
@@ -355,22 +381,22 @@ export function MyForm(props){
 
 
   
-
-        const element = findElement(name)
-        if (element){
-          console.log("element", element);
-          if ( element.refresh ) {
-            console.debug("element.refresh PRESENT")
-            // elementToRefresh = element.refresh
-            console.log("element To Refresh", element.refresh);
-            refresh(element.refresh)
-          }
-          // refresh(element)
-          //update(element)
-        }
-        else {
-          console.log("element not found", name)
-        } 
+        // to cascade()
+        // const element = findElement(name)
+        // if (element){
+        //   console.log("element", element);
+        //   if ( element.refresh ) {
+        //     console.debug("element.refresh PRESENT")
+        //     // elementToRefresh = element.refresh
+        //     console.log("element To Refresh", element.refresh);
+        //     refresh(element.refresh)
+        //   }
+        //   // refresh(element)
+        //   //update(element)
+        // }
+        // else {
+        //   console.log("element not found", name)
+        // } 
 
         // const elements = forms.filter( (form) => form.name == name)
         // elements.map( (element) => {
@@ -384,33 +410,39 @@ export function MyForm(props){
 
       }
 
-      const refresh = (elementName) => {
-        // if ( formitem.refresh ) {
-          // console.debug("formitem.refresh PRESENT")
-          // elementToRefresh = element.refresh
-          console.log("refresh(", elementName, ")");
-          const element = findElement(elementName)
-          if (element.update){
-            update(element)
-          }
-      }
+      // const refresh = (elementNameToRefresh, name, value) => {
+      //   // if ( formitem.refresh ) {
+      //     // console.debug("formitem.refresh PRESENT")
+      //     // elementToRefresh = element.refresh
+      //     console.log("refresh(", elementNameToRefresh, ")");
+      //     const element = findElement(elementNameToRefresh)
+      //     if (element){
+      //       console.log("element", element);
+      //       if (element.update){
+      //         update(element,name,value)
+      //       }
+      //     }
+      // }
 
-      const update = (formitem) => {
-        if ( formitem.update ) {
-          console.debug("Element to update PRESENT")
-          const valueUpdated = updateValue(formitem.update, myValues, value)
-          // console.debug("opts: ", opts);
-          console.debug("FORM VALUE for ", formitem.name, " = " , valueUpdated , " <= " , formitem['value'] );
-          formitem['value'] = valueUpdated
-          // formitem['onChange'](valueUpdated)
-          // props.onChangeElement(formitem.name,valueUpdated)
-          let copiedValues = myValues
-          // copiedValues[formitem.name] = valueUpdated
-          // setMyValues(copiedValues)
-          setValeur({ name: formitem.name, value: valueUpdated })
-        }
+      // const update = (formitem,name,value) => {
+      //   if ( formitem.update ) {
+      //     console.debug("Element to update PRESENT")
 
-      }
+
+
+      //     const valueUpdated = updateValue(formitem.update, myValues, value)
+      //     // console.debug("opts: ", opts);
+      //     console.debug("FORM VALUE for ", formitem.name, " = " , valueUpdated , " <= " , formitem['value'] );
+      //     formitem['value'] = valueUpdated
+      //     // formitem['onChange'](valueUpdated)
+      //     // props.onChangeElement(formitem.name,valueUpdated)
+      //     let copiedValues = myValues
+      //     // copiedValues[formitem.name] = valueUpdated
+      //     // setMyValues(copiedValues)
+      //     setValeur({ name: formitem.name, value: valueUpdated })
+      //   }
+
+      // }
 
 
     //   const findElement = (name) => { 
@@ -546,6 +578,7 @@ export function MyForm(props){
                   <div className="grid" key="form">
                     {
                       forms.map( input => formElements(input) )
+                      // myForms.map( input => formElements(input) )
                     }
     
                   </div>
