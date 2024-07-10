@@ -6,6 +6,7 @@ import { MySelect } from "./mySelect5"
 import { MyInputSelect } from "./myInputSelect"
 import { MyTextField } from "./myTextField2"
 import { MyTextArea } from "./myTextArea"
+import { DisbledField } from "./DisabledField"
 // import SimpleSelect from "./SimpleSelect"
   
 // import dayjs from "dayjs";
@@ -22,6 +23,8 @@ import { MyDatePicker } from "./myDatePicker"
 // import {MyInput}from "@/components/mySelect4.js"
 import Drives from "./drives";
 import Instruments from "./instruments";
+import { Input } from "@nextui-org/input"
+// import { Input } from "postcss"
 
 export function FormElements(props) {
 
@@ -33,12 +36,75 @@ export function FormElements(props) {
     const mui = false;
 
     switch ( props.tag ){
+
+        case "DisabledField":
+
+        // let opts = {}
+        // if (props.update){
+        //     opts.onChange = props.onChange
+        // }
+        let propsUpdated = {...props}
+        if ( props.myValues ){
+            console.log("props.myValues:",props.myValues)
+            if (props.myValues[props.name]){
+                propsUpdated.value = props.myValues[props.name] //|| props.value
+            }
+            else{
+                console.debug("props.myValues[props.name] is undefined")
+            }
+        }
+        else {
+            console.debug("props.myValues is undefined")
+        }
+            // propsUpdated.value = props.myValues[props.name] || props.value
+        // return (<MyTextField {...props} key={props.name}
+        //     project={props.project}
+        //     sample={props.sample}
+        //     subsample={props.subsample}
+        //     onChange={(n,v) => props.onChange(n,v) }/>)
+
+        return (
+            <p>
+                {/* DisabledField */}
+                {/* {JSON.stringify( props) } */}
+                {/* {JSON.stringify( propsUpdated) } */}
+
+                {/* {JSON.stringify( props.myValues)} */}
+                {/* {props.myValues[props.name]} */}
+                <Input readOnly={true} value={props.myValues[props.name]} />
+            </p>
+
+        )
+
+        // return (<DisbledField {...propsUpdated} key={props.name}
+        //         project={props.project}
+        //         sample={props.sample}
+        //         subsample={props.subsample}
+        //         // {...opts}
+        //     />)
+
+
+
         case "TextField":
+
+            let opts = {}
+            if (props.update){
+                opts.onChange = props.onChange
+            }
+
+            // return (<MyTextField {...props} key={props.name}
+            //     project={props.project}
+            //     sample={props.sample}
+            //     subsample={props.subsample}
+            //     onChange={(n,v) => props.onChange(n,v) }/>)
+
             return (<MyTextField {...props} key={props.name}
-                project={props.project}
-                sample={props.sample}
-                subsample={props.subsample}
-                onChange={props.onChange}/>)
+                    project={props.project}
+                    sample={props.sample}
+                    subsample={props.subsample}
+                    {...opts}
+                />)
+    
 
             // if (mui ){ //|| props.minLength){
             //     return (<MyTextField {...props} key={props.name}
@@ -161,6 +227,7 @@ export function FormElements(props) {
             //         className="max-w-xs"
             //     />)
             // }
+        
 
         case "Empty":
             return (
