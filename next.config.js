@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: false,
+    // https://nextjs.org/docs/pages/api-reference/next-config-js/reactStrictMode
+    // reactStrictMode: false,
+    reactStrictMode: true,
     // serverActions: { allowedOrigins: ["imev:3001", "192.168.1.159:3001", "localhost:3001"], },
     experimental: {
         serverActions: {
