@@ -12,10 +12,32 @@ import { setConstantValue } from "typescript";
 export function MyTextField(props) {
 
 
+    // let initValue = props.value
+    // if (props.myValues){
+    //     console.log("props.myValues", props.myValues)
+    //     if ( props.myValues[props.name] ){
+    //         console.log("props.myValues[props.name]", props.myValues[props.name])
+    //         initValue = props.myValues[props.name]
+    //     }
+    // }
+
+    // if ( props.name === 'scan_id' ){
+    //     console.log("initValue", props.name, initValue)
+    //     initValue = "MMMERRRDDDDEEE"
+    //     // props.MERDE="MERDE"
+    // }
+    
     const [value, setValue] = React.useState(props.value);
+    // const [value, setValue] = React.useState(props.value.myValues[props.name]|props.value);
+    // const [value, setValue] = React.useState(initValue); ne sert à rien le composant est initialisé 1 seule fois
+
 
 
     var handleChange = (value) => {
+
+        // if ( props.name === 'scan_id' ){
+        //     console.log("MMMMMMMMMMMMMMMMMMMMMMMMM")
+        // }
 
         console.log("handleChange: ", value)
         var error = false
