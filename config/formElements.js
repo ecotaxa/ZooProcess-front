@@ -399,7 +399,7 @@ export const sampleid_formElements=[
         {
             title:"Scan ID",
             section:[
-            { tag:"TextField", name:"scan_id", type:"text", placeholder:"Scan ID", label:'Scan ID',
+            { tag:"DisabledField", name:"scan_id", type:"text", placeholder:"Scan ID", label:'Scan ID',
                 variant:"outlined", disabled:true,
                 xs:12, sm:12, fullWidth:true, // value:1,
                 fn2: { 
