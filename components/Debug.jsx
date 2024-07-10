@@ -4,9 +4,11 @@ import { useState } from "react";
 
 import {debug} from "../config/settings"
 
-export const Debug = ({params,title="debug"}) => {
+export const Debug = ({params,title="debug",open=false}) => {
 
-    const [isSelected, setIsSelected] = useState(false);
+    const [isSelected, setIsSelected] = useState(open);
+
+
 
     if ( debug == false ){
         return (<></>)
@@ -22,7 +24,8 @@ export const Debug = ({params,title="debug"}) => {
 
     const ShowError = () => {
 
-        if (!isSelected) { return (<></>) }
+        // if(!open)
+           if (!isSelected) { return (<></>) }
 
         return (
             <div className="xm-sm-max-100 w-50">
