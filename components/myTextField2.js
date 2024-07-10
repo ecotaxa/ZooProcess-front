@@ -1,46 +1,49 @@
 import React, { useEffect, useState } from "react";
 
+// import {   TextField, InputAdornment } from "@mui/material"
+// import { Textarea } from "@nextui-org/input";
+
 import {Input} from "@nextui-org/react";
+// import { Debug } from "./Debug";
 import { Debug } from "@/components/Debug";
+import { setConstantValue } from "typescript";
+
 
 export function MyTextField(props) {
 
+
     const [value, setValue] = React.useState(props.value);
 
-    let handleChange = (value) => {
 
-        if(props.disabled==true) {
-            console.log("CASSOSSSSSSSS")
-            return
-        }
+    var handleChange = (value) => {
 
         console.log("handleChange: ", value)
-        let error = false
-
-        // if (props.update){
-        //     console.log("need to update", props.name)
-        //     updateValue(props.update, props.maxValue, value)
-        // }
+        var error = false
 
         if (props.type === 'number') {
             console.log("handleChange number");
             if (props.maxValue){
                 if (props.maxValue < value) {
-                    error = true
-                }
-            }
 
+                    // field_props.value = props.maxValue
+                    error = true
+                    // return
+                }
+            } 
             if (props.minValue !== undefined ){
                 if (props.minValue > value) { 
+
+                    // field_props.value = props.minValue
                     error = true
                 }
-            }
+            } 
         } else {
             if ( props.type === 'text' ) {
                 console.log("handleChange text");
 
                 if (value.length < props.minLength) {
                     error = true
+                    // return
                 }
 
                 if ( props.regex ){
@@ -52,88 +55,37 @@ export function MyTextField(props) {
                     }
                 }
             }
-        }
+        } 
         
         setValue(value)
         if (!error) {
-            if (!props.update){
-                if (props.disabled == false){
-                    if (props.onChange){
-                        props.onChange(props.name, value)
-                    }    
-                }
-    
+            if (props.onChange){
+                props.onChange(props.name, value)
             }
         }
         setHasError(error)
     }
 
-    // const updateValue = (update, myValues, value) => {
-    //     //if (props.fn2) {
-    //       console.log("updateValue(update)  : ", update );
-    //       console.log("updateValue(myValues): ", myValues );
-    //       console.log("updateValue(value)   : ", value );
-  
-    //       const params = update.params.slice(1).slice(0,-1).split(',')
-  
-    //       let param = {}
-    //       params.forEach(element => {
-    //         console.log("element: ", element);  
-    //           if (  ! element in props ){
-    //               throw (`params error in update. ${element} don't exist`)
-    //           }
-    //           param[element] = myValues[element]
-    //           console.log("myValues[element]: ", myValues[element]);
-    //       });
-  
-    //       console.log("updateValue(param)   : ", param );
 
-    //       const prefix = new Function( update.params , update.func );
-    //       // opt['prefix'] = prefix(param)  // mui/material ?
-    //       // opt['startContent'] = prefix(param) // NextUI
-    //       const v = prefix(param)
+    // const field_keys = ['xs', 'sm', 'fullWidth', 'variant', 'name', 'type', 'label',
+    //     'required', 'placeholder', 'disabled', 
+    //     'value',
+    //     'error'
+    //  ]
 
-    //       console.log("updateValue(v)   : ", v );
-    //       return v
-    //     //}
-    // }
-
-    
-    // if ( props.update ){
-    //     console.debug("Element", props.name, "to update PRESENT")
-
-    //     const valueUpdated = updateValue(props.update, props.myValues, props.value)
-    //     // console.debug("opts: ", opts);
-    //     console.debug("FORM VALUE for ", props.name, " = ", valueUpdated, " <= ", props.value );
-    //     // formitem['value'] = valueUpdated
-    //     // formitem['onChange'](valueUpdated)
-    //     // props.onChangeElement(formitem.name,valueUpdated)
-    //     // let copiedValues = myValues
-    //     // copiedValues[formitem.name] = valueUpdated
-    //     // setMyValues(copiedValues)
-    //     // setValeur({ name: formitem.name, value: valueUpdated })
-    //     // setValue(valueUpdated)
-    //     // props.value = valueUpdated  
-    // }
-
-    // if ( props.update ){
-    //     setValue(props.myValues[props.name]) // infinite loop
-    // }
+ 
+    // field_keys.forEach(key => {
+    //                 field_props[key] = props[key]
+    // });
 
     let opt = {
         type: props.type,
         defaultValue: props.value,
         label: props.label,
         placeholder: props.placeholder,
-        // onValueChange: handleChange,
+        onValueChange: handleChange,
         isDisabled: props.disabled
-    }
-
-    if (props.disabled == false){
-        console.log("props.disabled == false")
-        // opt['onValueChange'] = handleChange
-        // opt['onValueChange'] = () => {handleChange()} // la saisie ne fonctionne plus 
-        opt['onValueChange'] = (v) => {handleChange(v)}
+        // onChange: handleChange
     }
     if (props.required == true) { opt['isRequired'] = true}
     if (props.prefix) { opt['startContent'] = props.prefix }
@@ -141,9 +93,32 @@ export function MyTextField(props) {
     if (props.readonly) { opt['isReadOnly'] = true}
     if (props.disabled) { opt['isReadOnly'] = true}
 
-    if (props.fn2) {
-        const params = props.fn2.params.slice(1).slice(0,-1).split(',')
+    // if (props.fn2 && props.project) { 
+    if (props.fn2) { 
+            // opt['TOTOT'] = 'TOTO' 
 
+        // console.log("props: ", props)
+
+        // console.log("props.fn2.params:", props.fn2.params)
+        // console.log("props.project:", props.project)
+        // console.log("props.sample:", props.sample)
+        // console.log("props['project']:", props['project'])
+
+        // try {
+        //     const json = JSON.parse(props.fn2.params)
+        //     console.log("json:",json)
+        // }
+        // catch(e){
+        //     console.log("json error:",e)
+        // }
+
+        // console.log("slice(-1): ",props.fn2.params.slice(0,-1))
+        // console.log("slice(1): ",props.fn2.params.slice(1).slice(0,-1))
+
+        const params = props.fn2.params.slice(1).slice(0,-1).split(',')
+        // console.log("params: ",params)
+
+        // const param = { project: props.project }
         let param = {}
         params.forEach(element => {
             if (  ! element in props ){
@@ -151,12 +126,17 @@ export function MyTextField(props) {
             }
             param[element] = props[element]
         });
+        // console.log("param:", param)
+
 
         const prefix = new Function( props.fn2.params , props.fn2.func );
-        opt['prefix'] = prefix(param) 
+        opt['prefix'] = prefix(param) // ("Toto");
         opt['startContent'] = prefix(param)
     }
     
+    // if (props.helperText) { opt['errorMessage'] = props.helperText }
+
+    // setOpts(opt);
     const [hasError, setHasError] = useState(false);
     const [opts, setOpts] = useState(opt);
 
@@ -165,22 +145,74 @@ export function MyTextField(props) {
         if ( hasError ){
             if (props.helperText) { opt['errorMessage'] = props.helperText }
         } else {
+            //if (props.helperText) { 
             delete opt.errorMessage;
         }
         setOpts(opt);
     },[hasError]);
 
+    // console.log("MyTextField: ", props);
+
+    // var field_props = {}
+
+
+
+
+    // field_props['helperText'] = ''
+
+    // console.log("opt: ", opt);
+
+    // if ( field_props['value'] == null ){
+    //     field_props['value'] = ""
+    // }
+
+
+    // if (props.shrink){
+    //     field_props['InputLabelProps']={ shrink: true }
+    // }
+
+
+
     return (
         <>
-        <Debug params={[{props:props},{opts:opts},{hasError:hasError}]} title={props.name} />
-
+        <Debug params={[{props:props},{opts:opts},{hasError:hasError}]} />
         <Input 
             {...opts}
             isInvalid={hasError}
             value={value}
+            // onChange={props.onChange}
         />       
         </>
     )
 
+    // const MUI_Text = () => {
+    //     <TextField {...field_props} 
+    //             onChange={event => handleChange(event.target.value)}
+    //             onFocus={handleFocus}
+
+    //             InputLabelProps={shrinked()}
+    //             InputProps={adornment()}
+    //             error={hasError}
+    //             helperText={hasError ? (props.helperText ? props.helperText : "Error - not an acceptable value") : '' }
+    //         />
+    // }
+
+
+
+    // return (
+
+    //         <TextField {...field_props} 
+    //             onChange={event => handleChange(event.target.value)}
+    //             onFocus={handleFocus}
+    //             InputLabelProps={shrinked()}
+    //             InputProps={adornment()}
+    //             error={hasError}
+    //             helperText={hasError ? (props.helperText ? props.helperText : "Error - not an acceptable value") : '' }
+    //         />
+            
+    // );
+
+
   }
 
+//   export default myTextField
