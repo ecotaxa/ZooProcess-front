@@ -85,7 +85,7 @@ export function MyForm(props){
     // const [rand,setRand] = useState(Math.random())
 
     useEffect(()=>{
-      console.log("myValues has changed:", myValues);
+      console.log("=============> myValues has changed:", myValues);
       // setRand(Math.random())
       // console.log("rand", rand);
     //   setValues(myValues)
@@ -100,6 +100,9 @@ export function MyForm(props){
         setMyValues(defaultValue)
     }
 
+
+
+    
     const updateValue = (update, myValues, value) => {
       //if (props.fn2) {
         console.log("updateValue(update)  : ", update );
@@ -118,13 +121,15 @@ export function MyForm(props){
             console.log("myValues[element]: ", myValues[element]);
         });
 
-        const prefix = new Function( update.params , update.func );
+        const prefix = new Function( update.params, update.func );
         // opt['prefix'] = prefix(param)  // mui/material ?
         // opt['startContent'] = prefix(param) // NextUI
         const v = prefix(param)
         return v
       //}
     }
+
+
 
 
     // inject the values given in parameter in the form
@@ -207,8 +212,10 @@ export function MyForm(props){
                 project={props.project}
                 sample={props.sample}
                 subsample={props.subsample}
-                onChange={onChangeElement}
-              />
+                // onChange={() => onChangeElement()} // ne fonctionne pas
+                // onChange={onChangeElement}
+                onChange={(n,v) => onChangeElement(n,v)} // ne fonctionne pas
+                />
             </Grid>
         )
     }
@@ -569,7 +576,7 @@ export function MyForm(props){
               
               <Debug params={forms} title="forms"/>
               <Debug params={value} title="value"/>
-              <Debug params={myValues} title="myValues"/>
+              <Debug params={myValues} title="myValues" open={true}/>
               {/* <Debug params={myValues} title="myform"/> */}
 
               </CardHeader>

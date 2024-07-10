@@ -401,7 +401,7 @@ export const sampleid_formElements=[
             section:[
             { tag:"TextField", name:"scan_id", type:"text", placeholder:"Scan ID", label:'Scan ID',
                 variant:"outlined", disabled:true,
-                xs:12, sm:12, fullWidth:true, //value:1,
+                xs:12, sm:12, fullWidth:true, // value:1,
                 fn2: { 
                     params:"{project,sample}",
                      func:'return String(project)+"_"+String(sample)+"_"'
@@ -413,6 +413,7 @@ export const sampleid_formElements=[
                      func:'return String(fraction_number)+"_"+String(fraction_id_suffix)'
                 }
             },
+
             // { tag:"Select", name:"fraction_type", type:"select", 
             //     placeholder:"Could be d1,d2, tot...", label:'Fraction Type',
             //     variant:"outlined", fullWidth:true, required:true, 
