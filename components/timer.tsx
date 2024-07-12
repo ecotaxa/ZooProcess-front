@@ -1,6 +1,7 @@
 
 
 import React, { useState, useEffect } from 'react';
+import CircularTimer from './CircularTimer';
 
 interface TimerProps {
   initialTime?: number;
@@ -42,6 +43,7 @@ const Timer: React.FC<TimerProps> = ({ initialTime = 0, onChange }) => {
 
   return (
     <div>
+      <CircularTimer time={time} totalTime={initialTime} />
       <h1>{formatTime(time)}</h1>
     </div>
   );
