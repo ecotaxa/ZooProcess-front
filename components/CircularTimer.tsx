@@ -10,6 +10,12 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (time / totalTime) * circumference;
 
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <svg height={radius * 2} width={radius * 2}>
@@ -41,6 +47,9 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
             fill="#333"
           />
         ))}
+        <text x={radius} y={radius} textAnchor="middle" dominantBaseline="central" fontSize="16">
+          {formatTime(time)}
+        </text>
       </svg>
     </div>
   );

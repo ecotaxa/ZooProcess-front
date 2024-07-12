@@ -44,7 +44,7 @@ const Timer: React.FC<TimerProps> = ({ initialTime = 0, onChange }) => {
   return (
     <div>
       <CircularTimer time={time} totalTime={initialTime} />
-      <h1>{formatTime(time)}</h1>
+      {/* <h1>{formatTime(time)}</h1> */}
     </div>
   );
 };
