@@ -11,7 +11,7 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (time / totalTime) * circumference;
   const containerSize = radius * 2 + 40;
-  const [currentSecond, setCurrentSecond] = useState(totalTime);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -21,17 +21,17 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSecond((prevSecond) => prevSecond - 1);
+      setElapsedSeconds((prevSeconds) => prevSeconds + 1);
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
   const getPointColor = (index: number) => {
-    if (index === currentSecond - 1) {
-      return '#ccc'; // Gray color for the current second
+    if (index < elapsedSeconds) {
+      return '#4caf50'; // Green color for elapsed seconds
     } else {
-      return '#4caf50'; // Green color for all other points
+      return '#ccc'; // Gray color for remaining seconds
     }
   };
 
