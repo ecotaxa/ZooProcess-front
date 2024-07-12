@@ -41,8 +41,8 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
         {Array.from({ length: 60 }, (_, index) => (
           <circle
             key={index}
-            cx={radius + radius * Math.cos((index * 6 * Math.PI) / 180)}
-            cy={radius + radius * Math.sin((index * 6 * Math.PI) / 180)}
+            cx={radius + radius * Math.cos(((index * 6 - 90) * Math.PI) / 180)}
+            cy={radius + radius * Math.sin(((index * 6 - 90) * Math.PI) / 180)}
             r={2}
             fill="#333"
           />
