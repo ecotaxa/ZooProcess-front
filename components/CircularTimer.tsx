@@ -19,13 +19,12 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
   };
 
   const getPointColor = (index: number) => {
-    const progress = (totalTime - time) / totalTime;
-    const pointProgress = index / 59; // Assuming 60 points
+    const remainingSeconds = totalTime - time;
 
-    if (pointProgress <= progress) {
-      return '#4caf50'; // Green color for completed points
+    if (index < remainingSeconds) {
+      return '#4caf50'; // Green color for remaining seconds
     } else {
-      return '#ccc'; // Gray color for remaining points
+      return '#ccc'; // Gray color for elapsed seconds
     }
   };
 
