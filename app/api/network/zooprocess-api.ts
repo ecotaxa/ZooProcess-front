@@ -630,6 +630,43 @@ export async function addSample(projectId:string, data:Sample){
 
   }
 
+
+  export async function updateSubSample(projectId:string, sampleId:string, subSampleId:string, data:Samples){
+
+    console.log("api updateSubSample projectId:", projectId);
+    console.log("api updateSubSample sampleId:", sampleId);
+    console.log("api updateSubSample subSampleId:", subSampleId);
+    console.log("api updateSubSample data:", data);
+  
+    const api = await axiosInstanse({})
+    return await api.patch(`/projects/${projectId}/samples/${sampleId}/subsamples/${subSampleId}`, data)
+        .then(function (response) {
+          console.log("updateSample response:", response);
+          return response.data;
+        })
+        .catch(function (error) {
+          console.log("updateSample error:", error.toJSON());
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+          throw(error);
+        });
+  
+  }
+
   export async function addSubSample(projectId:string, sampleId: string, data:Sample){
 
     console.log("api addSubSmaple projectId:", projectId);
@@ -712,6 +749,24 @@ export async function getSubSamples(url:string){
   return response.data; 
 }
 
+export async function getSubSample(url:string){
+
+  // console.log("getSamples(",projectId,")")
+  console.log("getSubSample(",url,")")
+
+  // throw (projectId)
+
+  // const pageSize = 12;
+  // const response = await api.get<Projects>(`/projects?limit=${pageSize}&offset=${pageSize * (page - 1)}`);
+  // const response = await api.get<Samples>(`/projects/${projectId}/samples`);
+  const api = await axiosInstanse({})
+  const response = await api.get<SubSample>(url);
+
+  console.log("getSubSample response: ", response);
+
+  return response.data; 
+}
+
 export async function getSample(url:string, options?: any){
 
   console.log("getSample(",url,",",options,")")
@@ -727,9 +782,9 @@ export async function getSample(url:string, options?: any){
 
 export async function updateSample(projectId:string, sampleId:string, data:Samples){
 
-  console.log("api addSample projectId:", projectId);
-  console.log("api addSample sampleId:", sampleId);
-  console.log("api addSample data:", data);
+  console.log("api updateSample projectId:", projectId);
+  console.log("api updateSample sampleId:", sampleId);
+  console.log("api updateSample data:", data);
 
   const api = await axiosInstanse({})
   return await api.put(`/projects/${projectId}/samples/${sampleId}`, data)

@@ -19,7 +19,7 @@ import { MySpinner } from '@/components/mySpinner';
 import { ErrorComponent } from '@/components/ErrorComponent';
 import { useUserMe } from '@/app/api/user';
 import { useProject } from '@/app/api/projects';
-import { User } from '@/app/api/network/zooprocess-api';
+import { Metadata, SubSample, User } from '@/app/api/network/zooprocess-api';
 // import { useProject } from '@/app/api/projects';
 // import { auth } from '@/auth';
  
@@ -27,33 +27,6 @@ import { User } from '@/app/api/network/zooprocess-api';
 
 
 
-// const testData = {
-//     //"sample_name":"dyfamed_wp2_2023_biotom_sn001",
-//     "sample_id": "dyfamed_wp2_2023_biotom_sn001",
-//     "scientific_program": "ZooProcess",
-//     "latitude_ns": 1,
-//     "station_id": "dyfamed",
-//     "bottom_depth": "2400",
-//     "sampling_date": "2022-11-13T00:13:40.000Z",
-//     // "sampling_date": "2023-10-09T09:13:40.000Z",
-//     "Latitude_degree": "43",
-//     "longitude_degree": "7",
-//     "latitude_minute": "25",
-//     "longitude_minute": "51",
-//     "longitude_ew": 1,
-//     "tow_type": "1",
-//     "net_sampling_type": "WP2",
-//     "net_mesh": "200",
-//     "net_opening_surface": "0.25",
-//     "minimum_depth": "1",
-//     "maximum_depth": "1",
-//     "quality_flag_for_depth_measurement": "2",
-//     "ship_speed": "99999",
-//     "cable_speed": "99999",
-//     "cable_length": "99999",
-//     "cable_angle_from_vertical": "45",
-//     "sampling_duration": "5"
-// }
 
 const forms = [
     // sampleid_formElements, 
@@ -66,7 +39,8 @@ interface pageProps {
     // params: {
         projectid: string
         sampleid: string
-        // subsampleid?: string
+        subsampleid?: string
+        onChange?: () => void
     // }
 }
 
@@ -86,13 +60,15 @@ const SubSampleForm =  ( params: pageProps) => {
     const projectid = params.projectid;
     const sampleid = params.sampleid;
     const projectId = params.projectid;
-    // const subsampleid =  params.subsampleid
-
+    const subsampleid =  params.subsampleid
+    console.log("NewSample params projectid: ", projectid);
+    console.log("NewSample params sampleid: ", sampleid);
+    console.log("NewSample params subsampleid: ", subsampleid);
+    
     // const { projectid, sampleid } = params
-    const { user, isLoading, isError } = useUserMe()
     // const { user, isLoading: isLoadingUser, isError:isErrorUser } = useUserMe()
     // const { project, isLoading:l , isError:err } = useProject()
-    // const { subsample, isLoading, isError } = useSubSample(subsampleid)
+    const { subsample, isLoading, isError } = useSubSample(projectId, sampleid, subsampleid)
 
     // if (isError) {
     //     // Handle error
@@ -106,8 +82,7 @@ const SubSampleForm =  ( params: pageProps) => {
 
  
 
-    console.log("NewSample params projectid: ", projectid);
-    console.log("NewSample params sampleid: ", sampleid);
+
 
     // const emptyData = {
     //     "scanning_operator":user.name, // "Seb"  // 
@@ -139,52 +114,59 @@ const SubSampleForm =  ( params: pageProps) => {
 
     const onChange = (value:any) => {
         console.log("App onChange:", value)
-        // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
-        // stringifiedData = JSON.stringify(value, null, 2);
-
-        setData(JSON.stringify(value, null, 2))
+        params.onChange && params.onChange()
         console.log("App onChange:", stringifiedData)
-
-        // const newData = prepareData(value)
-
-        const data = {
-            name: value.scan_id, //"Sample XXXX",
-            metadataModelId: "", //"6565df171af7a84541c48b20",
-            data: value,
-        }
-
-        console.log("newData: ", data);
-        // try {
-
-            console.log("----- projectId: ", projectid);
-            console.log("----- sampleId: ", sampleid);
-            // console.log("----- params.projectid : ",params.projectid);
-            // console.log("----- params : ",params);
-            // console.log("----- params.params : ",params.params);
-
-            // addSample(projectId, data)
-            return addSubSample({
-                projectId: projectid, // : params.params.projectid,
-                sampleId: sampleid, 
-                data
-            })
-            .then((response) => {
-                console.log("Go To the infos page" )
-                // router.push(`${response.data.id}`)
-                // const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
-                const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}`
-                router.push(path)
-            })
-            .catch((error) => {
-                return Promise.reject(error)
-            })
-
-        // }
-        // catch (e:any){
-        //     console.log(e);
-            
-        // }
+        return Promise.resolve() // le form attends une réponse pour gerer le bouton "submit", ici on ne change rien
     }
+
+    // const onChange = (value:any) => {
+    //     console.log("App onChange:", value)
+    //     // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
+    //     // stringifiedData = JSON.stringify(value, null, 2);
+
+    //     setData(JSON.stringify(value, null, 2))
+    //     console.log("App onChange:", stringifiedData)
+
+    //     // const newData = prepareData(value)
+
+    //     const data = {
+    //         name: value.scan_id, //"Sample XXXX",
+    //         metadataModelId: "", //"6565df171af7a84541c48b20",
+    //         data: value,
+    //     }
+
+    //     console.log("newData: ", data);
+    //     // try {
+
+    //         console.log("----- projectId: ", projectid);
+    //         console.log("----- sampleId: ", sampleid);
+    //         // console.log("----- params.projectid : ",params.projectid);
+    //         // console.log("----- params : ",params);
+    //         // console.log("----- params.params : ",params.params);
+
+    //         // addSample(projectId, data)
+    //         return addSubSample({
+    //             projectId: projectid, // : params.params.projectid,
+    //             sampleId: sampleid, 
+    //             data
+    //         })
+    //         .then((response) => {
+    //             console.log("Go To the infos page" )
+    //             // router.push(`${response.data.id}`)
+    //             // const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
+    //             const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}`
+    //             router.push(path)
+    //         })
+    //         .catch((error) => {
+    //             return Promise.reject(error)
+    //         })
+
+    //     // }
+    //     // catch (e:any){
+    //     //     console.log(e);
+            
+    //     // }
+    // }
 
     const onCancel = () => {
         router.back()
@@ -195,21 +177,60 @@ const SubSampleForm =  ( params: pageProps) => {
     }
 
     const formButtons = {
-        submit:'Scan'
+        // submit:'Scan'
+        submit:'Next'
     }
 
-    const formatData = (user:User|any) => {
-        console.log("formatData() ");
+    type DataReturn = Map<string,any>
 
-        const emptyData = {
-            "scanning_operator":user.name, // "Seb"  // 
+    // type MetadataType = {
+    //     id: String
+    //     name: string
+    //     type: String
+    //     value: String
+    //     sample_id: String
+    //   }
+
+    const fillSample = (sample:SubSample) : DataReturn => { 
+          console.log("fillSample: ", sample);
+          
+          let form: any = {}
+  
+          sample.metadata.forEach((element:Metadata) => {
+            if ( element.type == 'number'){
+              form[element.name] = Number(element.value)
+            } else {
+              form[element.name] = element.value
+            }
+          });
+  
+        return form;
+      }
+
+    const formatData = (subsample:SubSample|any) => {
+        console.log("formatData() ");
+        console.log("formatData() subsample: ", subsample);
+
+        const data = {
+            "scan_id":subsample.scan_id,
+            "fraction_number":subsample.fraction_number,
+            "fraction_id_suffix":subsample.fraction_id_suffix,
+            "scanning_operator":subsample.user.name, // "Seb"  // 
+
+            "fraction_min_mesh":subsample.fraction_min_mesh,
+            "fraction_max_mesh":subsample.fraction_max_mesh,
+            "spliting_ratio":subsample.spliting_ratio,
+            "observation":subsample.observation,
         }
     
+        console.log("formatData() data: ", data);
+
         const updatedForm = forms
     
         const form : any = []
             form['forms']=updatedForm
-            form['value']=emptyData//testData//
+            // form['value']=data//testData//
+            form['value']=fillSample(subsample)
             form['title']='Sub Sample metadata'
             form['subtitle']='Fill all the mandatory fields.'
     
@@ -217,7 +238,7 @@ const SubSampleForm =  ( params: pageProps) => {
     }
 
 
-    const showForm = (use:User|any) => {
+    const showForm = (subsample:SubSample|any) => {
 
         if (isLoading) return <MySpinner />;
         if (isError) return <ErrorComponent error={isError} />;
@@ -225,7 +246,7 @@ const SubSampleForm =  ( params: pageProps) => {
         // if ( ! user) return <ErrorComponent error={isError} />
 
         // else {
-        const form = formatData(user)
+        const form = formatData(subsample)
 
         return (
             <MyForm 
@@ -243,7 +264,7 @@ const SubSampleForm =  ( params: pageProps) => {
 
     return (
         <>
-            {showForm(user)}
+            {showForm(subsample)}
         </>
     );
 }

@@ -23,7 +23,10 @@ import { converttiff2jpg } from "@/api/convert";
 
 // import { Info } from 
 import {state, timelist} from "./state"
-import SubSampleForm from "../SubSampleForm";
+import SubSampleForm from "./SubSampleFormUpdate";
+import { getFontDefinitionFromNetwork } from "next/dist/server/font-utils";
+import Timer from "@/components/timer";
+// import SubSampleForm from "../SubSampleForm";
 // import Metadata from "./Metadata";
 
 type pageProps = {
@@ -251,14 +254,22 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         onChange: (value: string) => void,
     }
 
-    const Metadata = (project: Project|any, subsambpleid:string, current: state, nextState: state, onCancel: any , setCurrent: (state: state) => void) => {
+    const gotoInfo = () => {
+        setCurrent(state.info)
+    }
+
+    const Metadata = (project: Project|any, subsampleid:string, current: state, nextState: state, onCancel: any , setCurrent: (state: state) => void) => {
         if ( current != state.metadata )  {
             return <></>
         }
     
+        console.log("Metadata project: ", project)
+        console.log("Metadata subsambpleid: ", subsampleid) 
+
+
         return (
             <>
-                <SubSampleForm {...{projectid:projectid, sampleid:sampleid, subsambpleid:subsambpleid}} />
+                <SubSampleForm {...{projectid:projectid, sampleid:sampleid, subsampleid:subsampleid, onChange:gotoInfo}} />
             </>
         )
     }
@@ -398,7 +409,19 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
     }
 
     
+    const ThirtySeconds = (nextState: state) => {
+        if ( current != state.thirtys1 ) {
+            return <></>
+        }
     
+        const handleTimerEnd = () => {
+            setCurrent(nextState)
+        }
+
+        return (
+            <Timer initialTime={30} onChange={handleTimerEnd} />
+        )
+    }
 
     const ScannerSettings = (project: Project|any, nextState: state ) => {
         if ( current != state.scannerSettings ) {

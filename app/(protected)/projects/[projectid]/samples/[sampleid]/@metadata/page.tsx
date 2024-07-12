@@ -12,6 +12,7 @@ import { Stack } from '@mui/material';
 // import { Project as IProject } from '@/app/api/network/zooprocess-api';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MyForm } from '@/components/myForm';
+import { Metadata } from '@/app/api/network/zooprocess-api';
 
 interface pageProps {
     // params: {
@@ -64,6 +65,7 @@ const Metadata : FC<pageProps> = (params) => {
         let form: any = {}
 
         sample.metadata.forEach((element:MetadataType) => {
+        // sample.metadata.forEach((element:Metadata) => {
           if ( element.type == 'number'){
             form[element.name] = Number(element.value)
           } else {

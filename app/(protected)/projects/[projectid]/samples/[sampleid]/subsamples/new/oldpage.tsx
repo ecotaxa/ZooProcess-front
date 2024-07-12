@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 // import { addSample } from '@/app/api/samples';
 import { Debug } from '@/components/Debug';
-import { addSubSample, useSubSample } from '@/app/api/subsamples';
+import { addSubSample } from '@/app/api/subsamples';
 import { Timeline_scan } from '@/components/timeline-scan';
 // import { useUserMe } from '@/app/api/user';
 import { MySpinner } from '@/components/mySpinner';
@@ -66,33 +66,16 @@ interface pageProps {
     // params: {
         projectid: string
         sampleid: string
-        // subsampleid?: string
     // }
 }
 
-// const SubSampleForm : FC<pageProps> = (params ) => {
-const SubSampleForm =  ( params: pageProps) => {
+const NewSubSample : FC<pageProps> = (params ) => {
 
     const router = useRouter()
     
-    console.debug("SubSampleForm params: ", params);
-    // console.log("NewSample params projectid: ", params.projectid);
-    // console.log("NewSample params sampleid: ", params.sampleid);
-    // console.log("NewSample params projectid: ", params.projectid);
-
-    // const projectid = router.query.projectid //as string
-    // const projectid = params.params.projectid;
-    // const sampleid = params.params.sampleid;
-    const projectid = params.projectid;
-    const sampleid = params.sampleid;
-    const projectId = params.projectid;
-    // const subsampleid =  params.subsampleid
-
     // const { projectid, sampleid } = params
     const { user, isLoading, isError } = useUserMe()
-    // const { user, isLoading: isLoadingUser, isError:isErrorUser } = useUserMe()
     // const { project, isLoading:l , isError:err } = useProject()
-    // const { subsample, isLoading, isError } = useSubSample(subsampleid)
 
     // if (isError) {
     //     // Handle error
@@ -104,7 +87,15 @@ const SubSampleForm =  ( params: pageProps) => {
     //     return <div>Loading...</div>
     // }
 
- 
+    console.debug("NewSample params: ", params);
+    // console.log("NewSample params projectid: ", params.projectid);
+    // console.log("NewSample params sampleid: ", params.sampleid);
+    // console.log("NewSample params projectid: ", params.projectid);
+
+    // const projectid = router.query.projectid //as string
+    const projectid = params.params.projectid;
+    const sampleid = params.params.sampleid;
+    const projectId = params.projectid;
 
     console.log("NewSample params projectid: ", projectid);
     console.log("NewSample params sampleid: ", sampleid);
@@ -243,10 +234,35 @@ const SubSampleForm =  ( params: pageProps) => {
 
     return (
         <>
-            {showForm(user)}
+        <Head>
+            <title>
+            New Sub Sample Metadata | ZooProcess
+            </title>
+        </Head>
+        <Debug params={params}/>
+        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+
+            <div className="text-center justify-center">
+                <Stack spacing={3}>
+                    <Typography variant="h4">
+                    Sub Sample Metadata to sample {sampleid} from project {projectid}
+                    </Typography>
+                    <Timeline_scan current={0} />
+                    {/* <MyForm 
+                        {...form} 
+                        project={projectid}
+                        sample={sampleid}
+                        onChange={onChange} 
+                        onCancel={onCancel}
+                        button={formButtons}/> */}
+
+                        {showForm(user)}
+                </Stack>
+            </div>
+        </section>
         </>
     );
 }
 
 
-export default SubSampleForm;
+export default NewSubSample;

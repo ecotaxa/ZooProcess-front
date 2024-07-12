@@ -428,14 +428,14 @@ export const sampleid_formElements=[
             { tag:"TextField", name:"fraction_number", type:"text", 
                 placeholder:"Number of scans", label:'Fraction of scans',
                 variant:"outlined", required:true, disabled:false,
-                xs:12, sm:4, fullWidth:true, value:1
-                , refresh:"scan_id"
+                xs:12, sm:4, fullWidth:true, // value:1,
+                refresh:"scan_id"
             },
             { tag:"TextField", name:"fraction_id_suffix", type:"text", 
                 placeholder:"Could be 01,02, ...", label:'Fraction ID Suffix',
                 variant:"outlined", required:false, disabled:false,
-                xs:4, sm:2, fullWidth:true, value:2
-                , refresh:"scan_id"
+                xs:4, sm:2, fullWidth:true, //value:2,
+                refresh:"scan_id"
             },
 
             // { tag:"TextField", name:"sample_id", type:"text", placeholder:"Sample ID", label:'Sample ID',
