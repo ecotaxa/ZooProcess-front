@@ -58,11 +58,11 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
             strokeDashoffset={strokeDashoffset}
             style={{ transition: 'stroke-dashoffset 0.5s linear' }}
           />
-          {Array.from({ length: 60 }, (_, index) => (
+          {Array.from({ length: 30 }, (_, index) => (
             <circle
               key={index}
-              cx={radius + radius * Math.cos(((index * 6 + 270) * Math.PI) / 180)}
-              cy={radius + radius * Math.sin(((index * 6 + 270) * Math.PI) / 180)}
+              cx={radius + radius * Math.cos(((index * 6  + 90 ) * Math.PI) / 90)}
+              cy={radius + radius * Math.sin(((index * 6  + 90 ) * Math.PI) / 90)}
               r={4}
               fill={getPointColor(index)}
             />
