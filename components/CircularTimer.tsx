@@ -7,16 +7,21 @@ interface CircularTimerProps {
 
 const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
   const radius = 275;
+  const pointRadius = 20;
   const strokeWidth = 0;
+  const angle = 135;
+  const nbPoint = 30;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (time / totalTime) * circumference;
-  const containerSize = radius * 2 + 40;
+  const containerSize = radius * 2 + 280;
+  const center = containerSize/2
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    // return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${seconds.toString().padStart(2, '0')}`;
   };
 
   useEffect(() => {
@@ -38,7 +43,7 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <div style={{ width: containerSize, height: containerSize }}>
-        <svg height={radius * 2} width={radius * 2} style={{ display: 'block' }}>
+        <svg height={containerSize } width={containerSize } style={{ display: 'block' }}>
           <circle
             cx={radius}
             cy={radius}
@@ -58,16 +63,16 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
             strokeDashoffset={strokeDashoffset}
             style={{ transition: 'stroke-dashoffset 0.5s linear' }}
           />
-          {Array.from({ length: 30 }, (_, index) => (
+          {Array.from({ length: nbPoint }, (_, index) => (
             <circle
               key={index}
-              cx={radius + radius * Math.cos(((index * 6  + 90 ) * Math.PI) / 90)}
-              cy={radius + radius * Math.sin(((index * 6  + 90 ) * Math.PI) / 90)}
-              r={4}
+              cx={center + radius * Math.cos(((index * 6  + angle ) * Math.PI) / 90)}
+              cy={center + radius * Math.sin(((index * 6  + angle ) * Math.PI) / 90)}
+              r={pointRadius}
               fill={getPointColor(index)}
             />
           ))}
-          <text x={radius} y={radius} textAnchor="middle" dominantBaseline="central" fontSize="20">
+          <text x={center} y={center} textAnchor="middle" dominantBaseline="central" fontSize="40">
             {formatTime(time)}
           </text>
         </svg>
