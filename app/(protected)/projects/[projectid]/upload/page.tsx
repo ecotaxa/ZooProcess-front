@@ -18,6 +18,7 @@ import {pathToRealStorage, pathToSessionStorage}  from "@/lib/gateway"
 import scan from "../samples/[sampleid]/subsamples/new/_[...scan]/page";
 
 import { converttiff2jpg } from "@/api/convert";
+import Timer from "@/components/timer";
 
 type pageProps = {
     params:{
@@ -518,46 +519,59 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         )
     }
 
+    // const ThirtySeconds = (nextState: state) => {
+    //     if ( current != state.thirtys1 && current != state.thirtys1bis ) {
+    //         return <></>
+    //     }
+
+    //     return (
+    //         <>
+    //          <Card className="inline-block size-full"
+    //                 data-testid="ScanCard" 
+    //                 >
+    //             <CardBody className="p-6">
+    //                 <div  className="bg-100 p-6">
+    //                     <h1 className="text-center">Wait 30s.</h1>
+    //                 </div>
+    //             </CardBody>
+
+    //             <CardFooter className="flex flex-row-reverse py-3">
+
+    //                 <Button 
+    //                     disabled={ isError || isLoading || !image }
+    //                     color="primary"
+    //                     // showAnchorIcon
+    //                     variant="solid"
+    //                     data-testid="newProjectBtn"
+    //                     // >Scan {actions[nextAction(action)]}</Button>
+    //                     // onPress={onClick}
+    //                     onPress={
+    //                         () =>{ 
+    //                             console.debug("go to scan " + state.thirtys1?'1':'2'); 
+    //                             //state.thirtys1 ? setCurrent(state.scan1):setCurrent(nextState) 
+    //                             setCurrent(nextState) 
+    //                         }
+    //                     }
+    //                 >Done - Launch Preview</Button>
+    //             </CardFooter>
+    //         </Card>
+    //         </>
+    //     )
+    // }
+
     const ThirtySeconds = (nextState: state) => {
         if ( current != state.thirtys1 && current != state.thirtys1bis ) {
             return <></>
         }
+    
+        const handleTimerEnd = () => {
+            setCurrent(nextState)
+        }
 
         return (
-            <>
-             <Card className="inline-block size-full"
-                    data-testid="ScanCard" 
-                    >
-                <CardBody className="p-6">
-                    <div  className="bg-100 p-6">
-                        <h1 className="text-center">Wait 30s.</h1>
-                    </div>
-                </CardBody>
-
-                <CardFooter className="flex flex-row-reverse py-3">
-
-                    <Button 
-                        disabled={ isError || isLoading || !image }
-                        color="primary"
-                        // showAnchorIcon
-                        variant="solid"
-                        data-testid="newProjectBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
-                        // onPress={onClick}
-                        onPress={
-                            () =>{ 
-                                console.debug("go to scan " + state.thirtys1?'1':'2'); 
-                                //state.thirtys1 ? setCurrent(state.scan1):setCurrent(nextState) 
-                                setCurrent(nextState) 
-                            }
-                        }
-                    >Done - Launch Preview</Button>
-                </CardFooter>
-            </Card>
-            </>
+            <Timer initialTime={30} onChange={handleTimerEnd} />
         )
     }
-
 
   const Scan = (step: number = 1, nextState: state) => {
     if (current != state.scan1 && current != state.scan2) {
