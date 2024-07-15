@@ -138,6 +138,10 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         // show the converted image
                         // setImageUrl(imageUrl);
                         console.log("imageUrl: ", imageUrl)
+
+                        imageUrl = imageUrl.replace(/"/g, "")
+                        console.log("imageUrl cleaned: ", imageUrl)
+
                         // if ( imageUrl[0] == '"' ) {
                         //     console.error("arrrggggggggg !!!!!")
                         //     imageUrl=imageUrl.substring(1)
@@ -147,6 +151,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         //     console.error("arrrggggggggg !!!!!")
                         //     imageUrl=imageUrl.substring(0,imageUrl.length-1)
                         // }
+
                         const localPath = pathToSessionStorage(imageUrl)
                         console.log("localPath: ", localPath)
                         setBackground(localPath)

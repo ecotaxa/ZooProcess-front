@@ -53,7 +53,7 @@ function pathToSessionStorage(path:string , sessionFolder = process.env.UPLOAD_F
     // console.log( "newPath | sessionFolder  :", sessionFolder )
     // console.log( "newPath | path.substring :", path.substring( realFolder.length ) )
 
-    let newPath = sessionFolder + path.substring( realFolder.length+1) // .slice(0, -1);
+    let newPath = sessionFolder + path.substring( realFolder.length  ) // .slice(0, -1);
 
     // if ( newPath.substring( ) == '/' ) {
     //     newPath = newPath.substring(1)

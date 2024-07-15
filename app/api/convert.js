@@ -31,9 +31,25 @@ export async function converttiff2jpg ( data) {
             .then((response) => {
                 if (response.ok) {
                     console.log("converttiff2jpg fetch response: ", response)
-                    console.log("converttiff2jpg fetch response.text: ", response.text)
+                    // console.log("converttiff2jpg fetch response.text: ", response.text)
+                    // console.log("converttiff2jpg fetch JSON.parse(response.text): ", JSON.parse(response.text))
                     return response
 
+                    // response.text()
+                    // .then((imageUrl) => {
+
+                    //     // receive text: then need to remove the double quote around the text
+                    //     if ( imageUrl[0] == '"' ) {
+                    //         imageUrl = imageUrl.substring(1)
+                    //     }
+                    //     console.debug("imageUrl[-1]: ", imageUrl[-1])
+                    //     if ( imageUrl[-1] == '"'){
+                    //         imageUrl = imageUrl.substring(0, imageUrl.length-1)
+                    //     }
+
+                    //     return new Promise.resolve({path:imageUrl})
+                    // })
+                    
                     // response.text()
                     // .then((imageUrl) => {
                     //     // setImageUrl(imageUrl);
