@@ -110,7 +110,11 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                     .then(async (imageUrl) => {
                         // setImageUrl(imageUrl);
                         console.log("imageUrl: ", imageUrl)
-                        const localPath = pathToSessionStorage(imageUrl)
+                        imageUrl = imageUrl.replace(/"/g, "")
+                        console.log("imageUrl cleaned: ", imageUrl)
+
+
+                        const localPath = pathToSessionStorage(imageUrl, "/" )
                         console.log("localPath: ", localPath)
                         setBackground(localPath)
                         // return response
@@ -120,20 +124,25 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         furl.url = pathToRealStorage(fileUrl.url)
                         console.debug("furl: ", furl)
 
-                        // return await addBackground(fileUrl)
-                        return await addBackground(furl)
-                        .then((response) => {
-                            console.log("response: ", response)
-                            setImage(response.id)
-                            console.log("Go To the next page" )
-                            // router.push(`${response.id}`)
+                        // // return await addBackground(fileUrl)
+                        // return await addBackground(furl)
+                        // .then((response) => {
+                        //     console.log("response: ", response)
+                        //     setImage(response.id)
+                        //     console.log("Go To the next page" )
+                        //     // router.push(`${response.id}`)
                 
-                            // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
-                        })
-                        .catch((error) => {
-                            console.error("addBackground catch error: ", error)
-                            return Promise.reject(error)
-                        })
+                        //     // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
+                        // })
+                        // .catch((error) => {
+                        //     console.error("addBackground catch error: ", error)
+                        //     return Promise.reject(error)
+                        // })
+
+                        // here I make a plankton
+
+
+
 
                     })
                     .catch((error) => {

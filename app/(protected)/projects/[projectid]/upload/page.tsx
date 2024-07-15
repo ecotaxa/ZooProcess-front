@@ -152,7 +152,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         //     imageUrl=imageUrl.substring(0,imageUrl.length-1)
                         // }
 
-                        const localPath = pathToSessionStorage(imageUrl)
+                        const localPath = pathToSessionStorage(imageUrl , "/" )
                         console.log("localPath: ", localPath)
                         setBackground(localPath)
                         // return response
