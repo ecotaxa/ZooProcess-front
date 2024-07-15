@@ -103,7 +103,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             try {
 
                 return await converttiff2jpg(data)
-                .then(response => {
+                .then(async (response:Response) => {
+                    console.log("converttiff2jpg response: ", response)
+
                     response.text()
                     .then(async (imageUrl) => {
                         // setImageUrl(imageUrl);
@@ -113,7 +115,13 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         setBackground(localPath)
                         // return response
 
-                        return await addBackground(fileUrl)
+                        // store the uploaded image 
+                        let furl = fileUrl
+                        furl.url = pathToRealStorage(fileUrl.url)
+                        console.debug("furl: ", furl)
+
+                        // return await addBackground(fileUrl)
+                        return await addBackground(furl)
                         .then((response) => {
                             console.log("response: ", response)
                             setImage(response.id)
@@ -123,16 +131,19 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                             // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
                         })
                         .catch((error) => {
+                            console.error("addBackground catch error: ", error)
                             return Promise.reject(error)
                         })
 
                     })
                     .catch((error) => {
                         console.log("Cannot convert Tiff to Jpg error: ", error)
-                        const errormsg = { message:"Cannot convert Tiff to Jpg error: " + error}
+                        // const errormsg = { message:"Cannot convert Tiff to Jpg error: " + error}
+                        const errormsg = { ...error, message:"Cannot convert Tiff to Jpg error"}
                         // setMsg(errormsg.message)
                         // setError(errormsg)
-                        throw new Error("Cannot convert Tiff to Jpg error: " + error)
+                        // throw new Error("Cannot convert Tiff to Jpg error: " + error)
+                        throw errormsg
                     })
 
                 })
@@ -148,7 +159,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                     } else {
                         console.error("Cannot convert Tiff to Jpg error: ", response)
                         // setMsg("Cannot convert Tiff to Jpg error:")
-                        throw new Error("Cannot convert Tiff to Jpg error: " + response)
+                        // throw new Error("Cannot convert Tiff to Jpg error: " + response)
+                        const errormsg = { ...response, message:"Cannot convert Tiff to Jpg error"}
+                        throw errormsg
                     }
                 })
 
@@ -207,7 +220,13 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         } else {
             setBackground(fileUrl.url)
 
-            return await addBackground(fileUrl)
+            let furl = fileUrl
+            furl.url = pathToRealStorage(fileUrl.url)
+
+            console.log("furl:", furl)
+
+            // return await addBackground(fileUrl)
+            return await addBackground(furl)
             .then((response) => {
                 console.log("response: ", response)
                 setImage(response.id)
@@ -254,9 +273,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         onChange: (value: string) => void,
     }
 
-    const gotoInfo = () => {
-        setCurrent(state.info)
-    }
+  
 
     const Metadata = (project: Project|any, subsampleid:string, current: state, nextState: state, onCancel: any , setCurrent: (state: state) => void) => {
         if ( current != state.metadata )  {
@@ -266,6 +283,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         console.log("Metadata project: ", project)
         console.log("Metadata subsambpleid: ", subsampleid) 
 
+        const gotoInfo = () => {
+            setCurrent(nextState)
+        }
 
         return (
             <>
@@ -313,7 +333,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         variant="solid"
                         data-testid="newProjectBtn"
                         // >Scan {actions[nextAction(action)]}</Button>
-                        onPress={() =>{ console.debug("go to Preview");   setCurrent(nextState) }}
+                        onPress={() =>{ console.debug("go to Preview"); setCurrent(nextState) }}
                         // onPress={onClick}
                     >Done - Launch Preview</Button>
                 </CardFooter>
@@ -423,6 +443,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         )
     }
 
+
     const ScannerSettings = (project: Project|any, nextState: state ) => {
         if ( current != state.scannerSettings ) {
             return <></>
@@ -524,26 +545,73 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
     }
 
 
-  const Scan = (step: number = 1, nextState: state) => {
+//   const Scan = (step: number = 1, nextState: state) => {
+//     if (current != state.scan1) {
+//       return <></>;
+//     }
+
+//     // const loaderProps : MyLoaderProps = {
+//     //   project: project,
+//     //   onChange: onChange,
+//     // };
+
+//     return (
+//       <>
+//         <h3>Scan {step}</h3>
+//         <Card className="inline-block size-full" data-testid="ScanCard">
+//           <CardBody>
+//               <Loader project={project} onChange={onChange} />
+//               {/* <Loader props={loaderProps} /> */}
+//           </CardBody>
+
+//           <CardFooter className="flex flex-row-reverse py-3">
+//             <div className="flex-row">
+//               <Image
+//                 className="height-auto"
+//                 src={background}
+//                 alt="uploaded image"
+//                 height={446}
+//               />
+//             </div>
+
+//             <Button
+//               disabled={isError || isLoading || !image}
+//               color="primary"
+//               variant="solid"
+//               data-testid="newProjectBtn"
+//               onPress={() => {
+//                 if (current == state.scan1) {
+//                   console.debug("go to 30s bis");
+//                   setCurrent(nextState);
+//                 } else {
+//                   console.debug("go to onClick");
+//                   onClick();
+//                 }
+//               }}
+//             >
+//               Validate
+//             </Button>
+//           </CardFooter>
+//         </Card>
+//       </>
+//     );
+//   };
+
+const Scan = (step: number = 1, nextState: state) => {
     if (current != state.scan1) {
       return <></>;
     }
 
-    // const loaderProps : MyLoaderProps = {
-    //   project: project,
-    //   onChange: onChange,
-    // };
+    const loaderProps : MyLoaderProps = {
+      project: project,
+      onChange: onChange,
+    };
 
-    return (
-      <>
-        <h3>Scan {step}</h3>
-        <Card className="inline-block size-full" data-testid="ScanCard">
-          <CardBody>
-              <Loader project={project} onChange={onChange} />
-              {/* <Loader props={loaderProps} /> */}
-          </CardBody>
+    const showImage = () => {
+        if (isError) { return <></> }
 
-          <CardFooter className="flex flex-row-reverse py-3">
+        return (
+        <>
             <div className="flex-row">
               <Image
                 className="height-auto"
@@ -561,15 +629,32 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
               onPress={() => {
                 if (current == state.scan1) {
                   console.debug("go to 30s bis");
+                  setBackground(imagePlaceholder)
                   setCurrent(nextState);
                 } else {
                   console.debug("go to onClick");
+                  setBackground(imagePlaceholder)
                   onClick();
                 }
               }}
             >
               Validate
             </Button>
+        </>
+        )
+    }
+
+    return (
+      <>
+        {/* <h3>Scan {step}</h3> */}
+        <Card className="inline-block size-full" data-testid="ScanCard">
+          <CardBody>
+              <Loader project={project} onChange={onChange} />
+              {/* <Loader props={loaderProps} /> */}
+          </CardBody>
+
+          <CardFooter className="flex flex-row-reverse py-3">
+            { showImage() }
           </CardFooter>
         </Card>
       </>
