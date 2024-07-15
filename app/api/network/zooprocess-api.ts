@@ -49,7 +49,7 @@ export interface MetadataTemplate {
   // countSubSample: number 
 }
 
-export interface Metadata {
+export interface IMetadata {
     name: string
     value: string
     type: string
@@ -58,7 +58,7 @@ export interface Metadata {
 export interface SubSample {
   id: string
   name: string
-  metadata: Array<Metadata>
+  metadata: Array<IMetadata>
   // scan: Array<Scan>
   scan: Array<Scan>
 }
@@ -66,7 +66,7 @@ export interface SubSample {
 export interface Scan {
   id: string
   url: string
-  metadata: Array<Metadata>
+  metadata: Array<IMetadata>
 }
 
 
@@ -96,7 +96,7 @@ export interface Instrument {
 export interface Sample {
     id: string
     name: string
-    metadata: Array<Metadata>
+    metadata: Array<IMetadata>
     subsample: Array<SubSample>
 }
 

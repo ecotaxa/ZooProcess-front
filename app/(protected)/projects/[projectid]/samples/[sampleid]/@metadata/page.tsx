@@ -12,7 +12,7 @@ import { Stack } from '@mui/material';
 // import { Project as IProject } from '@/app/api/network/zooprocess-api';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MyForm } from '@/components/myForm';
-import { Metadata } from '@/app/api/network/zooprocess-api';
+import {  IMetadata } from '@/app/api/network/zooprocess-api';
 
 interface pageProps {
     // params: {
@@ -21,7 +21,7 @@ interface pageProps {
     // }
   }
 
-const Metadata : FC<pageProps> = (params) => {
+const Metadata: FC<pageProps> = (params) => {
   const router = useRouter();
 
   const projectId = params.projectid;
@@ -57,9 +57,9 @@ const Metadata : FC<pageProps> = (params) => {
     subsample: Array<any>
   }
 
-  type DataReturn = Map<string,any>
+  type DataReturn = Map<string, any>
 
-  const fillSample = (sample:Sample) : DataReturn => { 
+  const fillSample = (sample: Sample) : DataReturn => { 
         console.log("fillSample: ", sample);
         
         let form: any = {}

@@ -19,7 +19,7 @@ import { MySpinner } from '@/components/mySpinner';
 import { ErrorComponent } from '@/components/ErrorComponent';
 import { useUserMe } from '@/app/api/user';
 import { useProject } from '@/app/api/projects';
-import { Metadata, SubSample, User } from '@/app/api/network/zooprocess-api';
+import { IMetadata, SubSample, User } from '@/app/api/network/zooprocess-api';
 // import { useProject } from '@/app/api/projects';
 // import { auth } from '@/auth';
  
@@ -196,7 +196,7 @@ const SubSampleForm =  ( params: pageProps) => {
           
           let form: any = {}
   
-          sample.metadata.forEach((element:Metadata) => {
+          sample.metadata.forEach((element:IMetadata) => {
             if ( element.type == 'number'){
               form[element.name] = Number(element.value)
             } else {
