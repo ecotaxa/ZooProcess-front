@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useProject } from "@/app/api/projects";
 import { MySpinner } from "@/components/mySpinner";
 import { ErrorComponent } from "@/components/ErrorComponent";
-import { Project, addBackground } from "@/app/api/network/zooprocess-api";
+import { Project, addBackground, addScan } from "@/app/api/network/zooprocess-api";
 
 // import { MyImage } from "@/components/myImage";
 // import { tree } from "next/dist/build/templates/app-page";
@@ -39,7 +39,7 @@ type pageProps = {
 
 
 
-const BackgroundScanPage : FC<pageProps> = ({params}) => {
+const ScanPage : FC<pageProps> = ({params}) => {
 
     const router = useRouter();
     const {projectid, sampleid, subsampleid} = params;
@@ -47,6 +47,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
     const [image , setImage] = useState(false);
     const imagePlaceholder = "/images/placeholder-image.jpg";
     const [background, setBackground] = useState(imagePlaceholder)
+    const [scan, setScan] = useState(undefined)
     // const [imageRGB , setImageRGB] = useState("");
     
     const noError : Array<any>= []
@@ -87,11 +88,12 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         
 
         console.log("New scan onChange:", fileUrl)
+        setScan(fileUrl.url)
 
         if (isTiff(fileUrl.url)){
             const data = {
                 src: pathToRealStorage(fileUrl.url),
-                dst: pathToRealStorage(fileUrl.url + ".jpg"),
+                // dst: pathToRealStorage(fileUrl.url + ".jpg"),
             }
 
             // const data_test = {
@@ -124,37 +126,33 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         furl.url = pathToRealStorage(fileUrl.url)
                         console.debug("furl: ", furl)
 
-                        // // return await addBackground(fileUrl)
+                        // return await addBackground(fileUrl)
                         // return await addBackground(furl)
-                        // .then((response) => {
-                        //     console.log("response: ", response)
-                        //     setImage(response.id)
-                        //     console.log("Go To the next page" )
-                        //     // router.push(`${response.id}`)
+                        return await addScan(furl)
+                        .then((response) => {
+                            console.log("addScan response: ", response)
+                            setImage(response.id)
+                            console.log("Go To the next page" )
+                            // router.push(`${response.id}`)
                 
-                        //     // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
-                        // })
-                        // .catch((error) => {
-                        //     console.error("addBackground catch error: ", error)
-                        //     return Promise.reject(error)
-                        // })
-
+                            // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
+                            return Promise.resolve(response)
+                        })
+                        .catch((error) => {
+                            console.error("addScan catch error: ", error)
+                            return Promise.reject(error)
+                        })
                         // here I make a plankton
-
-
-
-
                     })
                     .catch((error) => {
                         console.log("Cannot convert Tiff to Jpg error: ", error)
                         // const errormsg = { message:"Cannot convert Tiff to Jpg error: " + error}
-                        const errormsg = { ...error, message:"Cannot convert Tiff to Jpg error"}
+                        const errormsg = { ...error, message: "Cannot convert Tiff to Jpg error"}
                         // setMsg(errormsg.message)
                         // setError(errormsg)
                         // throw new Error("Cannot convert Tiff to Jpg error: " + error)
                         throw errormsg
                     })
-
                 })
                 .catch((response) => {
                     console.error("Resp NOK", response.status)
@@ -169,63 +167,16 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         console.error("Cannot convert Tiff to Jpg error: ", response)
                         // setMsg("Cannot convert Tiff to Jpg error:")
                         // throw new Error("Cannot convert Tiff to Jpg error: " + response)
-                        const errormsg = { ...response, message:"Cannot convert Tiff to Jpg error"}
+                        const errormsg = { ...response, message: "Cannot convert Tiff to Jpg error"}
                         throw errormsg
                     }
                 })
-
             }
             catch (error) {
                 console.error("error: ", error)
                 setError(error)
                 setMsg(error)
             }
-
-            // // const server = "http://localhost:8000"
-            // const server = "http://zooprocess.imev-mer.fr:8000"
-            // const url = server + "/convert/"
-            // console.error("url: ", url)
-            // console.error("data: ", data)
-            // const response = await fetch( url , {
-            //     method: "POST",
-            //     body: JSON.stringify(data),
-            //     // body: data_test,
-            //     headers: {
-            //         "Content-Type": "application/text",
-            //         "Access-Control-Allow-Origin":"no-cors"
-            //     },
-            // })
-            // .then((response) => {
-            //     if (response.ok) {
-            //         console.log("response: ", response)
-            //         response.text()
-            //         .then((imageUrl) => {
-            //             // setImageUrl(imageUrl);
-            //             console.log("imageUrl: ", imageUrl)
-            //             const localPath = pathToSessionStorage(imageUrl)
-            //             console.log("localPath: ", localPath)
-            //             setBackground(localPath)
-            //         })
-            //         .catch((error) => {
-            //             console.log("Cannot convert Tiff to Jpg error: ", error)
-            //             const errormsg = { message:"Cannot convert Tiff to Jpg error: " + error}
-            //             setMsg(errormsg.message)
-            //             setError(errormsg)
-            //         })
-            //     } else {
-            //         console.error("Resp NOK", response.status)
-            //         setError(response)
-            //         // setError([response])
-            //         if ( response.status == 422) {
-            //             console.error("The server do not accept your connection")
-            //             console.error("Can't connect: ", response)
-            //             setMsg("The server do not accept your connection")
-            //         } else {
-            //             console.error("Cannot convert Tiff to Jpg error: ", response)
-            //             setMsg("Cannot convert Tiff to Jpg error:")
-            //         }
-            //     }
-            // })
         } else {
             setBackground(fileUrl.url)
 
@@ -235,19 +186,18 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             console.log("furl:", furl)
 
             // return await addBackground(fileUrl)
-            return await addBackground(furl)
+            return await addScan(furl)
             .then((response) => {
                 console.log("response: ", response)
                 setImage(response.id)
                 console.log("Go To the next page" )
                 // router.push(`${response.id}`)
-    
                 // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
+                return Promise.resolve(response)
             })
             .catch((error) => {
                 return Promise.reject(error)
             })
-
         }
 
         // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
@@ -380,7 +330,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                 <div><b>instrument Id: </b> {props.project.instrumentId}</div>
                 <div><b>instrument Id JS: </b> {JSON.stringify(props.project.instrumentId)}</div>
                 {/* <Debug params={props}/> */}
-                <FileUploader instrumentId={instrumentId} projectId={props.project.id} onChange={onChange} />
+                <FileUploader instrumentId={instrumentId} projectId={props.project.id} sampleId={sampleid} subsampleId={subsampleid} onChange={onChange} />
                 {/* <FileUploader instrumentId={project.instrumentId} image={imageRGB} onChange={onChange} /> */}
             </>
         )
@@ -432,9 +382,49 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         }
         return (
             <>
-            Processing
+            <Card className="inline-block size-full"
+                data-testid="ScannerSettingsCard" 
+                >
+                <CardBody className="p-6">
+                    <div  className="bg-100 p-6">
+                        <h1 className="text-center">Processing.</h1>
+                        <br/><br/>
+                        <div >
+                            <h1>id: {subsampleid}</h1>
+                            <h1>bg: {background}</h1>
+                            <h1>sc: {scan}</h1>
+                        </div>
+                    </div>
+                </CardBody>
+
+                <CardFooter className="flex flex-row-reverse py-3">
+
+                    <Button 
+                        disabled={ isError || isLoading || !image }
+                        color="primary"
+                        // showAnchorIcon
+                        variant="solid"
+                        data-testid="newProjectBtn"
+                        // >Scan {actions[nextAction(action)]}</Button>
+                        onPress={() =>{   setCurrent(nextState) }}
+                        // onPress={onClick}
+                    >Continue</Button>
+
+                    <Button 
+                        disabled={ isError || isLoading || !image }
+                        color="secondary"
+                        // showAnchorIcon
+                        variant="solid"
+                        data-testid="newProjectBtn"
+                        // >Scan {actions[nextAction(action)]}</Button>
+                        onPress={() =>{ router.back() }} // push('/projects'); }}
+                        // onPress={onClick}
+                    >Cancel</Button>
+                </CardFooter>
+            </Card>               
             </>
         )
+ 
     }
 
     
@@ -446,6 +436,43 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         const handleTimerEnd = () => {
             setCurrent(nextState)
         }
+
+        return (
+            <>
+            <Card className="inline-block size-full"
+                data-testid="ScannerSettingsCard" 
+                >
+                <CardBody className="p-6">
+                    <Timer initialTime={30} onChange={handleTimerEnd} />
+                </CardBody>
+
+                <CardFooter className="flex flex-row-reverse py-3">
+
+                    <Button 
+                        disabled={ isError || isLoading || !image }
+                        color="primary"
+                        // showAnchorIcon
+                        variant="solid"
+                        data-testid="newProjectBtn"
+                        // >Scan {actions[nextAction(action)]}</Button>
+                        onPress={() =>{ setCurrent(nextState) }}
+                        // onPress={onClick}
+                    >Continue</Button>
+
+                    <Button 
+                        disabled={ isError || isLoading || !image }
+                        color="secondary"
+                        // showAnchorIcon
+                        variant="solid"
+                        data-testid="newProjectBtn"
+                        // >Scan {actions[nextAction(action)]}</Button>
+                        onPress={() =>{ router.push('/projects'); }}
+                        // onPress={onClick}
+                    >Cancel</Button>
+                </CardFooter>
+            </Card>               
+            </>
+        )
 
         return (
             <Timer initialTime={30} onChange={handleTimerEnd} />
@@ -637,12 +664,12 @@ const Scan = (step: number = 1, nextState: state) => {
               data-testid="newProjectBtn"
               onPress={() => {
                 if (current == state.scan1) {
-                  console.debug("go to 30s bis");
-                  setBackground(imagePlaceholder)
+                  console.debug("go to Process");
+                //   setBackground(imagePlaceholder)
                   setCurrent(nextState);
                 } else {
                   console.debug("go to onClick");
-                  setBackground(imagePlaceholder)
+                //   setBackground(imagePlaceholder)
                   onClick();
                 }
               }}
@@ -716,5 +743,5 @@ const Scan = (step: number = 1, nextState: state) => {
 
 }
 
-export default BackgroundScanPage;
+export default ScanPage;
 
