@@ -4,6 +4,7 @@ import { string } from 'prop-types';
 import axiosInstanse from '@/network/axiosInstanse';
 // import Samples from '@/app/projects/[projectid]/@samples/page';
 import { AuthError } from 'next-auth';
+import { subSeconds } from 'date-fns';
 
 
 export interface Drive {
@@ -213,16 +214,24 @@ export async function addBackground(image: {url:string, instrumentId:string, pro
 }
 
 
-export async function addScan(image: {url:string, instrumentId:string, projectid:string, subsampleid:string}) {
+// export async function addScan(image: {url:string, instrumentId:string, projectid:string, subsampleid:string}) {
+export async function addScan(image: {url:string, instrumentId:string, projectId:string, subsampleId:string}) {
   
   console.log("addScan:", image)
   const api = await axiosInstanse({})
 
   const data = {
-    url: image.url
+    url: image.url,
+    // subSampleId:image.subsampleId
   }
 
-  return await api.post(`/scan/${image.instrumentId}/url`, data )
+  // return await api.post(`/scan/${image.instrumentId}/url`, data )
+  // const url = `/scan/${image.instrumentId}/url` // ?projectId=${image.projectId}`
+  const url = `/scan/${image.subsampleId}/url` // ?projectId=${image.projectId}`
+  console.log("addBackground url:", url)
+  console.log("addBackground data:", data)
+  
+  return await api.post(url, data )
       .then(function (response) {
         console.log("addScan response: ", response);
         return response.data;
@@ -237,7 +246,8 @@ export async function addScan(image: {url:string, instrumentId:string, projectid
                 message: error.response.data || "Duplicate value"
               //}
             }
-            throw(msg)
+            // throw(msg)
+            return Promise.reject(new Error(msg.message))
           }
 
           // The request was made and the server responded with a status code
@@ -255,7 +265,8 @@ export async function addScan(image: {url:string, instrumentId:string, projectid
           console.log('Error', error.message);
         }
         console.log(error.config);
-        throw(error);
+        // throw(error);
+        return Promise.reject(new Error(error.message))
       });
 
 
