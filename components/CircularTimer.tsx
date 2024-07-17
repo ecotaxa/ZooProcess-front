@@ -72,7 +72,7 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
               fill={getPointColor(index)}
             />
           ))}
-          <text x={center} y={center} textAnchor="middle" dominantBaseline="central" fontSize="40">
+          <text x={center} y={center} textAnchor="middle" dominantBaseline="central" fontSize="140">
             {formatTime(time)}
           </text>
         </svg>
