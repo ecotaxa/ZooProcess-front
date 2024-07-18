@@ -31,7 +31,7 @@ const ProcessPage : FC<pageProps> = ({params, searchParams}) => {
 
     console.log("ProcessPage")
     console.log("params: ",params)
-    console.log("searchParams: ",searchParams)
+    console.log("searchParams: ", searchParams)
 
     const router = useRouter();
     const { projectid, sampleid, subsampleid } = params
