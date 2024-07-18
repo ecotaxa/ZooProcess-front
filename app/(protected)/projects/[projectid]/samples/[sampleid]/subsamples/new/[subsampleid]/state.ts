@@ -1,5 +1,5 @@
 
-export enum state {
+export enum eState {
     metadata = 0,
     scannerSettings = 1,
     info = 2,

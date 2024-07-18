@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useProject } from "@/app/api/projects";
 import { MySpinner } from "@/components/mySpinner";
 import { ErrorComponent } from "@/components/ErrorComponent";
-import { Project, addBackground, addScan } from "@/app/api/network/zooprocess-api";
+import { IProcess, Project, addBackground, addScan } from "@/app/api/network/zooprocess-api";
 
 // import { MyImage } from "@/components/myImage";
 // import { tree } from "next/dist/build/templates/app-page";
@@ -22,12 +22,15 @@ import { converttiff2jpg } from "@/api/convert";
 // import { set } from "date-fns";
 
 // import { Info } from 
-import {state, timelist} from "./state"
+import {eState, timelist} from "./state"
 import SubSampleForm from "./SubSampleFormUpdate";
 import { getFontDefinitionFromNetwork } from "next/dist/server/font-utils";
 import Timer from "@/components/timer";
+import { sub } from "date-fns";
+import { useProcess } from "@/app/api/process";
 // import SubSampleForm from "../SubSampleForm";
 // import Metadata from "./Metadata";
+import {Process} from "./Process";
 
 type pageProps = {
     params:{
@@ -55,9 +58,9 @@ const ScanPage : FC<pageProps> = ({params}) => {
     // const [error, setError] = useState({});
     // const anyError : any = {}
     // const [error, setError] = useState(anyError);
-    const [error, setError]:[any,any] = useState(null);
+    const [error, setError]:[any, any] = useState(null);
 
-    const [msg,setMsg]:[string,any] = useState("")
+    const [msg, setMsg]:[string, any] = useState("")
 
     const onClick = () => {
         console.log("validate scan")
@@ -75,7 +78,7 @@ const ScanPage : FC<pageProps> = ({params}) => {
         console.log("onPreviewClick")
     }
 
-    const isTiff = (fileUrl:string) : boolean => {
+    const isTiff = (fileUrl: string) : boolean => {
         console.log("fileUrl: ", fileUrl)
         // return true
         return fileUrl.endsWith(".tif") || fileUrl.endsWith(".tiff")
@@ -234,8 +237,8 @@ const ScanPage : FC<pageProps> = ({params}) => {
 
   
 
-    const Metadata = (project: Project|any, subsampleid:string, current: state, nextState: state, onCancel: any , setCurrent: (state: state) => void) => {
-        if ( current != state.metadata )  {
+    const Metadata = (project: Project|any, subsampleid:string, current: eState, nextState: eState, onCancel: any , setCurrent: (state: eState) => void) => {
+        if ( current != eState.metadata )  {
             return <></>
         }
     
@@ -253,8 +256,8 @@ const ScanPage : FC<pageProps> = ({params}) => {
         )
     }
 
-    const Prepare = ( current: state, nextState: state, setCurrent: /*(s:state)=>{}*/ any) => {
-        if ( current != state.info ) {
+    const Prepare = ( current: eState, nextState: eState, setCurrent: /*(s:state)=>{}*/ any) => {
+        if ( current != eState.info ) {
             return <></>
         }
     
@@ -340,24 +343,25 @@ const ScanPage : FC<pageProps> = ({params}) => {
         router.back()
     }
   
-    const step = (current:state) => {
+    const step = (current:eState) => {
         switch (current) {
-            case state.metadata:
-                return Metadata(project, subsampleid, current, state.scannerSettings, onCancel, setCurrentFn)
-            case state.scannerSettings:
-                return ScannerSettings(project, state.info)
-            case state.info:
-                return Prepare(current, state.preview, setCurrent)
-            case state.preview:
-                return Preview(state.thirtys1)
-            case state.thirtys1:
-                return ThirtySeconds(state.scan1)
-            case state.scan1:
-                return Scan(1,state.process)
-            case state.process:
-                return Process(state.check)
-            case state.check:
-                return Scan(2,state.end)
+            case eState.metadata:
+                return Metadata(project, subsampleid, current, eState.scannerSettings, onCancel, setCurrentFn)
+            case eState.scannerSettings:
+                return ScannerSettings(project, eState.info)
+            case eState.info:
+                return Prepare(current, eState.preview, setCurrent)
+            case eState.preview:
+                return Preview(eState.thirtys1)
+            case eState.thirtys1:
+                return ThirtySeconds(eState.scan1)
+            case eState.scan1:
+                return Scan(1,eState.process)
+            case eState.process:
+                const params = {current, nextState: eState.check, scan, background,  projectid, sampleid, subsampleid,setCurrentFn, onCancel}
+                return ( <Process {...params}></Process> )
+            case eState.check:
+                return Scan(2,eState.end)
 
             default:
                 return (
@@ -369,67 +373,85 @@ const ScanPage : FC<pageProps> = ({params}) => {
     }
     // let current = state.preview1 // 0 // 0.5
 
-    let [current, setCurrent ] = useState(state.metadata)
+    let [current, setCurrent ] = useState(eState.metadata)
 
-    let setCurrentFn = (current:state) => {
+    let setCurrentFn = (current:eState) => {
         setCurrent(current)
         console.log("setCurrent: ", current)
     }
 
-    const Process = (nextState: state) => {
-        if ( current != state.process )  {
-            return <></>
-        }
-        return (
-            <>
-            <Card className="inline-block size-full"
-                data-testid="ScannerSettingsCard" 
-                >
-                <CardBody className="p-6">
-                    <div  className="bg-100 p-6">
-                        <h1 className="text-center">Processing.</h1>
-                        <br/><br/>
-                        <div >
-                            <h1>id: {subsampleid}</h1>
-                            <h1>bg: {background}</h1>
-                            <h1>sc: {scan}</h1>
-                        </div>
-                    </div>
-                </CardBody>
+    // const Process = (nextState: state) => {
+    //     if ( current != state.process )  {
+    //         return <></>
+    //     }
 
-                <CardFooter className="flex flex-row-reverse py-3">
+    //     const { data, isLoading, isError } = useProcess(subsampleid)
 
-                    <Button 
-                        disabled={ isError || isLoading || !image }
-                        color="primary"
-                        // showAnchorIcon
-                        variant="solid"
-                        data-testid="newProjectBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
-                        onPress={() =>{   setCurrent(nextState) }}
-                        // onPress={onClick}
-                    >Continue</Button>
+    //     const showState = (data:Process|any) => {
+    //         if (isLoading) return <MySpinner />
+    //         if (isError) return <ErrorComponent error={isError}/>
+        
+    //         return (
+    //             <>
+    //                 {data.state}
+    //             </> 
+    //         )
+    //     }
 
-                    <Button 
-                        disabled={ isError || isLoading || !image }
-                        color="secondary"
-                        // showAnchorIcon
-                        variant="solid"
-                        data-testid="newProjectBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
-                        onPress={() =>{ router.back() }} // push('/projects'); }}
-                        // onPress={onClick}
-                    >Cancel</Button>
-                </CardFooter>
-            </Card>               
-            </>
-        )
+
+    //     return (
+    //         <>
+    //         <Card className="inline-block size-full"
+    //             data-testid="ScannerSettingsCard" 
+    //             >
+    //             <CardBody className="p-6">
+    //                 <div  className="bg-100 p-6">
+    //                     <h1 className="text-center">Processing.</h1>
+    //                     <br/><br/>
+    //                     <div >
+    //                         <h1>id: {subsampleid}</h1>
+    //                         <h1>bg: {background}</h1>
+    //                         <h1>sc: {scan}</h1>
+    //                     </div>
+    //                     <div>
+    //                         {showState(data)}
+    //                     </div>
+    //                 </div>
+    //             </CardBody>
+
+    //             <CardFooter className="flex flex-row-reverse py-3">
+
+    //                 <Button 
+    //                     disabled={ isError || isLoading || !image }
+    //                     color="primary"
+    //                     // showAnchorIcon
+    //                     variant="solid"
+    //                     data-testid="newProjectBtn"
+    //                     // >Scan {actions[nextAction(action)]}</Button>
+    //                     onPress={() =>{   setCurrent(nextState) }}
+    //                     // onPress={onClick}
+    //                 >Continue</Button>
+
+    //                 <Button 
+    //                     disabled={ isError || isLoading || !image }
+    //                     color="secondary"
+    //                     // showAnchorIcon
+    //                     variant="solid"
+    //                     data-testid="newProjectBtn"
+    //                     // >Scan {actions[nextAction(action)]}</Button>
+    //                     onPress={() =>{ router.back() }} // push('/projects'); }}
+    //                     // onPress={onClick}
+    //                 >Cancel</Button>
+    //             </CardFooter>
+    //         </Card>               
+    //         </>
+    //     )
  
-    }
+    // }
 
     
-    const ThirtySeconds = (nextState: state) => {
-        if ( current != state.thirtys1 ) {
+    const ThirtySeconds = (nextState: eState) => {
+        if ( current != eState.thirtys1 ) {
             return <></>
         }
     
@@ -480,8 +502,8 @@ const ScanPage : FC<pageProps> = ({params}) => {
     }
 
 
-    const ScannerSettings = (project: Project|any, nextState: state ) => {
-        if ( current != state.scannerSettings ) {
+    const ScannerSettings = (project: Project|any, nextState: eState ) => {
+        if ( current != eState.scannerSettings ) {
             return <></>
         }
 
@@ -535,8 +557,8 @@ const ScanPage : FC<pageProps> = ({params}) => {
     }
 
 
-    const Preview = (nextState: state ) => {
-        if ( current != state.preview ) {
+    const Preview = (nextState: eState ) => {
+        if ( current != eState.preview ) {
             return <></>
         }
 
@@ -633,8 +655,8 @@ const ScanPage : FC<pageProps> = ({params}) => {
 //     );
 //   };
 
-const Scan = (step: number = 1, nextState: state) => {
-    if (current != state.scan1) {
+const Scan = (step: number = 1, nextState: eState) => {
+    if (current != eState.scan1) {
       return <></>;
     }
 
@@ -663,7 +685,7 @@ const Scan = (step: number = 1, nextState: state) => {
               variant="solid"
               data-testid="newProjectBtn"
               onPress={() => {
-                if (current == state.scan1) {
+                if (current == eState.scan1) {
                   console.debug("go to Process");
                 //   setBackground(imagePlaceholder)
                   setCurrent(nextState);

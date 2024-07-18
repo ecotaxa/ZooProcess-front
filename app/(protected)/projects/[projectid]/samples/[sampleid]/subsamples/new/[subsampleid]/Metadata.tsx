@@ -1,11 +1,11 @@
 import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
-import { state } from "./state";
+import { eState } from "./state";
 import { Project } from "@/app/api/network/zooprocess-api";
 import { Debug } from "@/components/Debug";
 
 
-const Metadata = (project: Project|any, current: state, nextState: state, onCancel: any , setCurrent: (state: state) => void) => {
-    if ( current != state.metadata )  {
+const Metadata = (project: Project|any, current: eState, nextState: eState, onCancel: any , setCurrent: (state: eState) => void) => {
+    if ( current != eState.metadata )  {
         return <></>
     }
 
