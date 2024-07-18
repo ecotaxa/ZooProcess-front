@@ -146,6 +146,11 @@ export interface SubSamples {
   data:Array<SubSample>
 }
 
+export interface IProcess {
+  state:string,
+  vignettes:Array<Vignette>,
+}
+
 // export async function getProject(id:string){
 
 //     const response = await api.get<Project>(`/projects/${id}`);
@@ -373,6 +378,12 @@ export async function getProjects(){
     return response.data; 
 }
 
+export async function getProcess(url:string){
+  const api = await axiosInstanse({})
+  const response = await api.get<IProcess>(url);
+  console.log("getProcess response: ", response);
+  return response.data;
+}
 
 export async function getProject(url:string){
   const api = await axiosInstanse({})
