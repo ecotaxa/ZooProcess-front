@@ -12,38 +12,38 @@ export const ScannerEffect: React.FC<ScannerEffectProps> = ({
   scanDuration = 3000,
   onScanComplete 
 }) => {
-  const [scanProgress, setScanProgress] = useState(0);
+  const [curtainWidth, setCurtainWidth] = useState(100);
   const [showLine, setShowLine] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setScanProgress((prevProgress) => {
-        if (prevProgress >= 100) {
+      setCurtainWidth((prevWidth) => {
+        if (prevWidth <= 0) {
           clearInterval(interval);
           setShowLine(false);
           onScanComplete();
-          return 100;
+          return 0;
         }
-        return prevProgress + 1;
+        return prevWidth - 1;
       });
-    }, scanDuration / 100);
+    }, scanDuration / 50);
 
     return () => clearInterval(interval);
   }, [scanDuration, onScanComplete]);
 
   return (
     <div className={styles.scannerContainer}>
-      <div className={styles.scannerImageContainer}>
+      <img src={imageSrc} alt="Scanned" className={styles.scannerImage} />
+      <div 
+        className={styles.curtain} 
+        style={{ width: `${curtainWidth}%` }}
+      />
+      {showLine && (
         <div 
-          className={styles.scannerImage} 
-          style={{ 
-            backgroundImage: `url(${imageSrc})`,
-            width: `${scanProgress}%`
-          }} 
+          className={styles.scannerLine} 
+          style={{ left: `${100 - curtainWidth}%` }}
         />
-      </div>
-      {showLine && <div className={styles.scannerLine} style={{ left: `${scanProgress}%` }} />}
+      )}
     </div>
   );
-  
 };
