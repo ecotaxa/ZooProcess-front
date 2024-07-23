@@ -1,31 +1,36 @@
+
+
 .scannerContainer {
     position: relative;
     width: 100%;
-    height: 300px;
+    margin: 0 auto;
     overflow: hidden;
+    background-color: black;
+  }
+  
+  .scannerImageContainer {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* Adjust this to match your image's aspect ratio */
   }
   
   .scannerImage {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-  }
-  
-  .scannerOverlay {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    transition: height 0.1s linear;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: left center;
+    transition: width 0.1s linear;
   }
+  
   
   .scannerLine {
     position: absolute;
-    left: 0;
-    right: 0;
-    height: 2px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
     background-color: #00ff00;
     box-shadow: 0 0 10px 2px #00ff00;
   }

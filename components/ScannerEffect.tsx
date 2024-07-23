@@ -13,12 +13,14 @@ export const ScannerEffect: React.FC<ScannerEffectProps> = ({
   onScanComplete 
 }) => {
   const [scanProgress, setScanProgress] = useState(0);
+  const [showLine, setShowLine] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setScanProgress((prevProgress) => {
         if (prevProgress >= 100) {
           clearInterval(interval);
+          setShowLine(false);
           onScanComplete();
           return 100;
         }
@@ -31,9 +33,17 @@ export const ScannerEffect: React.FC<ScannerEffectProps> = ({
 
   return (
     <div className={styles.scannerContainer}>
-      <div className={styles.scannerImage} style={{ backgroundImage: `url(${imageSrc})` }} />
-      <div className={styles.scannerOverlay} style={{ height: `${100 - scanProgress}%` }} />
-      <div className={styles.scannerLine} style={{ top: `${scanProgress}%` }} />
+      <div className={styles.scannerImageContainer}>
+        <div 
+          className={styles.scannerImage} 
+          style={{ 
+            backgroundImage: `url(${imageSrc})`,
+            width: `${scanProgress}%`
+          }} 
+        />
+      </div>
+      {showLine && <div className={styles.scannerLine} style={{ left: `${scanProgress}%` }} />}
     </div>
   );
+  
 };
