@@ -49,12 +49,16 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
   };
 
   const updateCoordinate = (value: string, setter: React.Dispatch<React.SetStateAction<number>>, otherCoord: number, isLat: boolean): void => {
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue) && isValidCoordinate(isLat ? numValue : otherCoord, isLat ? otherCoord : numValue)) {
+      setter(numValue);
+      hasScaled.current = false;
+    }
+  };
+
+  const handleInputChange = (value: string, setter: React.Dispatch<React.SetStateAction<number>>, otherCoord: number, isLat: boolean) => {
     if (coordinateFormat === 'decimal') {
-      const numValue = parseFloat(value);
-      if (!isNaN(numValue) && isValidCoordinate(isLat ? numValue : otherCoord, isLat ? otherCoord : numValue)) {
-        setter(numValue);
-        hasScaled.current = false;
-      }
+      updateCoordinate(value, setter, otherCoord, isLat);
     } else {
       const decimalValue = convertToDecimal(value);
       if (!isNaN(decimalValue) && isValidCoordinate(isLat ? decimalValue : otherCoord, isLat ? otherCoord : decimalValue)) {
@@ -63,11 +67,6 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
       }
     }
   };
-
-  const updateStartLat = (value: string): void => updateCoordinate(value, setStartLat, startLng, true);
-  const updateStartLng = (value: string): void => updateCoordinate(value, setStartLng, startLat, false);
-  const updateEndLat = (value: string): void => updateCoordinate(value, setEndLat as React.Dispatch<React.SetStateAction<number>>, endLng ?? 0, true);
-  const updateEndLng = (value: string): void => updateCoordinate(value, setEndLng as React.Dispatch<React.SetStateAction<number>>, endLat ?? 0, false);
 
   const clearEndPoint = () => {
     setEndLat(undefined);
@@ -136,32 +135,24 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
           </Select>
           <Input
             label="Start Latitude"
-            type="number"
-            step="0.000001"
             value={coordinateFormat === 'decimal' ? startLat.toString() : convertToDMS(startLat)}
-            onChange={(e) => updateStartLat(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value, setStartLat, startLng, true)}
           />
           <Input
             label="Start Longitude"
-            type="number"
-            step="0.000001"
             value={coordinateFormat === 'decimal' ? startLng.toString() : convertToDMS(startLng)}
-            onChange={(e) => updateStartLng(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value, setStartLng, startLat, false)}
           />
           <Button onClick={clearEndPoint}>Clear End Point</Button>
           <Input
             label="End Latitude"
-            type="number"
-            step="0.0001"
             value={endLat !== undefined ? (coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)) : ''}
-            onChange={(e) => updateEndLat(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value, setEndLat as React.Dispatch<React.SetStateAction<number>>, endLng ?? 0, true)}
           />
           <Input
             label="End Longitude"
-            type="number"
-            step="0.0001"
             value={endLng !== undefined ? (coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)) : ''}
-            onChange={(e) => updateEndLng(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value, setEndLng as React.Dispatch<React.SetStateAction<number>>, endLat ?? 0, false)}
           />
         </div>
       </CardBody>
