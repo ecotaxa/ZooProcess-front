@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import { Input, Card, CardBody } from '@nextui-org/react';
+import 'leaflet/dist/leaflet.css';
 
 const MapComponent = () => {
   const [startPosition, setStartPosition] = useState([0, 0]);
@@ -26,7 +27,7 @@ const MapComponent = () => {
   return (
     <Card>
       <CardBody>
-        <MapContainer center={[0, 0]} zoom={2} style={{ height: '300px', width: '100%' }}>
+        <MapContainer center={[0, 0]} zoom={2} style={{ height: '400px', width: '100%' }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
