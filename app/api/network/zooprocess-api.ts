@@ -867,7 +867,8 @@ export async function getVignettes(url:string){
 export enum TaskType {
   separate = "separate",
   background = "background",
-  vignette = "vignette"
+  vignette = "vignette",
+  process = "process",
 }
 
 // export async function addTask(subsampleid:string, task:TaskType ){

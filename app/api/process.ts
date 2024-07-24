@@ -10,9 +10,9 @@ export function useProcess( projectid: string, sampleid: string, subsampleid: st
     // const { data={}, error=false, isLoading=true } = useSWR(`/process/${subsampleid}`, api.getProcess ,
     const { data={}, error=false, isLoading=true } = useSWR( url, api.getProcess ,
         {
-          revalidateIfStale: false,
+          revalidateIfStale: true,
           revalidateOnFocus: false,
-          revalidateOnReconnect: false,
+          revalidateOnReconnect: true,
           refreshInterval: 10
         })
   
