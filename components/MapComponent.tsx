@@ -182,96 +182,107 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               />
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
-              <Input
-                label="Start Lat Degrees"
-                value={startLatDMS.deg.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'deg', setStartLatDMS, setStartLat, false)}
-              />
-              <Input
-                label="Minutes"
-                value={startLatDMS.min.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'min', setStartLatDMS, setStartLat, false)}
-              />
-              <Input
-                label="Seconds"
-                value={startLatDMS.sec.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'sec', setStartLatDMS, setStartLat, false)}
-              />
-              <Select
-                selectedKeys={[startLatDMS.dir]}
-                onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLatDMS, setStartLat, false)}
-              >
-                <SelectItem key="N" value="N">North</SelectItem>
-                <SelectItem key="S" value="S">South</SelectItem>
-              </Select>
-              <Input
-                label="Start Lng Degrees"
-                value={startLngDMS.deg.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'deg', setStartLngDMS, setStartLng, true)}
-              />
-              <Input
-                label="Minutes"
-                value={startLngDMS.min.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'min', setStartLngDMS, setStartLng, true)}
-              />
-              <Input
-                label="Seconds"
-                value={startLngDMS.sec.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'sec', setStartLngDMS, setStartLng, true)}
-              />
-              <Select
-                selectedKeys={[startLngDMS.dir]}
-                onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLngDMS, setStartLng, true)}
-              >
-                <SelectItem key="E" value="E">East</SelectItem>
-                <SelectItem key="W" value="W">West</SelectItem>
-              </Select>
-              <Input
-                label="End Lat Degrees"
-                value={endLatDMS.deg.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'deg', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
-              />
-              <Input
-                label="Minutes"
-                value={endLatDMS.min.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'min', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
-              />
-              <Input
-                label="Seconds"
-                value={endLatDMS.sec.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
-              />
-              <Select
-                selectedKeys={[endLatDMS.dir]}
-                onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
-              >
-                <SelectItem key="N" value="N">North</SelectItem>
-                <SelectItem key="S" value="S">South</SelectItem>
-              </Select>
-              <Input
-                label="End Lng Degrees"
-                value={endLngDMS.deg.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'deg', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
-              />
-              <Input
-                label="Minutes"
-                value={endLngDMS.min.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'min', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
-              />
-              <Input
-                label="Seconds"
-                value={endLngDMS.sec.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
-              />
+<div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
+            {/* Start Latitude DMS inputs */}
+            <Input
+              label="Start Lat Degrees"
+              value={startLatDMS.deg.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'deg', setStartLatDMS, setStartLat, false)}
+            />
+            <Input
+              label="Minutes"
+              value={startLatDMS.min.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'min', setStartLatDMS, setStartLat, false)}
+            />
+            <Input
+              label="Seconds"
+              value={startLatDMS.sec.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'sec', setStartLatDMS, setStartLat, false)}
+            />
             <Select
-                selectedKeys={[endLngDMS.dir]}
-                onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
-              >
-                <SelectItem key="E" value="E">East</SelectItem>
-                <SelectItem key="W" value="W">West</SelectItem>
-              </Select>
+              selectedKeys={[startLatDMS.dir]}
+              onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLatDMS, setStartLat, false)}
+            >
+              <SelectItem key="N" value="N">North</SelectItem>
+              <SelectItem key="S" value="S">South</SelectItem>
+            </Select>
+          
+            {/* Start Longitude DMS inputs */}
+            <Input
+              label="Start Lng Degrees"
+              value={startLngDMS.deg.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'deg', setStartLngDMS, setStartLng, true)}
+            />
+            <Input
+              label="Minutes"
+              value={startLngDMS.min.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'min', setStartLngDMS, setStartLng, true)}
+            />
+            <Input
+              label="Seconds"
+              value={startLngDMS.sec.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'sec', setStartLngDMS, setStartLng, true)}
+            />
+            <Select
+              selectedKeys={[startLngDMS.dir]}
+              onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLngDMS, setStartLng, true)}
+            >
+              <SelectItem key="E" value="E">East</SelectItem>
+              <SelectItem key="W" value="W">West</SelectItem>
+            </Select>
             </div>
+          
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
+            {/* End Latitude DMS inputs */}
+            <Input
+              label="End Lat Degrees"
+              value={endLatDMS.deg.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'deg', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
+            />
+            <Input
+              label="Minutes"
+              value={endLatDMS.min.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'min', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
+            />
+            <Input
+              label="Seconds"
+              value={endLatDMS.sec.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
+            />
+            <Select
+              selectedKeys={[endLatDMS.dir]}
+              onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
+            >
+              <SelectItem key="N" value="N">North</SelectItem>
+              <SelectItem key="S" value="S">South</SelectItem>
+            </Select>
+          
+            {/* End Longitude DMS inputs */}
+            <Input
+              label="End Lng Degrees"
+              value={endLngDMS.deg.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'deg', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
+            />
+            <Input
+              label="Minutes"
+              value={endLngDMS.min.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'min', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
+            />
+            <Input
+              label="Seconds"
+              value={endLngDMS.sec.toString()}
+              onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
+            />
+            <Select
+              selectedKeys={[endLngDMS.dir]}
+              onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
+            >
+              <SelectItem key="E" value="E">East</SelectItem>
+              <SelectItem key="W" value="W">West</SelectItem>
+            </Select>
+          </div>
+          </div>
           )}
           <Button onClick={clearEndPoint} style={{ marginTop: '20px' }}>Clear End Point</Button>
         </div>
