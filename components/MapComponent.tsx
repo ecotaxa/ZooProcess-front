@@ -18,6 +18,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
   const [coordinateFormat, setCoordinateFormat] = useState<'decimal' | 'dms'>('decimal');
 
   const mapRef = useRef<L.Map | null>(null);
+  const hasScaled = useRef(false);
 
   const positionIcon = new L.Icon({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -47,6 +48,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     const newLat = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
     if (isValidCoordinate(newLat, startLng)) {
       setStartLat(newLat);
+      hasScaled.current = false;
     }
   };
 
@@ -54,6 +56,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     const newLng = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
     if (isValidCoordinate(startLat, newLng)) {
       setStartLng(newLng);
+      hasScaled.current = false;
     }
   };
 
@@ -61,6 +64,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     const newLat = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
     if (isValidCoordinate(newLat, endLng)) {
       setEndLat(newLat);
+      hasScaled.current = false;
     }
   };
 
@@ -68,23 +72,25 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     const newLng = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
     if (isValidCoordinate(endLat, newLng)) {
       setEndLng(newLng);
+      hasScaled.current = false;
     }
   };
 
   useEffect(() => {
-    if (mapRef.current && isValidCoordinate(startLat, startLng) && isValidCoordinate(endLat, endLng)) {
+    if (mapRef.current && isValidCoordinate(startLat, startLng) && isValidCoordinate(endLat, endLng) && !hasScaled.current) {
       const bounds = L.latLngBounds([
         [startLat, startLng],
         [endLat, endLng]
       ]);
       mapRef.current.fitBounds(bounds, {
-        padding: [25, 25], // Add padding to ensure markers are fully visible
-        maxZoom: 15 // Limit the maximum zoom level
+        padding: [50, 50],
+        maxZoom: 15
       });
+      hasScaled.current = true;
     }
     onCoordsChange([startLat, startLng], [endLat, endLng]);
   }, [startLat, startLng, endLat, endLng, onCoordsChange]);
-  
+
   return (
     <Card>
       <CardBody>
@@ -93,6 +99,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
           zoom={5}
           style={{ height: '400px', width: '100%' }}
           ref={mapRef}
+          zoomControl={true}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
