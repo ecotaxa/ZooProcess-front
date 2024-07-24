@@ -1,15 +1,31 @@
 "use client"
 
 import MapComponent from "@/components/MapComponent";
+import { useState } from "react";
 
-const Public = () => {
-
+const PublicPage: React.FC = () => {
+    
+    const [startCoords, setStartCoords] = useState<[number, number]>([48.8566, 2.3522]);
+    const [endCoords, setEndCoords] = useState<[number, number]>([51.5074, -0.1278]);
+  
+    const handleCoordsChange = (newStartCoords: [number, number], newEndCoords: [number, number]) => {
+      setStartCoords(newStartCoords);
+      setEndCoords(newEndCoords);
+      // You can perform additional actions with the updated coordinates here
+    };
+  
     return (
-        <div>
-            <h1>Public</h1>
-            <MapComponent></MapComponent>
-        </div>
+      <div>
+        <h1>Map Coordinates</h1>
+        <MapComponent
+          initialStartCoords={startCoords}
+          initialEndCoords={endCoords}
+          onCoordsChange={handleCoordsChange}
+        />
+        <p>Start Coordinates: {startCoords.join(', ')}</p>
+        <p>End Coordinates: {endCoords.join(', ')}</p>
+      </div>
     );
 };
 
-export default Public;
+export default PublicPage

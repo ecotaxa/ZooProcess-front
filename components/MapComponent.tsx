@@ -4,14 +4,17 @@ import L from 'leaflet';
 import { Input, Card, CardBody, Select, SelectItem } from '@nextui-org/react';
 import 'leaflet/dist/leaflet.css';
 
-const MapComponent: React.FC = () => {
-  const startPoint = { lat: 48.8566, lng: 2.3522 };
-  const endPoint = { lat: 51.5074, lng: -0.1278 };
+interface MapComponentProps {
+  initialStartCoords: [number, number];
+  initialEndCoords: [number, number];
+  onCoordsChange: (startCoords: [number, number], endCoords: [number, number]) => void;
+}
 
-  const [startLat, setStartLat] = useState<number>(startPoint.lat);
-  const [startLng, setStartLng] = useState<number>(startPoint.lng);
-  const [endLat, setEndLat] = useState<number>(endPoint.lat);
-  const [endLng, setEndLng] = useState<number>(endPoint.lng);
+const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initialEndCoords, onCoordsChange }) => {
+  const [startLat, setStartLat] = useState<number>(initialStartCoords[0]);
+  const [startLng, setStartLng] = useState<number>(initialStartCoords[1]);
+  const [endLat, setEndLat] = useState<number>(initialEndCoords[0]);
+  const [endLng, setEndLng] = useState<number>(initialEndCoords[1]);
   const [coordinateFormat, setCoordinateFormat] = useState<'decimal' | 'dms'>('decimal');
 
   const mapRef = useRef<L.Map | null>(null);
@@ -76,7 +79,8 @@ const MapComponent: React.FC = () => {
       ]);
       mapRef.current.fitBounds(bounds);
     }
-  }, [startLat, startLng, endLat, endLng]);
+    onCoordsChange([startLat, startLng], [endLat, endLng]);
+  }, [startLat, startLng, endLat, endLng, onCoordsChange]);
 
   return (
     <Card>
