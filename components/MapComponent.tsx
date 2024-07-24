@@ -2,25 +2,12 @@ import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import { Input, Card, CardBody } from '@nextui-org/react';
-import 'leaflet/dist/leaflet.css';
 
 const MapComponent = () => {
-//   const [startPosition, setStartPosition] = useState<[number, number]>([0, 0]);
-//   const [endPosition, setEndPosition] = useState<[number, number]>([0, 0]);
-
-  const [startPosition, setStartPosition] = useState([48.8566, 2.3522]); // Paris coordinates
-  const [endPosition, setEndPosition] = useState([51.5074, -0.1278]); // London coordinates
-  
-
-  const startPositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const [lat, lng] = e.target.value.split(',').map(Number);
-    setStartPosition([lat, lng]);
-  };
-
-  const endPositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const [lat, lng] = e.target.value.split(',').map(Number);
-    setEndPosition([lat, lng]);
-  };
+  const [startLat, setStartLat] = useState(48.8566);
+  const [startLng, setStartLng] = useState(2.3522);
+  const [endLat, setEndLat] = useState(51.5074);
+  const [endLng, setEndLng] = useState(-0.1278);
 
   const positionIcon = new L.Icon({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -33,38 +20,42 @@ const MapComponent = () => {
   return (
     <Card>
       <CardBody>
-        <MapContainer center={[0, 0]} zoom={2} style={{ height: '400px', width: '100%' }}>
+        <MapContainer center={[(startLat + endLat) / 2, (startLng + endLng) / 2]} zoom={5} style={{ height: '400px', width: '100%' }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
-          {startPosition[0] !== 0 && startPosition[1] !== 0 && (
-            <Marker position={startPosition} icon={positionIcon}>
-              <Popup>Start Position</Popup>
-            </Marker>
-          )}
-          {endPosition[0] !== 0 && endPosition[1] !== 0 && (
-            <Marker position={endPosition} icon={positionIcon}>
-              <Popup>End Position</Popup>
-            </Marker>
-          )}
-          {startPosition[0] !== 0 && startPosition[1] !== 0 && endPosition[0] !== 0 && endPosition[1] !== 0 && (
-            <Polyline positions={[startPosition, endPosition]} color="red" />
-          )}
+          <Marker position={[startLat, startLng]} icon={positionIcon}>
+            <Popup>Start Position</Popup>
+          </Marker>
+          <Marker position={[endLat, endLng]} icon={positionIcon}>
+            <Popup>End Position</Popup>
+          </Marker>
+          <Polyline positions={[[startLat, startLng], [endLat, endLng]]} color="red" />
         </MapContainer>
         <Input 
-          label="Start Position"
-          fullWidth
-          value={startPosition.join(',')} 
-          onChange={startPositionChange}
-          placeholder="Enter start position (lat,lng)"
+          label="Start Latitude"
+          type="number"
+          value={startLat.toString()} 
+          onChange={(e) => setStartLat(parseFloat(e.target.value))}
         />
         <Input 
-          label="End Position"
-          fullWidth
-          value={endPosition.join(',')} 
-          onChange={endPositionChange}
-          placeholder="Enter end position (lat,lng)"
+          label="Start Longitude"
+          type="number"
+          value={startLng.toString()} 
+          onChange={(e) => setStartLng(parseFloat(e.target.value))}
+        />
+        <Input 
+          label="End Latitude"
+          type="number"
+          value={endLat.toString()} 
+          onChange={(e) => setEndLat(parseFloat(e.target.value))}
+        />
+        <Input 
+          label="End Longitude"
+          type="number"
+          value={endLng.toString()} 
+          onChange={(e) => setEndLng(parseFloat(e.target.value))}
         />
       </CardBody>
     </Card>
