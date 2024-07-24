@@ -40,41 +40,34 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
   };
 
   const convertToDecimal = (dms: string): number => {
-    const parts = dms.split(/[°'"]+/).map(part => parseFloat(part));
-    return parts[0] + parts[1] / 60 + parts[2] / 3600;
+    const parts = dms.split(/[°'"]+/).map(part => part.trim());
+    let result = 0;
+    if (parts[0]) result += parseFloat(parts[0]);
+    if (parts[1]) result += parseFloat(parts[1]) / 60;
+    if (parts[2]) result += parseFloat(parts[2]) / 3600;
+    return result;
   };
 
-  const updateStartLat = (value: string): void => {
-    const newLat = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
-    if (isValidCoordinate(newLat, startLng)) {
-      setStartLat(newLat);
-      hasScaled.current = false;
+  const updateCoordinate = (value: string, setter: React.Dispatch<React.SetStateAction<number>>, otherCoord: number, isLat: boolean): void => {
+    if (coordinateFormat === 'decimal') {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue) && isValidCoordinate(isLat ? numValue : otherCoord, isLat ? otherCoord : numValue)) {
+        setter(numValue);
+        hasScaled.current = false;
+      }
+    } else {
+      const decimalValue = convertToDecimal(value);
+      if (!isNaN(decimalValue) && isValidCoordinate(isLat ? decimalValue : otherCoord, isLat ? otherCoord : decimalValue)) {
+        setter(decimalValue);
+        hasScaled.current = false;
+      }
     }
   };
 
-  const updateStartLng = (value: string): void => {
-    const newLng = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
-    if (isValidCoordinate(startLat, newLng)) {
-      setStartLng(newLng);
-      hasScaled.current = false;
-    }
-  };
-
-  const updateEndLat = (value: string): void => {
-    const newLat = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
-    if (isValidCoordinate(newLat, endLng ?? 0)) {
-      setEndLat(newLat);
-      hasScaled.current = false;
-    }
-  };
-
-  const updateEndLng = (value: string): void => {
-    const newLng = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
-    if (isValidCoordinate(endLat ?? 0, newLng)) {
-      setEndLng(newLng);
-      hasScaled.current = false;
-    }
-  };
+  const updateStartLat = (value: string): void => updateCoordinate(value, setStartLat, startLng, true);
+  const updateStartLng = (value: string): void => updateCoordinate(value, setStartLng, startLat, false);
+  const updateEndLat = (value: string): void => updateCoordinate(value, setEndLat as React.Dispatch<React.SetStateAction<number>>, endLng ?? 0, true);
+  const updateEndLng = (value: string): void => updateCoordinate(value, setEndLng as React.Dispatch<React.SetStateAction<number>>, endLat ?? 0, false);
 
   const clearEndPoint = () => {
     setEndLat(undefined);
@@ -124,11 +117,11 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
             <Polyline positions={[[startLat, startLng], [endLat, endLng]]} color="red" />
           )}
         </MapContainer>
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'auto 1fr 1fr', 
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'auto 1fr 1fr',
           gridTemplateRows: 'auto auto',
-          gap: '10px', 
+          gap: '10px',
           alignItems: 'flex-end'
         }}>
           <Select
@@ -141,24 +134,32 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
             <SelectItem key="decimal" value="decimal">Decimal Degrees</SelectItem>
             <SelectItem key="dms" value="dms">Degrees, Minutes, Seconds</SelectItem>
           </Select>
-          <Input 
+          <Input
             label="Start Latitude"
+            type="number"
+            step="0.000001"
             value={coordinateFormat === 'decimal' ? startLat.toString() : convertToDMS(startLat)}
             onChange={(e) => updateStartLat(e.target.value)}
           />
-          <Input 
+          <Input
             label="Start Longitude"
+            type="number"
+            step="0.000001"
             value={coordinateFormat === 'decimal' ? startLng.toString() : convertToDMS(startLng)}
             onChange={(e) => updateStartLng(e.target.value)}
           />
           <Button onClick={clearEndPoint}>Clear End Point</Button>
-          <Input 
+          <Input
             label="End Latitude"
+            type="number"
+            step="0.0001"
             value={endLat !== undefined ? (coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)) : ''}
             onChange={(e) => updateEndLat(e.target.value)}
           />
-          <Input 
+          <Input
             label="End Longitude"
+            type="number"
+            step="0.0001"
             value={endLng !== undefined ? (coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)) : ''}
             onChange={(e) => updateEndLng(e.target.value)}
           />
