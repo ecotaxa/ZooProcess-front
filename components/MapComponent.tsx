@@ -199,7 +199,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 onChange={(e) => updateDMSState(e.target.value, 'sec', setStartLatDMS, setStartLat, false)}
               />
               <Select
-                value={startLatDMS.dir}
+                selectedKeys={[startLatDMS.dir]}
                 onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLatDMS, setStartLat, false)}
               >
                 <SelectItem key="N" value="N">North</SelectItem>
@@ -221,7 +221,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 onChange={(e) => updateDMSState(e.target.value, 'sec', setStartLngDMS, setStartLng, true)}
               />
               <Select
-                value={startLngDMS.dir}
+                selectedKeys={[startLngDMS.dir]}
                 onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLngDMS, setStartLng, true)}
               >
                 <SelectItem key="E" value="E">East</SelectItem>
@@ -243,7 +243,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
               />
               <Select
-                value={endLatDMS.dir}
+                selectedKeys={[endLatDMS.dir]}
                 onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
               >
                 <SelectItem key="N" value="N">North</SelectItem>
@@ -265,7 +265,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
               />
             <Select
-                value={endLngDMS.dir}
+                selectedKeys={[endLngDMS.dir]}
                 onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
               >
                 <SelectItem key="E" value="E">East</SelectItem>
