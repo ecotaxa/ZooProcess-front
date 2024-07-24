@@ -5,15 +5,21 @@ import { Input, Card, CardBody } from '@nextui-org/react';
 import 'leaflet/dist/leaflet.css';
 
 const MapComponent = () => {
-  const [startPosition, setStartPosition] = useState([0, 0]);
-  const [endPosition, setEndPosition] = useState([0, 0]);
+//   const [startPosition, setStartPosition] = useState<[number, number]>([0, 0]);
+//   const [endPosition, setEndPosition] = useState<[number, number]>([0, 0]);
 
-  const startPositionChange = (e) => {
-    setStartPosition(e.target.value.split(',').map(Number));
+  const [startPosition, setStartPosition] = useState([48.8566, 2.3522]); // Paris coordinates
+  const [endPosition, setEndPosition] = useState([51.5074, -0.1278]); // London coordinates
+  
+
+  const startPositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [lat, lng] = e.target.value.split(',').map(Number);
+    setStartPosition([lat, lng]);
   };
 
-  const endPositionChange = (e) => {
-    setEndPosition(e.target.value.split(',').map(Number));
+  const endPositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [lat, lng] = e.target.value.split(',').map(Number);
+    setEndPosition([lat, lng]);
   };
 
   const positionIcon = new L.Icon({
@@ -30,7 +36,7 @@ const MapComponent = () => {
         <MapContainer center={[0, 0]} zoom={2} style={{ height: '400px', width: '100%' }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            attribution='© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
           {startPosition[0] !== 0 && startPosition[1] !== 0 && (
             <Marker position={startPosition} icon={positionIcon}>
