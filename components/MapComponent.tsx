@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import L from 'leaflet';
 import { Input, Card, CardBody, Select, SelectItem, Button } from '@nextui-org/react';
 import 'leaflet/dist/leaflet.css';
+// import { useMap } from 'react-leaflet';
 
 interface MapComponentProps {
   initialStartCoords: [number, number];
@@ -21,8 +22,11 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
   const [startLngDMS, setStartLngDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'E' });
   const [endLatDMS, setEndLatDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'N' });
   const [endLngDMS, setEndLngDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'E' });
+//   const [shouldFitBounds, setShouldFitBounds] = useState(true);
 
   const mapRef = useRef<L.Map | null>(null);
+//   const [mapCenter, setMapCenter] = useState<[number, number]>([startLat, startLng]);
+//   const [mapZoom, setMapZoom] = useState(5);
 
   const blueIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
@@ -106,6 +110,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     setEndLng(undefined);
     setEndLatDMS({ deg: 0, min: 0, sec: 0, dir: 'N' });
     setEndLngDMS({ deg: 0, min: 0, sec: 0, dir: 'E' });
+    // setShouldFitBounds(true);
   };
 
   useEffect(() => {
@@ -117,7 +122,25 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     }
   }, [startLat, startLng, endLat, endLng]);
 
-  useEffect(() => {
+//   useEffect(() => {
+//     if (mapRef.current && isValidCoordinate(startLat, startLng)) {
+//       const bounds = endLat !== undefined && endLng !== undefined && isValidCoordinate(endLat, endLng)
+//         ? L.latLngBounds([[startLat, startLng], [endLat, endLng]])
+//         : L.latLngBounds([[startLat, startLng]]);
+      
+//       const newCenter = bounds.getCenter();
+//       const currentCenter = mapRef.current.getCenter();
+      
+//       if (newCenter.distanceTo(currentCenter) > 1000) {
+//         mapRef.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+//         setMapCenter([newCenter.lat, newCenter.lng]);
+//         setMapZoom(mapRef.current.getZoom());
+//       }
+//     }
+//     onCoordsChange([startLat, startLng], endLat !== undefined && endLng !== undefined ? [endLat, endLng] : undefined);
+//   }, [startLat, startLng, endLat, endLng, onCoordsChange]);
+  
+useEffect(() => {
     if (mapRef.current && isValidCoordinate(startLat, startLng)) {
       const bounds = endLat !== undefined && endLng !== undefined && isValidCoordinate(endLat, endLng)
         ? L.latLngBounds([[startLat, startLng], [endLat, endLng]])
@@ -126,6 +149,20 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     }
     onCoordsChange([startLat, startLng], endLat !== undefined && endLng !== undefined ? [endLat, endLng] : undefined);
   }, [startLat, startLng, endLat, endLng, onCoordsChange]);
+
+  
+//   const MapEvents = () => {
+//     const map = useMap();
+    
+//     useEffect(() => {
+//       map.on('zoomend moveend', () => {
+//         setMapCenter([map.getCenter().lat, map.getCenter().lng]);
+//         setMapZoom(map.getZoom());
+//       });
+//     }, [map]);
+  
+//     return null;
+//   };
 
   return (
     <Card>
@@ -136,7 +173,16 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
           style={{ height: '400px', width: '100%' }}
           ref={mapRef}
           zoomControl={true}
+        //   whenReady={(map) => {
+        //     map.on('zoomend moveend', () => {
+        //       setMapCenter([map.getCenter().lat, map.getCenter().lng]);
+        //       setMapZoom(map.getZoom());
+        //     });
+        // }}
         >
+         
+         {/* ... map layers and markers */}
+  
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -154,6 +200,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
           {isValidCoordinate(startLat, startLng) && isValidCoordinate(endLat ?? 0, endLng ?? 0) && endLat !== undefined && endLng !== undefined && (
             <Polyline positions={[[startLat, startLng], [endLat, endLng]]} color="red" />
           )}
+          {/* <MapEvents /> */}
         </MapContainer>
         <div style={{ marginTop: '20px' }}>
           <Select
