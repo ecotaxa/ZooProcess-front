@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
-import { Input, Card, CardBody, Select, SelectItem } from '@nextui-org/react';
+import { Input, Card, CardBody, Select, SelectItem, Button } from '@nextui-org/react';
 import 'leaflet/dist/leaflet.css';
 
 interface MapComponentProps {
@@ -76,6 +76,12 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     }
   };
 
+  const clearEndPoint = () => {
+    setEndLat(undefined);
+    setEndLng(undefined);
+    hasScaled.current = false;
+  };
+
   useEffect(() => {
     if (mapRef.current && isValidCoordinate(startLat, startLng) && !hasScaled.current) {
       const bounds = endLat !== undefined && endLng !== undefined
@@ -140,20 +146,21 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               onChange={(e) => updateStartLng(e.target.value)}
             />
           </div>
-          {endLat !== undefined && endLng !== undefined && (
-            <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+            <div style={{ display: 'flex', gap: '10px', flex: 1 }}>
               <Input 
                 label="End Latitude"
-                value={coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)}
+                value={endLat !== undefined ? (coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)) : ''}
                 onChange={(e) => updateEndLat(e.target.value)}
               />
               <Input 
                 label="End Longitude"
-                value={coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)}
+                value={endLng !== undefined ? (coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)) : ''}
                 onChange={(e) => updateEndLng(e.target.value)}
               />
             </div>
-          )}
+            <Button onClick={clearEndPoint}>Clear End Point</Button>
+          </div>
         </div>
       </CardBody>
     </Card>
