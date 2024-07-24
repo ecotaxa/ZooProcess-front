@@ -20,7 +20,7 @@ const PublicPage: React.FC = () => {
         <h1>Map Coordinates</h1>
         <MapComponent
           initialStartCoords={startCoords}
-        //   initialEndCoords={endCoords}
+          initialEndCoords={endCoords}
           onCoordsChange={handleCoordsChange}
         />
         <p>Start Coordinates: {startCoords.join(', ')}</p>

@@ -37,13 +37,13 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
   };
 
-  const convertToDMS = (decimal: number): { deg: number; min: number; sec: number; dir: string } => {
+  const convertToDMS = (decimal: number, isLongitude: boolean): { deg: number; min: number; sec: number; dir: string } => {
     const absolute = Math.abs(decimal);
     const deg = Math.floor(absolute);
     const min = Math.floor((absolute - deg) * 60);
-    const sec = ((absolute - deg - min / 60) * 3600).toFixed(2);
-    const dir = decimal >= 0 ? (decimal === 0 ? 'N' : 'N') : 'S';
-    return { deg, min, sec: parseFloat(sec), dir };
+    const sec = parseFloat(((absolute - deg - min / 60) * 3600).toFixed(2));
+    const dir = isLongitude ? (decimal >= 0 ? 'E' : 'W') : (decimal >= 0 ? 'N' : 'S');
+    return { deg, min, sec, dir };
   };
 
   const convertToDecimal = (dms: { deg: number; min: number; sec: number; dir: string }): number => {
@@ -58,7 +58,8 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     value: string,
     field: 'deg' | 'min' | 'sec' | 'dir',
     setter: React.Dispatch<React.SetStateAction<{ deg: number; min: number; sec: number; dir: string }>>,
-    decimalSetter: React.Dispatch<React.SetStateAction<number>>
+    decimalSetter: React.Dispatch<React.SetStateAction<number>>,
+    isLongitude: boolean
   ) => {
     setter(prev => {
       const updated = { ...prev, [field]: field === 'dir' ? value : parseFloat(value) || 0 };
@@ -71,12 +72,13 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
   const updateDecimalState = (
     value: string,
     setter: React.Dispatch<React.SetStateAction<number>>,
-    dmsSetter: React.Dispatch<React.SetStateAction<{ deg: number; min: number; sec: number; dir: string }>>
+    dmsSetter: React.Dispatch<React.SetStateAction<{ deg: number; min: number; sec: number; dir: string }>>,
+    isLongitude: boolean
   ) => {
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
       setter(numValue);
-      const dms = convertToDMS(numValue);
+      const dms = convertToDMS(numValue, isLongitude);
       dmsSetter(dms);
     }
   };
@@ -90,29 +92,23 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
   };
 
   useEffect(() => {
-    if (mapRef.current && isValidCoordinate(startLat, startLng) && !hasScaled.current) {
-      const bounds = endLat !== undefined && endLng !== undefined
+    if (mapRef.current && isValidCoordinate(startLat, startLng)) {
+      const bounds = endLat !== undefined && endLng !== undefined && isValidCoordinate(endLat, endLng)
         ? L.latLngBounds([[startLat, startLng], [endLat, endLng]])
         : L.latLngBounds([[startLat, startLng]]);
-      mapRef.current.fitBounds(bounds, {
-        padding: [50, 50],
-        maxZoom: 15
-      });
-      hasScaled.current = true;
+      mapRef.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
     }
-    onCoordsChange([startLat, startLng], endLat !== undefined && endLng !== undefined ? [endLat, endLng] : undefined);
-  }, [startLat, startLng, endLat, endLng, onCoordsChange]);
+  }, [startLat, startLng, endLat, endLng]);
 
   useEffect(() => {
-    if (coordinateFormat === 'dms') {
-      setStartLatDMS(convertToDMS(startLat));
-      setStartLngDMS(convertToDMS(startLng));
-      if (endLat !== undefined && endLng !== undefined) {
-        setEndLatDMS(convertToDMS(endLat));
-        setEndLngDMS(convertToDMS(endLng));
-      }
+    setStartLatDMS(convertToDMS(startLat, false));
+    setStartLngDMS(convertToDMS(startLng, true));
+    if (endLat !== undefined && endLng !== undefined) {
+      setEndLatDMS(convertToDMS(endLat, false));
+      setEndLngDMS(convertToDMS(endLng, true));
     }
-  }, [coordinateFormat]);
+  }, [startLat, startLng, endLat, endLng]);
+  
 
   return (
     <Card>
@@ -159,22 +155,22 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               <Input
                 label="Start Latitude"
                 value={startLat.toString()}
-                onChange={(e) => updateDecimalState(e.target.value, setStartLat, setStartLatDMS)}
+                onChange={(e) => updateDecimalState(e.target.value, setStartLat, setStartLatDMS, false)}
               />
               <Input
                 label="Start Longitude"
                 value={startLng.toString()}
-                onChange={(e) => updateDecimalState(e.target.value, setStartLng, setStartLngDMS)}
+                onChange={(e) => updateDecimalState(e.target.value, setStartLng, setStartLngDMS, true)}
               />
               <Input
                 label="End Latitude"
                 value={endLat !== undefined ? endLat.toString() : ''}
-                onChange={(e) => updateDecimalState(e.target.value, setEndLat as React.Dispatch<React.SetStateAction<number>>, setEndLatDMS)}
+                onChange={(e) => updateDecimalState(e.target.value, setEndLat as React.Dispatch<React.SetStateAction<number>>, setEndLatDMS, false)}
               />
               <Input
                 label="End Longitude"
                 value={endLng !== undefined ? endLng.toString() : ''}
-                onChange={(e) => updateDecimalState(e.target.value, setEndLng as React.Dispatch<React.SetStateAction<number>>, setEndLngDMS)}
+                onChange={(e) => updateDecimalState(e.target.value, setEndLng as React.Dispatch<React.SetStateAction<number>>, setEndLngDMS, true)}
               />
             </div>
           ) : (
@@ -182,21 +178,21 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               <Input
                 label="Start Lat Degrees"
                 value={startLatDMS.deg.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'deg', setStartLatDMS, setStartLat)}
+                onChange={(e) => updateDMSState(e.target.value, 'deg', setStartLatDMS, setStartLat, false)}
               />
               <Input
                 label="Minutes"
                 value={startLatDMS.min.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'min', setStartLatDMS, setStartLat)}
+                onChange={(e) => updateDMSState(e.target.value, 'min', setStartLatDMS, setStartLat, false)}
               />
               <Input
                 label="Seconds"
                 value={startLatDMS.sec.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'sec', setStartLatDMS, setStartLat)}
+                onChange={(e) => updateDMSState(e.target.value, 'sec', setStartLatDMS, setStartLat, false)}
               />
               <Select
                 value={startLatDMS.dir}
-                onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLatDMS, setStartLat)}
+                onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLatDMS, setStartLat, false)}
               >
                 <SelectItem key="N" value="N">N</SelectItem>
                 <SelectItem key="S" value="S">S</SelectItem>
@@ -204,21 +200,21 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               <Input
                 label="Start Lng Degrees"
                 value={startLngDMS.deg.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'deg', setStartLngDMS, setStartLng)}
+                onChange={(e) => updateDMSState(e.target.value, 'deg', setStartLngDMS, setStartLng, true)}
               />
               <Input
                 label="Minutes"
                 value={startLngDMS.min.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'min', setStartLngDMS, setStartLng)}
+                onChange={(e) => updateDMSState(e.target.value, 'min', setStartLngDMS, setStartLng, true)}
               />
               <Input
                 label="Seconds"
                 value={startLngDMS.sec.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'sec', setStartLngDMS, setStartLng)}
+                onChange={(e) => updateDMSState(e.target.value, 'sec', setStartLngDMS, setStartLng, true)}
               />
               <Select
                 value={startLngDMS.dir}
-                onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLngDMS, setStartLng)}
+                onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLngDMS, setStartLng, true)}
               >
                 <SelectItem key="E" value="E">E</SelectItem>
                 <SelectItem key="W" value="W">W</SelectItem>
@@ -226,21 +222,21 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               <Input
                 label="End Lat Degrees"
                 value={endLatDMS.deg.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'deg', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>)}
+                onChange={(e) => updateDMSState(e.target.value, 'deg', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
               />
               <Input
                 label="Minutes"
                 value={endLatDMS.min.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'min', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>)}
+                onChange={(e) => updateDMSState(e.target.value, 'min', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
               />
               <Input
                 label="Seconds"
                 value={endLatDMS.sec.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>)}
+                onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
               />
               <Select
                 value={endLatDMS.dir}
-                onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>)}
+                onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
               >
                 <SelectItem key="N" value="N">N</SelectItem>
                 <SelectItem key="S" value="S">S</SelectItem>
@@ -248,21 +244,21 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               <Input
                 label="End Lng Degrees"
                 value={endLngDMS.deg.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'deg', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>)}
+                onChange={(e) => updateDMSState(e.target.value, 'deg', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
               />
               <Input
                 label="Minutes"
                 value={endLngDMS.min.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'min', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>)}
+                onChange={(e) => updateDMSState(e.target.value, 'min', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
               />
               <Input
                 label="Seconds"
                 value={endLngDMS.sec.toString()}
-                onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>)}
+                onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
               />
               <Select
                 value={endLngDMS.dir}
-                onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>)}
+                onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
               >
                 <SelectItem key="E" value="E">E</SelectItem>
                 <SelectItem key="W" value="W">W</SelectItem>
