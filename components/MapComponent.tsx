@@ -4,17 +4,17 @@ import L from 'leaflet';
 import { Input, Card, CardBody, Select, SelectItem } from '@nextui-org/react';
 import 'leaflet/dist/leaflet.css';
 
-const MapComponent = () => {
+const MapComponent: React.FC = () => {
   const startPoint = { lat: 48.8566, lng: 2.3522 };
   const endPoint = { lat: 51.5074, lng: -0.1278 };
 
-  const [startLat, setStartLat] = useState(startPoint.lat);
-  const [startLng, setStartLng] = useState(startPoint.lng);
-  const [endLat, setEndLat] = useState(endPoint.lat);
-  const [endLng, setEndLng] = useState(endPoint.lng);
-  const [coordinateFormat, setCoordinateFormat] = useState('decimal');
+  const [startLat, setStartLat] = useState<number>(startPoint.lat);
+  const [startLng, setStartLng] = useState<number>(startPoint.lng);
+  const [endLat, setEndLat] = useState<number>(endPoint.lat);
+  const [endLng, setEndLng] = useState<number>(endPoint.lng);
+  const [coordinateFormat, setCoordinateFormat] = useState<'decimal' | 'dms'>('decimal');
 
-  const mapRef = useRef(null);
+  const mapRef = useRef<L.Map | null>(null);
 
   const positionIcon = new L.Icon({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -24,20 +24,52 @@ const MapComponent = () => {
     iconSize: [25, 41],
   });
 
-  const convertToDMS = (decimal) => {
+  const isValidCoordinate = (lat: number, lng: number): boolean => {
+    return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+  };
+
+  const convertToDMS = (decimal: number): string => {
     const degrees = Math.floor(Math.abs(decimal));
     const minutes = Math.floor((Math.abs(decimal) - degrees) * 60);
     const seconds = ((Math.abs(decimal) - degrees - minutes / 60) * 3600).toFixed(2);
     return `${degrees}° ${minutes}' ${seconds}"`;
   };
 
-  const convertToDecimal = (dms) => {
+  const convertToDecimal = (dms: string): number => {
     const parts = dms.split(/[°'"]+/).map(part => parseFloat(part));
     return parts[0] + parts[1] / 60 + parts[2] / 3600;
   };
 
+  const updateStartLat = (value: string): void => {
+    const newLat = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
+    if (isValidCoordinate(newLat, startLng)) {
+      setStartLat(newLat);
+    }
+  };
+
+  const updateStartLng = (value: string): void => {
+    const newLng = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
+    if (isValidCoordinate(startLat, newLng)) {
+      setStartLng(newLng);
+    }
+  };
+
+  const updateEndLat = (value: string): void => {
+    const newLat = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
+    if (isValidCoordinate(newLat, endLng)) {
+      setEndLat(newLat);
+    }
+  };
+
+  const updateEndLng = (value: string): void => {
+    const newLng = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
+    if (isValidCoordinate(endLat, newLng)) {
+      setEndLng(newLng);
+    }
+  };
+
   useEffect(() => {
-    if (mapRef.current) {
+    if (mapRef.current && isValidCoordinate(startLat, startLng) && isValidCoordinate(endLat, endLng)) {
       const bounds = L.latLngBounds([
         [startLat, startLng],
         [endLat, endLng]
@@ -59,18 +91,24 @@ const MapComponent = () => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
-          <Marker position={[startLat, startLng]} icon={positionIcon}>
-            <Popup>Start Position</Popup>
-          </Marker>
-          <Marker position={[endLat, endLng]} icon={positionIcon}>
-            <Popup>End Position</Popup>
-          </Marker>
-          <Polyline positions={[[startLat, startLng], [endLat, endLng]]} color="red" />
+          {isValidCoordinate(startLat, startLng) && (
+            <Marker position={[startLat, startLng]} icon={positionIcon}>
+              <Popup>Start Position</Popup>
+            </Marker>
+          )}
+          {isValidCoordinate(endLat, endLng) && (
+            <Marker position={[endLat, endLng]} icon={positionIcon}>
+              <Popup>End Position</Popup>
+            </Marker>
+          )}
+          {isValidCoordinate(startLat, startLng) && isValidCoordinate(endLat, endLng) && (
+            <Polyline positions={[[startLat, startLng], [endLat, endLng]]} color="red" />
+          )}
         </MapContainer>
         <Select
           label="Coordinate Format"
           value={coordinateFormat}
-          onChange={(e) => setCoordinateFormat(e.target.value)}
+          onChange={(e) => setCoordinateFormat(e.target.value as 'decimal' | 'dms')}
         >
           <SelectItem key="decimal" value="decimal">Decimal Degrees</SelectItem>
           <SelectItem key="dms" value="dms">Degrees, Minutes, Seconds</SelectItem>
@@ -80,24 +118,24 @@ const MapComponent = () => {
             <Input 
               label="Start Latitude"
               value={coordinateFormat === 'decimal' ? startLat.toString() : convertToDMS(startLat)}
-              onChange={(e) => setStartLat(coordinateFormat === 'decimal' ? parseFloat(e.target.value) : convertToDecimal(e.target.value))}
+              onChange={(e) => updateStartLat(e.target.value)}
             />
             <Input 
               label="Start Longitude"
               value={coordinateFormat === 'decimal' ? startLng.toString() : convertToDMS(startLng)}
-              onChange={(e) => setStartLng(coordinateFormat === 'decimal' ? parseFloat(e.target.value) : convertToDecimal(e.target.value))}
+              onChange={(e) => updateStartLng(e.target.value)}
             />
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <Input 
               label="End Latitude"
               value={coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)}
-              onChange={(e) => setEndLat(coordinateFormat === 'decimal' ? parseFloat(e.target.value) : convertToDecimal(e.target.value))}
+              onChange={(e) => updateEndLat(e.target.value)}
             />
             <Input 
               label="End Longitude"
               value={coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)}
-              onChange={(e) => setEndLng(coordinateFormat === 'decimal' ? parseFloat(e.target.value) : convertToDecimal(e.target.value))}
+              onChange={(e) => updateEndLng(e.target.value)}
             />
           </div>
         </div>
