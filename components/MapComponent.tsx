@@ -77,11 +77,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
         [startLat, startLng],
         [endLat, endLng]
       ]);
-      mapRef.current.fitBounds(bounds);
+      mapRef.current.fitBounds(bounds, {
+        padding: [25, 25], // Add padding to ensure markers are fully visible
+        maxZoom: 15 // Limit the maximum zoom level
+      });
     }
     onCoordsChange([startLat, startLng], [endLat, endLng]);
   }, [startLat, startLng, endLat, endLng, onCoordsChange]);
-
+  
   return (
     <Card>
       <CardBody>
