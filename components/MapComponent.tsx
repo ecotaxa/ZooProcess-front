@@ -124,45 +124,40 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
             <Polyline positions={[[startLat, startLng], [endLat, endLng]]} color="red" />
           )}
         </MapContainer>
-        <Select
-          label="Coordinate Format"
-          value={coordinateFormat}
-          onChange={(e) => setCoordinateFormat(e.target.value as 'decimal' | 'dms')}
-          defaultSelectedKeys={["decimal"]}
-        >
-          <SelectItem key="decimal" value="decimal">Decimal Degrees</SelectItem>
-          <SelectItem key="dms" value="dms">Degrees, Minutes, Seconds</SelectItem>
-        </Select>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', gap: '10px', flex: 1 }}>
-              <Input 
-                label="Start Latitude"
-                value={coordinateFormat === 'decimal' ? startLat.toString() : convertToDMS(startLat)}
-                onChange={(e) => updateStartLat(e.target.value)}
-              />
-              <Input 
-                label="Start Longitude"
-                value={coordinateFormat === 'decimal' ? startLng.toString() : convertToDMS(startLng)}
-                onChange={(e) => updateStartLng(e.target.value)}
-              />
-            </div>
-            <div style={{ width: '120px' }} /> {/* Spacer */}
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+            <Select
+              label="Coordinate Format"
+              value={coordinateFormat}
+              onChange={(e) => setCoordinateFormat(e.target.value as 'decimal' | 'dms')}
+              defaultSelectedKeys={["decimal"]}
+            >
+              <SelectItem key="decimal" value="decimal">Decimal Degrees</SelectItem>
+              <SelectItem key="dms" value="dms">Degrees, Minutes, Seconds</SelectItem>
+            </Select>
+            <Input 
+              label="Start Latitude"
+              value={coordinateFormat === 'decimal' ? startLat.toString() : convertToDMS(startLat)}
+              onChange={(e) => updateStartLat(e.target.value)}
+            />
+            <Input 
+              label="Start Longitude"
+              value={coordinateFormat === 'decimal' ? startLng.toString() : convertToDMS(startLng)}
+              onChange={(e) => updateStartLng(e.target.value)}
+            />
           </div>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
-            <div style={{ display: 'flex', gap: '10px', flex: 1 }}>
-              <Input 
-                label="End Latitude"
-                value={endLat !== undefined ? (coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)) : ''}
-                onChange={(e) => updateEndLat(e.target.value)}
-              />
-              <Input 
-                label="End Longitude"
-                value={endLng !== undefined ? (coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)) : ''}
-                onChange={(e) => updateEndLng(e.target.value)}
-              />
-            </div>
             <Button onClick={clearEndPoint}>Clear End Point</Button>
+            <Input 
+              label="End Latitude"
+              value={endLat !== undefined ? (coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)) : ''}
+              onChange={(e) => updateEndLat(e.target.value)}
+            />
+            <Input 
+              label="End Longitude"
+              value={endLng !== undefined ? (coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)) : ''}
+              onChange={(e) => updateEndLng(e.target.value)}
+            />
           </div>
         </div>
       </CardBody>
