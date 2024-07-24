@@ -133,18 +133,21 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
           <SelectItem key="decimal" value="decimal">Decimal Degrees</SelectItem>
           <SelectItem key="dms" value="dms">Degrees, Minutes, Seconds</SelectItem>
         </Select>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <Input 
-              label="Start Latitude"
-              value={coordinateFormat === 'decimal' ? startLat.toString() : convertToDMS(startLat)}
-              onChange={(e) => updateStartLat(e.target.value)}
-            />
-            <Input 
-              label="Start Longitude"
-              value={coordinateFormat === 'decimal' ? startLng.toString() : convertToDMS(startLng)}
-              onChange={(e) => updateStartLng(e.target.value)}
-            />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', gap: '10px', flex: 1 }}>
+              <Input 
+                label="Start Latitude"
+                value={coordinateFormat === 'decimal' ? startLat.toString() : convertToDMS(startLat)}
+                onChange={(e) => updateStartLat(e.target.value)}
+              />
+              <Input 
+                label="Start Longitude"
+                value={coordinateFormat === 'decimal' ? startLng.toString() : convertToDMS(startLng)}
+                onChange={(e) => updateStartLng(e.target.value)}
+              />
+            </div>
+            <div style={{ width: '120px' }} /> {/* Spacer */}
           </div>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
             <div style={{ display: 'flex', gap: '10px', flex: 1 }}>
