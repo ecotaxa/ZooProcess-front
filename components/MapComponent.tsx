@@ -17,7 +17,6 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
   const [endLng, setEndLng] = useState<number | undefined>(initialEndCoords?.[1]);
   const [coordinateFormat, setCoordinateFormat] = useState<'decimal' | 'dms'>('decimal');
 
-  // New state variables for DMS inputs
   const [startLatDMS, setStartLatDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'N' });
   const [startLngDMS, setStartLngDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'E' });
   const [endLatDMS, setEndLatDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'N' });
@@ -38,11 +37,13 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
   };
 
-  const convertToDMS = (decimal: number): { deg: number; min: number; sec: number } => {
-    const deg = Math.floor(Math.abs(decimal));
-    const min = Math.floor((Math.abs(decimal) - deg) * 60);
-    const sec = ((Math.abs(decimal) - deg - min / 60) * 3600).toFixed(2);
-    return { deg, min, sec: parseFloat(sec) };
+  const convertToDMS = (decimal: number): { deg: number; min: number; sec: number; dir: string } => {
+    const absolute = Math.abs(decimal);
+    const deg = Math.floor(absolute);
+    const min = Math.floor((absolute - deg) * 60);
+    const sec = ((absolute - deg - min / 60) * 3600).toFixed(2);
+    const dir = decimal >= 0 ? (decimal === 0 ? 'N' : 'N') : 'S';
+    return { deg, min, sec: parseFloat(sec), dir };
   };
 
   const convertToDecimal = (dms: { deg: number; min: number; sec: number; dir: string }): number => {
@@ -50,7 +51,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     if (dms.dir === 'S' || dms.dir === 'W') {
       decimal = -decimal;
     }
-    return decimal;
+    return parseFloat(decimal.toFixed(6));
   };
 
   const updateDMSState = (
@@ -76,7 +77,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     if (!isNaN(numValue)) {
       setter(numValue);
       const dms = convertToDMS(numValue);
-      dmsSetter(prev => ({ ...dms, dir: numValue >= 0 ? prev.dir : (prev.dir === 'N' ? 'S' : 'W') }));
+      dmsSetter(dms);
     }
   };
 
@@ -101,6 +102,17 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     }
     onCoordsChange([startLat, startLng], endLat !== undefined && endLng !== undefined ? [endLat, endLng] : undefined);
   }, [startLat, startLng, endLat, endLng, onCoordsChange]);
+
+  useEffect(() => {
+    if (coordinateFormat === 'dms') {
+      setStartLatDMS(convertToDMS(startLat));
+      setStartLngDMS(convertToDMS(startLng));
+      if (endLat !== undefined && endLng !== undefined) {
+        setEndLatDMS(convertToDMS(endLat));
+        setEndLngDMS(convertToDMS(endLng));
+      }
+    }
+  }, [coordinateFormat]);
 
   return (
     <Card>
@@ -130,26 +142,20 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
             <Polyline positions={[[startLat, startLng], [endLat, endLng]]} color="red" />
           )}
         </MapContainer>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'auto 1fr 1fr 1fr 1fr',
-          gridTemplateRows: 'auto auto auto',
-          gap: '10px',
-          alignItems: 'flex-end'
-        }}>
+        <div style={{ marginTop: '20px' }}>
           <Select
             label="Coordinate Format"
             value={coordinateFormat}
             onChange={(e) => setCoordinateFormat(e.target.value as 'decimal' | 'dms')}
             defaultSelectedKeys={["decimal"]}
-            style={{ width: '300px', gridColumn: '1 / -1' }}
+            style={{ width: '300px', marginBottom: '20px' }}
           >
             <SelectItem key="decimal" value="decimal">Decimal Degrees</SelectItem>
             <SelectItem key="dms" value="dms">Degrees, Minutes, Seconds</SelectItem>
           </Select>
           
           {coordinateFormat === 'decimal' ? (
-            <>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               <Input
                 label="Start Latitude"
                 value={startLat.toString()}
@@ -160,11 +166,21 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 value={startLng.toString()}
                 onChange={(e) => updateDecimalState(e.target.value, setStartLng, setStartLngDMS)}
               />
-            </>
-          ) : (
-            <>
               <Input
-                label="Start Latitude Degrees"
+                label="End Latitude"
+                value={endLat !== undefined ? endLat.toString() : ''}
+                onChange={(e) => updateDecimalState(e.target.value, setEndLat as React.Dispatch<React.SetStateAction<number>>, setEndLatDMS)}
+              />
+              <Input
+                label="End Longitude"
+                value={endLng !== undefined ? endLng.toString() : ''}
+                onChange={(e) => updateDecimalState(e.target.value, setEndLng as React.Dispatch<React.SetStateAction<number>>, setEndLngDMS)}
+              />
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
+              <Input
+                label="Start Lat Degrees"
                 value={startLatDMS.deg.toString()}
                 onChange={(e) => updateDMSState(e.target.value, 'deg', setStartLatDMS, setStartLat)}
               />
@@ -186,7 +202,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 <SelectItem key="S" value="S">S</SelectItem>
               </Select>
               <Input
-                label="Start Longitude Degrees"
+                label="Start Lng Degrees"
                 value={startLngDMS.deg.toString()}
                 onChange={(e) => updateDMSState(e.target.value, 'deg', setStartLngDMS, setStartLng)}
               />
@@ -207,28 +223,8 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 <SelectItem key="E" value="E">E</SelectItem>
                 <SelectItem key="W" value="W">W</SelectItem>
               </Select>
-            </>
-          )}
-
-          <Button onClick={clearEndPoint} style={{ gridColumn: '1 / -1' }}>Clear End Point</Button>
-
-          {coordinateFormat === 'decimal' ? (
-            <>
               <Input
-                label="End Latitude"
-                value={endLat !== undefined ? endLat.toString() : ''}
-                onChange={(e) => updateDecimalState(e.target.value, setEndLat as React.Dispatch<React.SetStateAction<number>>, setEndLatDMS)}
-              />
-              <Input
-                label="End Longitude"
-                value={endLng !== undefined ? endLng.toString() : ''}
-                onChange={(e) => updateDecimalState(e.target.value, setEndLng as React.Dispatch<React.SetStateAction<number>>, setEndLngDMS)}
-              />
-            </>
-          ) : (
-            <>
-              <Input
-                label="End Latitude Degrees"
+                label="End Lat Degrees"
                 value={endLatDMS.deg.toString()}
                 onChange={(e) => updateDMSState(e.target.value, 'deg', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>)}
               />
@@ -250,7 +246,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 <SelectItem key="S" value="S">S</SelectItem>
               </Select>
               <Input
-                label="End Longitude Degrees"
+                label="End Lng Degrees"
                 value={endLngDMS.deg.toString()}
                 onChange={(e) => updateDMSState(e.target.value, 'deg', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>)}
               />
@@ -271,8 +267,9 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 <SelectItem key="E" value="E">E</SelectItem>
                 <SelectItem key="W" value="W">W</SelectItem>
               </Select>
-            </>
+            </div>
           )}
+          <Button onClick={clearEndPoint} style={{ marginTop: '20px' }}>Clear End Point</Button>
         </div>
       </CardBody>
     </Card>
