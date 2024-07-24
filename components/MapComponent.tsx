@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
-import { Input, Label } from 'react-ui';
+import { Input, Card, CardBody } from '@nextui-org/react';
 
 const MapComponent = () => {
-  const [startPosition, setStartPosition] = useState([0, 0]);
-  const [endPosition, setEndPosition] = useState([0, 0]);
+  const [startPosition, setStartPosition] = useState<[number, number]>([0, 0]);
+  const [endPosition, setEndPosition] = useState<[number, number]>([0, 0]);
 
-  const startPositionChange = (e) => {
-    setStartPosition([e.target.value.split(',')[0], e.target.value.split(',')[1]]);
+  const startPositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [lat, lng] = e.target.value.split(',').map(Number);
+    setStartPosition([lat, lng]);
   };
 
-  const endPositionChange = (e) => {
-    setEndPosition([e.target.value.split(',')[0], e.target.value.split(',')[1]]);
+  const endPositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [lat, lng] = e.target.value.split(',').map(Number);
+    setEndPosition([lat, lng]);
   };
 
   const positionIcon = new L.Icon({
@@ -24,35 +26,43 @@ const MapComponent = () => {
   });
 
   return (
-    <div>
-      <MapContainer center={[0, 0]} zoom={13} style={{ height: '100px' }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    <Card>
+      <CardBody>
+        <MapContainer center={[0, 0]} zoom={13} style={{ height: '100px' }}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          />
+          {startPosition && (
+            <Marker position={startPosition as [number, number]} icon={positionIcon}>
+              <Popup>Start Position</Popup>
+            </Marker>
+          )}
+          {endPosition && (
+            <Marker position={endPosition as [number, number]} icon={positionIcon}>
+              <Popup>End Position</Popup>
+            </Marker>
+          )}
+          {startPosition && endPosition && (
+            <Polyline positions={[startPosition, endPosition]} color="red" />
+          )}
+        </MapContainer>
+        <Input 
+          label="Start Position"
+          fullWidth
+          value={startPosition.join(',')} 
+          onChange={startPositionChange}
+          placeholder="Enter start position"
         />
-        {startPosition && (
-          <Marker position={startPosition} icon={positionIcon}>
-            <Popup>Start Position</Popup>
-          </Marker>
-        )}
-        {endPosition && (
-          <Marker position={endPosition} icon={positionIcon}>
-            <Popup>End Position</Popup>
-          </Marker>
-        )}
-        {startPosition && endPosition && (
-          <Polyline positions={[startPosition, endPosition]} color="red" />
-        )}
-      </MapContainer>
-      <div>
-        <Label>Start Position:</Label>
-        <Input type="text" value={startPosition.join(',')} onChange={startPositionChange} />
-      </div>
-      <div>
-        <Label>End Position:</Label>
-        <Input type="text" value={endPosition.join(',')} onChange={endPositionChange} />
-      </div>
-    </div>
+        <Input 
+          label="End Position"
+          fullWidth
+          value={endPosition.join(',')} 
+          onChange={endPositionChange}
+          placeholder="Enter end position"
+        />
+      </CardBody>
+    </Card>
   );
 };
 
