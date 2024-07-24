@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
-import { Input, Card, CardBody } from '@nextui-org/react';
+import { Input, Card, CardBody, Select, SelectItem } from '@nextui-org/react';
 import 'leaflet/dist/leaflet.css';
 
 const MapComponent = () => {
@@ -12,6 +12,7 @@ const MapComponent = () => {
   const [startLng, setStartLng] = useState(startPoint.lng);
   const [endLat, setEndLat] = useState(endPoint.lat);
   const [endLng, setEndLng] = useState(endPoint.lng);
+  const [coordinateFormat, setCoordinateFormat] = useState('decimal');
 
   const positionIcon = new L.Icon({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -20,6 +21,18 @@ const MapComponent = () => {
     popupAnchor: [0, -41],
     iconSize: [25, 41],
   });
+
+  const convertToDMS = (decimal: number): string => {
+    const degrees = Math.floor(Math.abs(decimal));
+    const minutes = Math.floor((Math.abs(decimal) - degrees) * 60);
+    const seconds = ((Math.abs(decimal) - degrees - minutes / 60) * 3600).toFixed(2);
+    return `${degrees}° ${minutes}' ${seconds}"`;
+  };
+
+  const convertToDecimal = (dms: string): number => {
+    const parts = dms.split(/[°'"]+/).map(part => parseFloat(part));
+    return parts[0] + parts[1] / 60 + parts[2] / 3600;
+  };
 
   return (
     <Card>
@@ -37,31 +50,34 @@ const MapComponent = () => {
           </Marker>
           <Polyline positions={[[startLat, startLng], [endLat, endLng]]} color="red" />
         </MapContainer>
+        <Select
+          label="Coordinate Format"
+          value={coordinateFormat}
+          onChange={(e) => setCoordinateFormat(e.target.value)}
+        >
+          <SelectItem key="decimal" value="decimal">Decimal Degrees</SelectItem>
+          <SelectItem key="dms" value="dms">Degrees, Minutes, Seconds</SelectItem>
+        </Select>
         <Input 
-        label="Start Latitude"
-        type="number"
-        value={startLat.toString()} 
-        onChange={(e) => setStartLat(parseFloat(e.target.value))}
+          label="Start Latitude"
+          value={coordinateFormat === 'decimal' ? startLat.toString() : convertToDMS(startLat)}
+          onChange={(e) => setStartLat(coordinateFormat === 'decimal' ? parseFloat(e.target.value) : convertToDecimal(e.target.value))}
         />
         <Input 
-        label="Start Longitude"
-        type="number"
-        value={startLng.toString()} 
-        onChange={(e) => setStartLng(parseFloat(e.target.value))}
+          label="Start Longitude"
+          value={coordinateFormat === 'decimal' ? startLng.toString() : convertToDMS(startLng)}
+          onChange={(e) => setStartLng(coordinateFormat === 'decimal' ? parseFloat(e.target.value) : convertToDecimal(e.target.value))}
         />
         <Input 
-            label="End Lati   tude"
-            type="number"
-            value={endLat.toString()} 
-            onChange={(e) => setEndLat(parseFloat(e.target.value))}
+          label="End Latitude"
+          value={coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)}
+          onChange={(e) => setEndLat(coordinateFormat === 'decimal' ? parseFloat(e.target.value) : convertToDecimal(e.target.value))}
         />
         <Input 
-        label="End Longitude"
-        type="number"
-        value={endLng.toString()} 
-        onChange={(e) => setEndLng(parseFloat(e.target.value))}
+          label="End Longitude"
+          value={coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)}
+          onChange={(e) => setEndLng(coordinateFormat === 'decimal' ? parseFloat(e.target.value) : convertToDecimal(e.target.value))}
         />
-
       </CardBody>
     </Card>
   );
