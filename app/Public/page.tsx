@@ -4,13 +4,14 @@ import MapComponent from "@/components/MapComponent";
 import { useState } from "react";
 
 const PublicPage: React.FC = () => {
-    
+
     const [startCoords, setStartCoords] = useState<[number, number]>([48.8566, 2.3522]);
     const [endCoords, setEndCoords] = useState<[number, number]>([51.5074, -0.1278]);
   
-    const handleCoordsChange = (newStartCoords: [number, number], newEndCoords: [number, number]) => {
+    const handleCoordsChange = (newStartCoords: [number, number], newEndCoords?: [number, number]) => {
       setStartCoords(newStartCoords);
-      setEndCoords(newEndCoords);
+      if (newEndCoords) 
+        setEndCoords(newEndCoords);
       // You can perform additional actions with the updated coordinates here
     };
   
@@ -19,7 +20,7 @@ const PublicPage: React.FC = () => {
         <h1>Map Coordinates</h1>
         <MapComponent
           initialStartCoords={startCoords}
-          initialEndCoords={endCoords}
+        //   initialEndCoords={endCoords}
           onCoordsChange={handleCoordsChange}
         />
         <p>Start Coordinates: {startCoords.join(', ')}</p>

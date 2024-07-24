@@ -6,15 +6,15 @@ import 'leaflet/dist/leaflet.css';
 
 interface MapComponentProps {
   initialStartCoords: [number, number];
-  initialEndCoords: [number, number];
-  onCoordsChange: (startCoords: [number, number], endCoords: [number, number]) => void;
+  initialEndCoords?: [number, number];
+  onCoordsChange: (startCoords: [number, number], endCoords?: [number, number]) => void;
 }
 
 const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initialEndCoords, onCoordsChange }) => {
   const [startLat, setStartLat] = useState<number>(initialStartCoords[0]);
   const [startLng, setStartLng] = useState<number>(initialStartCoords[1]);
-  const [endLat, setEndLat] = useState<number>(initialEndCoords[0]);
-  const [endLng, setEndLng] = useState<number>(initialEndCoords[1]);
+  const [endLat, setEndLat] = useState<number | undefined>(initialEndCoords?.[0]);
+  const [endLng, setEndLng] = useState<number | undefined>(initialEndCoords?.[1]);
   const [coordinateFormat, setCoordinateFormat] = useState<'decimal' | 'dms'>('decimal');
 
   const mapRef = useRef<L.Map | null>(null);
@@ -62,7 +62,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
 
   const updateEndLat = (value: string): void => {
     const newLat = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
-    if (isValidCoordinate(newLat, endLng)) {
+    if (isValidCoordinate(newLat, endLng ?? 0)) {
       setEndLat(newLat);
       hasScaled.current = false;
     }
@@ -70,32 +70,31 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
 
   const updateEndLng = (value: string): void => {
     const newLng = coordinateFormat === 'decimal' ? parseFloat(value) : convertToDecimal(value);
-    if (isValidCoordinate(endLat, newLng)) {
+    if (isValidCoordinate(endLat ?? 0, newLng)) {
       setEndLng(newLng);
       hasScaled.current = false;
     }
   };
 
   useEffect(() => {
-    if (mapRef.current && isValidCoordinate(startLat, startLng) && isValidCoordinate(endLat, endLng) && !hasScaled.current) {
-      const bounds = L.latLngBounds([
-        [startLat, startLng],
-        [endLat, endLng]
-      ]);
+    if (mapRef.current && isValidCoordinate(startLat, startLng) && !hasScaled.current) {
+      const bounds = endLat !== undefined && endLng !== undefined
+        ? L.latLngBounds([[startLat, startLng], [endLat, endLng]])
+        : L.latLngBounds([[startLat, startLng]]);
       mapRef.current.fitBounds(bounds, {
         padding: [50, 50],
         maxZoom: 15
       });
       hasScaled.current = true;
     }
-    onCoordsChange([startLat, startLng], [endLat, endLng]);
+    onCoordsChange([startLat, startLng], endLat !== undefined && endLng !== undefined ? [endLat, endLng] : undefined);
   }, [startLat, startLng, endLat, endLng, onCoordsChange]);
 
   return (
     <Card>
       <CardBody>
         <MapContainer
-          center={[(startLat + endLat) / 2, (startLng + endLng) / 2]}
+          center={[startLat, startLng]}
           zoom={5}
           style={{ height: '400px', width: '100%' }}
           ref={mapRef}
@@ -110,12 +109,12 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               <Popup>Start Position</Popup>
             </Marker>
           )}
-          {isValidCoordinate(endLat, endLng) && (
+          {isValidCoordinate(endLat ?? 0, endLng ?? 0) && endLat !== undefined && endLng !== undefined && (
             <Marker position={[endLat, endLng]} icon={positionIcon}>
               <Popup>End Position</Popup>
             </Marker>
           )}
-          {isValidCoordinate(startLat, startLng) && isValidCoordinate(endLat, endLng) && (
+          {isValidCoordinate(startLat, startLng) && isValidCoordinate(endLat ?? 0, endLng ?? 0) && endLat !== undefined && endLng !== undefined && (
             <Polyline positions={[[startLat, startLng], [endLat, endLng]]} color="red" />
           )}
         </MapContainer>
@@ -141,18 +140,20 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               onChange={(e) => updateStartLng(e.target.value)}
             />
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <Input 
-              label="End Latitude"
-              value={coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)}
-              onChange={(e) => updateEndLat(e.target.value)}
-            />
-            <Input 
-              label="End Longitude"
-              value={coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)}
-              onChange={(e) => updateEndLng(e.target.value)}
-            />
-          </div>
+          {endLat !== undefined && endLng !== undefined && (
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <Input 
+                label="End Latitude"
+                value={coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)}
+                onChange={(e) => updateEndLat(e.target.value)}
+              />
+              <Input 
+                label="End Longitude"
+                value={coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)}
+                onChange={(e) => updateEndLng(e.target.value)}
+              />
+            </div>
+          )}
         </div>
       </CardBody>
     </Card>
