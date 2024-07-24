@@ -36,15 +36,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     const degrees = Math.floor(Math.abs(decimal));
     const minutes = Math.floor((Math.abs(decimal) - degrees) * 60);
     const seconds = ((Math.abs(decimal) - degrees - minutes / 60) * 3600).toFixed(2);
-    return `${degrees}° ${minutes}' ${seconds}"`;
+    const direction = decimal >= 0 ? (degrees < 90 ? 'N' : 'E') : (degrees < 90 ? 'S' : 'W');
+    return `${degrees}° ${minutes}' ${seconds}" ${direction}`;
   };
 
   const convertToDecimal = (dms: string): number => {
-    const parts = dms.split(/[°'"]+/).map(part => part.trim());
-    let result = 0;
-    if (parts[0]) result += parseFloat(parts[0]);
-    if (parts[1]) result += parseFloat(parts[1]) / 60;
-    if (parts[2]) result += parseFloat(parts[2]) / 3600;
+    const parts = dms.split(/[^\d\w.]+/).filter(Boolean);
+    let result = parseFloat(parts[0]) + parseFloat(parts[1]) / 60 + parseFloat(parts[2]) / 3600;
+    if (parts[3] === 'S' || parts[3] === 'W') result *= -1;
     return result;
   };
 
@@ -136,30 +135,26 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
           </Select>
           <Input
             label="Start Latitude"
-            type="number"
-            step="0.000001"
+            type="text"
             value={coordinateFormat === 'decimal' ? startLat.toString() : convertToDMS(startLat)}
             onChange={(e) => updateStartLat(e.target.value)}
           />
           <Input
             label="Start Longitude"
-            type="number"
-            step="0.000001"
+            type="text"
             value={coordinateFormat === 'decimal' ? startLng.toString() : convertToDMS(startLng)}
             onChange={(e) => updateStartLng(e.target.value)}
           />
           <Button onClick={clearEndPoint}>Clear End Point</Button>
           <Input
             label="End Latitude"
-            type="number"
-            step="0.0001"
+            type="text"
             value={endLat !== undefined ? (coordinateFormat === 'decimal' ? endLat.toString() : convertToDMS(endLat)) : ''}
             onChange={(e) => updateEndLat(e.target.value)}
           />
           <Input
             label="End Longitude"
-            type="number"
-            step="0.0001"
+            type="text"
             value={endLng !== undefined ? (coordinateFormat === 'decimal' ? endLng.toString() : convertToDMS(endLng)) : ''}
             onChange={(e) => updateEndLng(e.target.value)}
           />
