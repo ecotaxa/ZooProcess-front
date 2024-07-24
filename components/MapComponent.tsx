@@ -109,6 +109,7 @@ const MapComponent: React.FC = () => {
           label="Coordinate Format"
           value={coordinateFormat}
           onChange={(e) => setCoordinateFormat(e.target.value as 'decimal' | 'dms')}
+          defaultSelectedKeys={["decimal"]}
         >
           <SelectItem key="decimal" value="decimal">Decimal Degrees</SelectItem>
           <SelectItem key="dms" value="dms">Degrees, Minutes, Seconds</SelectItem>
