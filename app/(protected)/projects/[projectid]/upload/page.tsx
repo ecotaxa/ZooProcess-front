@@ -608,6 +608,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
               variant="solid"
               data-testid="newProjectBtn"
               onPress={() => {
+                setError(null)
                 if (current == state.scan1) {
                   console.debug("go to 30s bis");
                   setBackground(imagePlaceholder)
