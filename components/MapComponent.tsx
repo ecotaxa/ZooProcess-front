@@ -23,14 +23,23 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
   const [endLngDMS, setEndLngDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'E' });
 
   const mapRef = useRef<L.Map | null>(null);
-  const hasScaled = useRef(false);
 
-  const positionIcon = new L.Icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-    iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-    iconAnchor: [12, 41],
-    popupAnchor: [0, -41],
+  const blueIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  const yellowIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
   });
 
   const isValidCoordinate = (lat: number, lng: number): boolean => {
@@ -88,17 +97,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     setEndLng(undefined);
     setEndLatDMS({ deg: 0, min: 0, sec: 0, dir: 'N' });
     setEndLngDMS({ deg: 0, min: 0, sec: 0, dir: 'E' });
-    hasScaled.current = false;
   };
-
-  useEffect(() => {
-    if (mapRef.current && isValidCoordinate(startLat, startLng)) {
-      const bounds = endLat !== undefined && endLng !== undefined && isValidCoordinate(endLat, endLng)
-        ? L.latLngBounds([[startLat, startLng], [endLat, endLng]])
-        : L.latLngBounds([[startLat, startLng]]);
-      mapRef.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
-    }
-  }, [startLat, startLng, endLat, endLng]);
 
   useEffect(() => {
     setStartLatDMS(convertToDMS(startLat, false));
@@ -108,7 +107,16 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
       setEndLngDMS(convertToDMS(endLng, true));
     }
   }, [startLat, startLng, endLat, endLng]);
-  
+
+  useEffect(() => {
+    if (mapRef.current && isValidCoordinate(startLat, startLng)) {
+      const bounds = endLat !== undefined && endLng !== undefined && isValidCoordinate(endLat, endLng)
+        ? L.latLngBounds([[startLat, startLng], [endLat, endLng]])
+        : L.latLngBounds([[startLat, startLng]]);
+      mapRef.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+    }
+    onCoordsChange([startLat, startLng], endLat !== undefined && endLng !== undefined ? [endLat, endLng] : undefined);
+  }, [startLat, startLng, endLat, endLng, onCoordsChange]);
 
   return (
     <Card>
@@ -125,12 +133,12 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
           {isValidCoordinate(startLat, startLng) && (
-            <Marker position={[startLat, startLng]} icon={positionIcon}>
+            <Marker position={[startLat, startLng]} icon={blueIcon}>
               <Popup>Start Position</Popup>
             </Marker>
           )}
           {isValidCoordinate(endLat ?? 0, endLng ?? 0) && endLat !== undefined && endLng !== undefined && (
-            <Marker position={[endLat, endLng]} icon={positionIcon}>
+            <Marker position={[endLat, endLng]} icon={yellowIcon}>
               <Popup>End Position</Popup>
             </Marker>
           )}
@@ -194,8 +202,8 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 value={startLatDMS.dir}
                 onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLatDMS, setStartLat, false)}
               >
-                <SelectItem key="N" value="N">N</SelectItem>
-                <SelectItem key="S" value="S">S</SelectItem>
+                <SelectItem key="N" value="N">North</SelectItem>
+                <SelectItem key="S" value="S">South</SelectItem>
               </Select>
               <Input
                 label="Start Lng Degrees"
@@ -216,8 +224,8 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 value={startLngDMS.dir}
                 onChange={(e) => updateDMSState(e.target.value, 'dir', setStartLngDMS, setStartLng, true)}
               >
-                <SelectItem key="E" value="E">E</SelectItem>
-                <SelectItem key="W" value="W">W</SelectItem>
+                <SelectItem key="E" value="E">East</SelectItem>
+                <SelectItem key="W" value="W">West</SelectItem>
               </Select>
               <Input
                 label="End Lat Degrees"
@@ -238,8 +246,8 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 value={endLatDMS.dir}
                 onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLatDMS, setEndLat as React.Dispatch<React.SetStateAction<number>>, false)}
               >
-                <SelectItem key="N" value="N">N</SelectItem>
-                <SelectItem key="S" value="S">S</SelectItem>
+                <SelectItem key="N" value="N">North</SelectItem>
+                <SelectItem key="S" value="S">South</SelectItem>
               </Select>
               <Input
                 label="End Lng Degrees"
@@ -256,12 +264,12 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
                 value={endLngDMS.sec.toString()}
                 onChange={(e) => updateDMSState(e.target.value, 'sec', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
               />
-              <Select
+            <Select
                 value={endLngDMS.dir}
                 onChange={(e) => updateDMSState(e.target.value, 'dir', setEndLngDMS, setEndLng as React.Dispatch<React.SetStateAction<number>>, true)}
               >
-                <SelectItem key="E" value="E">E</SelectItem>
-                <SelectItem key="W" value="W">W</SelectItem>
+                <SelectItem key="E" value="E">East</SelectItem>
+                <SelectItem key="W" value="W">West</SelectItem>
               </Select>
             </div>
           )}
