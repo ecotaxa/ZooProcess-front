@@ -50,6 +50,7 @@
     "framer-motion": "^10.16.4",
     "intl-messageformat": "^10.5.0",
     "jose": "^5.2.0",
+    "leaflet": "^1.9.4",
     "mime": "^4.0.1",
     "next": "14.0.2",
     "next-auth": "^5.0.0-beta.4",
@@ -58,6 +59,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.3",
+    "react-leaflet": "^4.2.1",
     "react-stately": "^3.30.1",
     "swr": "^2.2.4",
     "tailwind-variants": "^0.1.18",
@@ -69,6 +71,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/formidable": "^3.4.5",
+    "@types/leaflet": "^1.9.12",
     "@types/mime": "^3.0.4"
   }
 }
