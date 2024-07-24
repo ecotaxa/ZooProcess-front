@@ -11,14 +11,16 @@ import { MySpinner } from "@/components/mySpinner";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { Project, addBackground } from "@/app/api/network/zooprocess-api";
 
-import { MyImage } from "@/components/myImage";
-import { tree } from "next/dist/build/templates/app-page";
+// import { MyImage } from "@/components/myImage";
+// import { tree } from "next/dist/build/templates/app-page";
 
 import {pathToRealStorage, pathToSessionStorage}  from "@/lib/gateway"
-import scan from "../samples/[sampleid]/subsamples/new/_[...scan]/page";
+// import scan from "../samples/[sampleid]/subsamples/new/_[...scan]/page";
 
 import { converttiff2jpg } from "@/api/convert";
 import Timer from "@/components/timer";
+import { TemporizedButton } from "@/components/temporized_button";
+import { ScannerEffect } from "@/components/ScannerEffect";
 
 type pageProps = {
     params:{
@@ -38,6 +40,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
     const [image , setImage] = useState(false);
     const imagePlaceholder = "/images/placeholder-image.jpg";
     const [background, setBackground] = useState(imagePlaceholder)
+    const [temporized, setTemporized] = useState(false)
+    const [triggerScan, setTriggerScan] = useState(false);
+
     // const [imageRGB , setImageRGB] = useState("");
     
     const noError : Array<any>= []
@@ -61,9 +66,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         }
     };
 
-    const onPreviewClick = () => {
-        console.log("onPreviewClick")
-    }
+
 
     const isTiff = (fileUrl:string) : boolean => {
         console.log("fileUrl: ", fileUrl)
@@ -74,7 +77,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
 
     const onChange = async (fileUrl:any) => {
 
-        ///TODO if ancien scan then remove it (because we replace with a new one)
+        ///TODO if old scan then remove it (because we replace with a new one)
         
 
         console.log("New scan onChange:", fileUrl)
@@ -123,7 +126,8 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         const errormsg = { message:"Cannot convert Tiff to Jpg error: " + error}
                         // setMsg(errormsg.message)
                         // setError(errormsg)
-                        throw new Error("Cannot convert Tiff to Jpg error: " + error)
+                        // throw new Error("Cannot convert Tiff to Jpg error: " + error)
+                        return Promise.reject(errormsg)
                     })
 
                 })
@@ -132,19 +136,24 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                     // setError(response)
                     // setError([response])
                     if ( response.status == 422) {
+                        const errormsg = { message:"The server do not accept your connection: " + error}
                         console.error("The server do not accept your connection")
                         console.error("Can't connect: ", response)
                         // setMsg("The server do not accept your connection")
-                        throw new Error("The server do not accept your connection")
+                        // throw new Error("The server do not accept your connection")
+                        return Promise.reject(errormsg)
                     } else {
+                        const errormsg = { message:"Cannot convert Tiff to Jpg error: " + error}
                         console.error("Cannot convert Tiff to Jpg error: ", response)
                         // setMsg("Cannot convert Tiff to Jpg error:")
-                        throw new Error("Cannot convert Tiff to Jpg error: " + response)
+                        // throw new Error("Cannot convert Tiff to Jpg error: " + response)
+                        return Promise.reject(errormsg)
                     }
                 })
 
             }
             catch (error) {
+                console.debug("catch exception")
                 console.error("error: ", error)
                 setError(error)
                 setMsg(error)
@@ -239,7 +248,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         { text: "Scanner Info", checked: false },
         { text: "Prepare", checked: false },
         { text: "Preview 1", checked: false },
-        { text: "30s", checked: false },
+        // { text: "30s", checked: false },
         { text: "Scan 1", checked: false },
         { text: "30s", checked: false },
         { text: "Scan 2", checked: false },
@@ -411,21 +420,47 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             return <></>
         }
 
+        const run = () => {
+            // setTemporized(false)
+            setTemporized(true)
+            setTriggerScan(false);
+        }
+
+        const onPreviewClick = () => {
+            console.log("onPreviewClick - TODO drive the scanner")
+            // setTemporized(false)
+            setTemporized(true)
+            setTriggerScan(true);
+        }
+
+        //setTriggerScan(true);
+
         return (
             <>
-             <Card className="inline-block size-full"
+             <Card className="inline-block size-full w-4/5 max-w-screen-lg mx-auto"
                     data-testid="ScanCard" 
                     >
                 <CardBody className="p-6">
                     <div  className="bg-100 p-6">
-                        <h1 className="text-center">Preview.</h1>
+                        <h1 className="text-center">Preview</h1>
+                        <ScannerEffect 
+                            imageSrc="/demo/demo_background.jpg" 
+                            scanDuration={1000} 
+                            onScanComplete={() => {
+                                // Your function to run after the scan is complete
+                                console.log("Scan completed!");
+                                // You can call any function or perform any action here
+                                run()
+                            }}
+                            triggerScan={triggerScan}
+                            />
                     </div>
                 </CardBody>
 
                 <CardFooter className="flex flex-row-reverse py-3">
 
                 <Button 
-                        disabled={ isError || isLoading || !image }
+                        // isDisabled={ isError || isLoading }
                         color="secondary"
                         // showAnchorIcon
                         variant="solid"
@@ -436,7 +471,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                     >Preview</Button>
 
                     <Button 
-                        disabled={ isError || isLoading || !image }
+                        isDisabled={ isError || isLoading || !image }
                         color="primary"
                         // showAnchorIcon
                         variant="solid"
@@ -445,6 +480,8 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         // onPress={onClick}
                         onPress={() =>{ console.debug("go to wait 30s");   setCurrent(nextState) }}
                     >Scan</Button>
+                    <TemporizedButton /*timer={30} label="Scan" waitlabel="Wait"*/ run={temporized}  onClick={() =>{ console.debug("go to wait 30s");   setCurrent(nextState) }}/>
+
                 </CardFooter>
             </Card>
             </>
@@ -564,9 +601,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             case state.info:
                 return Info(state.preview)
             case state.preview:
-                return Preview(state.thirtys1)
-            case state.thirtys1:
-                return ThirtySeconds(state.scan1)
+                return Preview(state.scan1) // thirtys1)
+            // case state.thirtys1:
+            //     return ThirtySeconds(state.scan1)
             case state.scan1:
                 return Scan(1,state.thirtys1bis)
             case state.thirtys1bis:

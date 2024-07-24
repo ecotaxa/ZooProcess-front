@@ -31,6 +31,7 @@ import { useProcess } from "@/app/api/process";
 // import SubSampleForm from "../SubSampleForm";
 // import Metadata from "./Metadata";
 import {Process} from "./Process";
+import { TemporizedButton } from "@/components/temporized_button";
 
 type pageProps = {
     params:{
@@ -585,7 +586,14 @@ const ScanPage : FC<pageProps> = ({params}) => {
                         // onPress={onClick}
                         onPress={() =>{ console.debug("renew Preview");  onPreviewClick()  }}
                     >Preview</Button>
-
+     
+                    <TemporizedButton timer={30} label="Scan" waitlabel="Wait 30s" onClick={() =>{ console.debug("go to wait 30s");   setCurrent(nextState) }}/>
+                </CardFooter>
+            </Card>
+            </>
+        )
+    }
+           /* 
                     <Button 
                         disabled={ isError || isLoading || !image }
                         color="primary"
@@ -595,13 +603,8 @@ const ScanPage : FC<pageProps> = ({params}) => {
                         // >Scan {actions[nextAction(action)]}</Button>
                         // onPress={onClick}
                         onPress={() =>{ console.debug("go to wait 30s");   setCurrent(nextState) }}
-                    >Scan</Button>
-                </CardFooter>
-            </Card>
-            </>
-        )
-    }
-
+                    >Scan</Button> */
+                    
 
 //   const Scan = (step: number = 1, nextState: state) => {
 //     if (current != state.scan1) {

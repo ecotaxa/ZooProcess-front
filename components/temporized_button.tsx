@@ -39,6 +39,7 @@ export const TemporizedButton = ({
     //   }, []);
     const [isRunning, setIsRunning] = useState(false);
     const [time, setTime] = useState(timer);
+    const [restart, setRestart] = useState(false)
 
     function changeButtonLabel(time:number):string{
 
@@ -48,6 +49,8 @@ export const TemporizedButton = ({
     }
 
     const restartTimer = () => {
+        console.log("restartTimer")
+        setRestart(true)
         setIsRunning(true);
         setEnable(false);
         setTime(timer);
@@ -61,7 +64,7 @@ export const TemporizedButton = ({
         //   setEnable(false);
         //   setTime(timer);
         }
-      }, [run]);//, timer]);
+    }, [run, timer]);
       
 
     useEffect(() => {
@@ -72,6 +75,7 @@ export const TemporizedButton = ({
         setTime((prevTime) => {
             const newTime = prevTime - 1;
             setButtonLabel(changeButtonLabel(newTime))
+           // if (restart == true ){  restartTimer(); return timer}
             if (newTime === 0 /*&& onChange*/) {
                 // onChange();
                 setIsRunning(false);
