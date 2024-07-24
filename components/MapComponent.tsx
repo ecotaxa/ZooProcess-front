@@ -206,8 +206,9 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
 
 <BlueMarker />
 
-  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
-            {/* Start Latitude DMS inputs */}
+<div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
+{/* Start Latitude DMS inputs */}
             <Input
               label="Start Lat Degrees"
               value={startLatDMS.deg.toString()}
@@ -230,6 +231,8 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               <SelectItem key="N" value="N">North</SelectItem>
               <SelectItem key="S" value="S">South</SelectItem>
             </Select>
+            </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
             {/* Start Longitude DMS inputs */}
             <Input
               label="Start Lng Degrees"
@@ -255,11 +258,15 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
             </Select>
             </div>
             </div>
+            </div>
+
+
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <YellowMarker />
           
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
-            {/* End Latitude DMS inputs */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
+      {/* End Latitude DMS inputs */}
             <Input
               label="End Lat Degrees"
               value={endLatDMS.deg.toString()}
@@ -282,7 +289,9 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               <SelectItem key="N" value="N">North</SelectItem>
               <SelectItem key="S" value="S">South</SelectItem>
             </Select>
-          
+            </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
+
             {/* End Longitude DMS inputs */}
             <Input
               label="End Lng Degrees"
@@ -306,6 +315,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
               <SelectItem key="E" value="E">East</SelectItem>
               <SelectItem key="W" value="W">West</SelectItem>
             </Select>
+          </div>
           </div>
           </div>
           </div>
