@@ -27,6 +27,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
   const mapRef = useRef<L.Map | null>(null);
 //   const [mapCenter, setMapCenter] = useState<[number, number]>([startLat, startLng]);
 //   const [mapZoom, setMapZoom] = useState(5);
+const hasScaled = useRef(false);
 
   const blueIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
@@ -83,12 +84,15 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     decimalSetter: React.Dispatch<React.SetStateAction<number>>,
     isLongitude: boolean
   ) => {
+    console.debug("updateDMSState")
     setter(prev => {
       const updated = { ...prev, [field]: field === 'dir' ? value : parseFloat(value) || 0 };
       const decimal = convertToDecimal(updated);
       decimalSetter(decimal);
       return updated;
     });
+    console.debug("hasScaled.current = false")
+    hasScaled.current = false;
   };
 
   const updateDecimalState = (
@@ -97,12 +101,15 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
     dmsSetter: React.Dispatch<React.SetStateAction<{ deg: number; min: number; sec: number; dir: string }>>,
     isLongitude: boolean
   ) => {
+    console.debug("updateDMSState")
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
       setter(numValue);
       const dms = convertToDMS(numValue, isLongitude);
       dmsSetter(dms);
     }
+    console.debug("hasScaled.current = false")
+    hasScaled.current = false;
   };
 // const updateDecimalState = (
 //     value: string,
@@ -158,11 +165,12 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
 //   }, [startLat, startLng, endLat, endLng, onCoordsChange]);
   
 useEffect(() => {
-    if (mapRef.current && isValidCoordinate(startLat, startLng)) {
+    if (mapRef.current && isValidCoordinate(startLat, startLng) && !hasScaled.current) {
       const bounds = endLat !== undefined && endLng !== undefined && isValidCoordinate(endLat, endLng)
         ? L.latLngBounds([[startLat, startLng], [endLat, endLng]])
         : L.latLngBounds([[startLat, startLng]]);
       mapRef.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+      hasScaled.current = true;
     }
     onCoordsChange([startLat, startLng], endLat !== undefined && endLng !== undefined ? [endLat, endLng] : undefined);
   }, [startLat, startLng, endLat, endLng, onCoordsChange]);
