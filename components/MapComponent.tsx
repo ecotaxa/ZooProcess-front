@@ -104,6 +104,23 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
       dmsSetter(dms);
     }
   };
+// const updateDecimalState = (
+//     value: string,
+//     setter: React.Dispatch<React.SetStateAction<number>>,
+//     dmsSetter: React.Dispatch<React.SetStateAction<{ deg: number; min: number; sec: number; dir: string }>>,
+//     isLongitude: boolean
+//   ) => {
+//     if (value === '' || value === '-' || value === '.' || value === '-.') {
+//       setter(0);
+//       return;
+//     }
+//     const numValue = parseFloat(value);
+//     if (!isNaN(numValue)) {
+//       setter(numValue);
+//       const dms = convertToDMS(numValue, isLongitude);
+//       dmsSetter(dms);
+//     }
+//   };
 
   const clearEndPoint = () => {
     setEndLat(undefined);
