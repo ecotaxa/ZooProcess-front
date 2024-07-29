@@ -11,7 +11,7 @@ import {eState, timelist} from "./state"
 import { useProcess } from "@/app/api/process"
 import { useEffect, useState } from "react";
 
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 import { addProcessTask } from "@/app/api/tasks";
 import { add } from "date-fns";
 
@@ -30,7 +30,7 @@ export function Process (params:{current:eState, nextState: eState, scan?: strin
 
 
 
-    function addTask(){
+    async function addTask(){
         const data = { 
             params : {
                 projectid,
@@ -147,19 +147,19 @@ export function Process (params:{current:eState, nextState: eState, scan?: strin
     function ErrorMsg() {
 
         if ( showErrorMsg ) {
-        return (
-            <div>
-                <Card>
-                    <CardBody>
-                        <h1>Error</h1>
-                        <h3>There is an error with your scan</h3>
-                    </CardBody>
-                    <CardFooter>
-                        {/* <Button color="primary" onClick={onPress}>Retry</Button> */}
-                    </CardFooter>
-                </Card>
-            </div>
-        )
+            return (
+                <div>
+                    <Card>
+                        <CardBody>
+                            <h1>Error</h1>
+                            <h3>There is an error with your scan</h3>
+                        </CardBody>
+                        <CardFooter>
+                            {/* <Button color="primary" onClick={onPress}>Retry</Button> */}
+                        </CardFooter>
+                    </Card>
+                </div>
+            )
         } else {
             return <></>
         }
