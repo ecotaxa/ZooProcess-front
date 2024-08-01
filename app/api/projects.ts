@@ -8,6 +8,8 @@ import { projectEcotaxaElements } from '@/config/formElements'
 // import { auth } from '@/auth'
 // import { da } from 'date-fns/locale'
 
+import { Project } from '@/app/api/network/zooprocess-api'
+
 // const getProjectsFetcher = (url) => { api.getProjects(url,globalThis.token) }
 
 export function useProjects() {
@@ -38,8 +40,8 @@ export function useProjects() {
 
 
   
-  export function useProject(projectId) {
-    const { data={}, error=false, isLoading=true } = useSWR(`/projects/${projectId}`, api.getProject ,
+  export function useProject(projectId: string) {
+    const { data={} /*as Project*/, error=false, isLoading=true } = useSWR(`/projects/${projectId}`, api.getProject ,
       {
         revalidateIfStale: false,
         revalidateOnFocus: false,
@@ -58,7 +60,17 @@ export function useProjects() {
       isLoading,
       isError: error
     }
+  //   return {
+  //       project: data || {},
+  //       isLoading: isLoading || true,
+  //       isError: error || false
+  //   }
   }
+
+
+
+
+
 
   // export function useProjectMetadata(projectId) {
 
@@ -85,7 +97,7 @@ export function useProjects() {
 
 
 
-export function addProject(data){
+export function addProject(data:any){
 
   console.log("adding Project...");
   console.info(data);
@@ -110,7 +122,7 @@ export function addProject(data){
 
 
 
-const convertData2api = (data) => {
+const convertData2api = (data:any) => {
 
   console.debug(`convertData2api(${data})`)
 
@@ -125,7 +137,7 @@ const convertData2api = (data) => {
     driveId:data.drive, //Id,
     description:data.description,
 
-    driveId:data.drive, //Id,
+    // driveId:data.drive, //Id,
     instrumentId:data.instrument,
 
     // only manager options
@@ -133,17 +145,20 @@ const convertData2api = (data) => {
     updateAt:date.toISOString(), 
 
     // instrument
-    instrumentId: data.serial,
+    // instrumentId: data.serial,
     // serial: data.serial,
 
     // ecotaxa
     ///TODO  copie ecotaxa fields
     // ecotaxa_project_title: data.ecotaxa_project_title,
     // ecotaxa_project_name: data.ecotaxa_project_name,
+
+    ecotaxaId: undefined
   }
 
   if (data.ecotaxa_project){
     dataConverted.ecotaxaId = data.ecotaxa_project
+    // dataConverted = {...dataConverted, ecotaxaId : data.ecotaxa_project}
   }
 
   console.debug("convertData2api dataConverted: ", dataConverted)
@@ -153,7 +168,7 @@ const convertData2api = (data) => {
 
 
 
-export function updateProject(data){
+export function updateProject(data:any){
 
   console.log("updating Project... with: ", data);
 
