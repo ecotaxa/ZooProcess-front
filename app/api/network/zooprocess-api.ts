@@ -160,9 +160,15 @@ export interface IProcess {
 //     return response.data; 
 // }
 
+export interface IScan {
+  url:string, 
+  instrumentId:string, 
+  projectId:string
+}
+
 // on se fiche de userId : il est passé avec le bearer token
 // export async function addBackground(instrumentId:string, image: {url:string, userId:string}) {
-export async function addBackground(image: {url:string, instrumentId:string, projectId:string}) {
+export async function addBackground(image: IScan ) {
   
   console.log("addBackground:", image)
   const api = await axiosInstanse({})
@@ -201,6 +207,7 @@ export async function addBackground(image: {url:string, instrumentId:string, pro
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
+          return Promise.reject(error.response)
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -546,7 +553,7 @@ export async function addProject(data:Project){
   }
 
   
-  export async function updateProject(data:Project){
+  export async function updateProject(data:any){
 
     if (data.id == undefined) throw("Cannot update, project has no id defined");
 
