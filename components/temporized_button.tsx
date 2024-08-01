@@ -14,7 +14,9 @@ interface TemporizedButtonProps {
   waitlabel?: string
   timer?: number
   run: boolean
+  noWait?: boolean
 //   onRestart?: () => void;
+  resetTrigger?: number;
 };
 
 export const TemporizedButton = ({
@@ -23,6 +25,8 @@ export const TemporizedButton = ({
   waitlabel = "Waiting",
   timer = 30,
   run = false,
+  noWait = false,
+  resetTrigger = 0,
 //   onRestart
 }: TemporizedButtonProps) => {
 
@@ -66,6 +70,11 @@ export const TemporizedButton = ({
         }
     }, [run, timer]);
       
+    useEffect(() => {
+        if (resetTrigger > 0) {
+          restartTimer();
+        }
+      }, [resetTrigger]);
 
     useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -74,7 +83,12 @@ export const TemporizedButton = ({
         interval = setInterval(() => {
         setTime((prevTime) => {
             const newTime = prevTime - 1;
-            setButtonLabel(changeButtonLabel(newTime))
+            if ( newTime == 0){
+                if (noWait == true) { onClick(); }
+                setButtonLabel(label)
+            } else {
+                setButtonLabel(changeButtonLabel(newTime))
+            }
            // if (restart == true ){  restartTimer(); return timer}
             if (newTime === 0 /*&& onChange*/) {
                 // onChange();
