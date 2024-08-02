@@ -49,6 +49,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
 
     const [msg,setMsg]:[string,any] = useState("")
 
+    const [scan1 , setScan1] = useState<string | undefined>(undefined)
+    const [scan2 , setScan2] = useState<string | undefined>(undefined)
+
     const onClick = () => {
         console.log("validate scan")
         if ( image ) {
@@ -79,7 +82,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             //    let data = await response.text();
             //    console.log(data);
                
+            const data = {
 
+            }
 
 
             router.push(path)
@@ -281,7 +286,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                 // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
             })
             .catch((error) => {
-                return Promise.reject(error)
+                // return Promise.reject(error)
+                setError(error)
+                setMsg(error)
             })
 
         }
@@ -578,70 +585,76 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         )
     }
 
-  const Scan = (step: number = 1, nextState: state) => {
-    if (current != state.scan1 && current != state.scan2) {
-      return <></>;
-    }
+     const Scan = (step: number, nextState: state) => {
+        if (current != state.scan1 && current != state.scan2) {
+            return <></>;
+        }
 
-    const loaderProps : MyLoaderProps = {
-      project: project,
-      onChange: onChange,
-    };
+        const loaderProps : MyLoaderProps = {
+            project: project,
+            onChange: onChange,
+        };
 
-    const showImage = () => {
-        if (isError) { return <></> }
+        const showImage = () => {
+            if (isError) { return <></> }
+
+            return (
+            <>
+                <div className="flex-row">
+                <Image
+                    className="height-auto"
+                    src={background}
+                    alt="uploaded image"
+                    height={446}
+                />
+                </div>
+
+                <Button
+                disabled={isError || isLoading || !image}
+                color="primary"
+                variant="solid"
+                data-testid="newProjectBtn"
+                onPress={() => {
+                    setError(null)
+                    if (current == state.scan1) {
+                    console.debug("go to 30s bis");
+                    setBackground(imagePlaceholder)
+                    setCurrent(nextState);
+                    } else {
+                    console.debug("go to onClick");
+                    setBackground(imagePlaceholder)
+                    onClick();
+                    }
+                }}
+                >
+                Validate
+                </Button>
+            </>
+            )
+        }
+
+        const onClick = () => {
+            
+        }
 
         return (
         <>
-            <div className="flex-row">
-              <Image
-                className="height-auto"
-                src={background}
-                alt="uploaded image"
-                height={446}
-              />
-            </div>
+            {/* <h3>Scan {step}</h3> */}
+            <Card className="inline-block size-full" data-testid="ScanCard">
+            <CardBody>
+                <Loader project={project} onChange={onChange} />
+                {/* <Loader props={loaderProps} /> */}
+            </CardBody>
 
-            <Button
-              disabled={isError || isLoading || !image}
-              color="primary"
-              variant="solid"
-              data-testid="newProjectBtn"
-              onPress={() => {
-                setError(null)
-                if (current == state.scan1) {
-                  console.debug("go to 30s bis");
-                  setBackground(imagePlaceholder)
-                  setCurrent(nextState);
-                } else {
-                  console.debug("go to onClick");
-                  setBackground(imagePlaceholder)
-                  onClick();
-                }
-              }}
-            >
-              Validate
-            </Button>
+            <CardFooter className="flex flex-row-reverse py-3">
+                { showImage() }
+            </CardFooter>
+            </Card>
         </>
-        )
-    }
+        );
+    };
 
-    return (
-      <>
-        {/* <h3>Scan {step}</h3> */}
-        <Card className="inline-block size-full" data-testid="ScanCard">
-          <CardBody>
-              <Loader project={project} onChange={onChange} />
-              {/* <Loader props={loaderProps} /> */}
-          </CardBody>
 
-          <CardFooter className="flex flex-row-reverse py-3">
-            { showImage() }
-          </CardFooter>
-        </Card>
-      </>
-    );
-  };
 
     const step = (current:state) => {
         switch (current) {
