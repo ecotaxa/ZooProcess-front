@@ -65,6 +65,7 @@ const ArcticMap: React.FC = () => {
       minZoom={0}
     >
       <MapInitializer />
+      
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="Blue Marble">
           <TileLayer
@@ -77,21 +78,22 @@ const ArcticMap: React.FC = () => {
             tilematrixset="EPSG3413_250m"
           />
         </LayersControl.BaseLayer>
-        <LayersControl.Overlay name="MODIS Terra">
+        <LayersControl.Overlay checked name="Land/Water Map">
           <TileLayer
-            url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_CorrectedReflectance_TrueColor/default/{time}/{tilematrixset}/{z}/{y}/{x}.jpg'
-            attribution='NASA MODIS Terra, GIBS'
+            url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_Land_Water_Mask/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+            attribution='NASA Land/Water Map, GIBS'
             maxZoom={8}
             minZoom={0}
             tileSize={512}
             time={yesterdayString}
             tilematrixset="EPSG3413_250m"
+            opacity={0.7}
           />
         </LayersControl.Overlay>
-        <LayersControl.Overlay checked name="Land/Water Map">
+        <LayersControl.Overlay name="MODIS Terra">
           <TileLayer
-            url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/Land_Water_Map/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
-            attribution='NASA Land/Water Map, GIBS'
+            url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_CorrectedReflectance_TrueColor/default/{time}/{tilematrixset}/{z}/{y}/{x}.jpg'
+            attribution='NASA MODIS Terra, GIBS'
             maxZoom={8}
             minZoom={0}
             tileSize={512}
@@ -112,6 +114,7 @@ const ArcticMap: React.FC = () => {
           />
         </LayersControl.Overlay>
       </LayersControl>
+
       <Marker position={[89, 2.45]} icon={yellowIcon} >
         <Popup>Point 1: 89°N, 2.45°E</Popup>
       </Marker>
