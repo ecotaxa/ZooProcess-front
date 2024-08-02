@@ -204,13 +204,23 @@ useEffect(() => {
     setIsPolar(Math.abs(startLat) > 75 || (endLat !== undefined && Math.abs(endLat) > 75));
   }, [startLat, endLat]);
 
-  useEffect(() => {
+//   useEffect(() => {
+//     if (mapRef.current) {
+//       mapRef.current.invalidateSize();
+//       // Add any other map-related logic here
+//     }
+//   }, [isPolar]);
+
+useEffect(() => {
     if (mapRef.current) {
       mapRef.current.invalidateSize();
-      // Add any other map-related logic here
+      if (isPolar) {
+        mapRef.current.setView([90, 0], 0);
+      } else {
+        mapRef.current.setView([startLat, startLng], 5);
+      }
     }
-  }, [isPolar]);
-
+  }, [isPolar, startLat, startLng]);
 
 
 
@@ -233,11 +243,21 @@ useEffect(() => {
 //     }
 //   );
 
+// const polarCRS = new L.Proj.CRS(
+//     'EPSG:3413',
+//     '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs',
+//     {
+//       resolutions: [8192, 4096, 2048, 1024, 512, 256, 128],
+//       origin: [-4194304, 4194304],
+//       bounds: L.bounds([-4194304, -4194304], [4194304, 4194304])
+//     }
+//   );
+
 const polarCRS = new L.Proj.CRS(
     'EPSG:3413',
     '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs',
     {
-      resolutions: [8192, 4096, 2048, 1024, 512, 256, 128],
+      resolutions: [32768, 16384, 8192, 4096, 2048, 1024, 512, 256],
       origin: [-4194304, 4194304],
       bounds: L.bounds([-4194304, -4194304], [4194304, 4194304])
     }
@@ -265,12 +285,23 @@ const polarCRS = new L.Proj.CRS(
         //   ref={mapRef}
         //   zoomControl={true}
         //   crs={isPolar ? polarCRS : L.CRS.EPSG3857}
+
+            // center={isPolar ? [90, 0] : [startLat, startLng]}
+            // zoom={isPolar ? 3 : 5}
+            // style={{ height: '400px', width: '100%' }}
+            // ref={mapRef}
+            // zoomControl={true}
+            // crs={isPolar ? EPSG3413 : L.CRS.EPSG3857}
+
+            key={isPolar ? 'polar' : 'standard'}
             center={isPolar ? [90, 0] : [startLat, startLng]}
-            zoom={isPolar ? 3 : 5}
+            zoom={isPolar ? 0 : 5}
             style={{ height: '400px', width: '100%' }}
             ref={mapRef}
             zoomControl={true}
-            crs={isPolar ? EPSG3413 : L.CRS.EPSG3857}
+            crs={isPolar ? polarCRS : L.CRS.EPSG3857}
+            minZoom={isPolar ? 0 : undefined}
+            maxZoom={isPolar ? 7 : undefined}
         >
          
          {/* ... map layers and markers */}
@@ -283,8 +314,8 @@ const polarCRS = new L.Proj.CRS(
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         /> */}
-            {isPolar ? (
-            // <TileLayer
+            {/* {isPolar ? ( 
+             <TileLayer
             //     url="https://gitc.earthdata.nasa.gov/wmts-arctic/Arctic_EASE_Grid/default/250m/{z}/{y}/{x}.png"
             //     attribution="NASA GIBS"
             //     maxZoom={7}
@@ -295,16 +326,28 @@ const polarCRS = new L.Proj.CRS(
             //     attribution="© ArcticConnect. Data © OpenStreetMap contributors"
             //     maxZoom={18}
             // />
+            // <TileLayer
+            //     url={isPolar ? 'https://map1.vis.earthdata.nasa.gov/wmts-arctic/wmts.cgi?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=MODIS_Terra_CorrectedReflectance_TrueColor&STYLE=&TILEMATRIXSET=EPSG3413_250m&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image%2Fjpeg' : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'}
+            //     attribution={isPolar ? '&copy; NASA' : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}
+            // />
+            // ) : (
+            // <TileLayer
+            //     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            //     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            /> 
+            )} */}
+
             <TileLayer
-                url={isPolar ? 'https://map1.vis.earthdata.nasa.gov/wmts-arctic/wmts.cgi?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=MODIS_Terra_CorrectedReflectance_TrueColor&STYLE=&TILEMATRIXSET=EPSG3413_250m&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image%2Fjpeg' : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'}
+                url={isPolar 
+                    ? 'https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_CorrectedReflectance_TrueColor/default/{time}/{tilematrixset}{maxZoom}/{z}/{y}/{x}.jpg'
+                    : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                }
                 attribution={isPolar ? '&copy; NASA' : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}
+                time={isPolar ? new Date().toISOString().split('T')[0] : ''}
+                tilematrixset={isPolar ? 'EPSG3413_' : ''}
+                maxZoom={isPolar ? 7 : 19}
             />
-            ) : (
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            />
-            )}
+
 
           {/* {isValidCoordinate(startLat, startLng) && (
             <Marker position={[startLat, startLng]} icon={blueIcon}>
