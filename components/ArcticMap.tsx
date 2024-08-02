@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'proj4';
@@ -29,8 +29,7 @@ const MapInitializer: React.FC = () => {
 };
 
 const ArcticMap: React.FC = () => {
-  // Obtenir la date d'aujourd'hui au format YYYY-MM-DD
-  const today = "2024-08-01" //new Date("2023-06-01").toISOString().split('T')[0];
+  const today = "2024-08-01" // new Date().toISOString().split('T')[0];
 
   return (
     <MapContainer
@@ -42,9 +41,22 @@ const ArcticMap: React.FC = () => {
       minZoom={0}
     >
       <MapInitializer />
-      <TileLayer
-        // url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_CorrectedReflectance_TrueColor/default/{time}/{tilematrixset}/{z}/{y}/{x}.jpg'
-        url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/OSM_Land_Mask/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+      <LayersControl position="topright">
+        <LayersControl.BaseLayer checked name="Blue Marble">
+          <TileLayer
+            url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/BlueMarble_ShadedRelief_Bathymetry/default/{time}/{tilematrixset}/{z}/{y}/{x}.jpg'
+            attribution='NASA Blue Marble, GIBS'
+            maxZoom={8}
+            minZoom={0}
+            tileSize={512}
+            time={today}
+            tilematrixset="EPSG3413_250m"
+          />
+        </LayersControl.BaseLayer>
+        <LayersControl.Overlay name="MODIS Terra">
+        <TileLayer
+        url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_CorrectedReflectance_TrueColor/default/{time}/{tilematrixset}/{z}/{y}/{x}.jpg'
+        // url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/OSM_Land_Mask/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
         attribution='Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.'
         maxZoom={8}
         minZoom={0}
@@ -52,6 +64,19 @@ const ArcticMap: React.FC = () => {
         time={today}
         tilematrixset="EPSG3413_250m"
       />
+        </LayersControl.Overlay>
+        <LayersControl.Overlay checked name="Coastlines">
+          <TileLayer
+            url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/Coastlines/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+            attribution='NASA Coastlines, GIBS'
+            maxZoom={8}
+            minZoom={0}
+            tileSize={512}
+            time={today}
+            tilematrixset="EPSG3413_250m"
+          />
+        </LayersControl.Overlay>
+      </LayersControl>
       <Marker position={[89, 2.45]}>
         <Popup>Point 1: 89°N, 2.45°E</Popup>
       </Marker>
