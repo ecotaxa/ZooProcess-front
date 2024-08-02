@@ -75,10 +75,10 @@ const ArcticMap: React.FC = () => {
             tilematrixset="EPSG3413_250m"
           />
         </LayersControl.BaseLayer>
-        <LayersControl.Overlay checked name="Land/Water Map">
+        <LayersControl.Overlay checked name="Land Surface Temperature">
           <TileLayer
-            url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_Land_Water_Mask/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
-            attribution='NASA Land/Water Map, GIBS'
+            url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_Land_Surface_Temp_Day/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+            attribution='NASA MODIS Terra Land Surface Temperature, GIBS'
             maxZoom={8}
             minZoom={0}
             tileSize={512}
