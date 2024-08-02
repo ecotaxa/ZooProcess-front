@@ -3,7 +3,7 @@
 import { Debug } from "@/components/Debug"
 import { Timeline_scan } from "@/components/timeline-scan";
 import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
-import { FC, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import FileUploader from "@/components/FileUploader";
 import { useRouter } from "next/navigation";
 import { useProject } from "@/app/api/projects";
@@ -23,6 +23,7 @@ import { TemporizedButton } from "@/components/temporized_button";
 import { ScannerEffect } from "@/components/ScannerEffect";
 import { url } from "inspector";
 import { boolean } from "zod";
+import { TimedScanButton } from "@/components/TimedScanButtonProps";
 
 type pageProps = {
     params:{
@@ -52,6 +53,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
 
     // const [error , setError] = useState<Error | undefined>(undefined)
     const [error , setError] = useState<string | Error | undefined>(undefined)
+    const [scanCompleted, setScanCompleted] = useState(false);
 
     // const [imageRGB , setImageRGB] = useState("");
     
@@ -283,6 +285,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             //     }
             // })
         } else {
+            console.debug("not a TIFF")
             setBackground(fileUrl.url)
 
             let furl = fileUrl
@@ -507,31 +510,48 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             return <></>
         }
 
-        const afterScanComplete = () => {
-            // setTemporized(false)
-            console.log("Scan completed!");
+        // const afterScanComplete = () => {
+        //     // setTemporized(false)
+        //     console.log("Scan completed!");
 
-            // if ( temporized == false ){
-                // setTemporized(true)
-            // } else {
-                // setResetCounter(prev => prev + 1);
-            // }
-            setTimeout(() => {
-                setTemporized(true);
-                setResetCounter(prev => prev + 1);
-            }, 100); // Adjust this delay as needed
+        //     // if ( temporized == false ){
+        //         // setTemporized(true)
+        //     // } else {
+        //         // setResetCounter(prev => prev + 1);
+        //     // }
+        //     setTimeout(() => {
+        //         setTemporized(true);
+        //         setResetCounter(prev => prev + 1);
+        //     }, 100); // Adjust this delay as needed
 
-            setTriggerScan(false);
-        }
+        //     setTriggerScan(false);
+        // }
+
+        // useEffect( () => {
+
+        // },[scanCompleted])
 
         const onPreviewClick = () => {
             console.log("onPreviewClick - TODO drive the scanner")
-            setTemporized(false)
-            // setTemporized(true)
-            // setResetCounter(prev => prev + 1);
+            console.debug("renew Preview");
+        //     setTemporized(false)
+        //     // setTemporized(true)
+        //     // setResetCounter(prev => prev + 1);
 
             setTriggerScan(true);
+            return Promise.resolve() 
         }
+
+        const handleScan = () => {
+            // console.log("Starting scan");
+            // setTriggerScan(true);
+            setCurrent(nextState) 
+        };
+    
+        const handleValidate = () => {
+            console.debug("go to wait 30s");
+            setCurrent(nextState);
+        };
 
         //setTriggerScan(true);
 
@@ -546,19 +566,24 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         <ScannerEffect 
                             imageSrc="/demo/demo_background.jpg" 
                             scanDuration={1000} 
+                            // onScanComplete={() => {
+                            //     // Your function to run after the scan is complete
+                            //     // You can call any function or perform any action here
+                            //     afterScanComplete()
+                            // }}
                             onScanComplete={() => {
-                                // Your function to run after the scan is complete
-                                // You can call any function or perform any action here
-                                afterScanComplete()
+                                console.log("Scan completed!");
+                                setTriggerScan(false);
+                                setScanCompleted(true)
                             }}
                             triggerScan={triggerScan}
-                            />
+                        />
                     </div>
                 </CardBody>
 
                 <CardFooter className="flex flex-row-reverse py-3">
 
-                <Button 
+                {/* <Button 
                         // isDisabled={ isError || isLoading }
                         color="secondary"
                         // showAnchorIcon
@@ -567,20 +592,28 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         // >Scan {actions[nextAction(action)]}</Button>
                         // onPress={onClick}
                         onPress={() =>{ console.debug("renew Preview");  onPreviewClick()  }}
-                    >Preview</Button>
+                    >Preview</Button> */}
 
-                    <Button 
+                    {/* <Button 
                         // isDisabled={ isError || isLoading }
-                        color="primary"
+                        color="danger"
                         // showAnchorIcon
                         variant="solid"
                         data-testid="newProjectBtn"
                         // >Scan {actions[nextAction(action)]}</Button>
                         // onPress={onClick}
                         onPress={() =>{ console.debug("go to wait 30s");   setCurrent(nextState) }}
-                    >Scan</Button>
-                    <TemporizedButton /*timer={30} label="Scan" waitlabel="Wait"*/ run={temporized} resetTrigger={resetCounter} onClick={() =>{ console.debug("go to wait 30s");   setCurrent(nextState) }}/>
-
+                    >Scan</Button> */}
+                    {/* <TemporizedButton  run={temporized} resetTrigger={resetCounter} onClick={() =>{ console.debug("go to wait 30s");   setCurrent(nextState) }}/> */}
+                    <TimedScanButton
+                        onScan={handleScan}
+                        onPreview={() =>{  return  onPreviewClick() } }
+                        // onValidate={handleValidate}
+                        // scanDuration={1000}
+                        // waitDuration={30}
+                        initialTime={30}
+                        scanCompleted={scanCompleted}
+                    />
                 </CardFooter>
             </Card>
             </>
@@ -748,7 +781,8 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                 </Button>
             ):(
                 // <TemporizedButton /*timer={30} label="Scan" waitlabel="Wait"*/ run={temporized} noWait={true}  onClick={() =>{ console.debug("go to wait 30s"); setScan1(scanned_image);  setCurrent(nextState) }}/>
-                <TemporizedButton /*timer={30} label="Scan" waitlabel="Wait"*/ run={temporized} noWait={true}  onClick={() =>{  onClick(scanned_image) }}/>
+                <TemporizedButton  run={temporized} noWait={true}  onClick={() =>{  onClick(scanned_image) }}/>
+                // <TimedScanButton onPreview={() => {}} onScan={()=>{}} initialTime={30} />
             )}
           </CardFooter>
         </Card>

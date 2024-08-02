@@ -3,68 +3,61 @@ import { Button } from "@nextui-org/react";
 
 interface TimedScanButtonProps {
   onScan: () => void;
-  onValidate: () => void;
-  onPreview: () => void;
-  scanDuration: number;
-  waitDuration: number;
-
+  onPreview: () => Promise<void>;
+  initialTime: number;
+  scanCompleted: boolean;
 }
 
 export const TimedScanButton: React.FC<TimedScanButtonProps> = ({
   onScan,
-  onValidate,
   onPreview,
-  scanDuration,
-  waitDuration
+  initialTime,
+  scanCompleted
 }) => {
-  const [isScanning, setIsScanning] = useState(false);
-  const [isWaiting, setIsWaiting] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(waitDuration);
+  const [timeLeft, setTimeLeft] = useState(initialTime);
+  const [isRunning, setIsRunning] = useState(false);
+
+
+  useEffect(() => {
+    if (scanCompleted) {
+      setTimeLeft(initialTime);
+      setIsRunning(true);
+    }
+  }, [scanCompleted, initialTime]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isWaiting && timeLeft > 0) {
+    if (isRunning && timeLeft > 0) {
       timer = setInterval(() => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
-    } else if (isWaiting && timeLeft === 0) {
-      setIsWaiting(false);
+    } else if (timeLeft === 0) {
+      setIsRunning(false);
     }
     return () => clearInterval(timer);
-  }, [isWaiting, timeLeft]);
+  }, [isRunning, timeLeft]);
 
-  const handleScan = () => {
-    setIsScanning(true);
-    onScan();
-    setTimeout(() => {
-      setIsScanning(false);
-      setIsWaiting(true);
-      setTimeLeft(waitDuration);
-    }, scanDuration);
-  };
-
-  const handlePreview = () => {
-    setIsWaiting(false);
-    setTimeLeft(waitDuration);
-    onPreview();
+  const handlePreview = async () => {
+    await onPreview();
+    setTimeLeft(initialTime);
+    setIsRunning(true);
   };
 
   return (
     <>
-    <Button
-      onPress={isWaiting ? onValidate : handleScan}
-      disabled={isScanning}
-      color={isWaiting ? "primary" : "secondary"}
-    >
-      {isScanning ? "Scanning..." : isWaiting ? `Validate (${timeLeft}s)` : "Scan"}
-    </Button>
-    <Button
-          onPress={handlePreview}
-          disabled={isScanning}
-          color="secondary"
-        >
-          Preview
-    </Button>
+      <Button
+        isDisabled={timeLeft === 0 ? false : true}
+        onPress={timeLeft === 0 ? onScan : () => {}}
+        color="primary"
+      >
+        {timeLeft > 0 ? `Wait (${timeLeft}s)` : "Scan"}
+      </Button>
+      <Button
+        onPress={handlePreview}
+        color="secondary"
+      >
+        Preview
+      </Button>
     </>
   );
 };
