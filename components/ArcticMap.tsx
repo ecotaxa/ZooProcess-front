@@ -43,8 +43,8 @@ const ArcticMap: React.FC = () => {
     >
       <MapInitializer />
       <TileLayer
-        url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_CorrectedReflectance_TrueColor/default/{time}/{tilematrixset}/{z}/{y}/{x}.jpg'
-        //url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/OSM_Land_Mask/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+        // url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_CorrectedReflectance_TrueColor/default/{time}/{tilematrixset}/{z}/{y}/{x}.jpg'
+        url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/OSM_Land_Mask/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
         attribution='Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.'
         maxZoom={8}
         minZoom={0}
