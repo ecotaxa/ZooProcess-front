@@ -28,8 +28,32 @@ const MapInitializer: React.FC = () => {
   return null;
 };
 
+const blueIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  const yellowIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+
+
+
 const ArcticMap: React.FC = () => {
-  const today = "2024-08-01" // new Date().toISOString().split('T')[0];
+  // Obtenir la date d'hier
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayString = yesterday.toISOString().split('T')[0];
 
   return (
     <MapContainer
@@ -49,21 +73,31 @@ const ArcticMap: React.FC = () => {
             maxZoom={8}
             minZoom={0}
             tileSize={512}
-            time={today}
+            time={yesterdayString}
             tilematrixset="EPSG3413_250m"
           />
         </LayersControl.BaseLayer>
         <LayersControl.Overlay name="MODIS Terra">
-        <TileLayer
-        url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_CorrectedReflectance_TrueColor/default/{time}/{tilematrixset}/{z}/{y}/{x}.jpg'
-        // url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/OSM_Land_Mask/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
-        attribution='Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.'
-        maxZoom={8}
-        minZoom={0}
-        tileSize={512}
-        time={today}
-        tilematrixset="EPSG3413_250m"
-      />
+          <TileLayer
+            url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_CorrectedReflectance_TrueColor/default/{time}/{tilematrixset}/{z}/{y}/{x}.jpg'
+            attribution='NASA MODIS Terra, GIBS'
+            maxZoom={8}
+            minZoom={0}
+            tileSize={512}
+            time={yesterdayString}
+            tilematrixset="EPSG3413_250m"
+          />
+        </LayersControl.Overlay>
+        <LayersControl.Overlay checked name="Land/Water Map">
+          <TileLayer
+            url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/Land_Water_Map/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+            attribution='NASA Land/Water Map, GIBS'
+            maxZoom={8}
+            minZoom={0}
+            tileSize={512}
+            time={yesterdayString}
+            tilematrixset="EPSG3413_250m"
+          />
         </LayersControl.Overlay>
         <LayersControl.Overlay checked name="Coastlines">
           <TileLayer
@@ -72,15 +106,16 @@ const ArcticMap: React.FC = () => {
             maxZoom={8}
             minZoom={0}
             tileSize={512}
-            time={today}
+            time={yesterdayString}
             tilematrixset="EPSG3413_250m"
+            opacity={0.8}
           />
         </LayersControl.Overlay>
       </LayersControl>
-      <Marker position={[89, 2.45]}>
+      <Marker position={[89, 2.45]} icon={yellowIcon} >
         <Popup>Point 1: 89°N, 2.45°E</Popup>
       </Marker>
-      <Marker position={[88.7, 0.1]}>
+      <Marker position={[88.7, 0.1]}icon={blueIcon}>
         <Popup>Point 2: 88.7°N, 0.1°E</Popup>
       </Marker>
     </MapContainer>
