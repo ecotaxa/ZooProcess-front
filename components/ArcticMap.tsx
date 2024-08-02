@@ -48,10 +48,12 @@ const MapInitializer: React.FC = () => {
 };
 
 const ArcticMap: React.FC = () => {
-  // Obtenir la date d'hier
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayString = yesterday.toISOString().split('T')[0];
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayString = yesterday.toISOString().split('T')[0];
+    
+    const currentMonthString = new Date().toISOString().slice(0, 7) + '-01';
+    
 
   return (
     <MapContainer
@@ -98,6 +100,74 @@ const ArcticMap: React.FC = () => {
             tilematrixset="EPSG3413_250m"
           />
         </LayersControl.Overlay>
+        <LayersControl.Overlay checked name="Land/Water Map">
+    <TileLayer
+      url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_Land_Water_Mask/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+      attribution='NASA MODIS Terra Land Water Mask, GIBS'
+      maxZoom={8}
+      minZoom={0}
+      tileSize={512}
+      time={yesterdayString}
+      tilematrixset="EPSG3413_250m"
+      opacity={1}
+      className="custom-land-water-map"
+    />
+  </LayersControl.Overlay>
+  <LayersControl.Overlay name="Sea Ice">
+    <TileLayer
+      url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_Sea_Ice/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+      attribution='NASA MODIS Terra Sea Ice, GIBS'
+      maxZoom={8}
+      minZoom={0}
+      tileSize={512}
+      time={yesterdayString}
+      tilematrixset="EPSG3413_250m"
+    />
+  </LayersControl.Overlay>
+  <LayersControl.Overlay name="Chlorophyll A">
+    <TileLayer
+      url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MODIS_Terra_Chlorophyll_A/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+      attribution='NASA MODIS Terra Chlorophyll A, GIBS'
+      maxZoom={8}
+      minZoom={0}
+      tileSize={512}
+      time={yesterdayString}
+      tilematrixset="EPSG3413_250m"
+    />
+  </LayersControl.Overlay>
+  <LayersControl.Overlay name="Sea Surface Currents">
+    <TileLayer
+      url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/Oscar_Sea_Surface_Currents_Zonal/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+      attribution='NASA Oscar Sea Surface Currents, GIBS'
+      maxZoom={8}
+      minZoom={0}
+      tileSize={512}
+      time={currentMonthString}
+      tilematrixset="EPSG3413_250m"
+    />
+  </LayersControl.Overlay>
+  <LayersControl.Overlay name="Surface Wind Speed">
+    <TileLayer
+      url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/MERRA2_Surface_Wind_Speed_Monthly/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+      attribution='NASA MERRA2 Surface Wind Speed, GIBS'
+      maxZoom={8}
+      minZoom={0}
+      tileSize={512}
+      time={currentMonthString}
+      tilematrixset="EPSG3413_250m"
+    />
+  </LayersControl.Overlay>
+  <LayersControl.Overlay name="Bathymetry">
+    <TileLayer
+      url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/GEBCO_2019_Bathymetry/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
+      attribution='GEBCO Bathymetry, GIBS'
+      maxZoom={8}
+      minZoom={0}
+      tileSize={512}
+      time={yesterdayString}
+      tilematrixset="EPSG3413_250m"
+    />
+  </LayersControl.Overlay>
         <LayersControl.Overlay checked name="Coastlines (Red)">
           <TileLayer
             url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/Coastlines/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
@@ -121,6 +191,9 @@ const ArcticMap: React.FC = () => {
       <style>{`
         .red-coastline {
           filter: brightness(0) saturate(100%) invert(19%) sepia(92%) saturate(6618%) hue-rotate(357deg) brightness(97%) contrast(113%);
+        }
+        .custom-land-water-map {
+          filter: contrast(200%) brightness(150%) sepia(100%) hue-rotate(20deg) saturate(1000%);
         }
       `}</style>
     </MapContainer>
