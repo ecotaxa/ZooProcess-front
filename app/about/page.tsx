@@ -3,15 +3,16 @@
 
 import { title } from "@/components/primitives";
 import { Timeline_scan } from "@/components/timeline-scan";
-import { Link, Spinner } from "@nextui-org/react";
+import { Card, CardBody, Link, Spinner } from "@nextui-org/react";
 
 import ArcticMap from '@/components/ArcticMap';
 
 
 export default function AboutPage() {
 	return (
-
-		<div>
+        <div>
+        <Card>
+      <CardBody>
 
         {/* <Timeline_scan current={0.5} />
 
@@ -22,7 +23,9 @@ export default function AboutPage() {
         <ArcticMap />
 
 
-		</div>
+		</CardBody>
+        </Card>
+        </div>
 	);
 }
 
