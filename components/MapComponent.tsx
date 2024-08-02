@@ -7,6 +7,8 @@ import 'leaflet/dist/leaflet.css';
 // polar projection
 // npm install proj4 proj4leaflet
 // npm i --save-dev @types/proj4leaflet
+
+import 'proj4';
 import 'proj4leaflet';
 import { Debug } from './Debug';
 
@@ -27,6 +29,10 @@ const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initial
   const [startLngDMS, setStartLngDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'E' });
   const [endLatDMS, setEndLatDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'N' });
   const [endLngDMS, setEndLngDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'E' });
+  const [autoActivatePolar, setAutoActivatePolar] = useState<boolean>(true);
+
+
+
 
   const mapRef = useRef<L.Map | null>(null);
 //   const [mapCenter, setMapCenter] = useState<[number, number]>([startLat, startLng]);
@@ -149,6 +155,14 @@ const hasScaled = useRef(false);
   };
 
   useEffect(() => {
+    if (autoActivatePolar) {
+      const shouldBePolar = Math.abs(startLat) > 75 || (endLat !== undefined && Math.abs(endLat) > 75);
+      setIsPolar(shouldBePolar);
+    }
+  }, [startLat, endLat, autoActivatePolar]);
+
+  
+  useEffect(() => {
     setStartLatDMS(convertToDMS(startLat, false));
     setStartLngDMS(convertToDMS(startLng, true));
     if (endLat !== undefined && endLng !== undefined) {
@@ -190,6 +204,16 @@ useEffect(() => {
     setIsPolar(Math.abs(startLat) > 75 || (endLat !== undefined && Math.abs(endLat) > 75));
   }, [startLat, endLat]);
 
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.invalidateSize();
+      // Add any other map-related logic here
+    }
+  }, [isPolar]);
+
+
+
+
   const proj4 = require('proj4');
 
 //   const polarCRS = L.CRS.EPSG3413; unknow
@@ -199,27 +223,54 @@ useEffect(() => {
 //    const polarCRS = L.CRS.ESPG900913; 
 // const polarCRS = L.CRS.Earth
 
+// const polarCRS = new L.Proj.CRS(
+//     'EPSG:3413',
+//     '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs',
+//     {
+//       resolutions: [8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1], // Adjust resolutions as needed
+//       origin: [-4194304, 4194304], // Top left corner of the projection
+//       bounds: L.bounds([-4194304, -4194304], [4194304, 4194304]), // Projection bounds
+//     }
+//   );
+
 const polarCRS = new L.Proj.CRS(
     'EPSG:3413',
     '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs',
     {
-      resolutions: [8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1], // Adjust resolutions as needed
-      origin: [-4194304, 4194304], // Top left corner of the projection
-      bounds: L.bounds([-4194304, -4194304], [4194304, 4194304]), // Projection bounds
+      resolutions: [8192, 4096, 2048, 1024, 512, 256, 128],
+      origin: [-4194304, 4194304],
+      bounds: L.bounds([-4194304, -4194304], [4194304, 4194304])
     }
   );
 
+  const EPSG3413 = new L.Proj.CRS(
+    'EPSG:3413',
+    '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs',
+    {
+      resolutions: [8192, 4096, 2048, 1024, 512, 256, 128],
+      origin: [-4194304, 4194304],
+      bounds: L.bounds([-4194304, -4194304], [4194304, 4194304])
+    }
+  );
+  
   return (
     <Card>
       <CardBody>
-        <Debug params={isPolar} title='isPolar' />
+        <Debug params={isPolar} title='isPolar' open={true} />
+        <Debug params={autoActivatePolar} title='autoActivatePolar' open={true} />
         <MapContainer
-          center={[startLat, startLng]}
-          zoom={5}
-          style={{ height: '400px', width: '100%' }}
-          ref={mapRef}
-          zoomControl={true}
-          crs={isPolar ? polarCRS : L.CRS.EPSG3857}
+        //   center={[startLat, startLng]}
+        //   zoom={5}
+        //   style={{ height: '400px', width: '100%' }}
+        //   ref={mapRef}
+        //   zoomControl={true}
+        //   crs={isPolar ? polarCRS : L.CRS.EPSG3857}
+            center={isPolar ? [90, 0] : [startLat, startLng]}
+            zoom={isPolar ? 3 : 5}
+            style={{ height: '400px', width: '100%' }}
+            ref={mapRef}
+            zoomControl={true}
+            crs={isPolar ? EPSG3413 : L.CRS.EPSG3857}
         >
          
          {/* ... map layers and markers */}
@@ -228,11 +279,34 @@ const polarCRS = new L.Proj.CRS(
             url={isPolar ? 'https://map1.vis.earthdata.nasa.gov/wmts-arctic/wmts.cgi?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=MODIS_Terra_CorrectedReflectance_TrueColor&STYLE=&TILEMATRIXSET=EPSG3413_250m&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image%2Fjpeg' : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'}
             attribution={isPolar ? '&copy; NASA' : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}
           /> */}
-          <TileLayer
+          {/* <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        />
-          {isValidCoordinate(startLat, startLng) && (
+        /> */}
+            {isPolar ? (
+            // <TileLayer
+            //     url="https://gitc.earthdata.nasa.gov/wmts-arctic/Arctic_EASE_Grid/default/250m/{z}/{y}/{x}.png"
+            //     attribution="NASA GIBS"
+            //     maxZoom={7}
+            //     // tilematrixset="250m"
+            // />
+            // <TileLayer
+            // url="https://tiles.arcticconnect.ca/osm_3573/{z}/{x}/{y}.png"
+            //     attribution="© ArcticConnect. Data © OpenStreetMap contributors"
+            //     maxZoom={18}
+            // />
+            <TileLayer
+                url={isPolar ? 'https://map1.vis.earthdata.nasa.gov/wmts-arctic/wmts.cgi?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=MODIS_Terra_CorrectedReflectance_TrueColor&STYLE=&TILEMATRIXSET=EPSG3413_250m&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image%2Fjpeg' : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'}
+                attribution={isPolar ? '&copy; NASA' : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}
+            />
+            ) : (
+            <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            />
+            )}
+
+          {/* {isValidCoordinate(startLat, startLng) && (
             <Marker position={[startLat, startLng]} icon={blueIcon}>
               <Popup>Start Position</Popup>
             </Marker>
@@ -244,7 +318,26 @@ const polarCRS = new L.Proj.CRS(
           )}
           {isValidCoordinate(startLat, startLng) && isValidCoordinate(endLat ?? 0, endLng ?? 0) && endLat !== undefined && endLng !== undefined && (
             <Polyline positions={[[startLat, startLng], [endLat, endLng]]} color="red" />
-          )}
+          )} */}
+          {isValidCoordinate(startLat, startLng) && (
+  <Marker position={isPolar ? polarCRS.unproject(L.point(startLng, startLat)) : [startLat, startLng]} icon={blueIcon}>
+    <Popup>Start Position</Popup>
+  </Marker>
+)}
+{isValidCoordinate(endLat ?? 0, endLng ?? 0) && endLat !== undefined && endLng !== undefined && (
+  <Marker position={isPolar ? polarCRS.unproject(L.point(endLng, endLat)) : [endLat, endLng]} icon={yellowIcon}>
+    <Popup>End Position</Popup>
+  </Marker>
+)}
+{isValidCoordinate(startLat, startLng) && isValidCoordinate(endLat ?? 0, endLng ?? 0) && endLat !== undefined && endLng !== undefined && (
+  <Polyline positions={isPolar ? 
+    [polarCRS.unproject(L.point(startLng, startLat)), polarCRS.unproject(L.point(endLng, endLat))] : 
+    [[startLat, startLng], [endLat, endLng]]} 
+    color="red" 
+  />
+)}
+
+
           {/* <MapEvents /> */}
         </MapContainer>
         <div style={{ marginTop: '20px' }}>
@@ -261,12 +354,22 @@ const polarCRS = new L.Proj.CRS(
           
           <Switch
             checked={isPolar}
-            onChange={(e) => setIsPolar(e.target.checked)}
+            // onChange={(e) => setIsPolar(e.target.checked)}
+            onChange={(e) => {
+                setIsPolar(e.target.checked);
+                setAutoActivatePolar(false);
+            }}
             style={{ marginBottom: '20px' }}
           >
             Polar Projection
           </Switch>
-          
+          <Switch
+            checked={autoActivatePolar}
+            onChange={(e) => setAutoActivatePolar(e.target.checked)}
+            style={{ marginBottom: '20px' }}
+            >
+            Auto Activate Polar Projection
+        </Switch>
           {coordinateFormat === 'decimal' ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
