@@ -19,6 +19,25 @@ const crs = new (L as any).Proj.CRS(
   }
 );
 
+// Définition des icônes personnalisées
+const blueIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+const yellowIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 // Composant pour initialiser la vue de la carte
 const MapInitializer: React.FC = () => {
   const map = useMap();
@@ -27,27 +46,6 @@ const MapInitializer: React.FC = () => {
   }, [map]);
   return null;
 };
-
-const blueIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
-
-  const yellowIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
-
-
-
 
 const ArcticMap: React.FC = () => {
   // Obtenir la date d'hier
@@ -65,7 +63,6 @@ const ArcticMap: React.FC = () => {
       minZoom={0}
     >
       <MapInitializer />
-      
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="Blue Marble">
           <TileLayer
@@ -101,7 +98,7 @@ const ArcticMap: React.FC = () => {
             tilematrixset="EPSG3413_250m"
           />
         </LayersControl.Overlay>
-        <LayersControl.Overlay checked name="Coastlines">
+        <LayersControl.Overlay checked name="Coastlines (Red)">
           <TileLayer
             url='https://map1.vis.earthdata.nasa.gov/wmts-arctic/Coastlines/default/{time}/{tilematrixset}/{z}/{y}/{x}.png'
             attribution='NASA Coastlines, GIBS'
@@ -110,17 +107,22 @@ const ArcticMap: React.FC = () => {
             tileSize={512}
             time={yesterdayString}
             tilematrixset="EPSG3413_250m"
-            opacity={0.8}
+            opacity={1}
+            className="red-coastline"
           />
         </LayersControl.Overlay>
       </LayersControl>
-
-      <Marker position={[89, 2.45]} icon={yellowIcon} >
+      <Marker position={[89, 2.45]} icon={yellowIcon}>
         <Popup>Point 1: 89°N, 2.45°E</Popup>
       </Marker>
-      <Marker position={[88.7, 0.1]}icon={blueIcon}>
+      <Marker position={[88.7, 0.1]} icon={blueIcon}>
         <Popup>Point 2: 88.7°N, 0.1°E</Popup>
       </Marker>
+      <style>{`
+        .red-coastline {
+          filter: brightness(0) saturate(100%) invert(19%) sepia(92%) saturate(6618%) hue-rotate(357deg) brightness(97%) contrast(113%);
+        }
+      `}</style>
     </MapContainer>
   );
 };
