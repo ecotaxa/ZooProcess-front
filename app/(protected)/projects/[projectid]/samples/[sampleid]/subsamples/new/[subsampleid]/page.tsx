@@ -359,7 +359,10 @@ const ScanPage : FC<pageProps> = ({params}) => {
             case eState.scan1:
                 return Scan(1,eState.process)
             case eState.process:
-                const params = {current, nextState: eState.check, scan, background,  projectid, sampleid, subsampleid,setCurrentFn, onCancel}
+                const params = {current, nextState: eState.check, scan, background,  projectid, sampleid, subsampleid,
+                    setCurrentFn, onCancel
+                    ,scanId : "42", ///TODO put the good value here
+                }
                 return ( <Process {...params}></Process> )
             case eState.check:
                 return Scan(2,eState.end)
