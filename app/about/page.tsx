@@ -1,19 +1,25 @@
+"use client"
+
+
 import { title } from "@/components/primitives";
 import { Timeline_scan } from "@/components/timeline-scan";
 import { Link, Spinner } from "@nextui-org/react";
+
+import ArcticMap from '@/components/ArcticMap';
+
 
 export default function AboutPage() {
 	return (
 
 		<div>
 
-
-		
-        <Timeline_scan current={0.5} />
+        {/* <Timeline_scan current={0.5} />
 
         <Timeline_scan current={1} />
-        <Timeline_scan current={1.5} />
-
+        <Timeline_scan current={1.5} /> */}
+        
+        <h1>Carte de l'Arctique</h1>
+        <ArcticMap />
 
 
 		</div>
