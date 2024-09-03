@@ -8,7 +8,7 @@ import { Card, CardBody, CardFooter, Input, Link, Select, SelectItem, Spinner, S
 import ArcticMap from '@/components/ArcticMap';
 import MapComponent from "@/components/MapComponent";
 import Planisfer from "@/components/Planisfer";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
 const startCoords :[number,number] = [43.3, 7.4]    
@@ -36,6 +36,15 @@ export default function AboutPage() {
     const [endLatDMS, setEndLatDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'N' });
     const [endLngDMS, setEndLngDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'E' });
     const hasScaled = useRef(false);
+
+
+    useEffect(() => {
+          const shouldBePolar = Math.abs(startLat) > 75 || (endLat !== undefined && Math.abs(endLat) > 75);
+          setIsPolar(shouldBePolar);
+      }, [startLat, endLat]);
+
+      
+
 
 
     const BlueMarker = () => (
