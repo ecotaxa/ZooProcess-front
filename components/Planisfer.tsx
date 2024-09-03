@@ -1,24 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { MapContainer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'proj4';
 import 'proj4leaflet';
-import ArcticMapLayers from './ArcticMapLayers';
+// import ArcticMapLayers from './ArcticMapLayers';
+import PlanisferLayers from './PlanisferLayers';
 
 // Définition de la projection EPSG:3413
-const crs = new (L as any).Proj.CRS(
-  'EPSG:3413',
-  '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs',
-  {
-    resolutions: [8192, 4096, 2048, 1024, 512, 256, 128],
-    origin: [-4194304, 4194304],
-    bounds: L.bounds(
-      [-4194304, -4194304],
-      [4194304, 4194304]
-    )
-  }
-);
+// const crs = new (L as any).Proj.CRS(
+//   'EPSG:3413',
+//   '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs',
+//   {
+//     resolutions: [8192, 4096, 2048, 1024, 512, 256, 128],
+//     origin: [-4194304, 4194304],
+//     bounds: L.bounds(
+//       [-4194304, -4194304],
+//       [4194304, 4194304]
+//     )
+//   }
+// );
+
 
 // Définition des icônes personnalisées
 const blueIcon = new L.Icon({
@@ -48,7 +50,7 @@ const MapInitializer: React.FC = () => {
   return null;
 };
 
-const ArcticMap: React.FC = () => {
+const Planisfer: React.FC = () => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 5);
     // const yesterdayString = '2024-07-24'
@@ -56,25 +58,31 @@ const ArcticMap: React.FC = () => {
   
     const currentMonthString = new Date().toISOString().slice(0, 7) + '-01';
   
+    const crs = L.CRS.EPSG3857
+    const mapRef = useRef<L.Map | null>(null);
+
     return (
     <>
     <div>{yesterdayString}</div>
       <MapContainer
-        center={[90, 0]}
+        key='standard'
+        center={[90, 0]} // [startLat, startLng]
         zoom={3}
         style={{ height: '600px', width: '100%' }}
+        ref={mapRef}
+        zoomControl={true}
         crs={crs}
         maxZoom={8}
-        minZoom={0}
+        minZoom={0} // undefined
       >
         <MapInitializer />
-        <ArcticMapLayers day={yesterdayString} monthString={currentMonthString} />
+        <PlanisferLayers day={yesterdayString} monthString={currentMonthString} />
         <MapContainer />
-        <Marker position={[89, 2.45]} icon={yellowIcon}>
-          <Popup>Point 1: 89°N, 2.45°E</Popup>
+        <Marker position={[43.2, 7.45]} icon={yellowIcon}>
+          <Popup>Point 1: 43°N, 7.45°E</Popup>
         </Marker>
-        <Marker position={[88.7, 0.1]} icon={blueIcon}>
-          <Popup>Point 2: 88.7°N, 0.1°E</Popup>
+        <Marker position={[42.7, 8.1]} icon={blueIcon}>
+          <Popup>Point 2: 42.7°N, 8.1°E</Popup>
         </Marker>
         <style>{`
           .red-coastline {
@@ -89,4 +97,4 @@ const ArcticMap: React.FC = () => {
     );
   };
   
-  export default ArcticMap;
+  export default Planisfer;

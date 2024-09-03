@@ -6,7 +6,16 @@ import { Timeline_scan } from "@/components/timeline-scan";
 import { Card, CardBody, Link, Spinner } from "@nextui-org/react";
 
 import ArcticMap from '@/components/ArcticMap';
+import MapComponent from "@/components/MapComponent";
+import Planisfer from "@/components/Planisfer";
 
+
+const startCoords :[number,number] = [43.3, 7.4]    
+const endCoords :[number,number] = [41.4, 7.4]
+
+function handleCoordsChange(start: [number,number], end :[number,number]|void){
+    console.log("handleCoordsChange", start, end)
+}
 
 export default function AboutPage() {
 	return (
@@ -19,6 +28,13 @@ export default function AboutPage() {
         <Timeline_scan current={1} />
         <Timeline_scan current={1.5} /> */}
         
+            {/* <MapComponent         
+            initialStartCoords={startCoords}
+            initialEndCoords={endCoords}
+        onCoordsChange={handleCoordsChange}
+            /> */}
+            <Planisfer/>
+
         <h1>Carte de l'Arctique</h1>
         <ArcticMap />
 
