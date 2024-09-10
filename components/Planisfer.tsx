@@ -47,16 +47,27 @@ interface CoordsProps {
   }
 
 
+  interface MapInitializerProps {
+    lat:number;
+    lng:number;
+    zoom:number;
+  }
+
 // Composant pour initialiser la vue de la carte
-const MapInitializer: React.FC<CoordsProps> = ({start,end})  => {
+const MapInitializer: React.FC<MapInitializerProps> = ({lat=0,lng=0,zoom=3})  => {
   const map = useMap();
   useEffect(() => {
-    map.setView([90, 0], 3);
+    map.setView([lat, lng], zoom);
   }, [map]);
   return null;
 };
 
-const Planisfer: React.FC = () => {
+
+interface CoordsProps {
+    start: [number,number];
+    end: [number|undefined,number|undefined];
+  }
+const Planisfer: React.FC<CoordsProps> = ({start,end}) => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 5);
     // const yesterdayString = '2024-07-24'
@@ -72,8 +83,8 @@ const Planisfer: React.FC = () => {
     <div>{yesterdayString}</div>
       <MapContainer
         key='standard'
-        center={[90, 0]} // [startLat, startLng]
-        zoom={3}
+        center={[start[0], start[1]]} // [startLat, startLng]
+        zoom={5}
         style={{ height: '600px', width: '100%' }}
         ref={mapRef}
         zoomControl={true}
@@ -81,15 +92,16 @@ const Planisfer: React.FC = () => {
         maxZoom={8}
         minZoom={0} // undefined
       >
-        <MapInitializer />
+        <MapInitializer lat={start[0]} lng={start[1]} zoom={5}/>
         <PlanisferLayers day={yesterdayString} monthString={currentMonthString} />
         <MapContainer />
-        <Marker position={[43.2, 7.45]} icon={yellowIcon}>
-          <Popup>Point 1: 43°N, 7.45°E</Popup>
+        {/* <Marker position={[89, 2.45]} icon={yellowIcon}> */}
+        <Marker position={[start[0], start[1]]} icon={yellowIcon}>
+          <Popup>Start: [{start[0]}, {start[1]}]</Popup>
         </Marker>
-        <Marker position={[42.7, 8.1]} icon={blueIcon}>
-          <Popup>Point 2: 42.7°N, 8.1°E</Popup>
-        </Marker>
+        {end && end[0] && end[1] && <Marker position={[end[0], end[1]]} icon={blueIcon}>
+          <Popup>End: [{end[0]}, {end[1]}]</Popup>
+        </Marker>}
         <style>{`
           .red-coastline {
             filter: brightness(0) saturate(100%) invert(19%) sepia(92%) saturate(6618%) hue-rotate(357deg) brightness(97%) contrast(113%);
