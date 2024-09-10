@@ -31,6 +31,15 @@ const AntarcticMapLayers: React.FC<AntarcticMapLayersProps> = ({ yesterdayString
           className="custom-land-water-map"
         />
       </LayersControl.Overlay>
+      <LayersControl.Overlay checked name="MODIS Terra True Color">
+      <TileLayer
+        url={`https://map1.vis.earthdata.nasa.gov/wmts-antarctic/MODIS_Terra_CorrectedReflectance_TrueColor/default/${yesterdayString}/${tilematrixset}/{z}/{y}/{x}.jpg`}
+        attribution='NASA MODIS Terra True Color, GIBS'
+        maxZoom={8}
+        minZoom={0}
+        tileSize={512}
+      />
+    </LayersControl.Overlay>
       <LayersControl.Overlay name="Sea Ice">
         <TileLayer
           url={`https://map1.vis.earthdata.nasa.gov/wmts-antarctic/MODIS_Terra_Sea_Ice/default/${yesterdayString}/${tilematrixset}/{z}/{y}/{x}.png`}
