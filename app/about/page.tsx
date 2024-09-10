@@ -44,7 +44,16 @@ export default function AboutPage() {
           setIsPolar(shouldBePolar);
       }, [startLat, endLat]);
 
-      
+
+    useEffect(() => {
+        setStartLatDMS(convertToDMS(startLat, false));
+        setStartLngDMS(convertToDMS(startLng, true));
+        if (endLat !== undefined && endLng !== undefined) {
+          setEndLatDMS(convertToDMS(endLat, false));
+          setEndLngDMS(convertToDMS(endLng, true));
+        }
+      }, [startLat, startLng, endLat, endLng]);
+          
 
 
 
