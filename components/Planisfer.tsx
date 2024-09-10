@@ -41,8 +41,14 @@ const yellowIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+interface CoordsProps {
+    start: [number,number];
+    end: [number|undefined, number|undefined];
+  }
+
+
 // Composant pour initialiser la vue de la carte
-const MapInitializer: React.FC = () => {
+const MapInitializer: React.FC<CoordsProps> = ({start,end})  => {
   const map = useMap();
   useEffect(() => {
     map.setView([90, 0], 3);

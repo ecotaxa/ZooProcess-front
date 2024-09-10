@@ -9,6 +9,7 @@ import ArcticMap from '@/components/ArcticMap';
 import MapComponent from "@/components/MapComponent";
 import Planisfer from "@/components/Planisfer";
 import { useEffect, useRef, useState } from "react";
+import AntarcticMap from "@/components/AntarcticMap";
 
 
 const startCoords :[number,number] = [43.3, 7.4]    
@@ -39,7 +40,7 @@ export default function AboutPage() {
 
 
     useEffect(() => {
-          const shouldBePolar = Math.abs(startLat) > 75 || (endLat !== undefined && Math.abs(endLat) > 75);
+          const shouldBePolar = Math.abs(startLat) > 75 || Math.abs(startLat) < -75 || (endLat !== undefined && (Math.abs(endLat) > 75 || Math.abs(endLat) < -75));
           setIsPolar(shouldBePolar);
       }, [startLat, endLat]);
 
@@ -278,6 +279,25 @@ export default function AboutPage() {
         )
     }
 
+    const showArtic = () => {
+        if (startLat > 75 || (endLat!= undefined && endLat > 75) ) {
+            return (
+                <>
+                <h1>Carte de l'Arctique</h1>
+                <ArcticMap start={[startLat,startLng]} end={[endLat,endLng]} />
+              </>
+            )
+        } else {
+          return  (
+            <>
+                <h1>Carte de l'Antarctique</h1>
+                <AntarcticMap start={[startLat,startLng]} end={[endLat,endLng]} />
+            </>
+          )
+        }
+
+    }
+
 	return (
         <div>
         <Card>
@@ -296,14 +316,11 @@ export default function AboutPage() {
 
         { isPolar === true ? 
             (
-                <>
-                <h1>Carte de l'Arctique</h1>
-                <ArcticMap />
-                </>
+                showArtic()
             )
             :
             (
-                <Planisfer/>
+                <Planisfer start={[startLat,startLng]} end={[endLat,endLng]} />
             )
         }
 

@@ -38,44 +38,85 @@ const yellowIcon = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
+const blackIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+interface MapInitializerProps {
+  lat:number;
+  lng:number;
+  zoom:number;
+}
 
 // Composant pour initialiser la vue de la carte
-const MapInitializer: React.FC = () => {
+const MapInitializer: React.FC<MapInitializerProps> = ({lat=90,lng=0,zoom=0}) => {
   const map = useMap();
+
   useEffect(() => {
-    map.setView([90, 0], 3);
-  }, [map]);
+    map.setView([lat, lng], zoom);
+  }, [map,lat,lng,zoom]);
   return null;
 };
 
-const ArcticMap: React.FC = () => {
+interface CoordsProps {
+    start: [number,number];
+    end: [number|undefined,number|undefined];
+  }
+
+const ArcticMap: React.FC<CoordsProps> = ({start,end}) => {
     const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 5);
+    yesterday.setDate(yesterday.getDate() - 1);
     // const yesterdayString = '2024-07-24'
     const yesterdayString = yesterday.toISOString().split('T')[0];
   
     const currentMonthString = new Date().toISOString().slice(0, 7) + '-01';
   
+    // const endMarker = () => {
+    //     if (end && end[0] && end[1]) {
+    //         return (
+    //             <Marker position={[end[0], end[1]]} icon={blueIcon}>
+    //                 <Popup>Point 2: [end[0], end[1]]</Popup>
+    //             </Marker>
+    //         )
+    //     } else {
+    //         return null;
+    //     }
+    // }
+
     return (
     <>
     <div>{yesterdayString}</div>
       <MapContainer
-        center={[90, 0]}
-        zoom={3}
+        center={[start[0], start[1]]}
+        zoom={1}
         style={{ height: '600px', width: '100%' }}
         crs={crs}
         maxZoom={8}
         minZoom={0}
       >
-        <MapInitializer />
+        <MapInitializer lat={start[0]} lng={start[1]} zoom={0}/>
         <ArcticMapLayers day={yesterdayString} monthString={currentMonthString} />
-        <MapContainer />
-        <Marker position={[89, 2.45]} icon={yellowIcon}>
-          <Popup>Point 1: 89°N, 2.45°E</Popup>
+        {/* <MapContainer /> */}
+
+        <Marker position={[90, 0]} icon={blackIcon}>
+          <Popup>North Pole</Popup>
         </Marker>
-        <Marker position={[88.7, 0.1]} icon={blueIcon}>
+
+        {/* <Marker position={[89, 2.45]} icon={yellowIcon}> */}
+        <Marker position={[start[0], start[1]]} icon={yellowIcon}>
+          <Popup>Start: [{start[0]}, {start[1]}]</Popup>
+        </Marker>
+        {end && end[0] && end[1] && <Marker position={[end[0], end[1]]} icon={blueIcon}>
+          <Popup>End: [{end[0]}, {end[1]}]</Popup>
+        </Marker>}
+        {/* <Marker position={[88.7, 0.1]} icon={blueIcon}>
           <Popup>Point 2: 88.7°N, 0.1°E</Popup>
-        </Marker>
+        </Marker> */}
         <style>{`
           .red-coastline {
             filter: brightness(0) saturate(100%) invert(19%) sepia(92%) saturate(6618%) hue-rotate(357deg) brightness(97%) contrast(113%);
