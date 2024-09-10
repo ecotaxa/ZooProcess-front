@@ -279,7 +279,7 @@ export default function AboutPage() {
         )
     }
 
-    const showArtic = () => {
+    const showArtic = (startLat: number, startLng: number, endLat?: number, endLng?: number) => {
         if (startLat > 75 || (endLat!= undefined && endLat > 75) ) {
             return (
                 <>
@@ -288,20 +288,24 @@ export default function AboutPage() {
               </>
             )
         } else {
+            if (startLat < -75 || (endLat!= undefined && endLat < -75) )
           return  (
             <>
                 <h1>Carte de l'Antarctique</h1>
                 <AntarcticMap start={[startLat,startLng]} end={[endLat,endLng]} />
             </>
           )
+          else 
+           return 
+            <Planisfer start={[startLat,startLng]} end={[endLat,endLng]} />
         }
 
     }
 
 	return (
-        <div>
-        <Card>
-      <CardBody>
+        <div className="w-screen max-w-none overflow-x-hidden px-6" >
+        <Card className="w-full">
+      <CardBody >
 
         {/* <Timeline_scan current={0.5} />
 
@@ -316,7 +320,7 @@ export default function AboutPage() {
 
         { isPolar === true ? 
             (
-                showArtic()
+                showArtic(startLat, startLng, endLat, endLng)
             )
             :
             (
@@ -330,7 +334,7 @@ export default function AboutPage() {
 
         <div style={{ marginTop: '20px' }}>
 
-        <Switch
+        {/* <Switch
             checked={isPolar}
             onChange={(e) => {
                 setIsPolar(e.target.checked);
@@ -338,7 +342,7 @@ export default function AboutPage() {
             style={{ marginBottom: '20px' }}
           >
             Polar Projection
-          </Switch>
+          </Switch> */}
 
         <Select
             label="Coordinate Format"
