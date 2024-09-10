@@ -17,15 +17,15 @@ import ArcticMap from './ArcticMap';
 
 
 interface MapComponentProps {
-    initialStartCoords: [number, number];
-    initialEndCoords?: [number, number];
+    start: [number, number];
+    end?: [number, number];
     onCoordsChange: (startCoords: [number, number], endCoords?: [number, number]) => void;
   }
-const MapComponent: React.FC<MapComponentProps> = ({ initialStartCoords, initialEndCoords, onCoordsChange }) => {
-    const [startLat, setStartLat] = useState<number>(initialStartCoords[0]);
-    const [startLng, setStartLng] = useState<number>(initialStartCoords[1]);
-    const [endLat, setEndLat] = useState<number | undefined>(initialEndCoords?.[0]);
-    const [endLng, setEndLng] = useState<number | undefined>(initialEndCoords?.[1]);
+const MapComponent: React.FC<MapComponentProps> = ({ start, end: end, onCoordsChange }) => {
+    const [startLat, setStartLat] = useState<number>(start[0]);
+    const [startLng, setStartLng] = useState<number>(start[1]);
+    const [endLat, setEndLat] = useState<number | undefined>(end?.[0]);
+    const [endLng, setEndLng] = useState<number | undefined>(end?.[1]);
     const [coordinateFormat, setCoordinateFormat] = useState<'decimal' | 'dms'>('decimal');
     const [isPolar, setIsPolar] = useState<boolean>(false);
     const [startLatDMS, setStartLatDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'N' });
