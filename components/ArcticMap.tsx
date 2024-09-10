@@ -108,10 +108,10 @@ const ArcticMap: React.FC<CoordsProps> = ({start,end}) => {
         </Marker>
 
         {/* <Marker position={[89, 2.45]} icon={yellowIcon}> */}
-        <Marker position={[start[0], start[1]]} icon={yellowIcon}>
+        <Marker position={[start[0], start[1]]} icon={blueIcon}>
           <Popup>Start: [{start[0]}, {start[1]}]</Popup>
         </Marker>
-        {end && end[0] && end[1] && <Marker position={[end[0], end[1]]} icon={blueIcon}>
+        {end && end[0] && end[1] && <Marker position={[end[0], end[1]]} icon={yellowIcon}>
           <Popup>End: [{end[0]}, {end[1]}]</Popup>
         </Marker>}
         {/* <Marker position={[88.7, 0.1]} icon={blueIcon}>
