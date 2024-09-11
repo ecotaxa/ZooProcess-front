@@ -42,7 +42,7 @@ const yellowIcon = new L.Icon({
 });
 
 interface CoordsProps {
-    start: [number,number];
+    start: [number|undefined, number|undefined];
     end: [number|undefined, number|undefined];
   }
 
@@ -64,7 +64,7 @@ const MapInitializer: React.FC<MapInitializerProps> = ({lat=0,lng=0,zoom=3})  =>
 
 
 interface CoordsProps {
-    start: [number,number];
+    start: [number|undefined,number|undefined];
     end: [number|undefined,number|undefined];
   }
 const Planisfer: React.FC<CoordsProps> = ({start,end}) => {
@@ -83,7 +83,7 @@ const Planisfer: React.FC<CoordsProps> = ({start,end}) => {
     <div>{yesterdayString}</div>
       <MapContainer
         key='standard'
-        center={[start[0], start[1]]} // [startLat, startLng]
+        center={[start[0] ?? 0, start[1] ?? 0]} // [startLat, startLng]
         zoom={5}
         style={{ height: '600px', width: '100%' }}
         ref={mapRef}
@@ -92,16 +92,20 @@ const Planisfer: React.FC<CoordsProps> = ({start,end}) => {
         maxZoom={8}
         minZoom={0} // undefined
       >
-        <MapInitializer lat={start[0]} lng={start[1]} zoom={5}/>
+        <MapInitializer lat={start[0] ?? 0} lng={start[1] ?? 0} zoom={5}/>
         <PlanisferLayers day={yesterdayString} monthString={currentMonthString} />
         <MapContainer />
         {/* <Marker position={[89, 2.45]} icon={yellowIcon}> */}
-        <Marker position={[start[0], start[1]]} icon={blueIcon}>
-          <Popup>Start: [{start[0]}, {start[1]}]</Popup>
+        {start[0]!== undefined && start[1]!== undefined && (
+          <Marker position={[start[0], start[1]]} icon={blueIcon}>
+            <Popup>Start: [{start[0]}, {start[1]}]</Popup>
         </Marker>
-        {end && end[0] && end[1] && <Marker position={[end[0], end[1]]} icon={yellowIcon}>
-          <Popup>End: [{end[0]}, {end[1]}]</Popup>
-        </Marker>}
+        )}
+        {end[0] !== undefined && end[1] !== undefined && (
+          <Marker position={[end[0], end[1]]} icon={yellowIcon}>
+            <Popup>End: [{end[0]}, {end[1]}]</Popup>
+          </Marker>
+        )}
         <style>{`
           .red-coastline {
             filter: brightness(0) saturate(100%) invert(19%) sepia(92%) saturate(6618%) hue-rotate(357deg) brightness(97%) contrast(113%);
