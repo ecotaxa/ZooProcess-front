@@ -20,7 +20,33 @@ export const sampleid_formElements=[
         ]
     }
     ]
-    
+
+    export const inputFormElementsMapTest=[
+    {
+        title:"Map Test",
+        section:
+        [
+            { tag:"Map", name:"Map", type:"object",
+                placeholder:"map", label:'map',
+                variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
+                // minValue:0,maxValue:90,
+                // endAdornment:{pos:'end', text:'deg'},
+                // helperText:"de 0 à 90°",
+                object: {
+                    start: {
+                        lat: 'number',
+                        lng: 'number'
+                    },
+                    end: {
+                        lat: 'number',
+                        lng: 'number'
+                    }
+                }
+            }
+        ]
+    }]
+
+
     export const inputFormElements=[
     {
 
@@ -94,53 +120,70 @@ export const sampleid_formElements=[
         title:"Latitude & Longitude",
         section:[ 
     
-        { tag:"TextField",name:"Latitude_degree", type:"number", 
-            placeholder:"Enter Latitude (degree)", label:'Latitude (degree)',
+        // { tag:"TextField",name:"Latitude_degree", type:"number", 
+        //     placeholder:"Enter Latitude (degree)", label:'Latitude (degree)',
+        //     variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
+        //     minValue:0,maxValue:90, 
+        //     endAdornment:{pos:'end', text:'deg'},
+        //     helperText:"de 0 à 90°"
+        // },
+        // { tag:"TextField", name:"latitude_minute", type:"number",
+        //     placeholder:"Enter Latitude (minute)", label:'Latitude (minute',
+        //     variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
+        //     minValue:0,maxValue:60, helperText:"de 0 à 59",
+        //     endAdornment:{pos:'end', text:'min'}
+        // },
+        // { tag:"Select", name:"latitude_ns", type:"select", 
+        //     placeholder:"N/S", label:'Latitude (N/S)',
+        //     variant:"outlined", required:true,
+        //     fullWidth:true, xs:12, 
+        //     sm:3, 
+        //     // sm:12, // to debug easely
+        //     sx:{m:0, minWith:150},
+        //     choice:[
+        //         {id:1, value:"North"},
+        //         {id:2, value:"South"}
+        //     ]
+        // },
+        // { tag:"TextField",name:"longitude_degree", type:"number", 
+        //     placeholder:"Enter Longitude (degree)", label:'Longitude (degree)',
+        //     variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
+        //     minValue:0,maxValue:180, helperText:"de 0 à 180°",
+        //     endAdornment:{pos:'end', text:'°'}
+        // },
+        // { tag:"TextField",name:"longitude_minute", type:"number", 
+        //     placeholder:"Enter Longitude (minute)" , label:'Longitude (minute)',
+        //     variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
+        //     minValue:0,maxValue:59.999999, helperText:"de 0 à 59",
+        //     endAdornment:{pos:'end', text:"'"},
+        //     // value:59
+        // },
+        // { tag:"Select",name:"longitude_ew", type:"select", 
+        //     placeholder:"E/O", label:'Longitude (N/S)',
+        //     variant:"outlined", fullWidth:true, required:true, 
+        //     xs:12, sm:3, sx:{m:0, minWith:150},
+        //     choice:[
+        //         {id:1, value:"East"},
+        //         {id:2, value:"West"}
+        //     ]
+        // },
+        { tag:"Map", name:"Map", type:"object",
+            placeholder:"map", label:'map',
             variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
-            minValue:0,maxValue:90, 
-            endAdornment:{pos:'end', text:'deg'},
-            helperText:"de 0 à 90°"
-        },
-        { tag:"TextField", name:"latitude_minute", type:"number",
-            placeholder:"Enter Latitude (minute)", label:'Latitude (minute',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
-            minValue:0,maxValue:60, helperText:"de 0 à 59",
-            endAdornment:{pos:'end', text:'min'}
-        },
-        { tag:"Select", name:"latitude_ns", type:"select", 
-            placeholder:"N/S", label:'Latitude (N/S)',
-            variant:"outlined", required:true,
-            fullWidth:true, xs:12, 
-            sm:3, 
-            // sm:12, // to debug easely
-            sx:{m:0, minWith:150},
-            choice:[
-                {id:1, value:"North"},
-                {id:2, value:"South"}
-            ]
-        },
-        { tag:"TextField",name:"longitude_degree", type:"number", 
-            placeholder:"Enter Longitude (degree)", label:'Longitude (degree)',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
-            minValue:0,maxValue:180, helperText:"de 0 à 180°",
-            endAdornment:{pos:'end', text:'°'}
-        },
-        { tag:"TextField",name:"longitude_minute", type:"number", 
-            placeholder:"Enter Longitude (minute)" , label:'Longitude (minute)',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
-            minValue:0,maxValue:59.999999, helperText:"de 0 à 59",
-            endAdornment:{pos:'end', text:"'"},
-            // value:59
-        },
-        { tag:"Select",name:"longitude_ew", type:"select", 
-            placeholder:"E/O", label:'Longitude (N/S)',
-            variant:"outlined", fullWidth:true, required:true, 
-            xs:12, sm:3, sx:{m:0, minWith:150},
-            choice:[
-                {id:1, value:"East"},
-                {id:2, value:"West"}
-            ]
-        },
+            // minValue:0,maxValue:90,
+            // endAdornment:{pos:'end', text:'deg'},
+            // helperText:"de 0 à 90°",
+            object: {
+                start: {
+                    lat: 'number',
+                    lng: 'number'
+                },
+                end: {
+                    lat: 'number',
+                    lng: 'number'
+                }
+            }
+        }
     ]
     },
     {
