@@ -19,9 +19,9 @@ const PublicPage: React.FC = () => {
       <div>
         <h1>Map Coordinates</h1>
         <MapComponent
-          initialStartCoords={startCoords}
-          initialEndCoords={endCoords}
-          onCoordsChange={handleCoordsChange}
+          start={startCoords}
+          end={endCoords}
+          onChange={handleCoordsChange}
         />
         <p>Start Coordinates: {startCoords.join(', ')}</p>
         <p>End Coordinates: {endCoords.join(', ')}</p>

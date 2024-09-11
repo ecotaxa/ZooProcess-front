@@ -33,7 +33,7 @@ export default function AboutPage() {
 	return (
         <div className="w-screen max-w-none overflow-x-hidden px-6" >
  
-        <MapComponent start={initialStartCoords} end={initialEndCoords} onCoordsChange={onCoordsChange} />
+        <MapComponent start={initialStartCoords} end={initialEndCoords} onChange={onCoordsChange} />
 
         </div>
 	);
