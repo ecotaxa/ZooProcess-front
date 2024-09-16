@@ -1,4 +1,4 @@
-// "use client"
+"use client"
 
 import { auth, signOut } from "@/auth"
 import { Button } from "@nextui-org/button";
@@ -6,6 +6,7 @@ import { Link } from "@nextui-org/link";
 import { User } from "@nextui-org/react";
 import { Label } from "@radix-ui/react-label";
 import { useRouter } from "next/navigation";
+import { handleSignOut } from "./serverActions"
 
 const SettingsPage = async () => {
 
@@ -13,13 +14,17 @@ const SettingsPage = async () => {
  
 
     if ( session ){
-        const date = new Date(session.expires)
+        const expirationDate = new Date(session.expires)
         const now = new Date()
 
-        console.log("Session  expires: ", date)
+        console.log("Session  expires: ", expirationDate)
         console.log("Session date now: ", now)
 
-        if ( date < now ){
+        console.log("Expiration date:", expirationDate);
+        console.log("Current date:", now);
+        console.log("Is expired:", expirationDate < now);
+
+        if ( expirationDate < now ){
             console.log("Session expired")
             await signOut(); 
             const router = useRouter()
@@ -97,10 +102,7 @@ const SettingsPage = async () => {
             <br/>
             <Button href="projects" as={Link} color="primary">My Projects</Button>
 
-            <form action={async () => {
-                 "use server";
-                 await signOut();   
-            }}>
+            <form action={handleSignOut}>
                 <Button color="danger" type="submit">
                     Sign Out
                 </Button>
