@@ -102,7 +102,12 @@ const AntarcticMap: React.FC<CoordsProps> = ({start,end}) => {
         {end && end[0] && end[1] && <Marker position={[end[0], end[1]]} icon={yellowIcon}>
           <Popup>End: [{end[0]}, {end[1]}]</Popup>
         </Marker>}
-
+        {start[0]!== undefined && start[1]!== undefined && end[0] !== undefined && end[1] !== undefined  && (
+          <Polyline positions={ 
+            [[start[0], start[1]], [end[0], end[1]]]} 
+            color="red" 
+          />
+        )}  
       <style>{`
         .red-coastline {
           filter: brightness(0) saturate(100%) invert(19%) sepia(92%) saturate(6618%) hue-rotate(357deg) brightness(97%) contrast(113%);

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { MapContainer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Polyline, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'proj4';
@@ -78,6 +78,14 @@ const Planisfer: React.FC<CoordsProps> = ({start,end}) => {
     const crs = L.CRS.EPSG3857
     const mapRef = useRef<L.Map | null>(null);
 
+    const showStartPoint = () => {
+      return start[0]!== undefined && start[1]!== undefined
+    }
+
+    const showEndPoint = () => {
+      return showStartPoint() && end[0] !== undefined && end[1] !== undefined 
+    }
+
     return (
     <>
     <div>{yesterdayString}</div>
@@ -101,11 +109,20 @@ const Planisfer: React.FC<CoordsProps> = ({start,end}) => {
             <Popup>Start: [{start[0]}, {start[1]}]</Popup>
         </Marker>
         )}
-        {end[0] !== undefined && end[1] !== undefined && (
+        {end[0] !== undefined && end[1] !== undefined  && (
           <Marker position={[end[0], end[1]]} icon={yellowIcon}>
             <Popup>End: [{end[0]}, {end[1]}]</Popup>
           </Marker>
         )}
+
+
+{start[0]!== undefined && start[1]!== undefined && end[0] !== undefined && end[1] !== undefined  && (
+  <Polyline positions={ 
+    [[start[0], start[1]], [end[0], end[1]]]} 
+    color="red" 
+  />
+)}
+
         <style>{`
           .red-coastline {
             filter: brightness(0) saturate(100%) invert(19%) sepia(92%) saturate(6618%) hue-rotate(357deg) brightness(97%) contrast(113%);
