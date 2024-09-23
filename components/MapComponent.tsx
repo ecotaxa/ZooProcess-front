@@ -21,9 +21,10 @@ interface MapComponentProps {
     end?: [number, number];
     onChange: (startCoords: [number, number], endCoords?: [number, number]) => void;
   }
-const MapComponent: React.FC<MapComponentProps> = ({ start, end: end, onChange: onCoordsChange }) => {
+const MapComponent: React.FC<MapComponentProps> = ({ start, end, onChange: onCoordsChange }) => {
 
     console.log("MapComponent start: ", start)
+    console.log("MapComponent end: ", end)
 
     const [startLat, setStartLat] = useState<number | undefined>(start?.[0]);
     const [startLng, setStartLng] = useState<number | undefined>(start?.[1]);
@@ -37,23 +38,32 @@ const MapComponent: React.FC<MapComponentProps> = ({ start, end: end, onChange: 
     const [endLngDMS, setEndLngDMS] = useState({ deg: 0, min: 0, sec: 0, dir: 'E' });
     const hasScaled = useRef(false);
 
+    console.log("startLat:",startLat)
+    console.log("startLng:",startLng)
+
     const isValidCoordinate = (lat: number, lng: number): boolean => {
       return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
     };
 
-    // useEffect( () => {
-    //   if (start) {
-    //     setStartLat(start[0]);
-    //     setStartLng(start[1]);
-    //     if (end) {
-    //     setEndLat(end[0]);
-    //     setEndLng(end[1]);
-    //   }
-    //   }
-    // },[])
+    useEffect( () => {
+      console.debug("useEffect[]")
+      if (start) {
+        console.debug("<= setStartLat setStartLng")
+        setStartLat(start[0]);
+        setStartLng(start[1]);
+        if (end) {
+          console.debug("<= setEndLat setEndLng")
+          setEndLat(end[0]);
+          setEndLng(end[1]);
+        }
+      } else {
+        console.debug("start is NULL")
+      }
+    },[start, end]);
     
     useEffect(() => {
      console.log ("useEffect startLat, endLat")
+     if (startLat == undefined || startLng == undefined) setIsPolar(false)
       const shouldBePolar = startLat!== undefined && (Math.abs(startLat) > 75 || Math.abs(startLat) < -75) || (endLat !== undefined && (Math.abs(endLat) > 75 || Math.abs(endLat) < -75));
           setIsPolar(shouldBePolar);
       }, [startLat, endLat]);
@@ -95,6 +105,13 @@ const MapComponent: React.FC<MapComponentProps> = ({ start, end: end, onChange: 
         <div style={{ width: '20px', height: '20px', backgroundColor: 'yellow', borderRadius: '50%', marginRight: '10px' }} />
       );
     
+      const clearEndPoint = () => {
+        setEndLat(undefined);
+        setEndLng(undefined);
+        setEndLatDMS({ deg: 0, min: 0, sec: 0, dir: 'N' });
+        setEndLngDMS({ deg: 0, min: 0, sec: 0, dir: 'E' });
+      };
+      
       const convertToDMS = (decimal: number, isLongitude: boolean): { deg: number; min: number; sec: number; dir: string } => {
         const absolute = Math.abs(decimal);
         const deg = Math.floor(absolute);
@@ -336,7 +353,10 @@ const MapComponent: React.FC<MapComponentProps> = ({ start, end: end, onChange: 
          {/* <div> */}
         <Card className="w-full">
       <CardBody >
-
+        {/* <div>
+          COORDS 
+          {startLat}, {startLng}, {endLat}, {endLng}
+        </div> */}
         {/* <Timeline_scan current={0.5} />
 
         <Timeline_scan current={1} />
@@ -348,9 +368,9 @@ const MapComponent: React.FC<MapComponentProps> = ({ start, end: end, onChange: 
         onCoordsChange={handleCoordsChange}
             /> */}
 
-        { isPolar === true ? 
+        { isPolar == true && startLat && startLng ? 
             (
-                showArtic(startLat, startLng, endLat, endLng)
+              showArtic(startLat, startLng, endLat, endLng)
             )
             :
             (
@@ -391,6 +411,8 @@ const MapComponent: React.FC<MapComponentProps> = ({ start, end: end, onChange: 
                     : DMSButton()
 
             }
+            <Button onClick={clearEndPoint} style={{ marginTop: '20px' }}>Clear End Point</Button>
+
             </div>
             
         </CardFooter>
