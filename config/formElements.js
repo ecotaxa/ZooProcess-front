@@ -167,7 +167,7 @@ export const sampleid_formElements=[
         //         {id:2, value:"West"}
         //     ]
         // },
-        { tag:"Map", name:"Map", type:"object",
+        { tag:"Map", name:"map", type:"object",
             placeholder:"map", label:'map',
             variant:"outlined", fullWidth:true, required:true, xs:12, sm:4.5,
             // minValue:0,maxValue:90,
