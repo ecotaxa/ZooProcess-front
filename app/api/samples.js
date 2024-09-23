@@ -115,7 +115,7 @@ export async function addSample({projectId, data}){
 
 export async function updateSample({projectId, sampleId, data}){
 
-  console.log("umpdate Sample...projectId: ", projectId, " - ", sampleId);
+  console.log("update Sample...projectId: ", projectId, " - ", sampleId);
 
   return api.updateSample(projectId,sampleId,data)
   .then( (response) => {

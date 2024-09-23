@@ -71,6 +71,11 @@ const Metadata: FC<pageProps> = (params) => {
           } else {
             form[element.name] = element.value
           }
+
+          if ( element.type == 'object'){
+            console.log("OBJECT FOUND")
+          }
+
         });
 
       return form;
@@ -146,7 +151,9 @@ const Metadata: FC<pageProps> = (params) => {
       // console.log("App onChange:", stringifiedData)
       // console.log("App onChange:", JSON.stringify(value, null, 2));
 
-      return updateSample(value);
+      // const v = { ...value, project: projectId, sample: sampleId }
+
+      return updateSample( { projectId, sampleId , data: value } );
     }
 
   const onCancel = () => {
