@@ -1,22 +1,41 @@
-import { title } from "@/components/primitives";
-import { Timeline_scan } from "@/components/timeline-scan";
-import { Link, Spinner } from "@nextui-org/react";
+"use client"
+
+
+// import { title } from "@/components/primitives";
+// import { Timeline_scan } from "@/components/timeline-scan";
+// import { Card, CardBody, CardFooter, Input, Link, Select, SelectItem, Spinner, Switch } from "@nextui-org/react";
+
+// import ArcticMap from '@/components/ArcticMap';
+import MapComponent from "@/components/MapComponent";
+// import Planisfer from "@/components/Planisfer";
+import { useEffect, useRef, useState } from "react";
+// import AntarcticMap from "@/components/AntarcticMap";
+
+
+const startCoords :[number,number] = [43.3, 7.4]    
+const endCoords :[number,number] = [41.4, 7.4]
+
+function handleCoordsChange(start: [number,number], end :[number,number]|void){
+    console.log("handleCoordsChange", start, end)
+}
+
+type Coord =  [number,number]
 
 export default function AboutPage() {
+
+    const initialStartCoords :Coord = [43.3, 7.1]
+    const initialEndCoords :Coord = [41.3, 8.1]
+
+    const onCoordsChange = (start: Coord, end :Coord|void) : any => {
+        console.log("onCoordsChange", start, end)
+    }
+ 
 	return (
+        <div className="w-screen max-w-none overflow-x-hidden px-6" >
+ 
+        <MapComponent start={initialStartCoords} end={initialEndCoords} onChange={onCoordsChange} />
 
-		<div>
-
-
-		
-        <Timeline_scan current={0.5} />
-
-        <Timeline_scan current={1} />
-        <Timeline_scan current={1.5} />
-
-
-
-		</div>
+        </div>
 	);
 }
 

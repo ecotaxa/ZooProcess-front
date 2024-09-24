@@ -17,6 +17,9 @@ import { ProjectName } from "@/components/projectName";
 import QC from "./@qc/page";
 import { useProject } from "@/app/api/projects";
 import { Project } from "@/app/api/network/zooprocess-api";
+import { useParams, usePathname } from "next/navigation";
+
+import { useHash } from '@/lib/useHash'
 
 interface pageProps {
     params: {
@@ -26,11 +29,31 @@ interface pageProps {
 
 // const Project = ({ params }: { params: { projectid: string; }} ) => {
 const ProjectPage: FC<pageProps> = ({ params }) => {
+
+  console.log("params:", params)
+
+  // const useHash = () => { (typeof window != 'undefined' ? decodeURIComponent(window.location.hash.replace('#','')) : undefined)}
+
   const projectid = params.projectid;
+
+  const hash = useHash().replace('#','')
+  console.debug("path:",hash)
 
   const { project, isLoading, isError } = useProject(projectid);
 
-  const selectedKey="stats"
+  let selectedKey="stats"
+  // const selectedKey = path
+
+  switch (hash){ 
+    case "stats":
+    case "metadata":
+    case "samples":
+    case "background":
+    case "scans":
+    case "qc":
+      selectedKey = hash
+  }
+
 
   const p: Project = project;
 
