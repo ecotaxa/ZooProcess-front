@@ -4,6 +4,7 @@ import { string } from 'prop-types';
 import axiosInstanse from '@/network/axiosInstanse';
 // import Samples from '@/app/projects/[projectid]/@samples/page';
 import { AuthError } from 'next-auth';
+import { subSeconds } from 'date-fns';
 
 
 export interface Drive {
@@ -49,7 +50,7 @@ export interface MetadataTemplate {
   // countSubSample: number 
 }
 
-export interface Metadata {
+export interface IMetadata {
     name: string
     value: string
     type: string
@@ -58,7 +59,7 @@ export interface Metadata {
 export interface SubSample {
   id: string
   name: string
-  metadata: Array<Metadata>
+  metadata: Array<IMetadata>
   // scan: Array<Scan>
   scan: Array<Scan>
 }
@@ -66,7 +67,7 @@ export interface SubSample {
 export interface Scan {
   id: string
   url: string
-  metadata: Array<Metadata>
+  metadata: Array<IMetadata>
 }
 
 
@@ -96,7 +97,7 @@ export interface Instrument {
 export interface Sample {
     id: string
     name: string
-    metadata: Array<Metadata>
+    metadata: Array<IMetadata>
     subsample: Array<SubSample>
 }
 
@@ -145,6 +146,11 @@ export interface SubSamples {
   data:Array<SubSample>
 }
 
+export interface IProcess {
+  state:string,
+  vignettes:Array<Vignette>,
+}
+
 // export async function getProject(id:string){
 
 //     const response = await api.get<Project>(`/projects/${id}`);
@@ -154,9 +160,15 @@ export interface SubSamples {
 //     return response.data; 
 // }
 
+export interface IScan {
+  url:string, 
+  instrumentId:string, 
+  projectId:string
+}
+
 // on se fiche de userId : il est passé avec le bearer token
 // export async function addBackground(instrumentId:string, image: {url:string, userId:string}) {
-export async function addBackground(image: {url:string, instrumentId:string, projectId:string}) {
+export async function addBackground(image: IScan ) {
   
   console.log("addBackground:", image)
   const api = await axiosInstanse({})
@@ -195,6 +207,7 @@ export async function addBackground(image: {url:string, instrumentId:string, pro
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
+          return Promise.reject(error.response)
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -213,16 +226,24 @@ export async function addBackground(image: {url:string, instrumentId:string, pro
 }
 
 
-export async function addScan(image: {url:string, instrumentId:string, projectid:string, subsampleid:string}) {
+// export async function addScan(image: {url:string, instrumentId:string, projectid:string, subsampleid:string}) {
+export async function addScan(image: {url:string, instrumentId:string, projectId:string, subsampleId:string}) {
   
   console.log("addScan:", image)
   const api = await axiosInstanse({})
 
   const data = {
-    url: image.url
+    url: image.url,
+    // subSampleId:image.subsampleId
   }
 
-  return await api.post(`/scan/${image.instrumentId}/url`, data )
+  // return await api.post(`/scan/${image.instrumentId}/url`, data )
+  // const url = `/scan/${image.instrumentId}/url` // ?projectId=${image.projectId}`
+  const url = `/scan/${image.subsampleId}/url` // ?projectId=${image.projectId}`
+  console.log("addBackground url:", url)
+  console.log("addBackground data:", data)
+  
+  return await api.post(url, data )
       .then(function (response) {
         console.log("addScan response: ", response);
         return response.data;
@@ -237,7 +258,8 @@ export async function addScan(image: {url:string, instrumentId:string, projectid
                 message: error.response.data || "Duplicate value"
               //}
             }
-            throw(msg)
+            // throw(msg)
+            return Promise.reject(new Error(msg.message))
           }
 
           // The request was made and the server responded with a status code
@@ -255,7 +277,8 @@ export async function addScan(image: {url:string, instrumentId:string, projectid
           console.log('Error', error.message);
         }
         console.log(error.config);
-        throw(error);
+        // throw(error);
+        return Promise.reject(new Error(error.message))
       });
 
 
@@ -362,6 +385,12 @@ export async function getProjects(){
     return response.data; 
 }
 
+export async function getProcess(url:string){
+  const api = await axiosInstanse({})
+  const response = await api.get<IProcess>(url);
+  console.log("getProcess response: ", response);
+  return response.data;
+}
 
 export async function getProject(url:string){
   const api = await axiosInstanse({})
@@ -524,7 +553,7 @@ export async function addProject(data:Project){
   }
 
   
-  export async function updateProject(data:Project){
+  export async function updateProject(data:any){
 
     if (data.id == undefined) throw("Cannot update, project has no id defined");
 
@@ -630,6 +659,43 @@ export async function addSample(projectId:string, data:Sample){
 
   }
 
+
+  export async function updateSubSample(projectId:string, sampleId:string, subSampleId:string, data:Samples){
+
+    console.log("api updateSubSample projectId:", projectId);
+    console.log("api updateSubSample sampleId:", sampleId);
+    console.log("api updateSubSample subSampleId:", subSampleId);
+    console.log("api updateSubSample data:", data);
+  
+    const api = await axiosInstanse({})
+    return await api.patch(`/projects/${projectId}/samples/${sampleId}/subsamples/${subSampleId}`, data)
+        .then(function (response) {
+          console.log("updateSample response:", response);
+          return response.data;
+        })
+        .catch(function (error) {
+          console.log("updateSample error:", error.toJSON());
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+          throw(error);
+        });
+  
+  }
+
   export async function addSubSample(projectId:string, sampleId: string, data:Sample){
 
     console.log("api addSubSmaple projectId:", projectId);
@@ -712,6 +778,24 @@ export async function getSubSamples(url:string){
   return response.data; 
 }
 
+export async function getSubSample(url:string){
+
+  // console.log("getSamples(",projectId,")")
+  console.log("getSubSample(",url,")")
+
+  // throw (projectId)
+
+  // const pageSize = 12;
+  // const response = await api.get<Projects>(`/projects?limit=${pageSize}&offset=${pageSize * (page - 1)}`);
+  // const response = await api.get<Samples>(`/projects/${projectId}/samples`);
+  const api = await axiosInstanse({})
+  const response = await api.get<SubSample>(url);
+
+  console.log("getSubSample response: ", response);
+
+  return response.data; 
+}
+
 export async function getSample(url:string, options?: any){
 
   console.log("getSample(",url,",",options,")")
@@ -727,9 +811,9 @@ export async function getSample(url:string, options?: any){
 
 export async function updateSample(projectId:string, sampleId:string, data:Samples){
 
-  console.log("api addSample projectId:", projectId);
-  console.log("api addSample sampleId:", sampleId);
-  console.log("api addSample data:", data);
+  console.log("api updateSample projectId:", projectId);
+  console.log("api updateSample sampleId:", sampleId);
+  console.log("api updateSample data:", data);
 
   const api = await axiosInstanse({})
   return await api.put(`/projects/${projectId}/samples/${sampleId}`, data)
@@ -790,7 +874,8 @@ export async function getVignettes(url:string){
 export enum TaskType {
   separate = "separate",
   background = "background",
-  vignette = "vignette"
+  vignette = "vignette",
+  process = "process",
 }
 
 // export async function addTask(subsampleid:string, task:TaskType ){

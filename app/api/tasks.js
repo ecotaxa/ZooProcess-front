@@ -55,10 +55,10 @@ export async function addSeparateTask(params) {
 
     return await api.addTask(data)
     .then((response) => { 
-        console.log("api.addTask(data) -> respose :", response)
+        console.log("api.addTask(data) -> response :", response)
         // if ( response.status == 200 ){
             // console.log("api.addTask(data) -> taskId :", response.data.id)
-            console.log("api.addTask(data) -> taskId :", response.id)
+            console.log("api.addTask(data) -> taskId   :", response.id)
             // return
 
 
@@ -81,6 +81,31 @@ export async function addSeparateTask(params) {
     })
     .catch((error) => {
         throw Error(`Cannot run task separate`);// (id:${taskId})`)
+    })
+
+}
+
+
+
+export async function addProcessTask(params) {
+    
+    const data = {
+        exec: api.TaskType.process,
+        params: params.params,
+        // log: params.log
+    }
+
+    console.log("addProcessTask() | data :", data)
+
+    return await api.addTask(data)
+    .then((response) => { 
+        console.log("api.addTask(data) -> response :", response)
+        console.log("api.addTask(data) -> taskId   :", response.id)
+
+        return api.runTask(response.id)
+    })
+    .catch((error) => {
+        throw Error(`Cannot run task process`);
     })
 
 }

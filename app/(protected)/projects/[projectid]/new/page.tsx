@@ -7,7 +7,7 @@ import { FC } from "react";
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 // import { ProjectsTable } from 'src/sections/projects/projects-table';
 import { MyForm } from '@/components/myForm';
-import { inputFormElements } from '@/config/formElements';
+import { inputFormElements, inputFormElementsMapTest } from '@/config/formElements';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { addSample } from '@/app/api/samples';
@@ -47,7 +47,10 @@ const testData = {
 
 const forms = [
     // sampleid_formElements, 
+
     inputFormElements, 
+    // inputFormElementsMapTest
+    
     // inputFormElements_tow_type_vertical, 
     // fraction_inputFormElments
 ]

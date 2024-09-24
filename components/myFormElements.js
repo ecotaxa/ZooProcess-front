@@ -24,6 +24,9 @@ import { MyDatePicker } from "./myDatePicker"
 import Drives from "./drives";
 import Instruments from "./instruments";
 import { Input } from "@nextui-org/input"
+// import MapComponent from "./MapComponent"
+import MyMap from "./myMap"
+// import { useCallback } from "react"
 // import { Input } from "postcss"
 
 export function FormElements(props) {
@@ -197,6 +200,29 @@ export function FormElements(props) {
             return ( <Instruments key={props.name}
                 {...props}
                 onChange={props.onChange}
+            />)
+
+        case "Map":
+
+                // const newprops =  { ...props, start:[43,5],end:[45,6]}
+
+                // const newprops =  { ...props, value:{"start":[43,5], "end":[45,6]} }
+                // const newprops =  { ...props, value:{"startLat":43,"startLng":5, "endLat":45,"endLng":6} }
+
+            // const onCoordsChange = useCallback( (newCoords) => {
+            //     console.log("newCoords: ", newCoords);
+            //     props.onChange(props.name, newCoords)
+            // }, [props.onChange])
+
+            console.log("MAP props: ", props);
+
+            // return ( <>Map component</> )
+            return ( <MyMap key={props.name}
+                {...props} 
+                // start={[43,5]} end={[45,6]}
+                // {...newprops}
+                onChange={props.onChange}
+                // onChange={onCoordsChange}
             />)
 
         case "Select":

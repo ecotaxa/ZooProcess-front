@@ -63,11 +63,11 @@ const Metadata : FC<pageProps> = (params) => {
           "ecotaxa_project_title": project.ecotaxa?.name || "",
           "ecotaxa_project": project.ecotaxa?.projectId || "",
           "scanningOptions": project.scanningOptions || 0,
-          "serial": project.instrument.id || 0,
-          "xoffset_large": project.instrument.calibration.xOffset || 0,
-          "yoffset_large": project.instrument.calibration.yOffset || 0,
-          "xsize_large": project.instrument.calibration.xSize || 0,
-          "ysize_large": project.instrument.calibration.ySize || 0,
+          "serial": project.instrument?.id || 0,
+          "xoffset_large": project.instrument?.calibration.xOffset || 0,
+          "yoffset_large": project.instrument?.calibration.yOffset || 0,
+          "xsize_large": project.instrument?.calibration.xSize || 0,
+          "ysize_large": project.instrument?.calibration.ySize || 0,
       }
 
       // if (project.instrument.id) {

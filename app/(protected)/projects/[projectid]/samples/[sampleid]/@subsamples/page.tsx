@@ -12,7 +12,7 @@ import { ErrorComponent } from '@/components/ErrorComponent';
 import { FC, useEffect, useState } from 'react';
 
 import { useSubSamples } from '@/api/subsamples';
-import { Metadata } from '@/app/api/network/zooprocess-api';
+import { IMetadata } from '@/app/api/network/zooprocess-api';
 // import Project from '../page';
 
 
@@ -71,9 +71,9 @@ const SubSamples : FC<pageProps> = (params) => {
   
         console.log("subsample: ", subsamples);
 
-        function getMetadata(data:Array<Metadata>, name:String) {
+        function getMetadata(data:Array<IMetadata>, name:String) {
           console.log("getMetadata: ", data);
-          const value = data.find( (m:Metadata) => m.name == name)
+          const value = data.find( (m:IMetadata) => m.name == name)
           console.log("getMetadata value: ",  value);
           return value?.value || null
           // return 1

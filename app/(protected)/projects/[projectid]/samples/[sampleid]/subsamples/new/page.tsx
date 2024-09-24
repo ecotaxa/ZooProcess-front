@@ -9,7 +9,7 @@ import { FC } from "react";
 import { MyForm } from '@/components/myForm';
 import { fraction_inputFormElments } from '@/config/formElements';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 // import { addSample } from '@/app/api/samples';
 import { Debug } from '@/components/Debug';
 import { addSubSample } from '@/app/api/subsamples';
@@ -20,6 +20,8 @@ import { ErrorComponent } from '@/components/ErrorComponent';
 import { useUserMe } from '@/app/api/user';
 import { useProject } from '@/app/api/projects';
 import { User } from '@/app/api/network/zooprocess-api';
+import SubSampleForm from './SubSampleForm';
+import { timelist } from './[subsampleid]/state';
 // import { useProject } from '@/app/api/projects';
 // import { auth } from '@/auth';
  
@@ -75,6 +77,9 @@ const NewSubSample : FC<pageProps> = (params ) => {
     
     // const { projectid, sampleid } = params
     const { user, isLoading, isError } = useUserMe()
+
+    const params2 = useParams()
+
     // const { project, isLoading:l , isError:err } = useProject()
 
     // if (isError) {
@@ -115,121 +120,121 @@ const NewSubSample : FC<pageProps> = (params ) => {
 
 
     // const [stringifiedData,setData] = useState(JSON.stringify(testData, null, 2))
-    const [stringifiedData, setData] = useState("")
+    // const [stringifiedData, setData] = useState("")
     // var stringifiedData = "" ;
 
-    const prepareData = (data:any) => {
+    // const prepareData = (data:any) => {
 
-        let newData = {
-            ...data,
-            sampleId: sampleid
-        }
-        console.log("newData: ", newData);
-        return newData;
-    }
+    //     let newData = {
+    //         ...data,
+    //         sampleId: sampleid
+    //     }
+    //     console.log("newData: ", newData);
+    //     return newData;
+    // }
 
-    const onChange = (value:any) => {
-        console.log("App onChange:", value)
-        // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
-        // stringifiedData = JSON.stringify(value, null, 2);
+    // const onChange = (value:any) => {
+    //     console.log("App onChange:", value)
+    //     // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
+    //     // stringifiedData = JSON.stringify(value, null, 2);
 
-        setData(JSON.stringify(value, null, 2))
-        console.log("App onChange:", stringifiedData)
+    //     setData(JSON.stringify(value, null, 2))
+    //     console.log("App onChange:", stringifiedData)
 
-        // const newData = prepareData(value)
+    //     // const newData = prepareData(value)
 
-        const data = {
-            name: value.scan_id, //"Sample XXXX",
-            metadataModelId: "", //"6565df171af7a84541c48b20",
-            data: value,
-        }
+    //     const data = {
+    //         name: value.scan_id, //"Sample XXXX",
+    //         metadataModelId: "", //"6565df171af7a84541c48b20",
+    //         data: value,
+    //     }
 
-        console.log("newData: ", data);
-        // try {
+    //     console.log("newData: ", data);
+    //     // try {
 
-            console.log("----- projectId: ", projectid);
-            console.log("----- sampleId: ", sampleid);
-            // console.log("----- params.projectid : ",params.projectid);
-            // console.log("----- params : ",params);
-            // console.log("----- params.params : ",params.params);
+    //         console.log("----- projectId: ", projectid);
+    //         console.log("----- sampleId: ", sampleid);
+    //         // console.log("----- params.projectid : ",params.projectid);
+    //         // console.log("----- params : ",params);
+    //         // console.log("----- params.params : ",params.params);
 
-            // addSample(projectId, data)
-            return addSubSample({
-                projectId: projectid, // : params.params.projectid,
-                sampleId: sampleid, 
-                data
-            })
-            .then((response) => {
-                console.log("Go To the infos page" )
-                // router.push(`${response.data.id}`)
-                // const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
-                const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}/infos`
-                router.push(path)
-            })
-            .catch((error) => {
-                return Promise.reject(error)
-            })
+    //         // addSample(projectId, data)
+    //         return addSubSample({
+    //             projectId: projectid, // : params.params.projectid,
+    //             sampleId: sampleid, 
+    //             data
+    //         })
+    //         .then((response) => {
+    //             console.log("Go To the infos page" )
+    //             // router.push(`${response.data.id}`)
+    //             // const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
+    //             const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}`
+    //             router.push(path)
+    //         })
+    //         .catch((error) => {
+    //             return Promise.reject(error)
+    //         })
 
-        // }
-        // catch (e:any){
-        //     console.log(e);
+    //     // }
+    //     // catch (e:any){
+    //     //     console.log(e);
             
-        // }
-    }
+    //     // }
+    // }
 
-    const onCancel = () => {
-        router.back()
-        // router.push({
-        //     pathname: '/projects/[projectid]',
-        //     query: { projectid: projectid },                                         
-        // })
-    }
+    // const onCancel = () => {
+    //     router.back()
+    //     // router.push({
+    //     //     pathname: '/projects/[projectid]',
+    //     //     query: { projectid: projectid },                                         
+    //     // })
+    // }
 
-    const formButtons = {
-        submit:'Scan'
-    }
+    // const formButtons = {
+    //     submit:'Scan'
+    // }
 
-    const formatData = (user:User|any) => {
-        console.log("formatData() ");
+    // const formatData = (user:User|any) => {
+    //     console.log("formatData() ");
 
-        const emptyData = {
-            "scanning_operator":user.name, // "Seb"  // 
-        }
+    //     const emptyData = {
+    //         "scanning_operator":user.name, // "Seb"  // 
+    //     }
     
-        const updatedForm = forms
+    //     const updatedForm = forms
     
-        const form : any = []
-            form['forms']=updatedForm
-            form['value']=emptyData//testData//
-            form['title']='Sub Sample metadata'
-            form['subtitle']='Fill all the mandatory fields.'
+    //     const form : any = []
+    //         form['forms']=updatedForm
+    //         form['value']=emptyData//testData//
+    //         form['title']='Sub Sample metadata'
+    //         form['subtitle']='Fill all the mandatory fields.'
     
-        return form;
-    }
+    //     return form;
+    // }
 
 
-    const showForm = (use:User|any) => {
+    // const showForm = (use:User|any) => {
 
-        if (isLoading) return <MySpinner />;
-        if (isError) return <ErrorComponent error={isError} />;
+    //     if (isLoading) return <MySpinner />;
+    //     if (isError) return <ErrorComponent error={isError} />;
 
-        // if ( ! user) return <ErrorComponent error={isError} />
+    //     // if ( ! user) return <ErrorComponent error={isError} />
 
-        // else {
-        const form = formatData(user)
+    //     // else {
+    //     const form = formatData(user)
 
-        return (
-            <MyForm 
-                {...form} 
-                project={projectid}
-                sample={sampleid}
-                onChange={onChange}
-                onCancel={onCancel}
-                button={formButtons}
-            />
-        )
-        // }
-    }
+    //     return (
+    //         <MyForm 
+    //             {...form} 
+    //             project={projectid}
+    //             sample={sampleid}
+    //             onChange={onChange}
+    //             onCancel={onCancel}
+    //             button={formButtons}
+    //         />
+    //     )
+    //     // }
+    // }
 
 
     return (
@@ -247,7 +252,7 @@ const NewSubSample : FC<pageProps> = (params ) => {
                     <Typography variant="h4">
                     Sub Sample Metadata to sample {sampleid} from project {projectid}
                     </Typography>
-                    <Timeline_scan current={0} />
+                    <Timeline_scan list={timelist} current={0} />
                     {/* <MyForm 
                         {...form} 
                         project={projectid}
@@ -256,7 +261,8 @@ const NewSubSample : FC<pageProps> = (params ) => {
                         onCancel={onCancel}
                         button={formButtons}/> */}
 
-                        {showForm(user)}
+                        {/* {showForm(user)} */}
+                        <SubSampleForm {...{projectid:projectid, sampleid:sampleid}} />
                 </Stack>
             </div>
         </section>

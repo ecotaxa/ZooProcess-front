@@ -136,6 +136,11 @@ export function MyForm(props){
     const myElement = (formitem) => {
       // console.debug("myElement: ", formitem);
 
+      if ( ! 'name' in formitem ){
+        console.debug("myElement: ", formitem);
+        throw ("myElement: formitem must have a name")
+      }
+
       if ( formitem.name ){
         let value = myValues[formitem.name];
 
@@ -154,7 +159,7 @@ export function MyForm(props){
           //   console.debug("formitem.update PRESENT")
           //   const opts = updateValue(formitem.update, myValues, value)
           //   console.debug("opts: ", opts);
-          //   console.debug("FORM VALUE for ", formitem.name, " = " , value , " <= " , formitem['value'] );
+            console.debug("FORM VALUE for ", formitem.name, " = " , value , " <= " , formitem['value'] );
           // }
         //   else {
             // console.log("NO UPDATE fn");

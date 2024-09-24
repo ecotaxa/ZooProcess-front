@@ -12,6 +12,7 @@ import { Stack } from '@mui/material';
 // import { Project as IProject } from '@/app/api/network/zooprocess-api';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MyForm } from '@/components/myForm';
+import {  IMetadata } from '@/app/api/network/zooprocess-api';
 
 interface pageProps {
     // params: {
@@ -20,7 +21,7 @@ interface pageProps {
     // }
   }
 
-const Metadata : FC<pageProps> = (params) => {
+const Metadata: FC<pageProps> = (params) => {
   const router = useRouter();
 
   const projectId = params.projectid;
@@ -56,19 +57,25 @@ const Metadata : FC<pageProps> = (params) => {
     subsample: Array<any>
   }
 
-  type DataReturn = Map<string,any>
+  type DataReturn = Map<string, any>
 
-  const fillSample = (sample:Sample) : DataReturn => { 
+  const fillSample = (sample: Sample) : DataReturn => { 
         console.log("fillSample: ", sample);
         
         let form: any = {}
 
         sample.metadata.forEach((element:MetadataType) => {
+        // sample.metadata.forEach((element:Metadata) => {
           if ( element.type == 'number'){
             form[element.name] = Number(element.value)
           } else {
             form[element.name] = element.value
           }
+
+          if ( element.type == 'object'){
+            console.log("OBJECT FOUND")
+          }
+
         });
 
       return form;
@@ -144,7 +151,9 @@ const Metadata : FC<pageProps> = (params) => {
       // console.log("App onChange:", stringifiedData)
       // console.log("App onChange:", JSON.stringify(value, null, 2));
 
-      return updateSample(value);
+      // const v = { ...value, project: projectId, sample: sampleId }
+
+      return updateSample( { projectId, sampleId , data: value } );
     }
 
   const onCancel = () => {

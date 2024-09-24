@@ -18,6 +18,7 @@ import {pathToRealStorage, pathToSessionStorage}  from "@/lib/gateway"
 import scan from "../samples/[sampleid]/subsamples/new/_[...scan]/page";
 
 import { converttiff2jpg } from "@/api/convert";
+import Timer from "@/components/timer";
 
 type pageProps = {
     params:{
@@ -47,6 +48,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
     const [error, setError]:[any,any] = useState(null);
 
     const [msg,setMsg]:[string,any] = useState("")
+
+    const [scan1 , setScan1] = useState<string | undefined>(undefined)
+    const [scan2 , setScan2] = useState<string | undefined>(undefined)
 
     const onClick = () => {
         console.log("validate scan")
@@ -78,7 +82,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
             //    let data = await response.text();
             //    console.log(data);
                
+            const data = {
 
+            }
 
 
             router.push(path)
@@ -137,6 +143,10 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         // show the converted image
                         // setImageUrl(imageUrl);
                         console.log("imageUrl: ", imageUrl)
+
+                        imageUrl = imageUrl.replace(/"/g, "")
+                        console.log("imageUrl cleaned: ", imageUrl)
+
                         // if ( imageUrl[0] == '"' ) {
                         //     console.error("arrrggggggggg !!!!!")
                         //     imageUrl=imageUrl.substring(1)
@@ -146,7 +156,8 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                         //     console.error("arrrggggggggg !!!!!")
                         //     imageUrl=imageUrl.substring(0,imageUrl.length-1)
                         // }
-                        const localPath = pathToSessionStorage(imageUrl)
+
+                        const localPath = pathToSessionStorage(imageUrl , "/" )
                         console.log("localPath: ", localPath)
                         setBackground(localPath)
                         // return response
@@ -275,7 +286,9 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
                 // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
             })
             .catch((error) => {
-                return Promise.reject(error)
+                // return Promise.reject(error)
+                setError(error)
+                setMsg(error)
             })
 
         }
@@ -518,110 +531,130 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
         )
     }
 
+    // const ThirtySeconds = (nextState: state) => {
+    //     if ( current != state.thirtys1 && current != state.thirtys1bis ) {
+    //         return <></>
+    //     }
+
+    //     return (
+    //         <>
+    //          <Card className="inline-block size-full"
+    //                 data-testid="ScanCard" 
+    //                 >
+    //             <CardBody className="p-6">
+    //                 <div  className="bg-100 p-6">
+    //                     <h1 className="text-center">Wait 30s.</h1>
+    //                 </div>
+    //             </CardBody>
+
+    //             <CardFooter className="flex flex-row-reverse py-3">
+
+    //                 <Button 
+    //                     disabled={ isError || isLoading || !image }
+    //                     color="primary"
+    //                     // showAnchorIcon
+    //                     variant="solid"
+    //                     data-testid="newProjectBtn"
+    //                     // >Scan {actions[nextAction(action)]}</Button>
+    //                     // onPress={onClick}
+    //                     onPress={
+    //                         () =>{ 
+    //                             console.debug("go to scan " + state.thirtys1?'1':'2'); 
+    //                             //state.thirtys1 ? setCurrent(state.scan1):setCurrent(nextState) 
+    //                             setCurrent(nextState) 
+    //                         }
+    //                     }
+    //                 >Done - Launch Preview</Button>
+    //             </CardFooter>
+    //         </Card>
+    //         </>
+    //     )
+    // }
+
     const ThirtySeconds = (nextState: state) => {
         if ( current != state.thirtys1 && current != state.thirtys1bis ) {
             return <></>
         }
+    
+        const handleTimerEnd = () => {
+            setCurrent(nextState)
+        }
 
         return (
-            <>
-             <Card className="inline-block size-full"
-                    data-testid="ScanCard" 
-                    >
-                <CardBody className="p-6">
-                    <div  className="bg-100 p-6">
-                        <h1 className="text-center">Wait 30s.</h1>
-                    </div>
-                </CardBody>
-
-                <CardFooter className="flex flex-row-reverse py-3">
-
-                    <Button 
-                        disabled={ isError || isLoading || !image }
-                        color="primary"
-                        // showAnchorIcon
-                        variant="solid"
-                        data-testid="newProjectBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
-                        // onPress={onClick}
-                        onPress={
-                            () =>{ 
-                                console.debug("go to scan " + state.thirtys1?'1':'2'); 
-                                //state.thirtys1 ? setCurrent(state.scan1):setCurrent(nextState) 
-                                setCurrent(nextState) 
-                            }
-                        }
-                    >Done - Launch Preview</Button>
-                </CardFooter>
-            </Card>
-            </>
+            <Timer initialTime={30} onChange={handleTimerEnd} />
         )
     }
 
+     const Scan = (step: number, nextState: state) => {
+        if (current != state.scan1 && current != state.scan2) {
+            return <></>;
+        }
 
-  const Scan = (step: number = 1, nextState: state) => {
-    if (current != state.scan1 && current != state.scan2) {
-      return <></>;
-    }
+        const loaderProps : MyLoaderProps = {
+            project: project,
+            onChange: onChange,
+        };
 
-    const loaderProps : MyLoaderProps = {
-      project: project,
-      onChange: onChange,
-    };
+        const showImage = () => {
+            if (isError) { return <></> }
 
-    const showImage = () => {
-        if (isError) { return <></> }
+            return (
+            <>
+                <div className="flex-row">
+                <Image
+                    className="height-auto"
+                    src={background}
+                    alt="uploaded image"
+                    height={446}
+                />
+                </div>
+
+                <Button
+                disabled={isError || isLoading || !image}
+                color="primary"
+                variant="solid"
+                data-testid="newProjectBtn"
+                onPress={() => {
+                    setError(null)
+                    if (current == state.scan1) {
+                    console.debug("go to 30s bis");
+                    setBackground(imagePlaceholder)
+                    setCurrent(nextState);
+                    } else {
+                    console.debug("go to onClick");
+                    setBackground(imagePlaceholder)
+                    onClick();
+                    }
+                }}
+                >
+                Validate
+                </Button>
+            </>
+            )
+        }
+
+        const onClick = () => {
+            
+        }
 
         return (
         <>
-            <div className="flex-row">
-              <Image
-                className="height-auto"
-                src={background}
-                alt="uploaded image"
-                height={446}
-              />
-            </div>
+            {/* <h3>Scan {step}</h3> */}
+            <Card className="inline-block size-full" data-testid="ScanCard">
+            <CardBody>
+                <Loader project={project} onChange={onChange} />
+                {/* <Loader props={loaderProps} /> */}
+            </CardBody>
 
-            <Button
-              disabled={isError || isLoading || !image}
-              color="primary"
-              variant="solid"
-              data-testid="newProjectBtn"
-              onPress={() => {
-                if (current == state.scan1) {
-                  console.debug("go to 30s bis");
-                  setBackground(imagePlaceholder)
-                  setCurrent(nextState);
-                } else {
-                  console.debug("go to onClick");
-                  setBackground(imagePlaceholder)
-                  onClick();
-                }
-              }}
-            >
-              Validate
-            </Button>
+            <CardFooter className="flex flex-row-reverse py-3">
+                { showImage() }
+            </CardFooter>
+            </Card>
         </>
-        )
-    }
+        );
+    };
 
-    return (
-      <>
-        {/* <h3>Scan {step}</h3> */}
-        <Card className="inline-block size-full" data-testid="ScanCard">
-          <CardBody>
-              <Loader project={project} onChange={onChange} />
-              {/* <Loader props={loaderProps} /> */}
-          </CardBody>
 
-          <CardFooter className="flex flex-row-reverse py-3">
-            { showImage() }
-          </CardFooter>
-        </Card>
-      </>
-    );
-  };
 
     const step = (current:state) => {
         switch (current) {
