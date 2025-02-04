@@ -7,7 +7,7 @@ import { Debug } from "@/components/Debug";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "@nextui-org/button";
 import { CameraIcon } from "@radix-ui/react-icons";
-import { addBackground } from "@/app/api/network/zooprocess-api";
+// import { addBackground } from "@/app/api/network/zooprocess-api";
 import { auth } from "@/auth";
 // import { add, set } from "date-fns";
 import { add } from "date-fns";
@@ -32,7 +32,8 @@ type pageProps = {
 
       console.log("FileUploader(props):", props);
 
-        const {instrumentId, projectId, sampleId, subsampleId, onChange} = props;
+        // const {instrumentId, projectId, sampleId, subsampleId, onChange} = props;
+        const {instrumentId, projectId, onChange} = props;
 
   // const {projectid, sampleid, subsampleid, instrumentId} = props;
   // const {instrumentId} = props;
@@ -60,8 +61,9 @@ type pageProps = {
 
   const [isUploading, setIsUploading] = useState<boolean>(false)
 
-  const transmit = async (image: {url:string, instrumentId:string, projectId:string, sampleId?:string, subsampleId?:string}) => {
-    console.log("transmitting: ", image.url );
+  // const transmit = async (image: {url:string, instrumentId:string, projectId:string, sampleId?:string, subsampleId?:string}) => {
+  const transmit = async (image: {url:string, instrumentId:string, projectId:string}) => {
+      console.log("transmitting: ", image.url );
     // addBackground(image)   
     // à mettre dans la fonction qui appelle  plus besoin de passer project, sample et subsample
     // instrumentId oui pour quand il faudra attaquer le scanner avec l'API
@@ -155,8 +157,8 @@ type pageProps = {
         url: data.fileUrl,
         // userId,
         projectId,
-        sampleId,
-        subsampleId,
+        // sampleId,
+        // subsampleId,
         instrumentId
       }
       console.log("data2api: ", data2api)
@@ -214,7 +216,7 @@ type pageProps = {
             </div>
           )}
         </div> */}
-        <Debug params={{ imageUrl }} />
+        <Debug params={{ imageUrl }} open={true} />
 
       </div>
 

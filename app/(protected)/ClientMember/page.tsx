@@ -21,7 +21,7 @@ const Member = async () => {
     const { data: session } = useSession({
         required: true,
         onUnauthenticated(){
-            redirect("/api/auth/signin?callbackUrl='/CleintMember");
+            redirect("/api/auth/signin?callbackUrl='/ClientMember");
         }
     });
     return (

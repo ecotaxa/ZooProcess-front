@@ -1,7 +1,7 @@
 "use client"
 
 import Head from 'next/head';
-import { Box, Container, Stack, Typography } from '@mui/material';
+// import { Box, Container, Stack, Typography } from '@mui/material';
 import { FC } from "react";
 
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
@@ -12,38 +12,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { addSample } from '@/app/api/samples';
 import { Debug } from '@/components/Debug';
+import { debug } from '@/config/settings';
  
 
 
 
 
-const testData = {
-    //"sample_name":"dyfamed_wp2_2023_biotom_sn001",
-    "sample_id": "dyfamed_wp2_2023_biotom_sn001",
-    "scientific_program": "ZooProcess",
-    "station_id": "dyfamed",
-    "bottom_depth": "2400",
-    "sampling_date": "2022-11-13T00:13:40.000Z",
-    // "sampling_date": "2023-10-09T09:13:40.000Z",
-    "Latitude_degree": "43",
-    "longitude_degree": "7",
-    "latitude_minute": "25",
-    "longitude_minute": "51",
-    "latitude_ns": 1,
-    "longitude_ew": 1,
-    "tow_type": "1",
-    "net_sampling_type": "WP2",
-    "net_mesh": "200",
-    "net_opening_surface": "0.25",
-    "minimum_depth": "1",
-    "maximum_depth": "1",
-    "quality_flag_for_depth_measurement": "2",
-    "ship_speed": "99999",
-    "cable_speed": "99999",
-    "cable_length": "99999",
-    "cable_angle_from_vertical": "45",
-    "sampling_duration": "5"
-}
+
 
 const forms = [
     // sampleid_formElements, 
@@ -52,21 +27,24 @@ const forms = [
     // fraction_inputFormElments
 ]
 
-interface pageProps {
-    // params: {
-        projectid: string
-    // }
-}
+// interface pageProps {
+//     params: {
+//         projectid: string
+//     }
+// }
 
-const NewSample : FC<pageProps> = (params) => {
+// const NewSample : FC<pageProps> = (params) => {
+const NewSample = ({projectid}:{projectid: string}) => {
 
     const router = useRouter()
-    console.log("NewSample params: ", params);
-    console.log("NewSample params projectid: ", params.params.projectid);
+    // const projectid = {params}
+    // console.log("NewSample params: ", params);
+    // console.log("NewSample params projectid: ", params.params.projectid);
+    console.log("NewSample params projectid: ", projectid);
     // console.log("NewSample params projectid: ", params.projectid);
 
     // const projectid = router.query.projectid //as string
-    const projectId = params.params.projectid;
+    // const projectId = params.params.projectid;
     // const projectId = params.projectid;
 
     const emptyData = {
@@ -75,7 +53,7 @@ const NewSample : FC<pageProps> = (params) => {
 
     const form : any = []
         form['forms']=forms
-        form['value']=testData//emptyData
+        form['value']= emptyData //debug ? subsampleTestData : emptyData
         form['title']='Sample metadata'
         form['subtitle']='Fill all the mandatory fields.'
 
@@ -89,7 +67,7 @@ const NewSample : FC<pageProps> = (params) => {
 
         let newData = {
             ...data,
-            projectId: projectId
+            projectId: projectid
         }
         console.log("newData: ", newData);
         return newData;
@@ -119,7 +97,7 @@ const NewSample : FC<pageProps> = (params) => {
         // const newData = prepareData(value)
 
         const data = {
-            name: `${projectId}_${value.sample_id}`, //"Sample XXXX",
+            name: `${projectid}_${value.sample_id}`, //"Sample XXXX",
             metadataModelId: "6565df171af7a84541c48b20",
             data:value,
         }
@@ -127,7 +105,7 @@ const NewSample : FC<pageProps> = (params) => {
         console.log("newData: ", data);
         // try {
 
-            console.log("----- projectId : ", projectId);
+            console.log("----- projectId : ", projectid);
             console.log("----- name : ", data.name);
             // console.log("----- params.projectid : ",params.projectid);
             // console.log("----- params : ",params);
@@ -135,7 +113,7 @@ const NewSample : FC<pageProps> = (params) => {
 
             // addSample(projectId, data)
             return addSample({
-                projectId, // : params.params.projectid, 
+                projectId: projectid, // : params.params.projectid, 
                 data
             })
 
@@ -156,25 +134,26 @@ const NewSample : FC<pageProps> = (params) => {
 
     return (
         <>
-        <Head>
+        {/* <Head>
             <title>
             New Sample Metadata | ZooProcess
             </title>
-        </Head>
-        <Debug params={params}/>
+        </Head> */}
+        {/* <Debug params={params}/> */}
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
 
             <div className="text-center justify-center">
-                <Stack spacing={3}>
-                    <Typography variant="h4">
-                    Sample Metadata to project {projectId}
-                    </Typography>
+                {/* <Stack spacing={3}> */}
+                    {/* <Typography variant="h4"> */}
+                    {/* <h4>Sample Metadata to project {params.projectid}</h4> */}
+                    <h4>Sample Metadata to project {projectid}</h4>
+                    {/* </Typography> */}
                     <MyForm 
                         {...form} 
-                        project={projectId}
+                        project={projectid}
                         onChange={onChange} 
                         onCancel={onCancel}/>
-                </Stack>
+                {/* </Stack> */}
             </div>
         </section>
         </>

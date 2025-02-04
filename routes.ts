@@ -1,3 +1,5 @@
+// import { getTask } from "./app/api/data/task";
+
 /**
  * An array of routes that are accessible to the public
  * These routes do not require authentication
@@ -33,3 +35,22 @@ export const apiAuthPrefix = "/api/auth";
  * @type {string}
  */
 export const DEFAULT_LOGIN_REDIRECT = "/settings";
+
+// export async function GET(request: Request, { params }: { params: { taskId: string } }) {
+//   const task = await getTask(params.taskId);
+//   return Response.json(task);
+// }
+
+
+// export async function GET(
+//   request: Request,
+//   { params }: { params: { taskId: string } }
+// ) {
+//   try {
+//       const task = await getTask(params.taskId)
+//       return Response.json(task)
+//   } catch (error) {
+//       return Response.json({ error: "Task not found" }, { status: 404 })
+//   }
+// }
+

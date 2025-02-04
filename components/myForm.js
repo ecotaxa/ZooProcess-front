@@ -4,7 +4,9 @@
 import {   Grid , Typography} from "@mui/material";
 
 // import { FormElements, fraction_inputFormElments, inputFormElements, inputFormElements_tow_type_vertical, sampleid_formElements } from '../services/formElements';
-import { useState, useMemo, useEffect } from "react";
+import { useState, 
+  // useMemo,
+   useEffect } from "react";
 import { FormElements } from "@/components/myFormElements";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
@@ -37,7 +39,7 @@ export function MyForm(props){
     //   ]      
     // const forms = props.forms;
     // const {forms,onChange,onCancel} = props;
-    const {forms, value, title, subtitle} = props;
+    const {forms, value, title, subtitle, error:errorMessage} = props;
 
     const button = props.button
 
@@ -45,6 +47,7 @@ export function MyForm(props){
       cancel:button?.cancel||"Cancel",
       submit:button?.submit||"Submit",
       submitting:button?.updating||'Updating...',
+      // updating:button?.updating||'Updating...',
     }
 
 
@@ -59,12 +62,14 @@ export function MyForm(props){
 
     // keep value to reset it
     let defaultValue = {...props.value}
-
+    console.debug("defaultValue", defaultValue);
  
 
     // const testData2 = {sample_id:'b', scientific_program:'dyfamed_wp2_2023_biotom_sn001', latitude_ns:2}
     // const [myform, setMyForm] = useState(props.value?props.value:{});
-    const [myValues, setMyValues] = useState(value || {});
+    // const [myValues, setMyValues] = useState(value || {});
+    const [myValues, setMyValues] = useState(value || defaultValue || {});
+
     // const [myform, setMyForm] = useState({});
     // setMyForm(testData2)
     // const [title, setTitle] = useState(props.title?props.title:"Title");
@@ -96,9 +101,9 @@ export function MyForm(props){
 
     // const margin={margin:"0 5px"}
 
-    const init = () => {
-        setMyValues(defaultValue)
-    }
+    // const init = () => {
+    //     setMyValues(defaultValue)
+    // }
 
 
 
@@ -314,6 +319,25 @@ export function MyForm(props){
 
     },[valeur])
 
+  //   useEffect(() => {
+  //     const hasChanges = JSON.stringify(myValues) !== JSON.stringify(defaultValue);
+  //     setIsDataModified(hasChanges);
+  // }, [myValues, defaultValue]);
+
+  // Add deep comparison function
+  const isEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
+
+  const hasChanges = () => {
+    return JSON.stringify(myValues) !== JSON.stringify(defaultValue);
+};
+
+  // Update useEffect for value changes
+  useEffect(() => {
+      if (!isEqual(myValues, defaultValue)) {
+          setIsDataModified(true);
+      }
+  }, [myValues]);
+
 
     // const cascade = ( name, value) => {
 
@@ -390,7 +414,11 @@ export function MyForm(props){
         // setIsDataUpdated(false)
         // console.log("onChangeElement form values", myValues);
 
-
+        setIsUpdating(false); // Reset updating state
+        // setIsDataModified(true); // Set modified flag
+        const updatedValues = {...myValues, [name]: value};
+        const isChanged = JSON.stringify(updatedValues) !== JSON.stringify(defaultValue);
+        setIsDataModified(isChanged);
 
   
         // to cascade()
@@ -520,44 +548,86 @@ export function MyForm(props){
         props.onCancel();
     }
     
-  const onSubmitHandler = async (event /*: React.FormEvent<HTMLFormElement>*/) => {
-        console.debug("onSubmitHandler");
-        event.preventDefault(); // 👈️ prevent page refresh
-        setIsDataModified(false) // Set loading to true when the request starts
-        setError(null) // Clear previous errors when a new request starts
+  // const onSubmitHandler = async (event /*: React.FormEvent<HTMLFormElement>*/) => {
+  //       console.debug("onSubmitHandler");
+  //       event.preventDefault(); // 👈️ prevent page refresh
+  //       setIsDataModified(false) // Set loading to true when the request starts
+  //       setError(null) // Clear previous errors when a new request starts
 
-        const formData = new FormData(event.currentTarget)
-        console.log("formData: ", formData)
+  //       setIsUpdating(true); // Set updating effect on button before the API call
 
 
-        console.log("onSubmitHandler event", event);
-        console.log("event.timeStamp", event.timeStamp);
-        console.log("onSubmitHandler submit form", myValues);
-        console.log("onChange(", values);
+  //       const formData = new FormData(event.currentTarget)
+  //       console.log("formData: ", formData)
+
+
+  //       console.log("onSubmitHandler event", event);
+  //       console.log("event.timeStamp", event.timeStamp);
+  //       console.log("onSubmitHandler submit form", myValues);
+  //       console.log("onChange(", values);
         
-        setIsUpdating(true)
-        // props.onChange(values)
-        props.onChange(myValues)
-        .then( (response) => {
-          // console.log("onChange OK");
-          console.log("onChange OK " , response);
-          // console.log("Data Updated")
-          setValues(response)
-          // defaultValue = values;
-          defaultValue = response;
-          setIsDataUpdated(true)
-          setIsUpdating(false)
-        })
-        .catch( (error) => {
-          const message = error
-          console.error("onChange Error", message);
-          setIsUpdating(false)
-          setIsDataModified(true)
-          setError(message)
-          // console.error(error)
-        })
+  //       // setIsUpdating(true)
+  //       // props.onChange(values)
 
-    }  
+  //       try {
+  //       props.onChange(myValues)
+  //       .then( (response) => {
+  //         // console.log("onChange OK");
+  //         console.debug("---------------------------------------------------");
+  //         console.log("onChange OK " , response);
+  //         // console.log("Data Updated")
+  //         setValues(response)
+  //         // defaultValue = values;
+  //         defaultValue = response;
+  //         setIsDataUpdated(true)
+  //         setIsUpdating(false)
+  //       })
+  //       .catch( (error) => {
+  //         // const message = error
+  //         const errorMessage = error?.message || error?.toString() || "An error occurred";
+  //         console.debug("-%-%-%---------------------------------------------");
+  //         // console.error("onChange Error", message);
+  //         console.error("onChange Error", errorMessage);
+  //         setIsUpdating(false)
+  //         setIsDataModified(true)
+  //         // setError(message)
+  //         // console.error(error)
+  //         setError(errorMessage)
+  //         throw error; // Propagate error
+  //       })
+  //     }
+  //     catch (error) {
+  //       const errorMessage = error?.message || error?.toString() || "An error occurred";
+  //       console.debug("-%-%-%---------------------------------------%-%-%-");
+  //       // console.error("Catch on change exception:", error)
+  //       console.error("Catch on change exception:", errorMessage)
+  //       setIsUpdating(false)
+  //       setIsDataModified(true)
+  //       // setError(error)
+  //       setError(errorMessage)
+  //     } 
+
+  //   }  
+
+  // Update error handling in onSubmitHandler
+const onSubmitHandler = async (event) => {
+  event.preventDefault();
+  setIsUpdating(true);
+  
+  try {
+      const response = await props.onChange(myValues);
+      setValues(response);
+      defaultValue = response;
+      setIsDataUpdated(true);
+      setIsDataModified(false);
+      setError(null);
+  } catch (error) {
+      setError(error.message || error);
+      setIsDataModified(true);
+  } finally {
+      setIsUpdating(false);
+  }
+}
 
     // to print the debug json
     // const stringifiedData = useMemo(() => JSON.stringify(myform, null, 2), [myform]);
@@ -582,6 +652,9 @@ export function MyForm(props){
               <Debug params={forms} title="forms"/>
               <Debug params={value} title="value"/>
               <Debug params={myValues} title="myValues" open={true}/>
+              <Debug params={error} title="error" open={true}/>
+              <Debug params={errorMessage} title="errorMessage" open={true}/>
+
               {/* <Debug params={myValues} title="myform"/> */}
 
               </CardHeader>
@@ -595,10 +668,17 @@ export function MyForm(props){
     
                   </div>
     
+                  {/* {error && (
+        <div className="text-danger mt-2">
+            {error.message || error}
+        </div> 
+       )}*/}
+
               </CardBody>
               <CardFooter>
               <div className="gridjustify-items-end"
                       >
+                        {/* {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>} */}
                         {error && <div style={{ color: 'red' }}>{error}</div>}
                         {isDataUpdated && <div>Data have been updated</div>}
 
@@ -610,8 +690,12 @@ export function MyForm(props){
                         // onClick={props.onChange}
 
                         isDisabled={!isDataModified}
+                        // isDisabled={!isDataModified|| isUpdating}
+                        // isDisabled={!hasChanges() || isUpdating}
+
                       >
-                        {isUpdating ? btn.updating : btn.submit }
+                        {/* {isUpdating ? btn.updating : btn.submit } */}
+                        {isUpdating ? btn.submitting : btn.submit }
                       </Button>
                       <Spacer x={2}/>
 

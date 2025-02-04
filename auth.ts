@@ -58,10 +58,10 @@ export const {
 } = NextAuth({
   callbacks: {
     async session({ token, session }) {
-      console.log({
-        token,
-        session
-      })
+      // console.log("Auth() session:",{
+        // token,
+        // session
+      // })
       // const t : Session
       if (token.sub && session.user) {
         session.user.id = token.sub;
@@ -75,21 +75,86 @@ export const {
         session.user.token = token.token as string
       }
 
+      if ( ! token.token && globalThis.token ) {
+        session.user.token = globalThis.token as string
+        token.token = globalThis.token as string  
+      }
+
+      // console.log("session: ", session)
+
       return session
     },
+    // async jwt({ token , user }) {
+    //   // console.log("jwt: ", { token, user })
+    //   if (!token.sub) {
+    //     // console.log("token.sub is undefined")
+
+    //     const currentTimestamp = Math.floor(Date.now() / 1000);
+    //     if (token.exp && typeof token.exp === 'number' && token.exp < currentTimestamp) {
+    //       token.isExpired = true;
+    //       // console.log("Token has expired");
+    //     } else {
+    //       token.isExpired = false;
+    //       // console.log("Token is still valid");
+    //     }
+
+    //     return token;
+    //   }
+
+    //   // console.log(" ++++++++++++++++ : ", user)
+
+    //   //  token.token = user.token
+
+    //   if ( globalThis.token ) {
+    //     // console.log("globalThis.token: ", globalThis.token)
+    //     token.token = globalThis.token
+  
+    //     // const existingUser = await getUserByiD(token.sub, globalThis.token);
+
+
+    //     // const existingUser = await api.getUserById(`/users/${token.sub}`, globalThis.token )
+    //     const existingUser = await api.getUserById(`/users/me`, globalThis.token )
+        
+        
+      
+    //     if (!existingUser) return token;
+    //     token.role = existingUser.role
+    //   }
+
+    //   // console.log("existingUser: ", existingUser)
+
+    //   // token.existingUser = existingUser
+
+    //   // if (!existingUser) return token;
+
+    //   // token.role = existingUser.user. .role;
+
+    //   return token
+    // }
+
     async jwt({ token , user }) {
-      console.log("jwt: ", {
-        token,
-        user
-      })
-      if (!token.sub) return token;
+      // console.log("jwt: ", { token, user })
+      // if (!token.sub) {
+      //   // console.log("token.sub is undefined")
+
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+        if (token.exp && typeof token.exp === 'number' && token.exp < currentTimestamp) {
+          token.isExpired = true;
+          // console.log("Token has expired");
+        } else {
+          token.isExpired = false;
+          // console.log("Token is still valid");
+          return token;
+        }
+
+      // }
 
       // console.log(" ++++++++++++++++ : ", user)
 
       // token.token = user.token
 
       if ( globalThis.token ) {
-        console.log("globalThis.token: ", globalThis.token)
+        // console.log("globalThis.token: ", globalThis.token)
         token.token = globalThis.token
   
         // const existingUser = await getUserByiD(token.sub, globalThis.token);
@@ -112,9 +177,10 @@ export const {
 
       // token.role = existingUser.user. .role;
 
-      return token
+        return token
     }
-  },
-  session: { strategy: "jwt" },
+
+
+  },  session: { strategy: "jwt" },
   ...authConfig,
 });

@@ -1,12 +1,28 @@
+"use server";
+
 // import { parseJSON } from 'date-fns'
 // import useSWR, { Fetcher } from 'swr'
 import useSWR from 'swr'
-import { useProjects } from '@/app/api/projects';
+// import { useProjects } from '@/app/api/projects';
 
 import * as api from '@/app/api/network/zooprocess-api' 
-import { useEffect } from 'react';
+import { getScan } from './network/scan';
+// import { useEffect } from 'react';
 
-export function useBackgrounds(projectId) {
+/**
+ * Fetches background data for a given project using its ID.
+ * Utilizes SWR for data fetching and caching.
+ * 
+ * @param {string} projectId - The ID of the project to fetch backgrounds for.
+ * @returns {Object} An object containing:
+ *   - backgrounds: An array of background data.
+ *   - isLoading: A boolean indicating if the data is still loading.
+ *   - isError: An error object if an error occurred, otherwise false.
+ * 
+ * If the projectId is undefined, returns an error message indicating
+ * the inability to determine the project.
+ */
+export async function useBackgrounds(projectId) {
 
     if ( projectId == undefined ){
         return {
@@ -75,7 +91,7 @@ export function useBackgrounds(projectId) {
             }
 }
 
-export function useGetScan(scanId) {
+export async function useGetScan(scanId) {
 
     console.log("useGetScan: scanId", scanId)
 
@@ -89,7 +105,8 @@ export function useGetScan(scanId) {
 
     const { data=undefined, error=false, isLoading=true } = useSWR(
         `/scan/${scanId}`,
-        api.getScan, 
+        // api.getScan, 
+        getScan,
         {
             revalidateIfStale: false,
             revalidateOnFocus: false,
@@ -104,7 +121,7 @@ export function useGetScan(scanId) {
     }  
 }
 
-export function useShowScan(scanId) {
+export async function useShowScan(scanId) {
 
     console.log("useGetScan: scanId", scanId)
 
@@ -119,7 +136,8 @@ export function useShowScan(scanId) {
     const { data=undefined, error=false, isLoading=true } = useSWR(
         `/scan/${scanId}?show`,
         // `/scan/${scanId}`,
-        api.getScan, 
+        // api.getScan, 
+        getScan,
         {
             revalidateIfStale: false,
             revalidateOnFocus: false,
@@ -169,7 +187,7 @@ export function useShowScan(scanId) {
     } 
 
 }
-export function useSampleScans(projectId) {
+export async function useSampleScans(projectId) {
 
     if ( projectId == undefined ){
         return {

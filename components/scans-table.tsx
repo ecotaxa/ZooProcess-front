@@ -64,9 +64,9 @@ export function ScanTable(props:{projectId:String, scans:any}) {
         async sort({items, sortDescriptor}) {
             console.debug("sort: ",items, sortDescriptor)
           return {
-            items: items.sort((a, b) => {
-              let first = a[sortDescriptor.column];
-              let second = b[sortDescriptor.column];
+            items: items.sort((a: any, b: any) => {
+              let first = a[sortDescriptor.column as keyof typeof a];
+              let second = b[sortDescriptor.column as keyof typeof b];
               let cmp = (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
     
               console.debug("sort: ",first, second, cmp)
@@ -76,8 +76,9 @@ export function ScanTable(props:{projectId:String, scans:any}) {
               }
     
               return cmp;
-            }),
-          };
+
+            }),          
+          };        
         },
     });
 

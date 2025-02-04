@@ -16,9 +16,25 @@ export function MyMap(props:any) {
 
     console.log("myMap props: ", props)
     // const [value, setValue] = useState<myMapProps>(props.value);
-    const [value, setValue] = useState<string|null>(props.value);
+
+    const [value, setValue] = useState<string|myMapProps|null>(props.value);
     const [start, setStart] = useState<[number,number]|undefined>(undefined);
     const [end, setEnd] = useState<[number,number]|undefined>(undefined);
+    // console.log("MyMap useEffect[] value.startLat: ", value)
+    // console.debug("typeof value:", typeof value)
+    // //if ( value && typeof value === 'object' && 'startLat' in value && value.startLat !== undefined && value.startLng !== undefined) {
+    // // if ( value && 'startLat' in value && value.startLat !== undefined && value.startLng !== undefined) {
+    // if ( props.value ){
+    //     console.debug("MyMap useEffect[] value: ", value)
+    //     if ( typeof value === 'string') {
+    //         const coords = JSON.parse(value)
+    //         console.debug("Set the value")
+    //         setStart([coords.startLat, coords.startLng])
+    //         if (coords.endLat && coords.endLng){
+    //             setEnd([coords.endLat, coords.endLng])
+    //         }
+    //     }
+    // }
 
     const handleChange = useCallback( (start:[number,number], end:[number,number]|undefined) => {
         
@@ -61,10 +77,19 @@ export function MyMap(props:any) {
                 if (coords.endLat && coords.endLng){
                     setEnd([coords.endLat, coords.endLng])
                 }
-            }
+
+            } else {
+                console.error("props.value is not a string:", props.value);
+                setStart([value.startLat, value.startLng]);
+                if (value.endLat && value.endLng) {
+                    setEnd([value.endLat, value.endLng]);
+                } else {
+                    setEnd(undefined);
+                } 
+        } 
         }
     
-    },[])
+    },[props])
 
 
    // const start: [number,number] = [props.startLat, props.startLng]
@@ -84,4 +109,6 @@ export function MyMap(props:any) {
 
 }
 
+
 export default MyMap;
+

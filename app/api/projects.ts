@@ -1,123 +1,32 @@
-// import { parseJSON } from 'date-fns'
-// import useSWR, { Fetcher } from 'swr'
-import useSWR from 'swr'
+
+'use server'
+
 
 import * as api from '@/app/api/network/zooprocess-api' 
-import Instruments from '@/components/instruments'
-import { projectEcotaxaElements } from '@/config/formElements'
-// import { auth } from '@/auth'
-// import { da } from 'date-fns/locale'
-
-import { Project } from '@/app/api/network/zooprocess-api'
-
-// const getProjectsFetcher = (url) => { api.getProjects(url,globalThis.token) }
-
-export function useProjects() {
-
-    // console.log("globalThis.token :", globalThis.token)
 
 
-    const { data=[], error=false, isLoading=true } = useSWR('/projects/', api.getProjects ,
-      {
-        revalidateIfStale: false,
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false
-      })
-
-    // if ( isLoading==false && error==false ){
-    //   console.log("useProjects()")
-    //   console.log("  data      -> ", data )
-    //   console.log("  isLoading -> ", isLoading )
-    //   console.log("  error     -> ", error )
-    // }
-
-    return {
-      projects: data,
-      isLoading,
-      isError: error
-    }
-  }
 
 
+
+
+
+
+
+export async function addProject(project: any) {
+  console.debug("addProject starting with:", project);
   
-  export function useProject(projectId: string) {
-    const { data={} /*as Project*/, error=false, isLoading=true } = useSWR(`/projects/${projectId}`, api.getProject ,
-      {
-        revalidateIfStale: false,
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false
-      })
-
-    // if ( isLoading==false && error==false ){
-    //   console.log("useProjects()")
-    //   console.log("  data      -> ", data )
-    //   console.log("  isLoading -> ", isLoading )
-    //   console.log("  error     -> ", error )
-    // }
-
-    return {
-      project: data,
-      isLoading,
-      isError: error
-    }
-  //   return {
-  //       project: data || {},
-  //       isLoading: isLoading || true,
-  //       isError: error || false
-  //   }
+  try {
+      const response = await api.addProject(project);
+      console.debug("addProject success:", response);
+      return response;
+  } catch (error: any) {
+    console.debug("addProject caught error:", error);
+    // Extract message from error object
+    const errorMessage = error.message || 
+                       (error.response?.data?.message) || 
+                       (typeof error === 'object' ? JSON.stringify(error) : error);
+    throw new Error(errorMessage);
   }
-
-
-
-
-
-
-  // export function useProjectMetadata(projectId) {
-
-  //   const { data=[], error=false, isLoading=true } = useSWR(`/projects/${projectId}/metadata`, api.getProjectMetadata ,
-  //     {
-  //       revalidateIfStale: false,
-  //       revalidateOnFocus: false,
-  //       revalidateOnReconnect: false
-  //     })
-
-  //   // if ( isLoading==false && error==false ){
-  //   //   console.log("useProjects()")
-  //   //   console.log("  data      -> ", data )
-  //   //   console.log("  isLoading -> ", isLoading )
-  //   //   console.log("  error     -> ", error )
-  //   // }
-
-  //   return {
-  //     project: data,
-  //     isLoading,
-  //     isError: error
-  //   }
-  // }
-
-
-
-export function addProject(data:any){
-
-  console.log("adding Project...");
-  console.info(data);
-
-  // TODO added info box
-  if (data.scanningOptions == null) 
-  {
-    throw("scanningOptions is null")
-  }
-
-  return api.addProject(data)
-  .then((response) => {
-    console.log("Project added OK");
-    return Promise.resolve({data:response, message:"Project added"}) 
-  })
-  .catch ((error) =>  {
-    console.error("Project added NOK: ", error);
-    throw(error.message)
-  })
-
 }
 
 
@@ -168,7 +77,8 @@ const convertData2api = (data:any) => {
 
 
 
-export function updateProject(data:any){
+
+export async function updateProject(data:any){
 
   console.log("updating Project... with: ", data);
 
@@ -192,7 +102,6 @@ export function updateProject(data:any){
 }
 
 
-  // module.exports = 'useProjects'
 
 
   

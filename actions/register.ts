@@ -6,6 +6,7 @@ import { DevBundlerService } from "next/dist/server/lib/dev-bundler-service";
 import * as z from "zod"
 import * as bcrypt from 'bcryptjs'
 import { getUserByEmail } from "@/data/user";
+import { create_User } from "@/app/api/user";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
     // console.log(values)
@@ -19,22 +20,41 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     const { email , password, name } = validatedFields.data;
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const existingUser = await getUserByEmail(email)
+    // const existingUser = await getUserByEmail(email)
 
-    if ( existingUser ) {
+    // if ( existingUser ) {
+    //     return { error: "Email already in use!"}
+    // }
+
+    try {
+        await getUserByEmail(email)
         return { error: "Email already in use!"}
+    } 
+    catch (error){
+        console.log("OK no user with this email")
     }
 
-    await DevBundlerService.user.create({
-        data: {
-            name,
-            email,
-            password: hashedPassword
-        }
+    // Remove DevBundlerService.user.create as it's not a valid method
+    // You might want to replace this with your actual user creation logic
+    // For example, if you're using Prisma, it might look like:
+    // await prisma.user.create({
+    //     data: {
+    //         name,
+    //         email,
+    //         password: hashedPassword
+    //     }
+    // })
+
+    await create_User( name,email,password )
+    .then (res => {
+    //TODO: Send verification token email
+    //TODO: Implement user creation logic
+
+    return { success: "User created!" };
+
+    })
+    .catch((error) => {
+        console.log("OK no user with this email")
     })
 
-    //TODO: Send verification token email
-
- 
-    return { success: "User created!" };
 }

@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link, Tooltip } from "@nextui-org/react";
+
 // import { useRouter } from "next/navigation";
 // import { Button } from "@mui/material";
 
 // import { formatDate , formatTime }  from '@/api/formatDateAndTime.js';
 import { key } from '@/api/key';
+import { IMetadata, IScan, Sample } from '@/app/api/network/interfaces';
 
 import { Debug } from '@/components/Debug';
 import { useAsyncList } from "react-stately";
+import { sub } from "date-fns";
+import { EyeIcon } from "./icons/EyeIcon";
 
 // interface IColumn {
 //   name: string,
@@ -16,16 +20,21 @@ import { useAsyncList } from "react-stately";
 // }
 
 const columns /*: Array<IColumn>*/ = [
-    // {name: "ID", uid: "id", allowSorting:true},
+    {name: "ID", uid: "id", allowSorting:true},
     // {name: "DRIVE", uid: "drive"},
     {name: "NAME", uid: "name", allowSorting:true},
     // {name: "SAMPLE", uid: "sample"},
+    // {name: "SCAN OPERATOR", uid: "operator", allowSorting:true},
+    // {name: "FRACTION ID", uid:"fractionid", allowSorting:true},
+    // {name: "FRAC MIN", uid: "fracmin", allowSorting:true},
+    // {name: "FRAC SUP", uid: "fracsup", allowSorting:true},
+    // {name: "OBSERVATION", uid: "obs", allowSorting:true},
     {name: "SCAN OPERATOR", uid: "operator", allowSorting:true},
-    {name: "FRACTION ID", uid:"fractionid", allowSorting:true},
-    {name: "FRAC MIN", uid: "fracmin", allowSorting:true},
-    {name: "FRAC SUP", uid: "fracsup", allowSorting:true},
-    {name: "OBSERVATION", uid: "obs", allowSorting:true},
-    {name: "QC", uid: "qc", allowSorting:true},
+    {name: "FRACTION ID", uid:"fraction_number", allowSorting:true},
+    {name: "FRAC MIN", uid: "fraction_min_mesh", allowSorting:true},
+    {name: "FRAC SUP", uid: "fraction_max_mesh", allowSorting:true},
+    {name: "OBSERVATION", uid: "observation", allowSorting:true},
+        {name: "QC", uid: "qc", allowSorting:true},
     {name: "ACTIONS", uid: "actions", allowSorting:false},
   ];
 
@@ -74,7 +83,7 @@ export function SubSamplesTable(props) {
 
     const updateddata = subsamples.map( (sample) => { sample['key']=sample.id ; return sample;} )
     console.log("SubSamplesTable updateddata: ",updateddata)
-    const [rows, setRows] = useState(updateddata)
+    // const [rows, setRows] = useState(updateddata)
 
 
 
@@ -84,18 +93,45 @@ export function SubSamplesTable(props) {
             case "TODO":
             case "UNPROCESSED":
             case undefined: return "Unprocesssed";
-            case "HIGHN#MULTIPLE": return "High number of multiple";
+            case "HIGH#MULTIPLE": return "High number of multiple";
             default: return "Error";
         }
     }
 
 
+    function getScan(data/*:Array<IScan>*/, type/*:String*/="Scan") {
+      console.log("getScan: ", data);
+      const value = data.find( (m/*:IScan*/) => m.type == type)
+      console.log("getScan value: ",  value);
+      return value?.url || null
+      // return 1
+    }
 
     const renderCell = React.useCallback((sample, columnKey) => {
 
+        console.log("render cell :sample ", sample);
         console.log("render cell :columnKey ", columnKey); 
 
-        const cellValue = sample[columnKey];
+        // const cellValue = sample[columnKey];
+        let cellValue = sample[columnKey]
+        if ( cellValue == undefined ) {
+          const subsample = sample.metadata.find((item) => item.name == columnKey);
+          // if (subsample == undefined) return (
+          //   <div subsample="flex flex-col" >
+          //     <p className="text-bold text-sm capitalize">-</p>
+          //   </div>
+          // );
+          if ( subsample != undefined ) {
+            console.log("render cell :subsample ", subsample.value);
+            cellValue = subsample.value;
+            console.log("render cell :cellValue ", cellValue);
+          } else {
+            if (columnKey == "operator") {
+              cellValue = sample.user.name
+            }
+          }
+        }
+
 
         switch (columnKey) {
         case "id":
@@ -120,10 +156,11 @@ export function SubSamplesTable(props) {
               </div>
           );
           
-        case "fractionid":
-        case "fracsup":
-        case "fracmin":
-        case "obs":
+        case "fraction_number":
+        case "fraction_max_mesh":
+        case "fraction_min_mesh":
+        case "observation":
+          console.log("render cell: ", cellValue);
         return (
                 <div className="flex flex-col" >
                     <p className="text-bold text-sm">{cellValue}</p>
@@ -134,26 +171,65 @@ export function SubSamplesTable(props) {
         case "qc":
             return (
                 <div className="flex flex-col" >
-                    <p className="text-bold text-sm capitalize">{QCString(cellValue)}</p>
+                    <p className="text-bold text-sm capitalize">{cellValue?QCString(cellValue):"TODO"}</p>
                 </div>
             );   
 
         case "actions":
-            return (
-            <div className="relative flex items-center gap-2" key={key(sample.id,'action')}>
-                <Button 
+
+          let cellValue = sample["qc"]
+
+         const scan = getScan(sample.scan, "Scan")
+        //  console.log("render cell: ", cellValue);
+         console.debug("render cell: ", scan);
+
+          let url = scan?.url
+          url = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/check`
+          let button = ""
+          // switch ( cellValue ) {
+          //   case "UNPROCESSED":
+          //     url = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/process`
+          //     button = "PROCESS"
+          //     break;
+          //   case "TODO":
+          //   case undefined:
+          //   default:
+          //     url = `/projects/${projectId}/samples/${sampleId}/subsamples/new/${sample.id}?state=preview`
+          //     button = "SCAN"
+          //     break;
+          //   case "DONE":
+          //         url = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/check`
+          //         button = "VIEW"
+          //     } 
+
+              return (
+              <div className="relative flex items-center gap-2" key={key(sample.id,'action')}>
+                <Tooltip content="Detail">
+                  <Link 
+                      data-testid="detail_action_btn"
+                      size="sm"
+                      color="primary" 
+                      as={Link}
+                      href={`${url}`}
+                  >
+                    <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                      <EyeIcon/>
+                    </span>
+                  </Link>
+                </Tooltip>
+                
+                {/* <Button 
                     data-testid="action_btn"
                     variant="flat" 
                     size="sm" 
                     color="primary" 
                     as={Link}
-                    href={`/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}`}
-                    // onPress={ (projectid,sampleid=sample.id) => onDetail(projectid,sampleid) }                
+                    href={url}
                 >
-                    Sub-Sample Detail
-                </Button>
-            </div>
-            );
+                    {button}
+              </Button> */}
+              </div>
+              );
             
         default:
             return cellValue;

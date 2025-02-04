@@ -1,62 +1,57 @@
-import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
-import { eState } from "./state";
-import { Project } from "@/app/api/network/zooprocess-api";
-import { Debug } from "@/components/Debug";
+
+"use client";
 
 
-const Metadata = (project: Project|any, current: eState, nextState: eState, onCancel: any , setCurrent: (state: eState) => void) => {
-    if ( current != eState.metadata )  {
-        return <></>
+
+
+
+import { Project } from "next/dist/build/swc"
+// import { eState } from "./state"
+import { Sample, SubSample } from "@/app/api/network/interfaces";
+import SubSampleForm from "./SubSampleFormUpdate";
+
+
+
+const onValidFraction = () => {
+    console.log("onValid")
+}
+
+// const Metadata = (project: Project|any, subsampleid:string, current: eState, nextState: eState, onCancel: any , setCurrent: (state: eState) => void) => {
+export function Metadata(param: {
+    project: Project|any,
+    sample: Sample,
+    subsample: SubSample,
+    // current: eState;
+    // nextState: eState;
+    // setCurrent: (etate: eState) => void;
+    onCancel: () => void,
+    onValid: () => void,
+
+}) {
+    // const { project, sample, subsample, current, nextState, setCurrent } = param;
+    const { project, sample, subsample, onValid, onCancel } = param;
+    // if ( current != eState.metadata )  {
+    //     return <></>
+    // }
+
+    const onValidFraction = () => {
+        console.log("---- onValid")
+        onValid()
     }
+
+    
+    console.log("Metadata project: ", project)
+    console.log("Metadata subsambpleid: ", subsample.id) 
+
+
+    // const gotoInfo = () => {
+    //     setCurrent(nextState)
+    // }
 
     return (
         <>
-            <Card className="inline-block size-full"
-                data-testid="ScanCard" 
-                >
-                     <CardBody className="p-6">
-                <div  className="bg-100 p-6">
-                    <h1 className="text-center">You are about to scan with the Zooscan.</h1>
-                    <br/><br/>
-                    <div >
-                        <Debug params={project} title="project"/>
-                        { project.instrument?.sn && <b>Your project use Zooscan : {project.instrument?.sn}</b>}
-                        <br/>
-                        <b>project.instrumentId: {project.instrumentId}</b>
-                        {/* <b>Your project use Zooscan : {project.instrument?.sn||""}</b> */}
-                        {/* <b>Your project use Zooscan : {project.instrumentId} {project.instrument.serial}</b> */}
-                    </div>
-                </div>
-            </CardBody>
-
-            <CardFooter className="flex flex-row-reverse py-3">
-
-                <Button 
-                    disabled={ isError || isLoading }
-                    color="primary"
-                    // showAnchorIcon
-                    variant="solid"
-                    data-testid="newProjectBtn"
-                    // >Scan {actions[nextAction(action)]}</Button>
-                    onPress={() =>{ console.debug("I'm using " + project.instrument?.sn);   setCurrent(nextState) }}
-                    // onPress={onClick}
-                >Continue - {"I'm using " + project.instrument?.sn}</Button>
-
-                <Button 
-                    // disabled={ isError || isLoading || !image }
-                    color="secondary"
-                    // showAnchorIcon
-                    variant="solid"
-                    data-testid="newProjectBtn"
-                    // >Scan {actions[nextAction(action)]}</Button>
-                    // onPress={() =>{ console.debug("cancel scanning"); router.push('/projects'); }}
-                    onPress={() => onCancel()}
-                    // onPress={onClick}
-                >Cancel</Button>
-            </CardFooter>
-            </Card>       
+            <SubSampleForm {...{projectid:project.id, sampleid:sample.id, subsampleid:subsample.id, subsample, onCancel, onChange:onValidFraction}} />
         </>
     )
 }
 
-export default Metadata;

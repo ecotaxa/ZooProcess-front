@@ -1,8 +1,9 @@
 "use client";
 
-import { useBackgrounds, useSampleScans } from "@/app/api/background";
+import { getScans } from "@/app/api/data/scan";
+// import { useBackgrounds, useSampleScans } from "@/app/api/background";
 import { ErrorComponent } from "@/components/ErrorComponent";
-import { BackgroundTable } from "@/components/backgrounds-table";
+// import { BackgroundTable } from "@/components/backgrounds-table";
 import { MySpinner } from "@/components/mySpinner";
 import { ScanTable } from "@/components/scans-table";
 import { Button, Card, CardBody, CardHeader, Link, Spacer} from "@nextui-org/react";
@@ -15,17 +16,30 @@ interface pageProps {
 }
 
 
-const Scans : FC<pageProps> = (params) => {
+// const Scans : FC<pageProps> = (params) => {
+const Scans : FC<pageProps> = ({projectid}) => {
 
-    const projectId = params.projectid ;
-    console.log("Metadata params: ", params);
-    console.log("Metadata params projectid: ", params.projectid);
+    // const projectId = params.projectid ;
+    // console.log("Metadata params: ", params);
+    // console.log("Metadata params projectid: ", params.projectid);
+    console.log("Metadata params projectid: ", projectid);
 
     // const { backgrounds, isLoading, isError } = useBackgrounds(projectId)
     // const [ backgroundList, setBackgroundList ] = useState(backgrounds)
 
-    const { scans, isLoading: isScanLoading , isError: isScanError } = useSampleScans(projectId)
-    const [ scanList, setScanList ] = useState(scans)
+    // const { scans, isLoading: isScanLoading , isError: isScanError } = useSampleScans(projectId)
+    // const [ scanList, setScanList ] = useState(scans)
+    const [ scanList, setScanList ] = useState<any[]>([])
+
+    useEffect(() => {
+        const fetchBackgrounds = async () => {
+            const fetchedScans = await getScans(projectid)
+            const formattedData = formatData(fetchedScans)
+            setScanList(formattedData)
+        }
+        fetchBackgrounds()
+    }, [projectid])
+
     
     // {
     //     "id": "65c3635582772f6fd7ba5bd3",
@@ -71,7 +85,7 @@ const Scans : FC<pageProps> = (params) => {
     //     return backgrounds
     // }
 
-    const formatScanSampleData = (data:any) => {
+    const formatData = (data:any) => {
 
         console.log("formatData", data);
     
@@ -125,16 +139,16 @@ const Scans : FC<pageProps> = (params) => {
     //     }
     // } , [backgrounds])
     
-    useEffect( () => { 
-        if ( scans.length > 0 ) 
-            {
-                console.log("scan list has changed", scans);
-                const data = formatScanSampleData(scans)
-                // const data = formatData(backgrounds).filter(item => item !== undefined);
-                // const data = samples
-                setScanList(data);
-            }
-    } , [scans])
+    // useEffect( () => { 
+    //     if ( scans.length > 0 ) 
+    //         {
+    //             console.log("scan list has changed", scans);
+    //             const data = formatScanSampleData(scans)
+    //             // const data = formatData(backgrounds).filter(item => item !== undefined);
+    //             // const data = samples
+    //             setScanList(data);
+    //         }
+    // } , [scans])
   
       
     // const ShowData = () => {
@@ -145,10 +159,10 @@ const Scans : FC<pageProps> = (params) => {
     // }
 
     const ShowScanData = () => {
-        if (isScanLoading) return <MySpinner />
-        if (isScanError) return <ErrorComponent error={isScanError}/>
+        // if (isScanLoading) return <MySpinner />
+        // if (isScanError) return <ErrorComponent error={isScanError}/>
         console.debug(scanList)
-        return <ScanTable projectId={projectId} scans={scanList}/>
+        return <ScanTable projectId={projectid} scans={scanList}/>
     }
 
 

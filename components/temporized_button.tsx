@@ -30,6 +30,11 @@ export const TemporizedButton = ({
 //   onRestart
 }: TemporizedButtonProps) => {
 
+<<<<<<< HEAD
+=======
+  console.debug("TemporizedButton()")
+
+>>>>>>> updateNextSplitScanProcess
     const [enabled, setEnable] = useState(false)
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
     const [buttonLabel, setButtonLabel] = useState( changeButtonLabel(timer) )

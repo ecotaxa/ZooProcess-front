@@ -1,19 +1,23 @@
 "use client";
 
 
-import Head from 'next/head';
+// import Head from 'next/head';
 // import { Box, Button, Card, CardActions, CardContent, Container, Divider, Stack, Typography } from '@mui/material';
 
 
 import { SamplesTableNextUI as SamplesTable } from '@/components/samples-table'
 import { Button, Card, CardBody, CardHeader, Spacer, Link } from '@nextui-org/react';
-import { MySpinner } from '@/components/mySpinner';
-import { ErrorComponent } from '@/components/ErrorComponent';
+// import { MySpinner } from '@/components/mySpinner';
+// import { ErrorComponent } from '@/components/ErrorComponent';
 import { FC, useEffect, useState } from 'react';
 
-import { useSamples } from '@/app/api/samples';
+// import { useSamples } from '@/app/api/samples';
+import { Samples } from '@/app/api/network/interfaces';
+import { getSamples } from '@/app/api/data/samples';
 // import Project from '../page';
 
+// import { useQuery } from 'react-query';
+// import { useMemo } from 'react';
 
 interface pageProps {
   // params: {
@@ -21,116 +25,81 @@ interface pageProps {
   // }
 }
 
-const SamplesTab : FC<pageProps> = (params) => {
-    // const router = useRouter()
-    // const projectid = router.query.projectid //as string
-    // const sampleid = router.query.sampleid //as string
+const SamplesTab: FC<pageProps> = ({ projectid }) => {
+  console.log("Samples params: ", { projectid });
+  console.log("Samples projectid: ", projectid);
 
-  console.log("Samples params: ", params);
-  console.log("Samples params: ", params.projectid);
+  const projectId = projectid;
 
-  // const sampleName = "mon Sample";
+  // const [samples, setSamples] = useState<Samples | null>(null);
+  const [sampleList, setSampleList] = useState<any[]>([]);
 
-    // const sampleid = 10;
-    const projectId = params.projectid ;
+  useEffect(() => {
+    const fetchSamples = async () => {
+      const fetchedSamples = await getSamples(projectId);
+      // setSamples(fetchedSamples);
+      const formattedData = formatData(fetchedSamples);
+      setSampleList(formattedData);
+    };
+    fetchSamples();
+  }, [projectId]);
 
-    const { samples, isLoading, isError } = useSamples(projectId)
-    const [ sampleList, setSampleList ] = useState(samples)
+  const formatData = (data: any) => {
+    console.log("formatData", data);
 
-    // const formatData = (data:any) => {
-    //   console.log("formatData: ",data);
-    //   return data;
-    // }
+    const formattedSamples = Object.keys(data).map((sample) => {
+      console.log("sample: ", sample);
 
-    const formatData = (data:any) => {
+      if (sample === "key") {
+        console.error("ARRGG indey == key");
+        console.log("ARRGG indey == key");
+        console.log(data);
+        console.log("pfffff");
+        return null;
+      } else {
+        const s = data[sample];
 
-      console.log("formatData", data);
-  
-      const samples = Object.keys(data).map( (sample) => {
-        // const createdAt = new Date(samples.createdAt)
-        // console.log("createdAt: ", createdAt)
-  
-        // let updatedAt = undefined;
-        // if (samples.updatedAt){
-        //   try {
-        //     updatedAt = new Date(samples.updatedAt)
-        //   }
-        //   catch {
-        //     updatedAt = createdAt;
-        //   }
-        // } else {
-        //   updatedAt = createdAt;
-        // }
-  
-        console.log("sample: ", sample);
+        return {
+          id: data[sample].id,
+          name: data[sample].name,
+          fraction: s.nbFractions,
+          scans: s.nbScans,
+          createdAt: s.createdAt,
+          updatedAt: s.updatedAt,
+        };
+      }
+    }).filter(Boolean);
 
-        if ( sample == "key"){
-            console.error("ARRGG indey == key");
-            console.log("ARRGG indey == key")
-            console.debug(data);
-            console.log("pfffff")
-        } else {
-          const s = data[sample]
+    console.log("formatted data: ", formattedSamples);
+    return formattedSamples;
+  };
 
-          return {
-            id: data[sample].id,
-            name: data[sample].name,
-            fraction:s.nbFractions,
-            scans:s.nbScans,
-            createdAt:s.createdAt,
-            updatedAt:s.updatedAt,
-          }  
-        }
-
-      });
-  
-      console.log("formated data: ",samples);
-      return samples
-    }
-
-    useEffect( () => { 
-      console.log("samples has changed", samples);
-      const data = formatData(samples)
-      // const data = samples
-      setSampleList(data);
-    } , [samples])
-
-
-    const ShowData = () => {
-      if (isLoading) return <MySpinner />
-      if (isError) return <ErrorComponent error={isError}/>
-      return <SamplesTable projectId={projectId} samples={sampleList}/>
-    }
+  const ShowData = () => {
+    return <SamplesTable projectId={projectId} samples={sampleList} />;
+  };
 
   return (
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-          <div className="text-center justify-center">
-              {/* <h1 data-testid="title">
-                  Samples {projectId}
-              </h1> */}
-              <Spacer y={5}/>
-              <Card className="inline-block "
-                  data-testid="projectCard" 
-                  >
-                  <CardHeader className="flex flex-row-reverse py-3">
-                      <Button 
-                          // href={`/projects/${projectId}/samples/new`} cannot open this page ????
-                          href={`/projects/${projectId}/new`}
-                          as={Link}
-                          color="primary"
-                          // showAnchorIcon
-                          variant="solid"
-                          data-testid="newProjectBtn"
-                          >Add new sample</Button>
-                  </CardHeader>
-                  <CardBody>
-                      <ShowData/>
-                  </CardBody>
-
-              </Card> 
-          </div>
-      </section>
+    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      <div className="text-center justify-center">
+        <Spacer y={5} />
+        <Card className="inline-block" data-testid="projectCard">
+          <CardHeader className="flex flex-row-reverse py-3">
+            <Button
+              href={`/projects/${projectId}/new`}
+              as={Link}
+              color="primary"
+              variant="solid"
+              data-testid="newProjectBtn"
+            >
+              Add new sample
+            </Button>
+          </CardHeader>
+          <CardBody>
+            <ShowData />
+          </CardBody>
+        </Card>
+      </div>
+    </section>
   );
 };
-
 export default SamplesTab;

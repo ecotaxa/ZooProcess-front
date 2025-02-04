@@ -28,6 +28,7 @@ export function InstrumentsTable(props) {
     const router = useRouter();
     const stripped = true;
 
+    console.log("instruments: ",instruments)
 
     let list = useAsyncList({
         async load({signal}) {

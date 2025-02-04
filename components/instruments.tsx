@@ -1,10 +1,16 @@
 "use client";
+// "use server";
 
-import { useInstruments } from "@/app/api/instruments";
+// import { useInstruments } from "@/app/api/instruments";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { MySpinner } from "./mySpinner";
-import { ErrorComponent } from "./ErrorComponent";
+// import { MySpinner } from "./mySpinner";
+// import { ErrorComponent } from "./ErrorComponent";
+// import { Debug } from "./Debug";
+// import { getInstruments } from "@/app/api/data/instrument";
+// import AsyncInstrumentComponent from "./AsyncInstrumentComponent";
+import { Instrument } from "@/app/api/network/interfaces";
+import AsyncInstrumentData from "@/app/api/data/AsyncInstrumentData";
 import { Debug } from "./Debug";
 // import { spec } from "node:test/reporters";
 
@@ -21,7 +27,7 @@ interface FormItem {
     placeholder: string
     label: string
     required: boolean
-    choice: Array<Item>
+    // choice: Array<Item>
     onChange: (name:string,value:string)=>{}
 }
 
@@ -29,21 +35,42 @@ const Instruments = (props:FormItem) => {
 
     //console.log("Instruments props: ",props);
 
-    const { instruments, isLoading, isError} = useInstruments();    
+    // const { instruments, isLoading, isError} = useInstruments();  
+    const instrumentList = AsyncInstrumentData() // getInstruments()  
     // const [ driveList , setDriveList ] = useState(drives);
-    const [value, setValue] = useState(
-        props.value || 0
-        );
+    const [instruments, setInstruments] = useState<Array<Instrument>>([])
 
-    useEffect( () => { 
-        // console.log("drives have changed", drives);
-        // const data = samples
-        // setDriveList(drives);
-      } , [instruments])
+    const [value, setValue] = useState(props.value || 0);
 
+
+    // useEffect( () => { 
+    //     // console.log("drives have changed", drives);
+    //     // const data = samples
+    //     // setDriveList(drives);
+    //   } , [instruments])
+
+    useEffect( ()=> {
+        const fetchInstruments = async () => {
+            const instrumentsData = await instrumentList  // wait the Promise return
+            console.log("AsyncInstrumentComponent useEffect: ", instrumentsData)
+            setInstruments(instrumentsData)
+        }
+        fetchInstruments()
+    }, [])
       
-    if (isLoading) return <MySpinner />
-    if (isError) return <ErrorComponent error={isError}/>
+    // manage user selection
+    useEffect(() => {
+        if (props.value !== undefined) {
+          setValue(props.value);
+        }
+      }, [props.value]);
+    
+
+    useEffect( ()=> {
+        console.log("instruments have changed:", instruments);
+    }, [instruments])
+    // if (isLoading) return <MySpinner />
+    // if (isError) return <ErrorComponent error={isError}/>
 
 
     const handleChange = (value : string /* event: SelectChangeEvent*/) => {
@@ -81,7 +108,8 @@ const Instruments = (props:FormItem) => {
     return (
 
         <>
-        <Debug params={[{props:props},{opts:opts},{hasError:isError}]} title={props.name} />
+        {/* <Debug params={[{props:props},{opts:opts},{hasError:isError}]} title={props.name} /> */}
+        <Debug params={[{props:props},{opts:opts}]} title={props.name} />
 
         <Select
             // onChange={props.onChange}

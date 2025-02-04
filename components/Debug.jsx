@@ -1,10 +1,16 @@
+"useClient";
 
 import {Code, Switch, Tooltip} from "@nextui-org/react";
 import { useState } from "react";
 
 import {debug} from "../config/settings"
 
-export const Debug = ({params,title="debug",open=false}) => {
+export const Debug = ({
+        params, 
+        title="debug", 
+        open=false, 
+        pre=false
+    }) => {
 
     const [isSelected, setIsSelected] = useState(open);
 
@@ -30,7 +36,14 @@ export const Debug = ({params,title="debug",open=false}) => {
         return (
             <div className="xm-sm-max-100 w-50">
                 {/* <Code className="size-sm" color="secondary"> */}
-                    {JSON.stringify(params)}
+                { pre && 
+                <pre>
+                    {JSON.stringify(params,null,2)}
+                </pre>
+                }
+                { !pre &&
+                    <>{JSON.stringify(params,null,2)}</>
+                }
                 {/* </Code> */}
             </div>
         )
@@ -38,7 +51,7 @@ export const Debug = ({params,title="debug",open=false}) => {
 
     return (
     <>
-        <Tooltip
+        <Tooltip delay={1000} color="primary"
             content={
                 <div className="xm-sm-max-100">
                     {JSON.stringify(params)}

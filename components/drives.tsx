@@ -1,12 +1,16 @@
 "use client";
 
-import { useDrives } from "@/app/api/drives";
+// import { useDrives } from "@/app/api/drives";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { MySpinner } from "./mySpinner";
-import { ErrorComponent } from "./ErrorComponent";
-import { Debug } from "./Debug";
+// import { MySpinner } from "./mySpinner";
+// import { ErrorComponent } from "./ErrorComponent";
+// import { getDrives } from "@/app/api/data/drive";
+// import { useDrives } from "@/app/api/drives";
+// import { Debug } from "./Debug";
 // import { spec } from "node:test/reporters";
+import AsyncDriveData from '@/app/api/data/AsyncDriveData'
+import { Drive } from "@/app/api/network/interfaces";
 
 
 interface Item {
@@ -29,21 +33,41 @@ const Drives = (props:FormItem) => {
 
     //console.log("Drives props: ",props);
 
-    const { drives, isLoading, isError} = useDrives();    
-    // const [ driveList , setDriveList ] = useState(drives);
-    const [value, setValue] = useState(
-        props.value || 0
-        );
+    // const { drives, isLoading, isError} = useDrives();  
+    // const drives = getDrives()
+    const drivelist = AsyncDriveData();
+    const [ drives , setDrives ] = useState<Drive[]>([]);
 
+    
+    // const [ driveList , setDriveList ] = useState(drives);
+    const [value, setValue] = useState(props.value || 0);
+
+    useEffect(() => {
+        const fetchDrives = async () => {
+            const drivesData = await drivelist  // wait the Promise return
+            console.log("AsyncDriveContent useEffect: ", drivesData)
+            setDrives(drivesData)
+        }
+        fetchDrives()
+    // }, [drives])
+    }, [])
+// manage user selection
+  useEffect(() => {
+    if (props.value !== undefined) {
+      setValue(props.value);
+    }
+  }, [props.value]);
+
+    // just for log
     useEffect( () => { 
-        // console.log("drives have changed", drives);
+        console.log("drives have changed:", drives);
         // const data = samples
         // setDriveList(drives);
       } , [drives])
 
       
-    if (isLoading) return <MySpinner />
-    if (isError) return <ErrorComponent error={isError}/>
+    // if (isLoading) return <MySpinner />
+    // if (isError) return <ErrorComponent error={isError}/>
 
 
     const handleChange = (value : string /* event: SelectChangeEvent*/) => {
@@ -80,7 +104,7 @@ const Drives = (props:FormItem) => {
 
     return (
         <>
-        <Debug params={[{props:props},{opts:opts},{hasError:isError}]} title={props.name} />
+        {/* <Debug params={[{props:props},{opts:opts},{hasError:isError}]} title={props.name} /> */}
 
         <Select
             // onChange={props.onChange}

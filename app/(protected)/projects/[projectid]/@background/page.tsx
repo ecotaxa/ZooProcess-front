@@ -1,12 +1,15 @@
 "use client";
 
-import { useBackgrounds, useSampleScans } from "@/app/api/background";
-import { ErrorComponent } from "@/components/ErrorComponent";
+// import { useBackgrounds, useSampleScans } from "@/app/api/background";
+// import { ErrorComponent } from "@/components/ErrorComponent";
 import { BackgroundTable } from "@/components/backgrounds-table";
-import { MySpinner } from "@/components/mySpinner";
-import { ScanTable } from "@/components/scans-table";
+// import { MySpinner } from "@/components/mySpinner";
+// import { ScanTable } from "@/components/scans-table";
 import { Button, Card, CardBody, CardHeader, Link, Spacer} from "@nextui-org/react";
 import { FC, useEffect, useState } from "react";
+
+import { getProjectBackgrounds } from "@/app/api/data/background";
+import { Background } from "@/app/api/network/interfaces";
 
 interface pageProps {
     // params: {
@@ -15,15 +18,27 @@ interface pageProps {
 }
 
 
-const BackgroundScans : FC<pageProps> = (params) => {
+const BackgroundScans : FC<pageProps> = ({projectid}) => {
 
-    const projectId = params.projectid ;
-    console.log("Metadata params: ", params);
-    console.log("Metadata params projectid: ", params.projectid);
+    // const projectId = params.projectid ;
+    // console.log("Metadata params: ", params);
+    // console.log("Metadata params projectid: ", params.projectid);
+    console.log("Metadata params projectid: ", projectid);
 
-    const { backgrounds, isLoading, isError } = useBackgrounds(projectId)
-    const [ backgroundList, setBackgroundList ] = useState(backgrounds)
+    // const { backgrounds, isLoading, isError } = useBackgrounds(projectId)
+    const [ backgroundList, setBackgroundList ] = useState<any[]>([])
 
+
+    useEffect(() => {
+        const fetchBackgrounds = async () => {
+            const fetchedBackgrounds = await getProjectBackgrounds(projectid)
+            const formattedData = formatData(fetchedBackgrounds)
+            setBackgroundList(formattedData)
+        }
+        fetchBackgrounds()
+    }, [projectid])
+
+    
     // const { scans, isLoading: isScanLoading , isError: isScanError } = useSampleScans(projectId)
     // const [ scanList, setScanList ] = useState(scans)
     
@@ -115,15 +130,15 @@ const BackgroundScans : FC<pageProps> = (params) => {
         return scans
     }
 
-    useEffect( () => { 
-            if ( backgrounds.length > 0 ) {
-                console.log("background list has changed", backgrounds);
-                const data = formatData(backgrounds)
-                // const data = formatData(backgrounds).filter(item => item !== undefined);
-                // const data = samples
-                setBackgroundList(data);
-        }
-    } , [backgrounds])
+    // useEffect( () => { 
+    //         if ( backgrounds.length > 0 ) {
+    //             console.log("background list has changed", backgrounds);
+    //             const data = formatData(backgrounds)
+    //             // const data = formatData(backgrounds).filter(item => item !== undefined);
+    //             // const data = samples
+    //             setBackgroundList(data);
+    //     }
+    // } , [backgrounds])
     
     // useEffect( () => { 
     //     if ( scans.length > 0 ) 
@@ -138,10 +153,10 @@ const BackgroundScans : FC<pageProps> = (params) => {
   
       
     const ShowData = () => {
-        if (isLoading) return <MySpinner />
-        if (isError) return <ErrorComponent error={isError}/>
+        // if (isLoading) return <MySpinner />
+        // if (isError) return <ErrorComponent error={isError}/>
         console.debug(backgroundList)
-        return <BackgroundTable projectId={projectId} backgrounds={backgroundList}/>
+        return <BackgroundTable projectId={projectid} backgrounds={backgroundList}/>
     }
 
     // const ShowScanData = () => {
@@ -168,7 +183,7 @@ const BackgroundScans : FC<pageProps> = (params) => {
                     </div>
                     <Button 
                           // href={`/projects/${projectId}/samples/new`} cannot open this page ????
-                          href={`/projects/${projectId}/background/`}
+                          href={`/projects/${projectid}/background/`}
                           as={Link}
                           color="primary"
                           // showAnchorIcon
@@ -178,7 +193,7 @@ const BackgroundScans : FC<pageProps> = (params) => {
                         </Button>
                         <Button 
                           // href={`/projects/${projectId}/samples/new`} cannot open this page ????
-                          href={`/projects/${projectId}/upload/`}
+                          href={`/projects/${projectid}/upload/`}
                           as={Link}
                           color="primary"
                           // showAnchorIcon

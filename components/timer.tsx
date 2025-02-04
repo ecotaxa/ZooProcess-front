@@ -1,16 +1,18 @@
 
-
-import React, { useState, useEffect } from 'react';
-import CircularTimer from './CircularTimer';
+import { useEffect, useState } from "react";
+import CircularTimer from "./CircularTimer";
 
 interface TimerProps {
   initialTime?: number;
-  onChange?: () => void;
+  onComplete?: () => void;
 }
-
-const Timer: React.FC<TimerProps> = ({ initialTime = 0, onChange }) => {
+const Timer: React.FC<TimerProps> = ({ initialTime = 30, onComplete }) => {
   const [time, setTime] = useState(initialTime);
-  const [isRunning, setIsRunning] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => {
+    setIsRunning(true);
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -18,36 +20,34 @@ const Timer: React.FC<TimerProps> = ({ initialTime = 0, onChange }) => {
     if (isRunning) {
       interval = setInterval(() => {
         setTime((prevTime) => {
-          const newTime = prevTime - 1;
-          if (newTime === 0 && onChange) {
-            onChange();
+
+          if (prevTime <= 1) {
             setIsRunning(false);
+            console.log('Timer completed');
+            // onComplete?.();
+            setTimeout(() => {
+              onComplete?.(); // Ensure a delay before calling onComplete
+            }, 500); // Add a delay before calling onComplete
+            return 0;
           }
-          return newTime;
+          return prevTime - 1;
         });
       }, 1000);
-    } else {
-      clearInterval(interval!);
     }
 
-    return () => clearInterval(interval!);
-  }, [isRunning, onChange]);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  // }, [isRunning, onComplete]);
+  }, [isRunning]);
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-
-    // return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    return `${seconds.toString().padStart(2, '0')}`;
-  };
-
-  return (
-    <div>
-      <CircularTimer time={time} totalTime={initialTime} />
-      {/* <h1>{formatTime(time)}</h1> */}
-    </div>
-  );
+return (
+  <div>
+    <CircularTimer time={time} totalTime={initialTime} />
+  </div>
+);
 };
 
-export default Timer;
 
+
+export default Timer;

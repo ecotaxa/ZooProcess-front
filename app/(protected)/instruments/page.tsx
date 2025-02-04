@@ -1,15 +1,17 @@
-"use client";
+// "use client";
+"use server";
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { MySpinner } from '@/components/mySpinner'
-import { ErrorComponent } from '@/components/ErrorComponent'
+// import { useRouter } from 'next/navigation';
+// import { useEffect, useState } from 'react';
+// import { MySpinner } from '@/components/mySpinner'
+// import { ErrorComponent } from '@/components/ErrorComponent'
 import { InstrumentsTable } from './instruments-table'
 import { Button, Card, CardBody, CardHeader, Link, Spacer } from '@nextui-org/react';
-import { useInstruments } from '@/api/instruments'
+// import { useInstruments } from '@/api/instruments'
+import { getInstruments } from '@/app/api/data/instrument';
 
 
-export default function InstrumentsPage() {
+export default async function InstrumentsPage() {
 
     const formatData = (data:any) => {
         const fdata = data.map( (mdata:any) => {
@@ -31,22 +33,26 @@ export default function InstrumentsPage() {
     }
 
 
-	const { instruments, isLoading, isError } = useInstruments()
-    const [ instrumentList, setProjectList ] = useState([instruments])
-    const router = useRouter()
-    
-    useEffect( () => { 
-        if ( Object.keys(instruments).length == 0) return;
+	// const { instruments, isLoading, isError } = useInstruments()
+    const instruments = await getInstruments()
 
-        console.log("projects have changed (only useful columns for the table)", instruments);
-        const data = formatData(instruments)
-        setProjectList(data);
-      } , [instruments])
+
+    // const [ instrumentList, setProjectList ] = useState([instruments])
+    // const router = useRouter()
+    
+    // useEffect( () => { 
+    //     if ( Object.keys(instruments).length == 0) return;
+
+    //     console.debug("instrument have changed (only useful columns for the table)", instruments);
+    //     const data = formatData(instruments)
+    //     setProjectList(data);
+    //   } , [instruments])
     
     const ShowData = () => {
-        if (isLoading) return <MySpinner />
-        if (isError) return <ErrorComponent error={isError}/>
-        return <InstrumentsTable instruments={instrumentList}/>
+        // if (isLoading) return <MySpinner />
+        // if (isError) return <ErrorComponent error={isError}/>
+        // return <InstrumentsTable instruments={instrumentList}/>
+        return <InstrumentsTable instruments={instruments}/>
       }
 
     return (
@@ -61,7 +67,7 @@ export default function InstrumentsPage() {
                     >
                     <CardHeader className="flex flex-row-reverse py-3">
                         <Button 
-                            href="drives/new"
+                            href="instruments/new"
                             as={Link}
                             color="primary"
                             variant="solid"

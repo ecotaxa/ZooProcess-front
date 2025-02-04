@@ -7,7 +7,7 @@ import Head from 'next/head';
 // import { ProjectsTable } from 'src/sections/projects/projects-table';
 import { MyForm } from '@/components/myForm';
 // import { inputFormElements } from 'src/services/formElements';
-import { useState } from 'react';
+// import { useState } from 'react';
 import { projectForm } from '@/config/formElements';
 import { useRouter } from 'next/navigation';
 
@@ -20,7 +20,9 @@ import { addProject } from '@/app/api/projects';
 // import { SWRResponse } from 'swr';
 // import { Drive } from '@/app/api/network/zooprocess-api';
 import { Debug } from '@/components/Debug';
- 
+import { debug } from '@/config/settings';
+import { projectTestData } from '@/config/tests/project_data';
+import { useState } from 'react';
 
 
 
@@ -61,7 +63,9 @@ let emptyProject = {}
 
 const NewProject = (params:any) => {
     const router = useRouter();
-    
+    const [formError, setFormError] = useState<string|null>(null);
+
+
     console.log("NewProject params: ", params);
 
     // const { drives, isLoading, isError } = useDrives();
@@ -75,7 +79,7 @@ const NewProject = (params:any) => {
 
     let form : any = {}
     form['forms'] = projectForm; //driveList
-    form['value'] = emptyProject;
+    form['value'] = debug ? projectTestData : emptyProject;
     form['title'] = 'New Project';
     form['subtitle'] = 'Fill metadata about your new project';
 
@@ -103,28 +107,67 @@ const NewProject = (params:any) => {
     // }
 
     // onSubmit
-    const onChange = (value:any) => {
-        console.log("New project onChange:", value)
+    // const onChange = async (value:any) => {
+    //     console.log("New project onChange:", value)
 
-        // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
-        // stringifiedData = JSON.stringify(value, null, 2);
+    //     // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
+    //     // stringifiedData = JSON.stringify(value, null, 2);
 
-        // POUR AFFICHAGE DEBUG
-        // setData(JSON.stringify(value, null, 2))
-        // console.log("App onChange:", stringifiedData);
-
-
-        return addProject(value)
-        .then((response) => {
-            console.log("Go To the project page" )
-            router.push(`${response.data.id}`)
-        })
-        .catch((error) => {
-            return Promise.reject(error)
-        })
+    //     // POUR AFFICHAGE DEBUG
+    //     // setData(JSON.stringify(value, null, 2))
+    //     // console.log("App onChange:", stringifiedData);
 
 
+    //     // return 
+    //     // return addProject(value)
+    //     // .then((response) => {
+    //     //     console.log("Go To the project page" )
+    //     //     const path = `/projects/${response.data.id}`;
+    //     //     router.push(path);        })
+    //     // .catch((error) => {
+    //     //     // console.error("addProject Error: ", error)
+    //     //     // setFormError(error.message);
+    //     //     // return Promise.reject(error)
+    //     //    // Convert string error to Error object if needed
+    //     //    const errorObj = error instanceof Error ? error : new Error(error.message || error);
+    //     //    console.error("Error adding project:", errorObj);
+    //     //    throw errorObj; // Throw proper Error object
+    //     // })
+
+    //     try {
+    //         const response = await addProject(value);
+    //         const path = `/projects/${response.data.id}`;
+    //         router.push(path);
+    //     } catch (error: any) {
+    //         // console.error("Project added NOK: ", error);
+    //         // return Promise.reject(error?.message || error);
+        
+    //         // // Create proper error object
+    //         // const errorObj = new Error(error?.message || error);
+    //         // console.debug("Project added NOK:", errorObj);
+    //         // return Promise.reject(errorObj);
+    //         const errorMessage = error?.message || error;
+    //         console.debug("Project added NOK:", errorMessage);
+    //         throw new Error(errorMessage); // Using throw instead of Promise.reject
+
+    //     }
+
+    // }
+
+    const onChange = async (value:any) => {
+        console.debug("2. Starting addProject");
+        try {
+            const response = await addProject(value);
+            console.debug("3. addProject success:", response);
+            return response;
+        } catch (error: any) {
+            console.debug("4. addProject failed with HTTP 500:", error);
+            // Convert HTTP error to regular error
+            const errorMessage = error.message || "Failed to add project";
+            throw Error(errorMessage);
+        }
     }
+
 
     const onCancel = () => {
         router.back()
@@ -252,10 +295,54 @@ const NewProject = (params:any) => {
                 {/* <ProjectForm/> */}
                 {/* <Debug params={stringifiedData} /> */}
 
-                <MyForm {...form} 
-                    onChange={onChange} 
+                {/* <MyForm {...form} 
+                        error={formError}
+
+                    // onChange={onChange} 
+                    onChange={(value:any) => onChange(value)
+                        .then((response: { data: { id: any; }; }) => {
+                            console.log("Go To the project page: ", response.data.id);
+                            const path = `/projects/${response.data.id}`;
+                            router.push(path);
+                            return new Promise((resolve) => resolve(response));
+                        })
+                        .catch((error: any) => {
+                            console.error("Error adding project:", error)
+                            // Handle error (e.g., show error message to user)
+                            // throw error;
+                            return new Promise((resolve, reject) => reject(error));
+                        })
+                    } 
                     onCancel={onCancel}
-                />
+                /> */}
+
+<MyForm 
+    {...form}
+    error={formError}
+    onChange={(value:any) => {
+        console.debug("1. onChange called with value:", value);
+        return onChange(value)
+        .then((response) => {
+            console.debug("2. Success response received:", response);
+            const path = `/projects/${response.id}`;
+            console.debug("3. Navigating to path:", path);
+
+            router.push(path);
+        })
+        .catch((error) => {
+            console.debug("4. Error caught:", error);
+            console.debug("5. Error details:", {
+                message: error.message,
+                stack: error.stack
+            });
+            setFormError(error.message || error);
+            throw error; // Re-throw to propagate
+        })
+    }
+    }
+    onCancel={onCancel}
+/>
+
             {/* </Stack> */}
             </div>
         </section>

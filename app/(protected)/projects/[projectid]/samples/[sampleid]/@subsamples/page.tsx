@@ -6,20 +6,23 @@ import Head from 'next/head';
 
 
 import { SubSamplesTable } from '@/components/subsamples-table'
-import { Button, Card, CardBody, CardHeader, Spacer, Link } from '@nextui-org/react';
-import { MySpinner } from '@/components/mySpinner';
-import { ErrorComponent } from '@/components/ErrorComponent';
+import { Button, Card, CardBody, CardHeader, Spacer, Link, Tooltip } from '@nextui-org/react';
+// import { MySpinner } from '@/components/mySpinner';
+// import { ErrorComponent } from '@/components/ErrorComponent';
 import { FC, useEffect, useState } from 'react';
 
-import { useSubSamples } from '@/api/subsamples';
-import { IMetadata } from '@/app/api/network/zooprocess-api';
+
+import { IMetadata, IScan, Sample } from '@/app/api/network/interfaces';
+import { Debug } from '@/components/Debug';
+
 // import Project from '../page';
 
 
 interface pageProps {
   // params: {
     projectid: string,
-    sampleid: string
+    // sampleid: string
+    sample: Sample
     //subsampleid: string
   // }
 }
@@ -31,100 +34,112 @@ const SubSamples : FC<pageProps> = (params) => {
 
   console.log("Samples params: ", params);
   console.log("Samples params: ", params.projectid);
-  console.log("Samples params: ", params.sampleid);
+  // console.log("Samples params: ", params.sampleid);
   // console.log("SubSamples params: ", params.subsampleid);
 
   // const sampleName = "mon Sample";
 
     // const sampleid = 10;
-    const projectId = params.projectid ;
-    const sampleId = params.sampleid ;
-    // const subsampleId = params.subsampleid ;
+    // const projectId = params.projectid ;
+    // // const sampleId = params.sampleid ;
+    // const sampleId = params.sample.id ;
+    // // const subsampleId = params.subsampleid ;
 
-    const { subsamples, isLoading, isError } = useSubSamples(projectId, sampleId)
-    const [ subsampleList, setSubSampleList ] = useState(subsamples)
+    const { sample, projectid:projectId } = params;
+    const sampleId = sample.id ;
+
+    const disabled = sample.project.instrumentId == null
+    const tooltipMessage = disabled ? "Instrument not defined" : "Add a subsample"
+
+    // const { subsamples, isLoading, isError } = useSubSamples(projectId, sampleId)
+    const [ subsampleList, setSubSampleList ] = useState(params.sample.subsample)
+
+
 
     // const formatData = (data:any) => {
     //   console.log("formatData: ",data);
     //   return data;
     // }
 
-    const formatData = (data:any) => {
+    // const formatData = (data:any) => {
 
-      console.log("formatData", data);
+    //   console.log("formatData", data);
   
-      const samples = Object.keys(data).map( (sample) => {
-        // const createdAt = new Date(samples.createdAt)
-        // console.log("createdAt: ", createdAt)
+    //   const subsamples = Object.keys(data).map( (subsample) => {
+    //     // const createdAt = new Date(samples.createdAt)
+    //     // console.log("createdAt: ", createdAt)
   
-        // let updatedAt = undefined;
-        // if (samples.updatedAt){
-        //   try {
-        //     updatedAt = new Date(samples.updatedAt)
-        //   }
-        //   catch {
-        //     updatedAt = createdAt;
-        //   }
-        // } else {
-        //   updatedAt = createdAt;
-        // }
+    //     // let updatedAt = undefined;
+    //     // if (samples.updatedAt){
+    //     //   try {
+    //     //     updatedAt = new Date(samples.updatedAt)
+    //     //   }
+    //     //   catch {
+    //     //     updatedAt = createdAt;
+    //     //   }
+    //     // } else {
+    //     //   updatedAt = createdAt;
+    //     // }
   
-        console.log("subsample: ", subsamples);
+    //     console.log("subsample: ", subsample);
 
-        function getMetadata(data:Array<IMetadata>, name:String) {
-          console.log("getMetadata: ", data);
-          const value = data.find( (m:IMetadata) => m.name == name)
-          console.log("getMetadata value: ",  value);
-          return value?.value || null
-          // return 1
-        }
 
-        if ( sample == "key"){
-            console.error("ARRGG indey == key");
-            console.log("ARRGG indey == key")
-            console.debug(data);
-            console.log("pfffff")
-        } else {
-          const s = data[sample]
-          console.log("sssssss: ", typeof(s), s);
 
-          return {
-            id: data[sample].id,
-            name: data[sample].name,
-            // fraction:s.nbFractions,
-            // scans:s.nbScans,
-            createdAt:s.createdAt,
-            updatedAt:s.updatedAt,
-            operator:s.user.name,
-            fractionid:getMetadata(s.metadata, "fraction_id"),
-            fracmin:getMetadata(s.metadata, "fraction_min_mesh"),
-            fracsup:getMetadata(s.metadata, "fraction_max_mesh"),
-            obs:getMetadata(s.metadata, "observation"),
-          }  
-        }
+    //     function getScan(data:Array<IScan>, type:String="Scan") {
+    //       console.log("getScan: ", data);
+    //       const value = data.find( (m:IScan) => m.type == type)
+    //       console.log("getScan value: ",  value);
+    //       return value?.url || null
+    //       // return 1
+    //     }
 
-      });
+    //     if ( subsample == "key"){
+    //         console.error("ARRGG indey == key");
+    //         console.log("ARRGG indey == key")
+    //         console.debug(data);
+    //         console.log("pfffff")
+    //     } else {
+    //       const s = data[subsample]
+    //       console.log("sssssss: ", typeof(s), s);
+
+    //       return {
+    //         id: data[subsample].id,
+    //         name: data[subsample].name,
+    //         // fraction:s.nbFractions,
+    //         // scans:s.nbScans,
+    //         createdAt:s.createdAt,
+    //         updatedAt:s.updatedAt,
+    //         operator:s.user.name,
+    //         fractionid:getMetadata(s.metadata, "fraction_id"),
+    //         fracmin:getMetadata(s.metadata, "fraction_min_mesh"),
+    //         fracsup:getMetadata(s.metadata, "fraction_max_mesh"),
+    //         obs:getMetadata(s.metadata, "observation"),
+    //         url:getScan(s.scans, "SCAN"),
+    //       }  
+    //     }
+
+    //   });
   
-      console.log("formated data: ",samples);
-      return samples
-    }
+    //   console.log("formated data: ",subsamples);
+    //   return subsamples
+    // }
 
-    useEffect( () => { 
-      console.log("sub samples has changed", subsamples);
-      const data = formatData(subsamples)
-      // const data = samples
-      setSubSampleList(data);
-    } , [subsamples])
-
+    // useEffect( () => { 
+    //   console.log("sub samples has changed", subsamples);
+    //   const data = formatData(subsamples)
+    //   // const data = samples
+    //   setSubSampleList(data);
+    // } , [subsamples])
 
     const ShowData = () => {
-      if (isLoading) return <MySpinner />
-      if (isError) return <ErrorComponent error={isError}/>
+      // if (isLoading) return <MySpinner />
+      // if (isError) return <ErrorComponent error={isError}/>
       return <SubSamplesTable projectId={projectId} sampleId={sampleId} subsamples={subsampleList}/>
     }
 
   return (
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+        <Debug params={disabled} title='disabled' open={true} />
           <div className="text-center justify-center">
               <h1 data-testid="title">
                   Samples {projectId}
@@ -135,14 +150,21 @@ const SubSamples : FC<pageProps> = (params) => {
                   data-testid="projectCard" 
                 >
                 <CardHeader className="flex flex-row-reverse py-3">
+                { disabled &&
+                  <div className="flex flex-col items-center justify-center gap-4  text-red-600">You have no instrument</div>
+                }
+                <Tooltip content={tooltipMessage} isDisabled={!disabled} color="warning">
+                {/* isDisabled={disabled} */}
                     <Button 
                       href={`/projects/${projectId}/samples/${sampleId}/subsamples/new`}
                       as={Link}
                       color="primary"
+                      isDisabled={disabled}
                       // showAnchorIcon
                       variant="solid"
                       data-testid="newSubSampleBtn"
                       >Scan sub sample</Button>
+                      </Tooltip>
                 </CardHeader>
                 <CardBody>
                   <ShowData/>

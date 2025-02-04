@@ -1,27 +1,16 @@
 "use client"
 
-import Head from 'next/head';
-import { Stack, Typography } from '@mui/material';
+
 import { FC } from "react";
 
-// import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-// import { ProjectsTable } from 'src/sections/projects/projects-table';
+
 import { MyForm } from '@/components/myForm';
 import { fraction_inputFormElments } from '@/config/formElements';
-import { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
-// import { addSample } from '@/app/api/samples';
-import { Debug } from '@/components/Debug';
-import { addSubSample, useSubSample } from '@/app/api/subsamples';
-import { Timeline_scan } from '@/components/timeline-scan';
-// import { useUserMe } from '@/app/api/user';
-import { MySpinner } from '@/components/mySpinner';
-import { ErrorComponent } from '@/components/ErrorComponent';
-import { useUserMe } from '@/app/api/user';
-import { useProject } from '@/app/api/projects';
-import { IMetadata, SubSample, User } from '@/app/api/network/zooprocess-api';
-// import { useProject } from '@/app/api/projects';
-// import { auth } from '@/auth';
+
+import { IMetadata, SubSample } from '@/app/api/network/interfaces';
+
  
 
 
@@ -39,13 +28,16 @@ interface pageProps {
     // params: {
         projectid: string
         sampleid: string
-        subsampleid?: string
-        onChange?: () => void
+
+        subsampleid: string
+        subsample: SubSample
+        onCancel: () => void
+        onChange: (value:any) => void
     // }
 }
 
-// const SubSampleForm : FC<pageProps> = (params ) => {
-const SubSampleForm =  ( params: pageProps) => {
+const SubSampleForm : FC<pageProps> = (params ) => {
+// const SubSampleForm =  ( params: pageProps) => {
 
     const router = useRouter()
     
@@ -59,48 +51,21 @@ const SubSampleForm =  ( params: pageProps) => {
     // const sampleid = params.params.sampleid;
     const projectid = params.projectid;
     const sampleid = params.sampleid;
-    const projectId = params.projectid;
+
+    // const projectId = params.projectid;
     const subsampleid =  params.subsampleid
+    const subsample =  params.subsample
     console.log("NewSample params projectid: ", projectid);
     console.log("NewSample params sampleid: ", sampleid);
     console.log("NewSample params subsampleid: ", subsampleid);
     
-    // const { projectid, sampleid } = params
-    // const { user, isLoading: isLoadingUser, isError:isErrorUser } = useUserMe()
-    // const { project, isLoading:l , isError:err } = useProject()
-    const { subsample, isLoading, isError } = useSubSample(projectId, sampleid, subsampleid)
-
-    // if (isError) {
-    //     // Handle error
-    //     return <div>Error loading user data</div>
-    // }
-
-    // if (isLoading) {
-    //     // Show loading state
-    //     return <div>Loading...</div>
-    // }
-
- 
 
 
 
-    // const emptyData = {
-    //     "scanning_operator":user.name, // "Seb"  // 
-    // }
-
-    // const updatedForm = forms
-
-    // const form : any = []
-    //     form['forms']=updatedForm
-    //     form['value']=emptyData//testData//
-    //     form['title']='Sub Sample metadata'
-    //     form['subtitle']='Fill all the mandatory fields.'
 
 
 
-    // const [stringifiedData,setData] = useState(JSON.stringify(testData, null, 2))
-    const [stringifiedData, setData] = useState("")
-    // var stringifiedData = "" ;
+  
 
     const prepareData = (data:any) => {
 
@@ -112,86 +77,48 @@ const SubSampleForm =  ( params: pageProps) => {
         return newData;
     }
 
-    const onChange = (value:any) => {
+
+    const onChange = async (value:any) => {
+        params.onChange(value)
         console.log("App onChange:", value)
-        params.onChange && params.onChange()
-        console.log("App onChange:", stringifiedData)
-        return Promise.resolve() // le form attends une réponse pour gerer le bouton "submit", ici on ne change rien
-    }
+        // setData(JSON.stringify(value, null, 2))
+        
+        const data = {
+            name: `${projectid}_${value.sample_id}`,
+            metadataModelId: "6565df171af7a84541c48b20",
+            data:value,
+        }
 
-    // const onChange = (value:any) => {
-    //     console.log("App onChange:", value)
-    //     // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
-    //     // stringifiedData = JSON.stringify(value, null, 2);
-
-    //     setData(JSON.stringify(value, null, 2))
-    //     console.log("App onChange:", stringifiedData)
-
-    //     // const newData = prepareData(value)
-
-    //     const data = {
-    //         name: value.scan_id, //"Sample XXXX",
-    //         metadataModelId: "", //"6565df171af7a84541c48b20",
-    //         data: value,
-    //     }
-
-    //     console.log("newData: ", data);
-    //     // try {
-
-    //         console.log("----- projectId: ", projectid);
-    //         console.log("----- sampleId: ", sampleid);
-    //         // console.log("----- params.projectid : ",params.projectid);
-    //         // console.log("----- params : ",params);
-    //         // console.log("----- params.params : ",params.params);
-
-    //         // addSample(projectId, data)
-    //         return addSubSample({
-    //             projectId: projectid, // : params.params.projectid,
-    //             sampleId: sampleid, 
-    //             data
-    //         })
-    //         .then((response) => {
-    //             console.log("Go To the infos page" )
-    //             // router.push(`${response.data.id}`)
-    //             // const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
-    //             const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}`
-    //             router.push(path)
-    //         })
-    //         .catch((error) => {
-    //             return Promise.reject(error)
-    //         })
-
-    //     // }
-    //     // catch (e:any){
-    //     //     console.log(e);
-            
-    //     // }
-    // }
-
-    const onCancel = () => {
-        router.back()
-        // router.push({
-        //     pathname: '/projects/[projectid]',
-        //     query: { projectid: projectid },                                         
+        console.log("updatedData: ", data);
+        
+        // on ne veut pas d'update des data (non permis)
+        // return updateSubSample({
+        //     projectId: projectid, 
+        //     sampleId: sampleid,
+        //     subSampleId: subsampleid,
+        //     data
         // })
+        // return data
+        params.onChange && params.onChange(value)
+        return data
     }
+
+
+
+   
+
+
 
     const formButtons = {
-        // submit:'Scan'
         submit:'Next'
     }
 
     type DataReturn = Map<string,any>
 
-    // type MetadataType = {
-    //     id: String
-    //     name: string
-    //     type: String
-    //     value: String
-    //     sample_id: String
-    //   }
 
-    const fillSample = (sample:SubSample) : DataReturn => { 
+
+
+    const fillSample = (sample:SubSample) : DataReturn => {
           console.log("fillSample: ", sample);
           
           let form: any = {}
@@ -240,12 +167,9 @@ const SubSampleForm =  ( params: pageProps) => {
 
     const showForm = (subsample:SubSample|any) => {
 
-        if (isLoading) return <MySpinner />;
-        if (isError) return <ErrorComponent error={isError} />;
 
-        // if ( ! user) return <ErrorComponent error={isError} />
 
-        // else {
+
         const form = formatData(subsample)
 
         return (
@@ -254,11 +178,10 @@ const SubSampleForm =  ( params: pageProps) => {
                 project={projectid}
                 sample={sampleid}
                 onChange={onChange}
-                onCancel={onCancel}
+                onCancel={params.onCancel}
                 button={formButtons}
             />
         )
-        // }
     }
 
 

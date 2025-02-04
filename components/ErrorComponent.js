@@ -10,32 +10,33 @@ export const ErrorComponent = ({error}) => {
   const router = useRouter()
   // router.push('/auth/login')
   
-  let message = "" //"blabla - TODO replace blabla with API message"
+  // let message = "" //"blabla - TODO replace blabla with API message"
+  let message = error.message || String(error)
 
-  if (error.status == 401) {
-    console.debug("ErrorComponent: error.status == test")
-    router.push('/auth/login')
-  }
+  // if (error.status == 401) {
+  //   console.debug("ErrorComponent: error.status == test")
+  //   router.push('/auth/login')
+  // }
 
-  if (error.status === 401) {
-    console.debug("ErrorComponent: error.status === test")
-    router.push('/auth/login')
-  }
+  // if (error.status === 401) {
+  //   console.debug("ErrorComponent: error.status === test")
+  //   router.push('/auth/login')
+  // }
 
-  if (error.status == "401") {
-    console.debug("ErrorComponent: error.status = string")
-    router.push('/auth/login')
-  }
+  // if (error.status == "401") {
+  //   console.debug("ErrorComponent: error.status = string")
+  //   router.push('/auth/login')
+  // }
 
-  if (error.message.status == "401") {
-    console.debug("ErrorComponent: error.message?.status == 401")
-    router.push('/auth/login')
-  }
+  // if (error.message.status == "401") {
+  //   console.debug("ErrorComponent: error.message?.status == 401")
+  //   router.push('/auth/login')
+  // }
 
-  if (error.message == "Request failed with status code 401") {
-    console.debug("ErrorComponent: error.message?.status == 401")
-    router.push('/auth/login')
-  }
+  // if (error.message == "Request failed with status code 401") {
+  //   console.debug("ErrorComponent: error.message?.status == 401")
+  //   router.push('/auth/login')
+  // }
 
   if ( error.status == 500 ){
     if ( error.name == "AxiosError"){
@@ -49,10 +50,14 @@ export const ErrorComponent = ({error}) => {
   //   message = error.message
   // }
 
+  // const errorMessage = error instanceof Error ? error.message : String(error);
+
     return (
     <Card>
       <CardBody>
-        <h1 data-testid="error-title">{error.message}</h1>
+        {/* <h1 data-testid="error-title">{error.message}</h1> */}
+        {/* <h1 data-testid="error-title">{errorMessage}</h1> */}
+        <h1 data-testid="error-title">{message}</h1>
         <h4 data-testid="error-message">{message}</h4>
         <br/>
         <h2>Debug</h2>

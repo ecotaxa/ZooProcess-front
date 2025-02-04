@@ -6,13 +6,14 @@ import { Button, Card, CardBody, Link, Spacer } from "@nextui-org/react";
 import { ArrowDownIcon, ArrowDownTrayIcon, CloudIcon, PlusIcon } from "@heroicons/react/20/solid";
 import React, { FC } from "react";
 import { BoxMessage } from "@/components/BoxMessage";
-import { useProject } from "@/app/api/projects";
+// import { useProject } from "@/app/api/projects";
 import { MySpinner } from "@/components/mySpinner";
 import { ErrorComponent } from "@/components/ErrorComponent";
-import { Project } from "@/app/api/network/zooprocess-api";
+// import { Project } from "@/app/api/network/zooprocess-api";
 import { Debug } from "@/components/Debug";
 import { title } from "process";
 import { sub } from "date-fns";
+import { Project } from "@/app/api/network/interfaces";
 
 // interface IBoxMessage {
 //     children : any // React.ReactNode //React.RefAttributes<SVGSVGElement>
@@ -23,16 +24,17 @@ import { sub } from "date-fns";
 
 interface pageProps {
     // params: {
-      projectid: string
+      // projectid: string
+      project: Project
     // }
   }
 
 const Stats: FC<pageProps> = (params) => {
-  const projectId = params.projectid;
+  // const projectId = params.projectid;
   console.log("Metadata params: ", params);
-  console.log("Metadata params projectid: ", params.projectid);
+  // console.log("Metadata params projectid: ", params.projectid);
 
-  const { project, isLoading, isError } = useProject(projectId);
+  // const { project, isLoading, isError } = useProject(projectId);
 
   // const p: Project = project;
   // const [p, castProject] = React.useState(project);
@@ -53,7 +55,8 @@ const Stats: FC<pageProps> = (params) => {
           title="Your project is empty! Please create samples"
           subtitle="You can create samples in the data tab of your project."
           button={{
-            href: `/projects/${projectId}/new`,
+            // href: `/projects/${projectId}/new`,
+            href: `/projects/${params.project.id}/new`,
             text: "Create samples",
           }}
         >
@@ -114,10 +117,10 @@ const Stats: FC<pageProps> = (params) => {
     );
   };
 
-  if (isLoading) return <MySpinner />;
-  if (isError) return <ErrorComponent error={isError} />;
+  // if (isLoading) return <MySpinner />;
+  // if (isError) return <ErrorComponent error={isError} />;
 
-  const pc: Project = project;
+  const pc: Project = params.project;
   // castProject(pc);
 
   return (

@@ -8,14 +8,15 @@ import { useVignettes } from '@/api/vignettes';
 import { MySpinner } from "@/components/mySpinner";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { sep } from "path";
-import { Separator, Vignette } from "@/app/api/network/zooprocess-api";
+// import { Separator, Vignette } from "@/app/api/network/zooprocess-api";
 import { pathToSessionStorage } from "@/lib/gateway";
 import { Image } from "@nextui-org/react";
-import { BorderDottedIcon } from "@radix-ui/react-icons";
+// import { BorderDottedIcon } from "@radix-ui/react-icons";
 import { Debug } from "@/components/Debug";
 
 //import path from "path/posix";
 import path from "path";
+import { Vignette } from "@/app/api/network/interfaces";
 
 type pageProps = {
     params:{
@@ -28,7 +29,7 @@ type pageProps = {
 
 
 
-const CheckPage: FC<pageProps> = ({ params }) => {
+const CheckOnTaskPage: FC<pageProps> = ({ params }) => {
 // const CheckPage: FC<pageProps> = ({ projectid, sampleid,subsampleid, taskId }) => {
 
   const { separatorTask, isLoading, isError } = useVignettes(params.taskId);
@@ -287,5 +288,5 @@ const CheckPage: FC<pageProps> = ({ params }) => {
 }
 
 
-export default CheckPage;
+export default CheckOnTaskPage;
 

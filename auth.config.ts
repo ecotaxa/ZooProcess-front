@@ -7,6 +7,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { LoginSchema } from '@/schemas';
 // import { getUserByEmail } from '@/data/user';
 import { login } from '@/data/user';
+// import { User } from './app/api/network/zooprocess-api';
 // import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 
@@ -53,7 +54,53 @@ export const authConfig = {
           // if (passwordsMatch) return user;
 
           // const user = await login(email, password)
-          const token = await login(email, password)
+          // const token:User = await login(email, password)
+
+
+          try {
+            const user = await login(email, password);
+            if (user) {
+              const u = {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                token: user.token,
+                role: user.role
+              };
+              console.debug("login() user u: ", u);
+              return u;  // Assure-toi que l'utilisateur est bien retourné ici
+            } else {
+              return null;  // Retourne null si l'utilisateur n'est pas trouvé
+            }
+          } catch (error) {
+            console.log("login() error: ", error);
+            return null;  // Retourne null en cas d'erreur
+          }
+
+
+          // const prom =
+          // await login(email, password)
+          // .then(
+          //   (user:User) => {
+          //     console.log("login() token: ", user)
+
+          //     const u = {
+          //       id: user.id,
+          //       name: user.name,
+          //       email: user.email,
+          //       token: user.token,
+          //       role: user.role
+          //     }
+          //     console.debug("login() user u: ", u)
+          //     // return user;
+          //     return u
+          //   },
+          //   (error) => {
+          //     console.log("login() error: ", error)
+          //     return error
+          //   }
+          // )
+
           // token = user.token
           // console.log("-------------- user: ", user)
           // console.log("-------------- token: ", user.token)
@@ -67,7 +114,7 @@ export const authConfig = {
           //   cookies().set("currentUser", token.token)
           // }
 
-          return token
+          // return token
           // return user;          
         }
 

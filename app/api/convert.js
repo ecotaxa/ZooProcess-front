@@ -5,6 +5,12 @@ import { th } from "date-fns/locale"
 
 
 
+/**
+ * know path are  / something / Drive / Project name / * / image.tif
+ * must change to / session storage / Drive / Project name / * / image.jpg
+ * to change in pathToSessionStorage
+ */
+
 export async function converttiff2jpg ( data) {
             // "use server";
 
@@ -83,6 +89,14 @@ export async function converttiff2jpg ( data) {
                         // throw new Error({message:"Cannot convert Tiff to Jpg error: " + response})
                     }
                 }
+            })
+            .catch( err => {
+                console.error("Error converting Tiff to Jpg:", err)
+                console.error("Error converting Tiff to Jpg:", err.message)
+                console.error("return 404")
+                //return "/images/404.jpg"
+                //throw new Error("Cannot convert Tiff to Jpg error: " + err.message)
+                return Promise.resolve("/images/404.jpg")
             })
 
 }

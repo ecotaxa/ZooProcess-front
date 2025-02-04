@@ -8,6 +8,7 @@ const nextConfig = {
         serverActions: {
             allowedOrigins: ["imev:3001", "192.168.1.159:3001", "localhost:3001", "zooprocess.imev-mer.fr:3001", "zooprocess.imev-mer.fr:8000","localhost:8000" ],
         },
+        forceSwcTransforms: true, // use SWC despite the presence of a .babelrc. SWC is up to 17x faster than Babel when compiling individual files. https://nextjs.org/docs/messages/swc-disabled
     },
     output: "standalone",
 

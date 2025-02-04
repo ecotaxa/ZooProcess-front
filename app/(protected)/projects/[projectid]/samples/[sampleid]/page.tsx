@@ -1,15 +1,19 @@
-"use client"
+"use server"
 
 import { Card, CardBody, CardHeader, Spacer } from "@nextui-org/react";
-import { Tab, Tabs } from "@nextui-org/tabs";
-import SubSamples from "./@subsamples/page";
-import Stats from "./@stats/page";
-import Metadata from "./@metadata/page";
+// import { Tab, Tabs } from "@nextui-org/tabs";
+// import SubSamples from "./@subsamples/page";
+// import Stats from "./@stats/page";
+// import Metadata from "./@metadata/page";
 // import Samples from "./@samples/page";
 
 import { FC } from "react";
 import { Debug } from "@/components/Debug";
 import { ProjectBreadcrumbs } from "@/components/ProjectBreadcrumbs";
+import { Sample } from "@/app/api/network/interfaces";
+import { getSample } from "@/app/api/data/samples";
+
+import { SampleTabs } from "./SampleTabs";
 
 interface pageProps {
     params: {
@@ -19,12 +23,16 @@ interface pageProps {
 }
 
 // const Project = ({ params }: { params: { projectid: string; }} ) => {
-const SamplePage : FC<pageProps> = ({params}) => {
+const SamplePage : FC<pageProps> = async ({params}) => {
 
 
 
     const projectid = params.projectid
     const sampleid = params.sampleid
+
+
+    const sample : Sample = await getSample(projectid,sampleid);
+    // console.log("SamplePage", sample);
 
     // const projectName = "MOCK ;) Zooscan_ptb_wp2_2021_journee";
 
@@ -36,30 +44,18 @@ const SamplePage : FC<pageProps> = ({params}) => {
                     <h1>Project</h1>
                 </CardHeader>
                 <CardBody>
-                    {/* <h1>{projectName}</h1>
+                    {/* <h1>{projectName}</h1> */}
                     <h3>{projectid}</h3>
-                    <h3>{sampleid}</h3> */}
+                    <h3>{sampleid}</h3>
+                    <h3>{sample?sample.name:"Sample"}</h3>
+                    {/* <Debug params={sample} title="Sample" /> */}
                     <ProjectBreadcrumbs list={[projectid, sampleid]}  separator="/"/>
                 </CardBody>
             </Card>
             <Spacer y={20}/>
-            <Debug params={params}/>
-            {/* <div className="flex w-full flex-col"> */}
-            <Tabs aria-label="Options">
-                {/* <Tab key="stats" title="Stats" href={`/projects/${projectid}/stats`}> */}
-                <Tab key="stats" title="Stats" >
-                    <Stats/>
-                </Tab>
-                {/* <Tab key="metadata" title="Metadata" href={`/projects/${projectid}/metadata`}> */}
-                <Tab key="metadata" title="Metadata" >
-                    <Metadata  {...params}/>
-                </Tab>
-                <Tab key="samples" title="Sub Samples">
-                    <SubSamples {...params}/>
-                    <Debug params={params}/>
-                </Tab>
-            </Tabs>
-        {/* </div> */}
+
+
+        <SampleTabs sample={sample} params={params}/>
 
     </div>
     );

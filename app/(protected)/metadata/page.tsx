@@ -46,7 +46,7 @@ const { metadata, isLoading, isError } = useMetadata()
     useEffect( () => { 
         if ( Object.keys(metadata).length == 0) return;
 
-        console.log("projects have changed (only useful columns for the table)", metadata);
+        console.debug("metadata have changed (only useful columns for the table)", metadata);
         const data = formatData(metadata)
         setProjectList(data);
       } , [metadata])

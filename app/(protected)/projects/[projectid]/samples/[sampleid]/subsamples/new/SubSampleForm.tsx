@@ -1,25 +1,17 @@
 "use client"
 
-import Head from 'next/head';
-import { Stack, Typography } from '@mui/material';
-import { FC } from "react";
+
 
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 // import { ProjectsTable } from 'src/sections/projects/projects-table';
 import { MyForm } from '@/components/myForm';
 import { fraction_inputFormElments } from '@/config/formElements';
-import { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
-// import { addSample } from '@/app/api/samples';
-import { Debug } from '@/components/Debug';
-import { addSubSample, useSubSample } from '@/app/api/subsamples';
-import { Timeline_scan } from '@/components/timeline-scan';
-// import { useUserMe } from '@/app/api/user';
-import { MySpinner } from '@/components/mySpinner';
-import { ErrorComponent } from '@/components/ErrorComponent';
-import { useUserMe } from '@/app/api/user';
-import { useProject } from '@/app/api/projects';
-import { User } from '@/app/api/network/zooprocess-api';
+
+import { User } from '@/app/api/network/interfaces';
+import { addSubSample } from '@/app/api/subsamples';
+
 // import { useProject } from '@/app/api/projects';
 // import { auth } from '@/auth';
  
@@ -66,6 +58,8 @@ interface pageProps {
     // params: {
         projectid: string
         sampleid: string
+
+        user: User
         // subsampleid?: string
     // }
 }
@@ -85,25 +79,10 @@ const SubSampleForm =  ( params: pageProps) => {
     // const sampleid = params.params.sampleid;
     const projectid = params.projectid;
     const sampleid = params.sampleid;
-    const projectId = params.projectid;
-    // const subsampleid =  params.subsampleid
 
-    // const { projectid, sampleid } = params
-    const { user, isLoading, isError } = useUserMe()
-    // const { user, isLoading: isLoadingUser, isError:isErrorUser } = useUserMe()
-    // const { project, isLoading:l , isError:err } = useProject()
-    // const { subsample, isLoading, isError } = useSubSample(subsampleid)
-
-    // if (isError) {
-    //     // Handle error
-    //     return <div>Error loading user data</div>
-    // }
-
-    // if (isLoading) {
-    //     // Show loading state
-    //     return <div>Loading...</div>
-    // }
-
+    // const projectId = params.projectid;
+    const user = params.user
+ 
  
 
     console.log("NewSample params projectid: ", projectid);
@@ -124,67 +103,91 @@ const SubSampleForm =  ( params: pageProps) => {
 
 
     // const [stringifiedData,setData] = useState(JSON.stringify(testData, null, 2))
-    const [stringifiedData, setData] = useState("")
+
+    // const [stringifiedData, setData] = useState("")
     // var stringifiedData = "" ;
 
-    const prepareData = (data:any) => {
+    // const prepareData = (data:any) => {
 
-        let newData = {
-            ...data,
-            sampleId: sampleid
-        }
-        console.log("newData: ", newData);
-        return newData;
-    }
+    //     let newData = {
+    //         ...data,
+    //         sampleId: sampleid
+    //     }
+    //     console.log("newData: ", newData);
+    //     return newData;
+    // }
 
-    const onChange = (value:any) => {
+
+    const onChange = async (value:any) => {
         console.log("App onChange:", value)
-        // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
-        // stringifiedData = JSON.stringify(value, null, 2);
-
-        setData(JSON.stringify(value, null, 2))
-        console.log("App onChange:", stringifiedData)
-
-        // const newData = prepareData(value)
-
+        // setData(JSON.stringify(value, null, 2))
+        
         const data = {
-            name: value.scan_id, //"Sample XXXX",
-            metadataModelId: "", //"6565df171af7a84541c48b20",
-            data: value,
+            name: `${projectid}_${value.sample_id}`,
+            metadataModelId: "6565df171af7a84541c48b20",
+            data:value,
         }
 
         console.log("newData: ", data);
-        // try {
+        
+        return addSubSample({
+            projectId: projectid, 
+            sampleId: sampleid,
+            data
+        })
 
-            console.log("----- projectId: ", projectid);
-            console.log("----- sampleId: ", sampleid);
-            // console.log("----- params.projectid : ",params.projectid);
-            // console.log("----- params : ",params);
-            // console.log("----- params.params : ",params.params);
 
-            // addSample(projectId, data)
-            return addSubSample({
-                projectId: projectid, // : params.params.projectid,
-                sampleId: sampleid, 
-                data
-            })
-            .then((response) => {
-                console.log("Go To the infos page" )
-                // router.push(`${response.data.id}`)
-                // const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
-                const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}`
-                router.push(path)
-            })
-            .catch((error) => {
-                return Promise.reject(error)
-            })
-
-        // }
-        // catch (e:any){
-        //     console.log(e);
-            
-        // }
     }
+
+    // const onChange = (value:any) => {
+    //     // "use server"
+    //     console.log("App onChange:", value)
+    //     // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
+    //     // stringifiedData = JSON.stringify(value, null, 2);
+
+    //     // setData(JSON.stringify(value, null, 2))
+    //     // console.log("App onChange:", stringifiedData)
+
+    //     // const newData = prepareData(value)
+
+    //     const data = {
+    //         name: value.scan_id, //"Sample XXXX",
+    //         metadataModelId: "", //"6565df171af7a84541c48b20",
+    //         data: value,
+    //     }
+
+    //     console.log("newData: ", data);
+    //     // try {
+
+    //         console.log("----- projectId: ", projectid);
+    //         console.log("----- sampleId: ", sampleid);
+    //         // console.log("----- params.projectid : ",params.projectid);
+    //         // console.log("----- params : ",params);
+    //         // console.log("----- params.params : ",params.params);
+
+    //         // addSample(projectId, data)
+    //         return addSubSample({
+    //             projectId: projectid, // : params.params.projectid,
+    //             sampleId: sampleid, 
+    //             data
+    //         })
+    //         .then((response) => {
+    //             console.log("Go To the infos page" )
+    //             // router.push(`${response.data.id}`)
+    //             // const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
+    //             const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}`
+    //             router.push(path)
+    //         })
+    //         .catch((error) => {
+    //             return Promise.reject(error)
+    //         })
+
+    //     // }
+    //     // catch (e:any){
+    //     //     console.log(e);
+            
+    //     // }
+    // }
 
     const onCancel = () => {
         router.back()
@@ -219,8 +222,7 @@ const SubSampleForm =  ( params: pageProps) => {
 
     const showForm = (use:User|any) => {
 
-        if (isLoading) return <MySpinner />;
-        if (isError) return <ErrorComponent error={isError} />;
+
 
         // if ( ! user) return <ErrorComponent error={isError} />
 
@@ -232,7 +234,20 @@ const SubSampleForm =  ( params: pageProps) => {
                 {...form} 
                 project={projectid}
                 sample={sampleid}
-                onChange={onChange}
+
+                // onChange={onChange}
+                onChange={(value:any) => onChange(value)
+                    .then((response: { data: { id: any; }; }) => {
+                        console.log("Go To the subsample page: " , response.data.id )
+                        // router.push(`samples/${response.data.id}`)
+                        const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}?state=scanner`
+                        router.push(path)
+                    })
+                    .catch((error: any) => {
+                        console.error("Error adding subsample:", error)
+                        // Handle error (e.g., show error message to user)
+                    })
+                } 
                 onCancel={onCancel}
                 button={formButtons}
             />

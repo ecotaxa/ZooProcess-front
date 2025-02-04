@@ -1,25 +1,26 @@
-"use client"
+// "use client"
+"use server";
 
-import { Card, CardBody, CardHeader, Spacer } from "@nextui-org/react";
-import { Tab, Tabs } from "@nextui-org/tabs";
-import SamplesTab from "./@samples/page";
-import Stats from "./@stats/page";
-import Scans from "./@scans/page";
-import Metadata from "./@metadata/page";
-import BackgroundScans from "./@background/page";
+// import { Card, CardBody, CardHeader, Spacer } from "@nextui-org/react";
+// import { Tab, Tabs } from "@nextui-org/tabs";
+// import SamplesTab from "./@samples/page";
+// import Stats from "./@stats/page";
+// import Scans from "./@scans/page";
+// import Metadata from "./@metadata/page";
+// import BackgroundScans from "./@background/page";
 
 // import Samples from "./@samples/page";
 
 import { FC } from "react";
-import { Debug } from "@/components/Debug";
-import { ProjectBreadcrumbs } from "@/components/ProjectBreadcrumbs";
-import { ProjectName } from "@/components/projectName";
-import QC from "./@qc/page";
-import { useProject } from "@/app/api/projects";
-import { Project } from "@/app/api/network/zooprocess-api";
-import { useParams, usePathname } from "next/navigation";
 
-import { useHash } from '@/lib/useHash'
+// import { useHash } from '@/lib/useHash'
+// import * as api from "@/app/api/network/zooprocess-api";
+import { ProjectTabs } from "./ProjectTabs";
+import { getProject } from "@/app/api/data/projects";
+import { Project } from "@/app/api/network/interfaces";
+
+
+
 
 interface pageProps {
     params: {
@@ -27,8 +28,8 @@ interface pageProps {
     }
 }
 
-// const Project = ({ params }: { params: { projectid: string; }} ) => {
-const ProjectPage: FC<pageProps> = ({ params }) => {
+
+const ProjectPage: FC<pageProps> = async ({ params }) => {
 
   console.log("params:", params)
 
@@ -36,26 +37,13 @@ const ProjectPage: FC<pageProps> = ({ params }) => {
 
   const projectid = params.projectid;
 
-  const hash = useHash().replace('#','')
-  console.debug("path:",hash)
 
-  const { project, isLoading, isError } = useProject(projectid);
+  const project : Project = await getProject(projectid);
 
-  let selectedKey="stats"
-  // const selectedKey = path
-
-  switch (hash){ 
-    case "stats":
-    case "metadata":
-    case "samples":
-    case "background":
-    case "scans":
-    case "qc":
-      selectedKey = hash
-  }
+  
 
 
-  const p: Project = project;
+  const p: Project = project as Project;
 
   
   const isQcTabDisabled = () => {
@@ -68,7 +56,12 @@ const ProjectPage: FC<pageProps> = ({ params }) => {
 
   return (
     <div>
-      <ProjectName id={projectid} />
+      {/* <ProjectName id={projectid} /> */}
+      <div>
+            <h1>Project</h1>
+            <br/>
+            <h1>{project.name}</h1>
+      </div>
 
       {/* <Card>
         <CardHeader>
@@ -79,8 +72,10 @@ const ProjectPage: FC<pageProps> = ({ params }) => {
         </CardBody>
       </Card>
       <Spacer y={20} /> */}
-      <Debug params={params} />
-      <Tabs aria-label="Options" disabledKeys={isQcTabDisabled()} defaultSelectedKey={selectedKey}>
+     {/* <Debug params={params} /> */}
+      <ProjectTabs project={project} params={params} />
+
+      {/* <Tabs aria-label="Options" disabledKeys={isQcTabDisabled()} defaultSelectedKey={selectedKey}>
         <Tab key="stats" title="Stats">
           <Stats {...params} />
         </Tab>
@@ -101,9 +96,8 @@ const ProjectPage: FC<pageProps> = ({ params }) => {
           <QC {...params} />
         </Tab>
 
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 };
-
 export default ProjectPage;

@@ -1,21 +1,22 @@
 
+// "use client";
+"use server";
 
-"use client";
-
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { MySpinner } from '@/components/mySpinner'
-import { ErrorComponent } from '@/components/ErrorComponent'
+// import { useRouter } from 'next/navigation';
+// import { useEffect, useState } from 'react';
+// import { MySpinner } from '@/components/mySpinner'
+// import { ErrorComponent } from '@/components/ErrorComponent'
 import { DrivesTable } from './drives-table'
 import { Button, Card, CardBody, CardHeader, Link, Spacer } from '@nextui-org/react';
-import { useDrives } from '@/api/drives';
+import { getDrives } from '@/app/api/network/zooprocess-api';
+// import { useDrives } from '@/api/drives';
 
 // import { Projects } from "@/app/api/network/zooprocess-api"
 
 
 // const castArray = (value:Array<any>) => Array.isArray(value) ? value : [value];
 
-const Drives = () => {
+const DrivesPage = async () => {
 
 
     const formatData = (data:any) => {
@@ -37,22 +38,23 @@ const Drives = () => {
     }
 
 
-const { drives, isLoading, isError } = useDrives()
-    const [ driveList, setProjectList ] = useState([drives])
-    const router = useRouter()
+// const { drives, isLoading, isError } = useDrives()
+    const drives = await getDrives()
+    // const [ driveList, setProjectList ] = useState([drives])
+    // const router = useRouter()
     
-    useEffect( () => { 
-        if ( Object.keys(drives).length == 0) return;
+    // useEffect( () => { 
+    //     if ( Object.keys(drives).length == 0) return;
 
-        console.log("projects have changed (only useful columns for the table)", drives);
-        const data = formatData(drives)
-        setProjectList(data);
-      } , [drives])
+    //     console.debug("drives have changed (only useful columns for the table)", drives);
+    //     const data = formatData(drives)
+    //     setProjectList(data);
+    //   } , [drives])
     
     const ShowData = () => {
-        if (isLoading) return <MySpinner />
-        if (isError) return <ErrorComponent error={isError}/>
-        return <DrivesTable drives={driveList}/>
+        // if (isLoading) return <MySpinner />
+        // if (isError) return <ErrorComponent error={isError}/>
+        return <DrivesTable drives={drives}/>
       }
 
     return (
@@ -84,4 +86,4 @@ const { drives, isLoading, isError } = useDrives()
     );
 };
 
-export default Drives;
+export default DrivesPage;

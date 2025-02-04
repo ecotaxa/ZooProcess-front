@@ -1,3 +1,4 @@
+"use server";
 
 import useSWR from "swr"
 import * as api from '@/app/api/network/zooprocess-api' 

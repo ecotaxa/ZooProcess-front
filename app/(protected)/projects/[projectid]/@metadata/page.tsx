@@ -2,9 +2,10 @@
 
 import Head from 'next/head';
 
-import { updateProject, useProject } from "@/app/api/projects";
-import { ErrorComponent } from "@/components/ErrorComponent";
-import { MySpinner } from "@/components/mySpinner";
+// import { updateProject, useProject } from "@/app/api/projects";
+import { updateProject } from "@/app/api/projects";
+// import { ErrorComponent } from "@/components/ErrorComponent";
+// import { MySpinner } from "@/components/mySpinner";
 import { projectForm } from "@/config/formElements";
 import { FC, useEffect, useState } from 'react';
 import { Stack } from '@mui/material';
@@ -14,23 +15,25 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { MyForm } from '@/components/myForm';
 import { Debug } from '@/components/Debug';
 // import { set } from 'date-fns';
-
+// import * as api from '@/app/api/network/zooprocess-api'
+import { Project } from '@/app/api/network/interfaces';
 interface pageProps {
     // params: {
-      projectid: string
+      // projectid: string
+      project: Project
     // }
   }
 
 const Metadata : FC<pageProps> = (params) => {
   const router = useRouter();
 
-  const projectId = params.projectid ;
+  // const projectId = params.projectid ;
   console.log("Metadata params: ", params);
-  console.log("Metadata params projectid: ", params.projectid);
+  // console.log("Metadata params projectid: ", params.projectid);
 
-  const { project, isLoading, isError } = useProject(projectId)
+  // const { project, isLoading, isError } = useProject(projectId)
   // const [ sampleList, setSampleList ] = useState(project)
-  const [ projectData, setProject ] = useState(project)
+  const [ projectData, setProject ] = useState(params.project)
 
   function isEmpty(obj:Object) {
     for (var prop in obj) {
@@ -42,12 +45,12 @@ const Metadata : FC<pageProps> = (params) => {
     return true
   }
 
-  useEffect(() => {
-    if (!isEmpty(project)) {
-      console.log("AAAAAAAAAAAAAAAAAAAAAA Metadata useEffect: ", project);
-      setProject(project);
-    }
-  }, [project])
+  // useEffect(() => {
+  //   if (!isEmpty(project)) {
+  //     console.log("AAAAAAAAAAAAAAAAAAAAAA Metadata useEffect: ", project);
+  //     setProject(project);
+  //   }
+  // }, [project])
 
 
   const fillProject = (project:any) : any => { 
@@ -62,12 +65,13 @@ const Metadata : FC<pageProps> = (params) => {
           "acronym": project.acronym || "",
           "ecotaxa_project_title": project.ecotaxa?.name || "",
           "ecotaxa_project": project.ecotaxa?.projectId || "",
-          "scanningOptions": project.scanningOptions || 0,
+
+          "scanningOptions": project.scanningOptions || "",
           "serial": project.instrument?.id || 0,
-          "xoffset_large": project.instrument?.calibration.xOffset || 0,
-          "yoffset_large": project.instrument?.calibration.yOffset || 0,
-          "xsize_large": project.instrument?.calibration.xSize || 0,
-          "ysize_large": project.instrument?.calibration.ySize || 0,
+          // "xoffset_large": project.instrument?.calibration.xOffset || 0,
+          // "yoffset_large": project.instrument?.calibration.yOffset || 0,
+          // "xsize_large": project.instrument?.calibration.xSize || 0,
+          // "ysize_large": project.instrument?.calibration.ySize || 0,
       }
 
       // if (project.instrument.id) {
@@ -103,8 +107,8 @@ const Metadata : FC<pageProps> = (params) => {
    
 
   const ProjectForm = () => {
-    if (isLoading) return <MySpinner />
-    if (isError) return <ErrorComponent error={isError}/>
+    // if (isLoading) return <MySpinner />
+    // if (isError) return <ErrorComponent error={isError}/>
     // return <SamplesTable projectId={projectId} samples={sampleList}/>
     
     //const projectMetadata = 
@@ -116,10 +120,11 @@ const Metadata : FC<pageProps> = (params) => {
     // }
 
     const data = {
-      ...project,
+      ...params.project,
       projectData
     }
 
+    const id = params.project.id
     console.log("projectMetadata: ", data);
 
     form = { 
@@ -127,7 +132,8 @@ const Metadata : FC<pageProps> = (params) => {
       // value:fillProject(project),
       // value:fillProject(projectData),
       value:fillProject(data),
-      project:{projectId}
+      // project:{projectId}
+      project:{id} // outside id for the update query :(
     }
 
 
@@ -195,7 +201,7 @@ const Metadata : FC<pageProps> = (params) => {
           <div className="text-center justify-center">
             <Stack spacing={3}>
             <h1>Metadata</h1>
-            <Debug params={project} title='project'/>
+            <Debug params={params.project} title='project'/>
             <Debug params={projectData} title='projectData'/>
             <ProjectForm/>
             </Stack>

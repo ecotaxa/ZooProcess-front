@@ -2,7 +2,7 @@
 
 import Head from 'next/head';
 
-import { updateSample, useSample } from "@/app/api/samples";
+import { updateSample /*, useSample*/ } from "@/app/api/samples";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { MySpinner } from "@/components/mySpinner";
 import { inputFormElements, projectForm } from "@/config/formElements";
@@ -12,12 +12,15 @@ import { Stack } from '@mui/material';
 // import { Project as IProject } from '@/app/api/network/zooprocess-api';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MyForm } from '@/components/myForm';
-import {  IMetadata } from '@/app/api/network/zooprocess-api';
+
+import { Sample } from '@/app/api/network/interfaces';
+
 
 interface pageProps {
     // params: {
       projectid: string,
-      sampleid: string
+      // sampleid: string
+      sample: Sample
     // }
   }
 
@@ -25,12 +28,14 @@ const Metadata: FC<pageProps> = (params) => {
   const router = useRouter();
 
   const projectId = params.projectid;
-  const sampleId = params.sampleid;
+  // const sampleId = params.sampleid;
   console.log("Metadata params: ", params);
-  console.log("Metadata params projectid: ", params.projectid);
+  // console.log("Metadata params projectid: ", params.projectid);
 
-  const { sample, isLoading, isError } = useSample(projectId, sampleId)
+  // const { sample, isLoading, isError } = useSample(projectId, sampleId)
   // const [ sampleList, setSampleList ] = useState(project)
+
+  const [ sampleData, setSample ] = useState(params.sample)
 
 
   type MetadataType = {
@@ -72,9 +77,7 @@ const Metadata: FC<pageProps> = (params) => {
             form[element.name] = element.value
           }
 
-          if ( element.type == 'object'){
-            console.log("OBJECT FOUND")
-          }
+
 
         });
 
@@ -112,18 +115,62 @@ const Metadata: FC<pageProps> = (params) => {
   // }
 
   const SampleForm = () => {
-    if (isLoading) return <MySpinner />
-    if (isError) return <ErrorComponent error={isError}/>
+    // if (isLoading) return <MySpinner />
+    // if (isError) return <ErrorComponent error={isError}/>
     // return <SamplesTable projectId={projectId} samples={sampleList}/>
     
+  const update_form = (form:any) => {
+    console.log("update_form()");
+    let newForm = {...form}
+    console.log("newForm: ", newForm);
+      let map : any= {}
+      // const start = {
+      //   'lat': form['latitude_start'],
+      //   'lng': form['longitude_start']
+      // }
+      // map.start = start
+
+      // if (form['latitude_end'] && form['longitude_end']){
+      //   const end = {
+      //     'lat': form['latitude_end'],
+      //     'lng': form['longitude_end']
+      //   }
+      //   map.end = end
+      // }
+      if ( form['map']) return form
+      if (form['latitude_start'] && form['longitude_start']){
+        map.startLat = form['latitude_start']
+        map.startLng = form['longitude_start']
+        if (form['latitude_end'] && form['longitude_end']){
+          map.endLat = form['latitude_end']
+          map.endLng = form['longitude_end']
+        }
+        console.log("map: ", map)
+        newForm['map'] = map
+      } else {
+        console.debug("no map")
+      }
+      return newForm
+  }
+    
     //const projectMetadata = 
-    console.log("Sample: ", sample)
+    console.log("sampleData: ", sampleData)
+
+    let filledSample = {}
+    if (sampleData && 'metadataModel' in sampleData && 'projectId' in sampleData) {
+      filledSample = fillSample(sampleData as unknown as Sample)
+    }
+
+
+    const newSample = update_form(filledSample)
+    console.log("newformGPS: ", newSample)
 
     form = { 
       ...form,
-      value: fillSample(sample),
+      // value: fillSample(sample),
+      value: newSample, //filledSample,
       project: projectId,
-      sample: sampleId
+      sample: sampleData.id //sampleId
     }
     // form['value'] = fillProject(project)
     // setForm(f)
@@ -138,22 +185,29 @@ const Metadata: FC<pageProps> = (params) => {
         />
     )
   }
-
-       
     // onSubmit
     const onChange = (value:any) => {
-      console.log("Project metadata onChange:", value)
+      console.log("Sample metadata onChange:", value)
       // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
       // stringifiedData = JSON.stringify(value, null, 2);
 
       // POUR AFFICHAGE DEBUG
       // setData(JSON.stringify(value, null, 2))
       // console.log("App onChange:", stringifiedData)
-      // console.log("App onChange:", JSON.stringify(value, null, 2));
+      console.log("App onChange:", JSON.stringify(value, null, 2));
 
       // const v = { ...value, project: projectId, sample: sampleId }
 
-      return updateSample( { projectId, sampleId , data: value } );
+
+
+      // Transform Map values in flat 
+
+      value.latitude_start = value.map.startLat
+      value.longitude_start = value.map.startLng
+      value.latitude_end = value.map.endLat
+      value.longitude_end = value.map.endLng
+
+      return updateSample( { projectId, sampleId: sampleData.id , data: value } );
     }
 
   const onCancel = () => {
@@ -174,7 +228,7 @@ const Metadata: FC<pageProps> = (params) => {
             </title>
         </Head>
         <h1>{projectId}</h1>
-        <h1>{sampleId}</h1>
+        <h1>{sampleData?.id}</h1>
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
 
         <div className="text-center justify-center">

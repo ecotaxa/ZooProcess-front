@@ -175,12 +175,13 @@ export const sampleid_formElements=[
             // helperText:"de 0 à 90°",
             object: {
                 start: {
-                    lat: 'number',
-                    lng: 'number'
+
+                    lat: 'number', // 'latitude_start'
+                    lng: 'number'   // 'longitude_start'
                 },
                 end: {
-                    lat: 'number',
-                    lng: 'number'
+                    lat: 'number', // 'latitude_end'
+                    lng: 'number' // 'longitude_end'
                 }
             }
         }
@@ -520,7 +521,7 @@ export const sampleid_formElements=[
                 minValue:0, helperText:'value greather than or equal to zero'
             },
             { tag:"TextField", name:"fraction_max_mesh", type:"number", 
-                placeholder:"Fraction max mesh", label:'Max meshsubmethod',
+                placeholder:"Fraction max mesh", label:'Max mesh',
                 variant:"outlined", required:true,
                 xs:12, sm:6, fullWidth:true,
                 endAdornment:{pos:'end', text:'µm'},
@@ -671,38 +672,52 @@ export const sampleid_formElements=[
     
     
     export const userFormElements=[
-    
-        { name:"firstname", placeholder:"Enter first name", label:'First Name',
-            variant:"outlined", fullWidth:true, required:false, xs:12, sm:6, size:"small"
-        },
-        { name:"lastname", placeholder:"Enter last name", label:'Last Name',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
-        },
-        { name:"email", type:"email", placeholder:"Enter email", label:'Email',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
-        },
-        { name:"phone", type:"number", placeholder:"Enter phone number", label:'Phone',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
-        },
-        { name:"street", placeholder:"Enter street", label:'Street',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
-        },
-        { name:"city", placeholder:"Enter City", label:'City',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
-        },
-        { name:"state", placeholder:"Enter State", label:'State',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
-        },
-        { name:"country", placeholder:"Enter Country name", label:'Country',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
-        },
-        { name:"pincode", type:"number", placeholder:"Enter pincode number", label:'Pincode',
-            variant:"outlined", fullWidth:true, required:true, xs:12, sm:12
-        },
-    
+        {
+            title:"User",
+            section:
+            [
+                { name:"name", placeholder:"Enter name", label:'Name',
+                    tag:"TextField", type:"text",
+                    variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
+                },
+                // { name:"firstname", placeholder:"Enter first name", label:'First Name',
+                //     variant:"outlined", fullWidth:true, required:false, xs:12, sm:6, size:"small"
+                // },
+                // { name:"lastname", placeholder:"Enter last name", label:'Last Name',
+                //     variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
+                // },
+
+                { name:"email", type:"email", placeholder:"Enter email", label:'Email',
+                    tag:"TextField", type:"text",
+                    variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
+                },
+
+                // { name:"phone", type:"number", placeholder:"Enter phone number", label:'Phone',
+                //     variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
+                // },
+                // { name:"login ecotaxa", placeholder:"Login Ecotaxa", label:'Street',
+                //     variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
+                // },
+                // { name:"password Ecotaxa", type:"password", placeholder:"password Ecotaxa", label:'City',
+                //     variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
+                // },
+
+                { name: "role", placeholder: "ROLE", label: 'Role',
+                    tag: "Select",  type: "select", 
+                    variant:"outlined",  required: true, 
+                    xs:12, sm:6, size: "small",
+                    choice:[
+                        {id:"USER", value: "USER"},
+                        {id:"MANAGER", value: "MANAGER"},
+                        {id:"ADMIN", value: "ADMIN"},
+                    ],
+                    value:"USER"
+                },
+
+            ]
+        }
     ]
-    
-    
+
     export const projectElements= [
         {
             title:"Project Metadata",
@@ -797,12 +812,21 @@ export const sampleid_formElements=[
                 variant:"outlined",  required: true, 
                 xs:12, sm:6, size: "small",
                 choice:[
-                    {id:120, value: "NARROW (1200dpi)"},
-                    {id:1200, value: "LARGE (1200dpi)"},
-                    {id:240, value: "NARROW (2400dpi)"},
-                    {id:2400, value: "LARGE (2400dpi)"},
-                ],
-                value:"2400"
+                    {id:"NARROW", value: "NARROW"},
+                    {id:"LARGE", value: "LARGE"},
+                    {id:"OTHER", value: "OTHER"},
+               ],
+                value:"LARGE"
+                },
+                { name: "density", placeholder: "Density", label: 'Density Type',
+                    tag: "Select",  type: "select", 
+                    variant:"outlined",  required: true, 
+                    xs:12, sm:6, size: "small",
+                    choice:[
+                        {id:1200, value: "1200 dpi"},
+                        {id:2400, value: "2400 dpi"},
+                    ],
+                    value:"2400"
                 },
             ]
         }
@@ -814,21 +838,103 @@ export const sampleid_formElements=[
             section:
             [
                 { name:"instrument", placeholder:"Instrument", label:'Intrument',
-                tag:"TextField", type:"text", value:"Zooscan",
-                required:false, disabled:true,
-                variant:"outlined", fullWidth:true, 
-                xs:12, sm:6, size:"small"
+                    tag:"TextField", type:"text", value:"Zooscan",
+                    required:false, disabled:true,
+                    variant:"outlined", fullWidth:true, 
+                    xs:12, sm:6, size:"small"
                 },
-                { name:"serial", placeholder:"Instrument serial number", label:'Serial number',
-                tag:"Instruments", type:"text",
-                required:false, disabled:true,
-                variant:"outlined", fullWidth:true, 
-                xs:12, sm:6, size:"small"
+                { name:"model", placeholder:"Model", label:'Model',
+                    tag:"TextField", type:"text",
+                    required:true, disabled:true,
+                    variant:"outlined", fullWidth:true, 
+                    xs:12, sm:6, size:"small"
+                },
+                { name:"name", placeholder:"Nickname of the Instrument", label:'Name',
+                    tag:"TextField", type:"text",
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:true, 
+                    xs:12, sm:6, size:"small"
+                },
+                { name:"sn", placeholder:"Instrument serial number", label:'Serial number',
+                    tag:"TextField", type:"text",
+                    required:true, disabled:true,
+                    variant:"outlined", fullWidth:true, 
+                    xs:12, sm:6, size:"small"
                 },
             ]
         }
     ]
-    
+
+    export const scannerChoice = [
+        {
+            title:"Scanner",
+            section:
+            [
+                { name:"instrument", placeholder:"Instrument", label:'Intrument',
+                    tag:"Instruments", 
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:true,
+                    xs:12, sm:12, size:"small"
+                },
+                { name: "scanningOptions", placeholder: "Frame Type", label: 'Frame Type',
+                    tag: "Select",  type: "select", 
+                    variant:"outlined",  required: true, 
+                    xs:12, sm:6, size: "small",
+                    choice:[
+                        {id:"NARROW", value: "NARROW"},
+                        {id:"LARGE", value: "LARGE"},
+                        {id:"OTHER", value: "OTHER"},
+                    ],
+                    value:"LARGE"
+                },
+                { name: "density", placeholder: "Density", label: 'Density Type',
+                    tag: "Select",  type: "select", 
+                    variant:"outlined",  required: true, 
+                xs:12, sm:6, size: "small",
+                    choice:[
+                        {id:1200, value: "1200 dpi"},
+                        {id:2400, value: "2400 dpi"},
+                    ],
+                    value:"2400"
+                },
+            ]
+        }
+    ]
+
+    export const scannerElementsNew = [
+        {
+            title:"Scanner Metadata",
+            section:
+            [
+                { name:"instrument", placeholder:"Instrument", label:'Intrument',
+                    tag:"TextField", type:"text", value:"Zooscan",
+                    required:false, disabled:true,
+                    variant:"outlined", fullWidth:true, 
+                    xs:12, sm:6, size:"small"
+                },
+                { name:"model", placeholder:"Model", label:'Model',
+                    tag:"TextField", type:"text",
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:true, 
+                    xs:12, sm:6, size:"small"
+                },
+                { name:"name", placeholder:"Nickname of the Instrument", label:'Name',
+                    tag:"TextField", type:"text",
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:true, 
+                    xs:12, sm:6, size:"small"
+                },
+                { name:"serial", placeholder:"Instrument serial number", label:'Serial number',
+                    tag:"TextField", type:"text",
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:true, 
+                    xs:12, sm:6, size:"small"
+                },
+            ]
+        }
+    ]
+
+
     export const scannerCalibrationElements= [
         {
             title:"Scanner Calibration",
@@ -846,30 +952,60 @@ export const sampleid_formElements=[
                 // variant:"outlined", fullWidth:false, 
                 // xs:12, sm:6, size:"small"
                 // },
-                { name:"xoffset_large", placeholder:"XOffset (Large)", label:'XOffset',
-                tag:"TextField", type:"number",
-                required:false, disabled:false,
-                variant:"outlined", fullWidth:false, 
-                xs:12, sm:6, size:"small"
-                },
-                { name:"yoffset_large", placeholder:"YOffset (Large)", label:'YOffset',
-                tag:"TextField", type:"number",
-                required:false, disabled:false,
-                variant:"outlined", fullWidth:false, 
-                xs:12, sm:6, size:"small"
-                },
-                { name:"xsize_large", placeholder:"XSize (Large)", label:'XSize',
-                tag:"TextField", type:"number",
-                required:false, disabled:false,
-                variant:"outlined", fullWidth:false, 
-                xs:12, sm:6, size:"small"
-                },
-                { name:"ysize_large", placeholder:"YSize (Large)", label:'YSize',
-                tag:"TextField", type:"number",
-                required:false, disabled:false,
-                variant:"outlined", fullWidth:false, 
-                xs:12, sm:6, size:"small"
-                },
+                { name:"frame", placeholder:"Frame type (Large,Narrow)", label:'Frame',
+                    tag:"TextField", type:"string",
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:false, 
+                    xs:12, sm:12, size:"small"
+                    },
+                // { name:"xoffset_large", placeholder:"XOffset (Large)", label:'XOffset',
+                // tag:"TextField", type:"number",
+                // required:false, disabled:false,
+                // variant:"outlined", fullWidth:false, 
+                // xs:12, sm:6, size:"small"
+                // },
+                // { name:"yoffset_large", placeholder:"YOffset (Large)", label:'YOffset',
+                // tag:"TextField", type:"number",
+                // required:false, disabled:false,
+                // variant:"outlined", fullWidth:false, 
+                // xs:12, sm:6, size:"small"
+                // },
+                // { name:"xsize_large", placeholder:"XSize (Large)", label:'XSize',
+                // tag:"TextField", type:"number",
+                // required:false, disabled:false,
+                // variant:"outlined", fullWidth:false, 
+                // xs:12, sm:6, size:"small"
+                // },
+                // { name:"ysize_large", placeholder:"YSize (Large)", label:'YSize',
+                // tag:"TextField", type:"number",
+                // required:false, disabled:false,
+                // variant:"outlined", fullWidth:false, 
+                // xs:12, sm:6, size:"small"
+                // },
+                { name:"xOffset", placeholder:"XOffset", label:'XOffset',
+                    tag:"TextField", type:"number",
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:false, 
+                    xs:12, sm:6, size:"small"
+                    },
+                    { name:"yOffset", placeholder:"YOffset", label:'YOffset',
+                    tag:"TextField", type:"number",
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:false, 
+                    xs:12, sm:6, size:"small"
+                    },
+                    { name:"xSize", placeholder:"XSize", label:'XSize',
+                    tag:"TextField", type:"number",
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:false, 
+                    xs:12, sm:6, size:"small"
+                    },
+                    { name:"ySize", placeholder:"YSize", label:'YSize',
+                    tag:"TextField", type:"number",
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:false, 
+                    xs:12, sm:6, size:"small"
+                    },
             ]
         }
     ]
@@ -877,13 +1013,14 @@ export const sampleid_formElements=[
     export const scannerForm= [
         // scanningOptions,
         scannerElements,
-        scannerCalibrationElements
+        // scannerCalibrationElements
     ]
 
     export const projectForm = [
         projectElements,
-        scanningOptions,
-        scannerElements,
+        // scanningOptions,
+        // scannerElements,
+        scannerChoice,
         // scannerCalibrationElements,
         projectEcotaxaElements,
         // scannerForm

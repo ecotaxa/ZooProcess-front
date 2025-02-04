@@ -1,7 +1,10 @@
+"use server";
+
 import useSWR from "swr"
 
 import * as api from '@/app/api/network/zooprocess-api' 
-import { ta } from "date-fns/locale"
+import { run } from "node:test";
+// import { ca, ta } from "date-fns/locale"
 
 
 
@@ -15,46 +18,11 @@ export async function addSeparateTask(params) {
 
     console.log("addSeparateTask() | data :", data)
 
-    // // const taskId = 
-    // return await api.addTask(data)
-    // .then((response) => {
-    //     if ( response.status == 200 ){
-    //         console.log("addTask() -> response :", response)
-    //         const taskId = response.data.id
-    //         console.log("addTask() -> taskId :", taskId)
-        
-    //         // Running the task, don't wait
-    //         api.runTask(taskId)
-    //         .then((response) => {
-    //             if ( response.status == 200 ){
-    //                 console.log("runTask() -> taskId :", response)
-    //                 //TODO changer le status de la task en running fait dans l'API
-    //                 return Promise().resolve(response.data.id)
-    //             }
-    //         })
-    //         .catch(( error) => {
-    //             //TODO changer le status de la task en error 
-    //             console.log("Error addSeparateTask() addTask runTask: ", error)
-    //             throw Error("Cannot run task separate")
-    //             // return undefined
-    //         })
+  
 
-    //         return taskId
-    //     }
-    //     throw Error(response.status)
-    //     // return undefined
-    // })
-    // .catch ((error) => {
-    //     console.log("addSeparateTask() addTask Error: ", error)
-    //     throw Error("Cannot add task")
-    //     // return undefined
-    // })
-    // //return undefined
-    // // console.log("addSeparateTask() -> taskId :", taskId)
-    // // return taskId
 
-    return await api.addTask(data)
-    .then((response) => { 
+    return api.addTask(data)
+    .then(async (response) => { 
         console.log("api.addTask(data) -> response :", response)
         // if ( response.status == 200 ){
             // console.log("api.addTask(data) -> taskId :", response.data.id)
@@ -77,36 +45,86 @@ export async function addSeparateTask(params) {
         // console.log("then(taskId) :", taskId)
         // return api.runTask(taskId)
 
-        return api.runTask(response.id)
+        return await api.runTask(response.id)
     })
     .catch((error) => {
         throw Error(`Cannot run task separate`);// (id:${taskId})`)
     })
 
+    
+
 }
+
+
+
 
 
 
 export async function addProcessTask(params) {
-    
     const data = {
         exec: api.TaskType.process,
         params: params.params,
-        // log: params.log
     }
 
-    console.log("addProcessTask() | data :", data)
-
-    return await api.addTask(data)
-    .then((response) => { 
-        console.log("api.addTask(data) -> response :", response)
-        console.log("api.addTask(data) -> taskId   :", response.id)
-
-        return api.runTask(response.id)
-    })
-    .catch((error) => {
-        throw Error(`Cannot run task process`);
-    })
-
+    try {
+        const response = await api.addTask(data);
+        console.log("api.addTask(data) -> response :", response);
+        
+        // try {
+        //     await api.runTask(response.id);
+            return response.id;  // Return the task ID even if runTask fails
+        // } catch (error) {
+        //     console.log("RunTask error details:", error.response?.data);
+        //     return response.id;  // Still return the task ID
+        // }
+    } catch (error) {
+        throw new Error(error.response?.data?.error || "Failed to create task");
+    }
 }
 
+/**
+ * Add & launch a background task
+ * @param {*} params 
+ * @returns 
+ */
+export async function addBackgroundTask(params){
+
+    console.log("**************addBackgroundTask()**************")
+    console.log("addBackgroundTask() | params :", params)
+    console.trace("-=-=-=-=-=-=-=-=-=-=-")
+
+    const data = {
+        exec:api.TaskType.background,
+        params: params.params,
+    }
+
+    try {
+        const task = await api.addTask(data)
+        console.log("api.addTask(data) -> response :", task);
+
+        // try {
+        //     await api.runTask(task.id);
+            return task.id
+
+        // } catch(error) {
+        //     console.log("RunTask error details:", error.response?.data);
+        //     return task.id;  // Still return the task ID
+        // }
+    
+    } catch (error) {
+        throw new Error(error.response?.data?.error || "Failed to create task");
+    }
+}
+
+export async function runTask(taskId) {
+    console.log("runTask(taskId) -> taskId :", taskId)
+    try {
+        const response = await api.runTask(taskId);
+        console.log("api.runTask(taskId) -> response :", response);
+        return response;
+    } catch (error) {
+        console.log("runTask error:", error);
+        // throw error;
+        throw new Error(`Failed to run task with ID ${taskId}`);
+    }
+}
