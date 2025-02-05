@@ -12,6 +12,19 @@ import { useEffect, useRef, useState } from "react";
 // import AntarcticMap from "@/components/AntarcticMap";
 
 
+// import dotenv from 'dotenv';
+// dotenv.config();
+// const { useEnviron } = require('@next/npm/env');
+
+// useEnviron({
+//   database: 'your-database-url',
+//   username: 'your-username',
+//   password: 'your-password'
+// });
+
+// import { env } from 'node:process';
+// import env;
+
 const startCoords :[number,number] = [43.3, 7.4]    
 const endCoords :[number,number] = [41.4, 7.4]
 
@@ -26,12 +39,34 @@ export default function AboutPage() {
     const initialStartCoords :Coord = [43.3, 7.1]
     const initialEndCoords :Coord = [41.3, 8.1]
 
+    // const [folder, setFolder] = useState<string | undefined>();
+    // useEffect(() => {
+    //     setFolder(process.env.NEXT_PUBLIC_REAL_FOLDER);
+    // }, []);
+
     const onCoordsChange = (start: Coord, end :Coord|void) : any => {
         console.log("onCoordsChange", start, end)
     }
  
+    const test = () => {
+        const folder = process.env.NEXT_PUBLIC_REAL_FOLDER // || "toto"
+        // console.log("process.env.REAL_FOLDER", folder)
+
+        return (
+            <div>
+                <h1>Folder: {folder}</h1>
+            </div>
+        )
+
+    }
+
 	return (
         <div className="w-screen max-w-none overflow-x-hidden px-6" >
+
+        {test()}
+        {/* <h1>t{process.env.REAL_FOLDER}</h1> */}
+        {/* <h1>{process.env.NEXT_PUBLIC_REAL_FOLDER}</h1> */}
+
  
         <MapComponent start={initialStartCoords} end={initialEndCoords} onChange={onCoordsChange} />
 

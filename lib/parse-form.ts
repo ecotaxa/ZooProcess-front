@@ -12,7 +12,7 @@ export const parseForm = async (
 ): Promise<{ fields: formidable.Fields; files: formidable.Files }> => {
   return await new Promise(async (resolve, reject) => {
 
-    const uploadFolder = process.env.UPLOAD_FOLDER || "/uploads";
+    const uploadFolder = process.env.NEXT_PUBLIC_UPLOAD_FOLDER || "/uploads";
     const uploadDir = join(
       process.env.ROOT_DIR || process.cwd(),
       `${uploadFolder}/${dateFn.format(Date.now(), "dd-MM-Y")}`

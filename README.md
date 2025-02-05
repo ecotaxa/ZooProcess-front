@@ -67,6 +67,13 @@ docker build -t zooprocessv10-docker .
 
 
 
+# configuration
++ rename .env.example to .env.local
++ adapt the value to your environment
++ generate your secret key AUTH_SECRET with 
+```bash
+openssl rand -base64 32 | tr -d '='
+```
 
 
 
