@@ -20,7 +20,7 @@ const columns /*: Array<IColumn>*/ = [
     // {name: "DRIVE", uid: "drive"},
     {name: "NAME", uid: "name", allowSorting:true},
     // {name: "SAMPLE", uid: "sample"},
-    {name: "SCAN", uid: "scan", allowSorting:true},
+    {name: "SCAN", uid: "scans", allowSorting:true},
     {name: "FRACTION/SUBSAMPLE", uid:"fraction", allowSorting:true},
     {name: "CREATE AT", uid: "createdAt", allowSorting:true},
     {name: "UPDATED AT", uid: "updatedAt", allowSorting:true},
