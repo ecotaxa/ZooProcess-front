@@ -137,13 +137,14 @@ export function SamplesTableNextUI(props) {
         //         </div>
         //     );
             
-        // case "createdAt":
-        //             console.log("createdAt - createdAt")
-        //         return (
-        //             <div className="flex flex-col" >
-        //                 <p className="text-bold text-sm capitalize">{formatDate(cellValue)}<br/>{formatTime(cellValue)}</p>
-        //             </div>
-        //         );
+        case "createdAt":
+        case "updatedAt":
+        console.log("createdAt / updatedAt")
+                return (
+                    <div className="flex flex-col" >
+                        <p className="text-bold text-sm capitalize">{formatDate(cellValue)}<br/>{formatTime(cellValue)}</p>
+                    </div>
+                );
 
         // case "updatedAt":
         // return (
