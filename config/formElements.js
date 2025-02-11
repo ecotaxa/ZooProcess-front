@@ -837,7 +837,7 @@ export const sampleid_formElements=[
             title:"Scanner Metadata",
             section:
             [
-                { name:"instrument", placeholder:"Instrument", label:'Intrument',
+                { name:"instrument", placeholder:"Instrument", label:'Instrument',
                     tag:"TextField", type:"text", value:"Zooscan",
                     required:false, disabled:true,
                     variant:"outlined", fullWidth:true, 
