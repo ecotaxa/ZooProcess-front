@@ -17,7 +17,7 @@ import UpdateCalibrationForm from "./calibrationform_update";
 // import { ca, tr } from "date-fns/locale";
 // import { startOptimizedAppearAnimation } from "framer-motion";
 // import { setErrorMap } from "zod";
-import { Calibration, Instrument } from "@/app/api/network/interfaces";
+import { ICalibration, Instrument } from "@/app/api/network/interfaces";
 import { getCalibration, getInstrument } from "@/app/api/data/instrument";
 // const fomr = [
 //     userFormElements
@@ -33,7 +33,7 @@ interface pageProps {
 }
 
 const UpdateCalibrationPage: FC<pageProps> = async ({ params }) => {
-    const router = useRouter();
+    // const router = useRouter();
 
     // const { instrument, calibration } = params
 
@@ -49,20 +49,20 @@ const UpdateCalibrationPage: FC<pageProps> = async ({ params }) => {
 
     // const [param, setParam] = useState<any>({});
 
-    const [refreshTrigger, setRefreshTrigger] = useState(0);
+    // const [refreshTrigger, setRefreshTrigger] = useState(0);
 
 
-    const triggerRefresh = () => {
-        console.debug("refreshTrigger",refreshTrigger)
-        setRefreshTrigger(prev => prev + 1);
-    };
-    useEffect(() => {
-        if (refreshTrigger > 0) {
-          // Refetch the instrument data or perform any other refresh logic
-          console.debug("Refreshing data...");
-          router.refresh(); // Assuming you're using a query library that provides a refetch function
-        }
-      }, [refreshTrigger]);
+    // const triggerRefresh = () => {
+    //     console.debug("refreshTrigger",refreshTrigger)
+    //     setRefreshTrigger(prev => prev + 1);
+    // };
+    // useEffect(() => {
+    //     if (refreshTrigger > 0) {
+    //       // Refetch the instrument data or perform any other refresh logic
+    //       console.debug("Refreshing data...");
+    //       router.refresh(); // Assuming you're using a query library that provides a refetch function
+    //     }
+    //   }, [refreshTrigger]);
 
 
 
@@ -144,7 +144,7 @@ const UpdateCalibrationPage: FC<pageProps> = async ({ params }) => {
         // ...params,
         calibration,
         instrument,
-        onRefresh: triggerRefresh
+        // onRefresh: triggerRefresh
     }
 
     return (

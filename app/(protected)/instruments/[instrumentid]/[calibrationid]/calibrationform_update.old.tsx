@@ -1,7 +1,7 @@
 // import { addCalibration, calibrationUpdate, useInstrument } from "@/app/api/instruments"
 // import { Calibration, CalibrationForm, Instrument } from "@/app/api/network/zooprocess-api"
 import { calibrationUpdate } from "@/app/api/instruments"
-import { Calibration } from "@/app/api/network/interfaces"
+import { ICalibration } from "@/app/api/network/interfaces"
 // import { ErrorComponent } from "@/components/ErrorComponent"
 import { MyForm } from "@/components/myForm"
 // import { MySpinner } from "@/components/mySpinner"
@@ -21,7 +21,7 @@ export const forms = [
 interface pageProps {
     params: {
         instrumentid: string
-        calibration: Calibration
+        calibration: ICalibration
     }
 }
 
@@ -91,7 +91,7 @@ const UpdateCalibrationForm: FC<pageProps> = ({ params }) => {
     // console.debug("empty: ", empty)
 
 
-const formatData = (calibration:Calibration) => {
+const formatData = (calibration:ICalibration) => {
     console.log("formatData(calibration =", calibration );
 
 
@@ -111,7 +111,7 @@ const formatData = (calibration:Calibration) => {
     return form;
 }
 
-const showForm = (calibration:Calibration|any) => {
+const showForm = (calibration:ICalibration|any) => {
 
         // if (isLoading) return <MySpinner />;
         // if (isError) return <ErrorComponent error={isError} />;

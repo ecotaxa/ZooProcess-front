@@ -1,6 +1,6 @@
 "use server";
 
-import { Calibration, Instrument } from "../network/interfaces";
+import { ICalibration, Instrument } from "../network/interfaces";
 import * as api from '@/app/api/network/zooprocess-api' 
 
 
@@ -28,7 +28,7 @@ export async function getInstrument(instrumentId:string): Promise<Instrument>{
 }
 
 
-export async function getCalibration(instrument:Instrument, calibrationId:string): Promise<Calibration>{
+export async function getCalibration(instrument:Instrument, calibrationId:string): Promise<ICalibration>{
     // try {
     // const calibration = await api.getCalibration(`/calibrations/${calibrationId}`) 
     //     return calibration;

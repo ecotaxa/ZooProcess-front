@@ -86,9 +86,10 @@ export interface ICalibrationForm {
   yOffset: number
   xSize: number
   ySize: number
+  archived: boolean
 }
 
-export interface Calibration extends ICalibrationForm {
+export interface ICalibration extends ICalibrationForm {
     id: string
 }
 
@@ -97,7 +98,7 @@ export interface Instrument {
   model: string
   name: string
   sn: string
-  ZooscanCalibration?: Array<Calibration>
+  ZooscanCalibration?: Array<ICalibration>
 }
 
 export interface Sample {

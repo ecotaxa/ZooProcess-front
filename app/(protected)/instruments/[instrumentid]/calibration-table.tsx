@@ -5,14 +5,14 @@ import { Button, Link, Table, TableHeader, TableColumn, TableBody, TableRow, Tab
 import { key } from '@/api/key';
 import { useRouter } from "next/navigation";
 import { useAsyncList } from "react-stately";
-import { Calibration, Instrument } from "@/app/api/network/interfaces";
+import { ICalibration, Instrument } from "@/app/api/network/interfaces";
 // import { Calibration, Instrument } from "@/app/api/network/zooprocess-api";
 
 export interface IKey {
   key: string;
 }
 
-export interface CalibrationKey extends IKey, Calibration {}    
+export interface CalibrationKey extends IKey, ICalibration {}    
 
 const columns = [
   {name: "ID", uid: "id", allowSorting:true},
@@ -24,7 +24,7 @@ const columns = [
   {name: "ACTIONS", uid: "actions", allowSorting:false},
 ];
 
-export function CalibrationTable(props: { instrument: Instrument, calibrations?: Array<Calibration>, refreshTrigger: number }) {
+export function CalibrationTable(props: { instrument: Instrument, calibrations?: Array<ICalibration>, refreshTrigger: number }) {
   const router = useRouter();
   const stripped = true;
   const { instrument, calibrations = [], refreshTrigger } = props;
@@ -34,7 +34,7 @@ export function CalibrationTable(props: { instrument: Instrument, calibrations?:
 
 
   // const [rows, setRows] = useState<Array<CalibrationKey>>([]);
-  const initialRows = calibrations.map((calibration: Calibration) => ({
+  const initialRows = calibrations.map((calibration: ICalibration) => ({
     id: calibration.id,
     frame: calibration.frame,
     xOffset: calibration.xOffset,
@@ -51,7 +51,7 @@ export function CalibrationTable(props: { instrument: Instrument, calibrations?:
     console.log("useEffect", calibrations)
     console.log("useEffect", instrument)
 
-    const updateddata = calibrations.map((calibration: Calibration) => ({
+    const updateddata = calibrations.map((calibration: ICalibration) => ({
       id: calibration.id,
       frame: calibration.frame,
       xOffset: calibration.xOffset,
@@ -104,6 +104,7 @@ export function CalibrationTable(props: { instrument: Instrument, calibrations?:
           </div>
         );
       case "actions":
+        if (calibration.archived){return null}
         return (
           <div className="relative flex items-center gap-2" key={key(calibration.id, 'action')}>
             <Button

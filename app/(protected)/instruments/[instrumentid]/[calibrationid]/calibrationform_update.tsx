@@ -3,7 +3,7 @@
 import { calibrationUpdate
     //, useInstrument
      } from "@/app/api/instruments"
-import { Calibration, Instrument } from "@/app/api/network/interfaces"
+import { ICalibration, Instrument } from "@/app/api/network/interfaces"
 // import { Instrument } from "@/app/api/network/zooprocess-api"
 // import { ErrorComponent } from "@/components/ErrorComponent"
 import { MyForm } from "@/components/myForm"
@@ -19,7 +19,7 @@ interface pageProps {
         // instrumentid: string
         // calibrationid: string
         instrument: Instrument,
-        calibration: Calibration,
+        calibration: ICalibration,
         onRefresh: () => void
     }
 }
@@ -59,7 +59,7 @@ const UpdateCalibrationForm: FC<pageProps> = ({ params }) => {
 
     const formatData = (instrument:Instrument) => {
         const updatedForm = forms
-        const myCalibration = instrument?.ZooscanCalibration?.find((cal:Calibration) => cal.id == calibration.id);
+        const myCalibration = instrument?.ZooscanCalibration?.find((cal:ICalibration) => cal.id == calibration.id);
 
         const form : any = []
         form['forms']=updatedForm
@@ -71,7 +71,7 @@ const UpdateCalibrationForm: FC<pageProps> = ({ params }) => {
     }
 
     // const showForm = (instrument:Instrument| never[],calibrationId:string, isLoading:boolean,isError:boolean) =>  {
-    const showForm = (instrument:Instrument| never[],calibration:Calibration) =>  {
+    const showForm = (instrument:Instrument| never[],calibration:ICalibration) =>  {
         // if (isLoading) {
         //     return <MySpinner />
         // }
