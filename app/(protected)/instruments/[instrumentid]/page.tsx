@@ -1,22 +1,22 @@
 "use server"
 
-import Head from 'next/head';
+// import Head from 'next/head';
 // import { ErrorComponent } from "@/components/ErrorComponent";
 // import { MySpinner } from "@/components/mySpinner";
 // import { scannerCalibrationElements, scannerForm, scanningOptions } from "@/config/formElements";
 import { FC, useState } from 'react';
-import { Stack } from '@mui/material';
-import { useRouter } from 'next/navigation';
+// import { Stack } from '@mui/material';
+// import { useRouter } from 'next/navigation';
 // import { MyForm } from '@/components/myForm';
 // import { useInstrument } from '@/app/api/instruments';
-import { CalibrationTable } from './calibration-table';
-import { Button, Card, CardBody, CardHeader } from '@nextui-org/react';
-import Link from 'next/link';
+// import { CalibrationTable } from './calibration-table';
+// import { Button, Card, CardBody, CardHeader } from '@nextui-org/react';
+// import Link from 'next/link';
 import { getInstrument } from '@/app/api/data/instrument';
 
 // import InstrumentDetail, { instrumentDetail } from './instrumentDetail';
 import InstrumentDetail from './instrumentDetail';
-import { Instrument } from '@/app/api/network/interfaces';
+// import { Instrument } from '@/app/api/network/interfaces';
 interface pageProps {
     params: {
         // instrument: Instrument,
