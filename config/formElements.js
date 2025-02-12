@@ -952,12 +952,24 @@ export const sampleid_formElements=[
                 // variant:"outlined", fullWidth:false, 
                 // xs:12, sm:6, size:"small"
                 // },
-                { name:"frame", placeholder:"Frame type (Large,Narrow)", label:'Frame',
-                    tag:"TextField", type:"string",
-                    required:true, disabled:false,
-                    variant:"outlined", fullWidth:false, 
-                    xs:12, sm:12, size:"small"
-                    },
+                // { name:"frame", placeholder:"Frame type (Large,Narrow)", label:'Frame',
+                //     tag:"TextField", type:"string",
+                //     required:true, disabled:false,
+                //     variant:"outlined", fullWidth:false, 
+                //     xs:12, sm:12, size:"small"
+                //     },
+                    { name: "frame", placeholder: "Frame Type", label: 'Frame Type',
+                        tag: "Select",  type: "select", 
+                        variant:"outlined",  required: true, 
+                        xs:12, sm:12, size: "small",
+                        choice:[
+                            {id:"NARROW", value: "NARROW"},
+                            {id:"LARGE", value: "LARGE"},
+                            {id:"OTHER", value: "OTHER"},
+                       ],
+                        // value:"LARGE"
+                        },
+
                 // { name:"xoffset_large", placeholder:"XOffset (Large)", label:'XOffset',
                 // tag:"TextField", type:"number",
                 // required:false, disabled:false,
