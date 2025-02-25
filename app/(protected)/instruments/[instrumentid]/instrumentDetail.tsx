@@ -31,11 +31,16 @@ const InstrumentDetail = ( params : pageProps
   const router = useRouter();
 
     const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const [refreshData, setRefreshData] = useState(0);
 
     const triggerRefresh = () => {
         console.debug("refreshTrigger",refreshTrigger)
         setRefreshTrigger(prev => prev + 1);
     };
+
+    const handleRefresh = () => {
+      setRefreshData(prev => prev + 1);
+  };
 
     const initForm = () => {
         let localform: any = {}
@@ -149,12 +154,17 @@ const onCancel = () => {
                     {AddButton(instrument)}
                 </CardHeader>
                  <CardBody>
-                {instrument && 'id' in instrument && <CalibrationTable calibrations={instrument.ZooscanCalibration} instrument={{
-                  id: instrument.id,
-                    model: instrument.model,
-                    name: instrument.name,
-                    sn: instrument.sn
-                }} refreshTrigger={refreshTrigger}/>}
+                {instrument 
+                  && 'id' in instrument 
+                  && <CalibrationTable 
+                        calibrations={instrument.ZooscanCalibration} 
+                        instrument={{
+                          id: instrument.id,
+                            model: instrument.model,
+                            name: instrument.name,
+                            sn: instrument.sn
+                        }} 
+                        refreshTrigger={refreshTrigger} />}
                 </CardBody>                
                 </Card>
           </div>
