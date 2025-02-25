@@ -53,6 +53,20 @@ export async function getCalibration(instrument:Instrument, calibrationId:string
 
 }
 
+export async function updateCalibration(calibration:any) {
+  return api.updateCalibration(calibration)
+  .then((response)=> {
+    console.log("Calibration updated OK")
+    return Promise.resolve({ })
+  })
+  .catch((error) => {
+    console.error("Calibration updated NOK: ", error);
+    console.debug("calibration: ", calibration);
+    // return Promise.reject(error);
+    throw (error.message)
+  })
+}
+
 
 export async function updateInstrument(instrument:Instrument) { //}: Promise<Instrument>{
     // try {
@@ -66,8 +80,8 @@ export async function updateInstrument(instrument:Instrument) { //}: Promise<Ins
 
     return api.updateInstrument(instrument)
     .then((response) => {
-      console.log("Instrument added OK");
-      return Promise.resolve( { data:response, message:"Instrument have been added"})
+      console.log("Instrument updated OK");
+      return Promise.resolve( { data:response, message:"Instrument have been updated"})
     })
     .catch ((error) =>  {
       console.error("Instrument added NOK: ", error);

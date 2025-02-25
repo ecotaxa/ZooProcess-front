@@ -145,11 +145,13 @@ const UpdateCalibrationPage: FC<pageProps> = async ({ params }) => {
         calibration,
         instrument,
         // onRefresh: triggerRefresh
+        // onRefresh : ()=>{console.debug("refresh call null()")}
+        // if remove onRefresh have a warning problem, but else it generate a page error
     }
 
     return (
         <>
-        <Debug params={params}/>
+        {/* <Debug params={params}/> */}
             {/* { isLoading && <MySpinner /> }
             { isError && <ErrorComponent error={{ message: "Instrument not found" }} /> }
             { error && <ErrorComponent error={{ message: "Calibration not found" }} /> }

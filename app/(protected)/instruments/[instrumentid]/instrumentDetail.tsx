@@ -66,7 +66,6 @@ const onChange = (value:any) => {
 
 try {
   return updateInstrument(i)
-  // params.onChange()
 }
 catch(error) {
   console.error("Error - updateInstrument", error)
@@ -78,14 +77,11 @@ catch(error) {
 
 const onCancel = () => {
   console.debug("Cancel calibration form")
-  // params.onCancel()
   router.back()
 }
 
 
   const InstrumentForm = () => {
-    // if (isLoading) return <MySpinner />
-    // if (isError) return <ErrorComponent error={isError}/>
 
     form = { 
       ...form, 
@@ -103,22 +99,54 @@ const onCancel = () => {
     )
   }
 
+  const AddButton = (instrument: any) => {
+ 
+    console.debug("AddButton", instrument)
+
+    if ( instrument === null ) {
+      return (
+        <Button disabled>Add new calibration</Button>
+      )
+    }
+
+    const filteredArray = instrument.ZooscanCalibration.filter((item:any) => !item.archived);
+    // const permit2addCalibration = filteredArray.length < 3;
+    const noFilteredArray = instrument.ZooscanCalibration
+    console.debug("noFilteredArray", noFilteredArray)
+    console.debug("filteredArray", filteredArray)
+
+    // limit to 3: because choice are LARGE, NARROW or OTHER
+    // but need to remove already used cases when add a new one
+    if( filteredArray.length >= 3 ) {
+      return (
+        // <Button disabled>Add new calibration {noFilteredArray.length}</Button>
+        <Button disabled>Add new calibration</Button>
+      )
+    } 
+
+    return (
+    <div className="flex justify-center">
+      <Button
+        href={`/instruments/${instrument.id}/new`}
+        as={Link}
+        color="primary"
+        data-testid="newBtn"
+      >
+        Add new calibration
+      </Button>
+    </div>
+    )
+  }
+
     return (
         <>
         <h1>{instrument.id}</h1>
-        {/* <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10"> */}
           <div className="text-center justify-center">
-            {/* <Stack spacing={3}> */}
             <h1>Instrument</h1>
                 <InstrumentForm />
                 <Card className="inline-block" data-testid="calibrationCard">
                 <CardHeader className="flex flex-row-reverse py-3">
-                    <Button 
-                        href={`/instruments/${instrument.id}/new`}
-                        as={Link}
-                        color="primary"
-                        data-testid="newBtn"
-                        >Add new calibration</Button>
+                    {AddButton(instrument)}
                 </CardHeader>
                  <CardBody>
                 {instrument && 'id' in instrument && <CalibrationTable calibrations={instrument.ZooscanCalibration} instrument={{
@@ -129,9 +157,7 @@ const onCancel = () => {
                 }} refreshTrigger={refreshTrigger}/>}
                 </CardBody>                
                 </Card>
-            {/* </Stack> */}
           </div>
-        {/* </section> */}
     </>
 
     )

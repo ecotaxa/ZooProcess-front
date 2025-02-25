@@ -76,25 +76,26 @@ export async function addCalibration({instrumentId/*:string*/, data/*:any*/}){
   
   }
 
-  export async function calibrationUpdate({data/*:any*/}){
-    console.trace("calibrationUpdate stack trace:")
-    console.log("calibrationUpdate...",  data);
-    // console.log("instrumentId:",instrumentId);
-    console.log("data:",data);
 
-    if ( !data ) {
-      console.error("Data is required");
-      return Promise.reject("Data is required");
-    }
+  // export async function calibrationUpdate({data/*:any*/}){
+  //   console.trace("calibrationUpdate stack trace:")
+  //   console.log("calibrationUpdate...",  data);
+  //   // console.log("instrumentId:",instrumentId);
+  //   console.log("data:",data);
 
-    return api.updateCalibration(data)
-        .then((response) => {
-          console.log("Calibration updated OK");
-          return Promise.resolve({data:response, message:"Calibration updated"})
-        })
-        .catch ((error) =>  {
-          console.error("Calibration updated NOK: ", error);
-          throw(error.message)
-        })
-  }
+  //   if ( !data ) {
+  //     console.error("Data is required");
+  //     return Promise.reject("Data is required");
+  //   }
+
+  //   return api.updateCalibration(data)
+  //       .then((response) => {
+  //         console.log("Calibration updated OK");
+  //         return Promise.resolve({data:response, message:"Calibration updated"})
+  //       })
+  //       .catch ((error) =>  {
+  //         console.error("Calibration updated NOK: ", error);
+  //         throw(error.message)
+  //       })
+  // }
   

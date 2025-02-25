@@ -86,7 +86,7 @@ export interface ICalibrationForm {
   yOffset: number
   xSize: number
   ySize: number
-  archived: boolean
+  archived?: boolean
 }
 
 export interface ICalibration extends ICalibrationForm {
