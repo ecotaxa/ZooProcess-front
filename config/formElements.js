@@ -870,7 +870,7 @@ export const sampleid_formElements=[
             title:"Scanner",
             section:
             [
-                { name:"instrument", placeholder:"Instrument", label:'Intrument',
+                { name:"serial", placeholder:"Instrument", label:'Intrument',
                     tag:"Instruments", 
                     required:true, disabled:false,
                     variant:"outlined", fullWidth:true,
