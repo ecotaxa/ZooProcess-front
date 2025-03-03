@@ -53,7 +53,7 @@ const Metadata : FC<pageProps> = (params) => {
   // }, [project])
 
 
-  const fillProject = (project:any) : any => { 
+  const fillProject = (project:any) : any => {
         console.log("fillProject: ", project);
         
       let proj = {
@@ -68,6 +68,11 @@ const Metadata : FC<pageProps> = (params) => {
 
           "scanningOptions": project.scanningOptions || "",
           "serial": project.instrument?.id || 0,
+          // "serial": project.scanner?.id || 0,
+          // "scanner": project.scanner,
+          // "serial": project.scanner?.id,
+          // "scanningOptions": project.scanner?.settingsId || "",
+          "scanner":{ id:project.instrument?.id || 0, "settingsId": project.scanningOptions || undefined}
           // "xoffset_large": project.instrument?.calibration.xOffset || 0,
           // "yoffset_large": project.instrument?.calibration.yOffset || 0,
           // "xsize_large": project.instrument?.calibration.xSize || 0,

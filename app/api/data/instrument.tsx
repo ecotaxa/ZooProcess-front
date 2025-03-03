@@ -4,10 +4,10 @@ import { ICalibration, Instrument } from "../network/interfaces";
 import * as api from '@/app/api/network/zooprocess-api' 
 
 
-export async function getInstruments(): Promise<Array<Instrument>>{  
+export async function getInstruments(full:boolean=false): Promise<Array<Instrument>>{  
 
     try {
-      const instruments = await api.getInstruments()
+      const instruments = await api.getInstruments(full)
       return instruments;
     } catch (error) {
       console.error("Error - getDrives()", error);

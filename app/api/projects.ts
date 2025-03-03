@@ -3,6 +3,7 @@
 
 
 import * as api from '@/app/api/network/zooprocess-api' 
+import { Project, ProjectUpdate } from './network/interfaces';
 
 
 
@@ -33,13 +34,13 @@ export async function addProject(project: any) {
 
 const convertData2api = (data:any) => {
 
-  console.debug(`convertData2api(${data})`)
+  console.debug("convertData2api(",data,")")
 
   const date = new Date();
 
 
 
-  let dataConverted = {
+  let dataConverted : ProjectUpdate = {
     id:data.id,
     name:data.name,
     acronym:data.acronym,
@@ -47,11 +48,11 @@ const convertData2api = (data:any) => {
     description:data.description,
 
     // driveId:data.drive, //Id,
-    instrumentId:data.instrument,
+    // instrumentId:data.instrument,
 
     // only manager options
     scanningOptions:data.scanningOptions, //.currentKey,
-    updateAt:date.toISOString(), 
+    updatedAt:date.toISOString(), 
 
     // instrument
     // instrumentId: data.serial,
@@ -64,6 +65,22 @@ const convertData2api = (data:any) => {
 
     ecotaxaId: undefined
   }
+
+  if ( data.instrument){
+    dataConverted.instrumentId = data.instrument
+  }
+  if ( data.scanningOptions){
+    dataConverted.scanningOptions = data.scanningOptions
+  }
+  console.debug("Search data.scanner")
+  if ( data.scanner ){
+    console.debug("found data.scanner")
+    dataConverted.instrumentId = data.scanner.id
+    if ( data.scanner.settingsId){
+      dataConverted.scanningOptions = data.scanner.settingsId
+    }
+  }
+
 
   if (data.ecotaxa_project){
     dataConverted.ecotaxaId = data.ecotaxa_project
@@ -92,7 +109,7 @@ export async function updateProject(data:any){
   return api.updateProject(dataConverted)
   .then((response) => {
     console.log("Project updated OK", response);
-    return Promise.resolve({data:response, message:"Project updated"} )
+    return Promise.resolve({data: response, message: "Project updated"} )
   })
   .catch ((error) =>  {
     console.error("Project updated NOK: ", error);
@@ -101,7 +118,3 @@ export async function updateProject(data:any){
 
 }
 
-
-
-
-  

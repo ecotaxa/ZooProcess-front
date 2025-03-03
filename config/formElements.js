@@ -870,23 +870,40 @@ export const sampleid_formElements=[
             title:"Scanner",
             section:
             [
-                { name:"serial", placeholder:"Instrument", label:'Intrument',
-                    tag:"Instruments", 
-                    required:true, disabled:false,
-                    variant:"outlined", fullWidth:true,
-                    xs:12, sm:12, size:"small"
+                {
+                    name: "scanner", placeholder: "Scanner", label: 'Scanner',
+                    tag:"Scanner", type:"object",
+                    xs:12, sm:12
                 },
-                { name: "scanningOptions", placeholder: "Frame Type", label: 'Frame Type',
-                    tag: "Select",  type: "select", 
-                    variant:"outlined",  required: true, 
-                    xs:12, sm:6, size: "small",
-                    choice:[
-                        {id:"NARROW", value: "NARROW"},
-                        {id:"LARGE", value: "LARGE"},
-                        {id:"OTHER", value: "OTHER"},
-                    ],
-                    value:"LARGE"
-                },
+                // { name:"serial", placeholder:"Instrument", label:'Intrument',
+                //     tag:"Instruments", 
+                //     required:true, disabled:false,
+                //     variant:"outlined", fullWidth:true,
+                //     xs:12, sm:12, size:"small"
+                // },
+                // { name: "scanningOptions", placeholder: "Frame Type", label: 'Frame Type',
+                //     tag: "Select",  type: "select", 
+                //     variant:"outlined",  required: true, 
+                //     xs:12, sm:6, size: "small",
+                //     choice:[
+                //         {id:"NARROW", value: "NARROW"},
+                //         {id:"LARGE", value: "LARGE"},
+                //         {id:"OTHER", value: "OTHER"},
+                //     ],
+                //     value:"LARGE",
+                //     // fn2: { 
+                //     //     params:"{project,sample}",
+                //     //      func:'return String(project)+"_"+String(sample)+"_"'
+                //     //     },
+                //     // update: {
+                //     //     params:"{fraction_number,fraction_id_suffix}",
+                //     //      func:'return String(fraction_number)+"_"+String(fraction_id_suffix)'                    
+                //     // },
+                //     // choiser: { 
+                //     //     params:"{fraction_number,fraction_id_suffix}",
+                //     //      func:'return String(fraction_number)+"_"+String(fraction_id_suffix)'                    
+                //     // }
+                // },
                 { name: "density", placeholder: "Density", label: 'Density Type',
                     tag: "Select",  type: "select", 
                     variant:"outlined",  required: true, 

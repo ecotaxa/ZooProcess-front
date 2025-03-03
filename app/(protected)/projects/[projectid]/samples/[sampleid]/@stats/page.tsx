@@ -76,7 +76,7 @@ const Stats: FC<pageProps> = (params) => {
                 <CloudIcon/>
             </BoxMessage> */}
 
-            {/* { sample.project != null  && */}
+            { sample.project != null  && sample.project.instrumentId == null &&
                 <BoxMessage
                     title="Your project isn't linked to any instrument! Please link it to an existing or new instrument."
                     subtitle="You cannot scan without scanning instrument."
@@ -89,7 +89,7 @@ const Stats: FC<pageProps> = (params) => {
                 >
                     <CloudIcon/>
                 </BoxMessage>
-            {/* } */}
+            } 
         
         
                 <div>

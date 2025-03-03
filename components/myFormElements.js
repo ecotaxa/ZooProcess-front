@@ -6,7 +6,7 @@ import { MySelect } from "./mySelect5"
 import { MyInputSelect } from "./myInputSelect"
 import { MyTextField } from "./myTextField2"
 import { MyTextArea } from "./myTextArea"
-import { DisbledField } from "./DisabledField"
+// import { DisbledField } from "./DisabledField"
 // import SimpleSelect from "./SimpleSelect"
   
 // import dayjs from "dayjs";
@@ -26,6 +26,8 @@ import Instruments from "./instruments";
 import { Input } from "@nextui-org/input"
 // import MapComponent from "./MapComponent"
 import MyMap from "./myMap"
+import ScannerComponent from "./Scanner"
+import { MyScanner } from "./myScanner"
 // import { useCallback } from "react"
 // import { Input } from "postcss"
 
@@ -223,6 +225,16 @@ export function FormElements(props) {
                 // {...newprops}
                 onChange={props.onChange}
                 // onChange={onCoordsChange}
+            />)
+
+        case "Scanner":
+
+            console.log("MAP props: ", props);
+
+            // return ( <ScannerComponent key={props.name}
+            return ( <MyScanner key={props.name}
+                {...props} 
+                onChange={props.onChange}
             />)
 
         case "Select":

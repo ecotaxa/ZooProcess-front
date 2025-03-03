@@ -1,3 +1,4 @@
+import { extend } from "dayjs"
 import { string } from "zod"
 
 export interface Drive {
@@ -10,22 +11,29 @@ export interface Ecotaxa {
     id:string
 }
 
-export interface Project {
-    id:string,
-    name:string,
-    drive:Drive,
-    acronym: string,
-    description: string,
-    updatedAt: Date,
-    createdAt: Date,
-    driveId: string,
-    ecotaxaId: string,
-    ecotaxa?: Ecotaxa,
-    instrumentId?: string,
-    instrument?: Instrument,
-    scanningOptions?: string,
-    samples?: Array<Sample>,
-    qc?: string
+interface MinProject {
+  id:string,
+  name:string,
+  acronym: string,
+  description: string,
+  driveId: string,
+  ecotaxaId?: string,
+  ecotaxa?: Ecotaxa,
+  instrumentId?: string,
+  instrument?: Instrument,
+  scanningOptions?: string,
+  samples?: Array<Sample>,
+  qc?: string
+}
+
+export interface Project extends MinProject {
+  drive:Drive,
+  updatedAt: Date,
+  createdAt: Date,
+}
+
+export interface ProjectUpdate extends MinProject {
+  updatedAt: string,
 }
 
 export interface User {

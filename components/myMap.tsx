@@ -86,7 +86,7 @@ export function MyMap(props:any) {
                 } else {
                     setEnd(undefined);
                 } 
-        } 
+            } 
         }
     
     },[props])

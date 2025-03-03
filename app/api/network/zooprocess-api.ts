@@ -500,9 +500,11 @@ export async function addProject(data:I.Project){
 
 
 
-export async function getInstruments(){
+export async function getInstruments(full:boolean=false){
   const api = await axiosInstanse({})
-  const response = await api.get<Array<I.Instrument>>(`/instruments`);
+  let url = `/instruments`
+  if (full) url += "?full=true";
+  const response = await api.get<Array<I.Instrument>>(url);
   
   console.log("getInstruments response: ", response.status);
 
