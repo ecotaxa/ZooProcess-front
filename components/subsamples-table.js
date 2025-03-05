@@ -30,7 +30,8 @@ const columns /*: Array<IColumn>*/ = [
     // {name: "FRAC SUP", uid: "fracsup", allowSorting:true},
     // {name: "OBSERVATION", uid: "obs", allowSorting:true},
     {name: "SCAN OPERATOR", uid: "operator", allowSorting:true},
-    {name: "FRACTION ID", uid:"fraction_number", allowSorting:true},
+    // {name: "FRACTION ID", uid:"fraction_number", allowSorting:true},
+    {name: "FRACTION ID", uid:"fraction_id", allowSorting:true},
     {name: "FRAC MIN", uid: "fraction_min_mesh", allowSorting:true},
     {name: "FRAC SUP", uid: "fraction_max_mesh", allowSorting:true},
     {name: "OBSERVATION", uid: "observation", allowSorting:true},
@@ -156,6 +157,7 @@ export function SubSamplesTable(props) {
               </div>
           );
           
+        case "fraction_id":
         case "fraction_number":
         case "fraction_max_mesh":
         case "fraction_min_mesh":
@@ -232,7 +234,14 @@ export function SubSamplesTable(props) {
               );
             
         default:
-            return cellValue;
+            // return cellValue;
+            // Strange default do not work, even if the return is the same code used in the other cases upper
+            // then simply add the case upper
+            return (
+              <div className="flex flex-col" >
+                <p className="text-bold text-sm">{cellValue}</p>
+              </div>
+            ); 
         }
     }, []);
 

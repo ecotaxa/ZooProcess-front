@@ -438,7 +438,7 @@ export const sampleid_formElements=[
         ]
     }
     ]
-    
+
     export const fraction_inputFormElments=[
         {
             title:"Scan ID",
@@ -470,7 +470,7 @@ export const sampleid_formElements=[
             //     ]
             // },
             { tag:"TextField", name:"fraction_number", type:"text", 
-                placeholder:"Number of scans", label:'Fraction of scans',
+                placeholder:"Number of scans (frac_id)  tot, d1, d2, ...", label:'Fraction of scans',
                 variant:"outlined", required:true, disabled:false,
                 xs:12, sm:4, fullWidth:true, // value:1,
                 refresh:"scan_id"
