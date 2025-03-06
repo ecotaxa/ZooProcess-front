@@ -5,37 +5,6 @@ import useSWR from 'swr'
 
 import * as api from '@/app/api/network/zooprocess-api' 
 
-// export function useInstruments() {
-//     const { data=[], error=false, isLoading=true } = useSWR('/instruments/', api.getInstruments ,
-//     {
-//         revalidateIfStale: false,
-//         revalidateOnFocus: false,
-//         revalidateOnReconnect: false
-//     })
-
-//     return {
-//         instruments: data,
-//         isLoading,
-//         isError: error
-//     }
-// }
-
-
-
-// export function useInstrument(instrumentId) {
-//     const { data=[], error=false, isLoading=true } = useSWR(`/instruments/${instrumentId}`, api.getInstrument ,
-//     {
-//         revalidateIfStale: false,
-//         revalidateOnFocus: false,
-//         revalidateOnReconnect: false
-//     })
-
-//     return {
-//         instrument: data,
-//         isLoading,
-//         isError: error
-//     }
-// }
 
 
 
@@ -76,26 +45,27 @@ export async function addCalibration({instrumentId/*:string*/, data/*:any*/}){
   
   }
 
+  // @obsolette
+  // keep it, but unused at this moment. we forbid the calibration/setting update if a scan has been linked to it
+  export async function calibrationUpdate({data/*:any*/}){
+    console.trace("calibrationUpdate stack trace:")
+    console.log("calibrationUpdate...",  data);
+    // console.log("instrumentId:",instrumentId);
+    console.log("data:",data);
 
-  // export async function calibrationUpdate({data/*:any*/}){
-  //   console.trace("calibrationUpdate stack trace:")
-  //   console.log("calibrationUpdate...",  data);
-  //   // console.log("instrumentId:",instrumentId);
-  //   console.log("data:",data);
+    if ( !data ) {
+      console.error("Data is required");
+      return Promise.reject("Data is required");
+    }
 
-  //   if ( !data ) {
-  //     console.error("Data is required");
-  //     return Promise.reject("Data is required");
-  //   }
-
-  //   return api.updateCalibration(data)
-  //       .then((response) => {
-  //         console.log("Calibration updated OK");
-  //         return Promise.resolve({data:response, message:"Calibration updated"})
-  //       })
-  //       .catch ((error) =>  {
-  //         console.error("Calibration updated NOK: ", error);
-  //         throw(error.message)
-  //       })
-  // }
+    return api.updateCalibration(data)
+        .then((response) => {
+          console.log("Calibration updated OK");
+          return Promise.resolve({data:response, message:"Calibration updated"})
+        })
+        .catch ((error) =>  {
+          console.error("Calibration updated NOK: ", error);
+          throw(error.message)
+        })
+  }
   
