@@ -954,7 +954,7 @@ export const sampleid_formElements=[
 
     export const scannerCalibrationElements= [
         {
-            title:"Scanner Calibration",
+            title:"Scanner Setting",
             section:
             [
                 // { name:"optical_density_xposition", placeholder:"Optical density Xposition", label:'Optical density Xposition',

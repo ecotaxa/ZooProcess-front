@@ -110,7 +110,7 @@ const onCancel = () => {
 
     if ( instrument === null ) {
       return (
-        <Button disabled>Add new calibration</Button>
+        <Button disabled>Add new setting</Button>
       )
     }
 
@@ -125,7 +125,7 @@ const onCancel = () => {
     if( filteredArray.length >= 3 ) {
       return (
         // <Button disabled>Add new calibration {noFilteredArray.length}</Button>
-        <Button disabled>Add new calibration</Button>
+        <Button disabled>Add new setting</Button>
       )
     } 
 
@@ -137,7 +137,7 @@ const onCancel = () => {
         color="primary"
         data-testid="newBtn"
       >
-        Add new calibration
+        Add new setting
       </Button>
     </div>
     )
