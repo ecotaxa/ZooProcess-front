@@ -1,4 +1,5 @@
-"use server";
+// "use server";
+"use client";
 
 import { Project } from "@/app/api/network/interfaces";
 import { addBackgroundTask } from "@/app/api/tasks";

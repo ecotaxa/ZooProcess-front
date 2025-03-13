@@ -4,7 +4,7 @@ import useSWR from "swr"
 import * as api from '@/app/api/network/zooprocess-api' 
 
 
-export function useMetadata() {
+export async function useMetadata() {
     const { data={}, error=false, isLoading=true } = useSWR(`/metadata`, api.getMetadata ,
     {
         revalidateIfStale: false,
