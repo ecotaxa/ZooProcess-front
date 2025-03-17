@@ -37,6 +37,7 @@ async function ProjectsPage() {
       const createdAt = new Date(project.createdAt)
       const updatedAt = project.updatedAt ? new Date(project.updatedAt) : createdAt
       const nbscans = project.samples?.flatMap(sample => sample.subsample?.map((sub: any) => sub.scan.length || 0)).reduce((a, b) => a + b, 0) || 0
+      // const nbscans = project.samples?.flatMap(sample => sample.scanSubsamples?.map((sub: any) => sub.scan.length || 0)).reduce((a, b) => a + b, 0) || 0
 
       return {
         id: project.id,
