@@ -126,9 +126,9 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
     // }
 
      // token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OGRkN2VhMjRiYzEwYTRiZjFlMzdlMiIsImlhdCI6MTczNDAxODExNiwiZXhwIjoxNzM2NjEwMTE2fQ.grXcAgaUutf6Nya7aSWy2eR9N2IqXec428D6rMG25Pg"
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OGRkN2VhMjRiYzEwYTRiZjFlMzdlMiIsImlhdCI6MTc0MDQwNTM1NSwiZXhwIjoxNzQyOTk3MzU1fQ.AVhyQODLUEhr5Oh6BuWfz4a0rVh3qRT9EtHag2TjbnQ"
-    if (token) {
-        // console.log("axiosInstance - token: ", token)
+    // token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OGRkN2VhMjRiYzEwYTRiZjFlMzdlMiIsImlhdCI6MTc0MDQwNTM1NSwiZXhwIjoxNzQyOTk3MzU1fQ.AVhyQODLUEhr5Oh6BuWfz4a0rVh3qRT9EtHag2TjbnQ"
+    if (token && useAuth) {
+        console.log("axiosInstance - token: ", token)
 
         const header : AxiosHeaderValue = "bearer " + token;
         const paramsUpdated = {
@@ -145,7 +145,8 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
     }
 
     if ( globalThis.token ) {
-        const header : AxiosHeaderValue = "bearer " + token;
+        console.log("axiosInstance - globalThis.token: ", globalThis.token)
+        const header : AxiosHeaderValue = "bearer " + globalThis.token;
         const paramsUpdated = {
             ..._params,
             headers: {
