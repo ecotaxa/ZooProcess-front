@@ -64,7 +64,7 @@ export const sampleid_formElements=[
                 // },
                 fn2: { params:"{project}", func:'return String(project)+"_"' }
             },
-            { tag:"Empty", xs:0, xm:6 },
+            { tag:"Empty", xs:0, sm:6 },
             { tag:"TextField", name:"barcode", type:"text",
                 placeholder:"Barcode", label:'Barcode',
                 variant:"outlined", required:false, 
