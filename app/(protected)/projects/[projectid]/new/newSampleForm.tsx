@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { addSample } from '@/app/api/samples';
 // import { Debug } from '@/components/Debug';
-import { debug } from '@/config/settings';
+import { debug , debugForm, isDebugFormEnabled } from '@/config/settings';
 import { sampleTestData } from '@/config/tests/sample_data';
 import { Project } from '@/app/api/network/interfaces';
 import { CustomError, removeDigest, removeDigestFromError, removeDigestSafe } from '@/app/api/digest';
@@ -84,9 +84,10 @@ interface pageProps {
         "scientific_program": "ZooProcess",
     }
 
-    const form : any = []
+        // need to init form by injection to permit easy configuration of the form, easy change the form elements
+        const form : any = []
         form['forms']=forms
-        form['value']= debug ? sampleTestData : emptyData // testData
+        form['value']= isDebugFormEnabled('project') ? sampleTestData : emptyData // testData
         form['title']='Sample metadata'
         form['subtitle']='Fill all the mandatory fields.'
 
@@ -176,7 +177,8 @@ interface pageProps {
                     </Typography> */}
                     <MyForm 
                         {...form} 
-                        project={projectId}
+                        // project={projectId}
+                        project={project.name}
                         // onChange={onChange} 
                         // onChange={async (value:any) => {
                         //     onChange(value)
