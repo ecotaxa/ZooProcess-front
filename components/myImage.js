@@ -117,13 +117,16 @@ export function MyImage(props){
         return path.replace(/\.tif?$/i, '.jpg')
       }
 
-    useEffect(() => {
+    useEffect( () => {
         if (isTiff(props.src)) {
             const data = { 
                 src: pathToRealStorage(props.src),
                 dst: changeToJpgExtension(pathToSessionStorage(props.src, ""))
+                // dst: changeToJpgExtension(props.src)
              }
             
+             console.debug("MyImage() | data :", data)
+
             // converttiff2jpg(data)
             //     .then(response => response.text())
             //     .then(imageUrl => {
@@ -131,14 +134,20 @@ export function MyImage(props){
             //         setProcessedImage(sessionPath)
             //     })
             converttiff2jpg(data)
-                .then(response => response.text())
+                .then(response => { console.debug("converttiff2jpg return", response) ;return response})
+                // .then(response => response.text())
+                // .then(response => response.json())
+                .then((p)=>{console.log("response imageUrl", p); return p})
                 .then(imageUrl => pathToSessionStorage(imageUrl.replace(/"/g, ""), ""))
+                .then((p)=>{console.log("pathToSessionStorage =>", p); return p})
                 .then(path => {
                     console.debug("------------------------------------------------")
                     console.debug("MyImage() | sessionPath :", path)
                     return path
                  })
                 .then(sessionPath => sessionPath.replace(/^\/+/, '/'))
+                .then((i)=> {console.log("normalizedPath", i); return i})
+                // .then(()=> {return ('/Users/sebastiengalvagno/Work/test/nextui/ZooprocessFront/public/Volumes/sgalvagno/plankton/zooscan_zooprocess_test/Zooscan_apero_pp_2023_wp2_sn002/Zooscan_scan/_raw/apero2023_pp_wp2_001_st01_d_d1_raw_1.jpg')})
                 .then(normalizedPath => setProcessedImage(normalizedPath))
                 
                 .catch(e => {

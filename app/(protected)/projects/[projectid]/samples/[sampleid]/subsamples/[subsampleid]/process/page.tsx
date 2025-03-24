@@ -126,6 +126,7 @@ const ProcessNewScanPage : FC<pageProps> = async ({params}) => {
             await api.runTask(taskId);
         return taskId;  // Return the task ID even if runTask fails
         } catch (error:any) {
+            console.error("Error received:", error);
             console.log("ProcessNewScanPage::addProcessTask() RunTask error details:", error.response?.data);
             // return taskId;  // Still return the task ID
             throw new Error("Cannot run task");

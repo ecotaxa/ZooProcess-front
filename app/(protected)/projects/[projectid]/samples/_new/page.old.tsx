@@ -2,7 +2,7 @@
 
 import Head from 'next/head';
 // import { Box, Container, Stack, Typography } from '@mui/material';
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 // import { ProjectsTable } from 'src/sections/projects/projects-table';
@@ -13,7 +13,9 @@ import { useRouter } from 'next/navigation';
 import { addSample } from '@/app/api/samples';
 import { Debug } from '@/components/Debug';
 import { debug } from '@/config/settings';
- 
+import { getProject } from '@/app/api/data/projects';
+import { Project } from '@/app/api/network/interfaces';
+
 
 
 
@@ -34,7 +36,7 @@ const forms = [
 // }
 
 // const NewSample : FC<pageProps> = (params) => {
-const NewSample = ({projectid}:{projectid: string}) => {
+const NewSample = async ({projectid}:{projectid: string}) => {
 
     const router = useRouter()
     // const projectid = {params}
@@ -47,15 +49,65 @@ const NewSample = ({projectid}:{projectid: string}) => {
     // const projectId = params.params.projectid;
     // const projectId = params.projectid;
 
+    const [ projectName, setProjectName] = useState<String>("");
+
+    const project = await getProject(projectid)
+
     const emptyData = {
         "scientific_program": "ZooProcess",
+        // "sample_id": project.name,
+        "project": projectName,
     }
 
-    const form : any = []
-        form['forms']=forms
-        form['value']= emptyData //debug ? subsampleTestData : emptyData
-        form['title']='Sample metadata'
-        form['subtitle']='Fill all the mandatory fields.'
+    const initForm : any = []
+    initForm['forms']=forms
+    initForm['value']= emptyData //debug ? subsampleTestData : emptyData
+    initForm['title']='Sample metadata'
+    initForm['subtitle']='Fill all the mandatory fields.'
+    // form['project']='SEBASTIAN'
+    const [form, setForm] = useState<any>(initForm)
+
+
+
+
+    // useEffect(() => {
+    //     if (project) {
+    //         setProjectName(project.name)
+    //         setForm({...initForm, value: { ...emptyData, project: project.name }})
+    //     }
+    // }, [project])
+    // useEffect(() => {
+    //     if (project) {
+    //         setProjectName(project.name)
+    //         setForm({
+    //             ...initForm, 
+    //             value: { 
+    //                 ...emptyData, 
+    //                 project: project.name,
+    //                 sample_id: project.name + "_"  // This sets the prefix
+    //             }
+    //         })
+    //     }
+    // }, [project])
+    useEffect(() => {
+        if (project) {
+            setProjectName(project.name)
+            setForm({
+                ...initForm,
+                value: {
+                    ...emptyData,
+                    project: project.name
+                }
+            })
+        }
+    }, [project])
+    
+    // const form : any = []
+    //     form['forms']=forms
+    //     form['value']= emptyData //debug ? subsampleTestData : emptyData
+    //     form['title']='Sample metadata'
+    //     form['subtitle']='Fill all the mandatory fields.'
+    //     // form['project']='SEBASTIAN'
 
 
 
@@ -150,7 +202,8 @@ const NewSample = ({projectid}:{projectid: string}) => {
                     {/* </Typography> */}
                     <MyForm 
                         {...form} 
-                        project={projectid}
+                        // project={projectid}
+                        project={projectName}
                         onChange={onChange} 
                         onCancel={onCancel}/>
                 {/* </Stack> */}

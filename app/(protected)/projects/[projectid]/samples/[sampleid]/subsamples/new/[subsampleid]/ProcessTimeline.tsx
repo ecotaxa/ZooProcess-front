@@ -212,69 +212,35 @@ export function ProcessTimeline(param: {
                 // };
 
                 const onChange = async (fileUrl: any) => {
-                    console.debug("onChange", fileUrl);
+                    console.debug("eState.scan1::onChange", fileUrl);
                     try {
-                        // setScan(fileUrl.url);
-                        if ( scanData.scan !== fileUrl.url) {
-                            setScanData({ ...scanData, scan: fileUrl.url, fileUrl });
-                            if (isTiff(fileUrl.url)) {
-                                const data = { src: pathToRealStorage(fileUrl.url) };
-                                const response = await converttiff2jpg(data);
-                                const imageUrl = await response.text();
-                                const localPath = pathToSessionStorage(imageUrl.replace(/"/g, ""), "/");
-                                console.debug("scanData.background: ", scanData.background);
-                                if ( scanData.background !== localPath ) {
-                                    // setBackground(localPath);
-                                    console.debug("scanData.background !== localPath ");
-                                    // setScanData(prevState => ({ ...scanData, background: localPath }))
-                                    setScanData({ ...scanData, background: localPath , fileUrl})
-                                }
-                        
-                            // let furl = { ...fileUrl, url: pathToRealStorage(fileUrl.url) };
-                            // console.debug("Calling addScan with:", furl);
-                            // const scanResponse = await addScan(furl);
-                            // if  ( scanResponse){
-                            //     console.debug("Scan response:", scanResponse);
-
-                            //     // setImage(scanResponse.id);
-                            //     if (scanData.image !== scanResponse.id) {
-                            //         setScanData(prevState => ({ ...scanData, image: scanResponse.id }));
+                        console.debug("eState.scan1::scanData:", scanData)
+                        if (scanData.scan !== fileUrl.url) {
+                            // setScanData({ ...scanData, scan: fileUrl.url, fileUrl });
+                            // if (isTiff(fileUrl.url)) {
+                            //     const data = { src: pathToRealStorage(fileUrl.url) };
+                            //     const response = await converttiff2jpg(data);
+                            //     if (response === null || response === undefined) {
+                            //         throw new Error("Error converting tiff to jpg");
                             //     }
-                            //     console.log("Go To the next page");
+                            //     const imageUrl = await response.text();
+                            //     const localPath = pathToSessionStorage(imageUrl.replace(/"/g, ""), "/");
+                            //     console.debug("scanData.background: ", scanData.background);
+                            //     if (scanData.background !== localPath) {
+                            //         console.debug("scanData.background !== localPath ");
+                            //         setScanData({ ...scanData, background: localPath, fileUrl })
+                            //     }
+                            // } else {
+                            //     setScanData({ ...scanData, scan: fileUrl.url, fileUrl });
                             // }
-                            // else{
-                            //     console.error("Error adding scan");
-                            // }
-                        } else {
-                            setScanData({ ...scanData, scan: fileUrl.url, fileUrl });
+                            setScanData({ ...scanData, scan: fileUrl.url, fileUrl , background: fileUrl.url });
                         }
-                        // else {
-                        //     // setBackground(fileUrl.url);
-                        //     if ( scanData.background !== fileUrl.url ) {
-                        //         setScanData(prevState => ({ ...scanData, background: fileUrl.url }))
-                        //     }
-                        //     let furl = { ...fileUrl, url: pathToRealStorage(fileUrl.url) };
-                        //     console.debug("2 Calling addScan with:", furl);
-                        //     const scanResponse = await addScan(furl);
-                        //     if  ( scanResponse){
-                        //         console.debug("2 Scan response:", scanResponse);
-                        //         // setImage(scanResponse.id);
-                        //         if (scanData.image !== scanResponse.id) {
-                        //             setScanData(prevState => ({ ...scanData, image: scanResponse.id }));
-                        //         }
-                        //         console.log("Go To the next page 2");
-                        //     } else {
-                        //         console.error("Error adding scan 2");
-                        //     }
-                        // }
                     }
-                }
-                catch (error) {
+                    catch (error) {
                         console.error("Error in onChange: ", error);
                         setError(error as any[]);
                     }
                 };
-
 
                 const onValid = async () => {
                     console.debug("onValid");
@@ -284,7 +250,7 @@ export function ProcessTimeline(param: {
                     const fileUrl = scanData.fileUrl;
                     // if (isTiff(fileUrl.url)) {
 
-                        let furl = { ...fileUrl, url: pathToRealStorage(fileUrl.url) };
+                        let furl = { ...fileUrl, url: pathToRealStorage(fileUrl.url), subsampleId:subsample.id };
                         console.debug("Calling addScan with:", furl);
                         const scanResponse = await addScan(furl);
                         if  ( scanResponse ){

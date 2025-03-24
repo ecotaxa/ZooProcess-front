@@ -5,6 +5,7 @@ import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 import { Project, Sample, SubSample } from "@/app/api/network/interfaces";
 // import { Loader, MyLoaderProps } from "./Loader";
 import { Loader } from "./Loader";
+import { MyImage } from "@/components/myImage";
 // import { addScan } from "@/app/actions/scan-actions";
 // import { useState } from "react";
 // import { pathToRealStorage, pathToSessionStorage } from "@/lib/gateway";
@@ -139,13 +140,16 @@ export function Scan (params:{
         return (
         <>
             <div className="flex-row">
-              <Image
+              <p>background : {background}</p>
+              {/* <Image
                 className="height-auto"
                 src={background}
                 alt="uploaded image"
                 height={446}
-              />
+              /> */}
+              <MyImage src={background} />
             </div>
+
 
             <Button
             //   disabled={isError || isLoading || !image}

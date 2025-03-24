@@ -60,18 +60,19 @@ interface pageProps {
 
     const user = await getMe()
 
-    const project = await getProject(projectid)
-    let sample : Sample | undefined = undefined;
-    if ( project.samples !== undefined ) {
-        const s = project.samples.find((s: any) => s.sample_id === sampleid)
-        if ( s !== undefined ) {
-            sample = s
-        } else {
-            sample = await getSample(projectid,sampleid)
-        }
-    }
+    // const project = await getProject(projectid)
+    // let sample : Sample | undefined = undefined;
+    // if ( project.samples !== undefined ) {
+    //     const s = project.samples.find((s: any) => s.sample_id === sampleid)
+    //     if ( s !== undefined ) {
+    //         sample = s
+    //     } else {
+    //         sample = await getSample(projectid,sampleid)
+    //     }
+    // }
+    const sample = await getSample(projectid,sampleid)
 
-   
+   const project = sample.project
 
 
     // console.debug("NewSample params: ", params);
@@ -105,7 +106,9 @@ interface pageProps {
                     Sub Sample|undefined = undefined; Metadata to sample {sampleid} from project {projectid}
                     <Timeline_scan list={timelist} current={0} />
 
-                        <SubSampleForm {...{projectid:projectid, sampleid:sampleid, user:user} } />
+                        {/* <SubSampleForm {...{projectid:projectid, sampleid:sampleid, user:user} } /> */}
+                        {/* <SubSampleForm {...{sample:sample, user:user} } /> */}
+                        <SubSampleForm sample={sample} user={user}  />
             </div>
         </section>
         </>

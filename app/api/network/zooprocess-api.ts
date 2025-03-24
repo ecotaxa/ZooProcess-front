@@ -944,7 +944,7 @@ export async function addTask(data:any){
 
 
 export async function runTask(taskId: string) {
-  console.log("putain runTask(", taskId, ")");
+  console.log("API runTask(", taskId, ")");
 
   const api = await axiosInstanse({});
   console.log("runTask() api:", api);

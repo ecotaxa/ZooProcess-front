@@ -1,6 +1,6 @@
 "use server";
 
-import { getProject } from "@/app/api/data/projects";
+// import { getProject } from "@/app/api/data/projects";
 import { getSample } from "@/app/api/data/samples";
 import { getSubSample } from "@/app/api/data/subsamples";
 import { FC } from "react"
@@ -35,6 +35,7 @@ const CheckPage : FC<pageProps> = async ({params}) => {
             <h3>{projectid}</h3>
             <h3>{sampleid}</h3>
             <h3>{subsampleid}</h3>
+            <h1>{sample.project.name} / {sample.name} / {subsample.name}</h1>
             <ViewPage sample={sample} subsample={subsample} />
         </>
     )

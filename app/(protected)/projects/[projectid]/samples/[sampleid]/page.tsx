@@ -47,9 +47,10 @@ const SamplePage : FC<pageProps> = async ({params}) => {
                     {/* <h1>{projectName}</h1> */}
                     <h3>{projectid}</h3>
                     <h3>{sampleid}</h3>
-                    <h3>{sample?sample.name:"Sample"}</h3>
+                    <h3>{sample.project.name} / {sample?sample.name:"Sample"}</h3>
                     {/* <Debug params={sample} title="Sample" /> */}
                     <ProjectBreadcrumbs list={[projectid, sampleid]}  separator="/"/>
+                    <ProjectBreadcrumbs list={[sample.project.name, sample.name]}  separator="/"/>
                 </CardBody>
             </Card>
             <Spacer y={20}/>

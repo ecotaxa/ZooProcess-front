@@ -10,11 +10,11 @@ export async function addScan(image: {url:string, instrumentId:string, projectId
 console.debug("addScan:", image);
 const api = await axiosInstanse({});
 console.debug("addScan: api OK" );
-const data = {
-    url: image.url,
-    // subSampleId:image.subsampleId
-}
-
+// const data = {
+//     url: image.url,
+//     // subSampleId:image.subsampleId
+// }
+const data = image
 // return await api.post(`/scan/${image.instrumentId}/url`, data )
 // const url = `/scan/${image.instrumentId}/url` // ?projectId=${image.projectId}`
 const url = `/scan/${image.subsampleId}/url` // ?projectId=${image.projectId}`
@@ -37,7 +37,9 @@ return await api.post(url, data )
             //}
             }
             // throw(msg)
-            return Promise.reject(new Error(msg.message))
+            // return Promise.reject(new Error(msg.message))
+            return Promise.reject(msg.message)
+
         }
 
         // The request was made and the server responded with a status code
@@ -56,7 +58,8 @@ return await api.post(url, data )
         }
         console.log(error.config);
         // throw(error);
-        return Promise.reject(new Error(error.message))
+        // return Promise.reject(new Error(error.message))
+        return Promise.reject(error.message)
     });
 
     console.debug("addScan out");

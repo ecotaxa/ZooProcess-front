@@ -1,6 +1,6 @@
 
 
-import { th } from "date-fns/locale"
+// import { th } from "date-fns/locale"
 
 
 
@@ -11,7 +11,10 @@ import { th } from "date-fns/locale"
  * to change in pathToSessionStorage
  */
 
-export async function converttiff2jpg ( data) {
+
+
+
+export async function converttiff2jpg ( data:any ) : Promise<string> {
             // "use server";
 
             const bodytext = JSON.stringify(data)
@@ -23,7 +26,9 @@ export async function converttiff2jpg ( data) {
             console.debug("converttiff2jpg url: ", url)
             console.debug("converttiff2jpg data: ", data)
             // const response = 
-            return await fetch( url , {
+            // return
+            // await 
+            const datafetched = fetch( url , {
                 method: "POST",
                 body: bodytext, // JSON.stringify(data),
                 // body: data_test,
@@ -34,12 +39,14 @@ export async function converttiff2jpg ( data) {
                     // "Access-Control-Allow-Origin":"no-cors"
                 },
             })
-            .then((response) => {
+
+            return datafetched
+            .then((response:Response) => {
                 if (response.ok) {
                     console.log("converttiff2jpg fetch response: ", response)
                     // console.log("converttiff2jpg fetch response.text: ", response.text)
                     // console.log("converttiff2jpg fetch JSON.parse(response.text): ", JSON.parse(response.text))
-                    return response
+                    return response.text()
 
                     // response.text()
                     // .then((imageUrl) => {
@@ -96,8 +103,10 @@ export async function converttiff2jpg ( data) {
                 console.error("return 404")
                 //return "/images/404.jpg"
                 //throw new Error("Cannot convert Tiff to Jpg error: " + err.message)
-                return Promise.resolve("/images/404.jpg")
+                return "/images/404.jpg"
             })
 
 }
-
+// module.exports = {
+//     convertTiff2Jpg
+// }

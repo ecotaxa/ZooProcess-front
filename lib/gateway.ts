@@ -7,7 +7,8 @@ function pathToRealStorage(path:string) : string {
     console.log( "pathToRealStorage() | path :", path)
 
     // path.substring(0, 1) == '/'? path.substring(1) : path
-    const sessionFolder = process.env.UPLOAD_FOLDER || "/uploads"
+    // const sessionFolder = process.env.UPLOAD_FOLDER || "/uploads"
+    const sessionFolder = "" //process.env.UPLOAD_FOLDER || "/uploads"
     const newPath = path.substring( 0, sessionFolder.length) == sessionFolder ? realFolder + path.substring( sessionFolder.length) : path
     
 
@@ -45,15 +46,19 @@ function pathToSessionStorage(path:string , sessionFolder = process.env.NEXT_PUB
     console.log( "pathToSessionStorage() | path :", path)
     console.log('path type:', typeof path, 'path value:', path);
 
-   
+    console.log("realFolder:", realFolder)
 
-    if ( path.startsWith(realFolder)) {
-        return path.substring( realFolder.length) 
+    if (realFolder) {
+        if ( path.startsWith(realFolder)) {
+            const newPath = path.substring( realFolder.length)
+            console.debug("newPath:",newPath)
+            return newPath
 
+        }
     }
 
+    console.debug("pathToSessionStorage =>:", realFolder + path)
     return realFolder + path
-
 }
 
 

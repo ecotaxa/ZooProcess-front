@@ -1,5 +1,6 @@
 "use client"
 
+import { FC } from "react";
 
 
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
@@ -9,7 +10,7 @@ import { fraction_inputFormElments } from '@/config/formElements';
 
 import { useRouter } from 'next/navigation';
 
-import { User } from '@/app/api/network/interfaces';
+import { Sample, User } from '@/app/api/network/interfaces';
 import { addSubSample } from '@/app/api/subsamples';
 
 // import { useProject } from '@/app/api/projects';
@@ -56,8 +57,9 @@ const forms = [
 
 interface pageProps {
     // params: {
-        projectid: string
-        sampleid: string
+        // projectid: string
+        // sampleid: string
+        sample: Sample
 
         user: User
         // subsampleid?: string
@@ -65,11 +67,13 @@ interface pageProps {
 }
 
 // const SubSampleForm : FC<pageProps> = (params ) => {
-const SubSampleForm =  ( params: pageProps) => {
+// const SubSampleForm =  ( params: pageProps) => {
+const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
 
     const router = useRouter()
     
-    console.debug("SubSampleForm params: ", params);
+    // console.debug("SubSampleForm params: ", params);
+    console.debug("SubSampleForm params: ", {sample, user});
     // console.log("NewSample params projectid: ", params.projectid);
     // console.log("NewSample params sampleid: ", params.sampleid);
     // console.log("NewSample params projectid: ", params.projectid);
@@ -77,11 +81,17 @@ const SubSampleForm =  ( params: pageProps) => {
     // const projectid = router.query.projectid //as string
     // const projectid = params.params.projectid;
     // const sampleid = params.params.sampleid;
-    const projectid = params.projectid;
-    const sampleid = params.sampleid;
+    // const projectid = params.projectid;
+    // const sampleid = params.sampleid;
+
+    const project = sample.project;
+    const projectid = project.id;
+    const sampleid = sample.id;
 
     // const projectId = params.projectid;
-    const user = params.user
+    // const user = params.user
+
+    // const {sample,user}= 
  
  
 
@@ -232,8 +242,8 @@ const SubSampleForm =  ( params: pageProps) => {
         return (
             <MyForm 
                 {...form} 
-                project={projectid}
-                sample={sampleid}
+                project={project.name}
+                sample={sample.name}
 
                 // onChange={onChange}
                 onChange={(value:any) => onChange(value)
