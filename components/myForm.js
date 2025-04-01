@@ -90,7 +90,13 @@ export function MyForm(props){
     // const [rand,setRand] = useState(Math.random())
 
     useEffect(()=>{
-      console.log("=============> myValues has changed:", myValues);
+      console.debug("=============> errorMessage has changed:", errorMessage);
+      setError(errorMessage)
+      setIsUpdating(false)
+    },[errorMessage])
+
+    useEffect(()=>{
+      console.debug("=============> myValues has changed:", myValues);
       // setRand(Math.random())
       // console.log("rand", rand);
     //   setValues(myValues)

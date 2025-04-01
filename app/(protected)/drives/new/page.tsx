@@ -1,3 +1,4 @@
+import NewDriveForm from "./NewDriveForm";
 
 
 
@@ -5,7 +6,8 @@ const NewDrivePage = async () => {
 
     return (
         <>
-        New Drive TO DO
+        <h1>New Drive</h1>
+        <NewDriveForm/>
         </>
     )
 }

@@ -316,32 +316,32 @@ const NewProject = (params:any) => {
                     onCancel={onCancel}
                 /> */}
 
-<MyForm 
-    {...form}
-    error={formError}
-    onChange={(value:any) => {
-        console.debug("1. onChange called with value:", value);
-        return onChange(value)
-        .then((response) => {
-            console.debug("2. Success response received:", response);
-            const path = `/projects/${response.id}`;
-            console.debug("3. Navigating to path:", path);
+                <MyForm 
+                    {...form}
+                    error={formError}
+                    onChange={(value:any) => {
+                        console.debug("1. onChange called with value:", value);
+                        return onChange(value)
+                        .then((response) => {
+                            console.debug("2. Success response received:", response);
+                            const path = `/projects/${response.id}`;
+                            console.debug("3. Navigating to path:", path);
 
-            router.push(path);
-        })
-        .catch((error) => {
-            console.debug("4. Error caught:", error);
-            console.debug("5. Error details:", {
-                message: error.message,
-                stack: error.stack
-            });
-            setFormError(error.message || error);
-            throw error; // Re-throw to propagate
-        })
-    }
-    }
-    onCancel={onCancel}
-/>
+                            router.push(path);
+                        })
+                        .catch((error) => {
+                            console.debug("4. Error caught:", error);
+                            console.debug("5. Error details:", {
+                                message: error.message,
+                                stack: error.stack
+                            });
+                            setFormError(error.message || error);
+                            throw error; // Re-throw to propagate
+                        })
+                    }
+                    }
+                    onCancel={onCancel}
+                />
 
             {/* </Stack> */}
             </div>

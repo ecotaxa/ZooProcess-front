@@ -489,6 +489,46 @@ export async function addProject(data:I.Project){
 
   }
 
+  export async function updateDrive(drive:any) : Promise<I.Drive>{
+    
+    const api = await axiosInstanse({})
+    return await api.post('/drives', drive)
+      .then(function (response) {
+        console.log("updateDrive response:", response.status);
+        return response.data;
+      })
+      .catch(function (error) {
+        console.error("updateDrive error:", error.toJSON());
+        if (error.response) {
+
+          if (error.response.status == "409"){
+            const msg = {
+              //error:{
+                message: error.response.data || "Duplicate value"
+              //}
+            }
+            throw(msg)
+          }
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error(error.response.data);
+          console.error(error.response.status);
+          console.error(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.error(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error('Error', error.message);
+        }
+        console.error(error.config);
+        throw(error);
+      });
+
+  }
+
   export async function getDrives(){
     const api = await axiosInstanse({})
     const response = await api.get<Array<I.Drive>>(`/drives`);

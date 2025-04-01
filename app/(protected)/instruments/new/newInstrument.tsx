@@ -1,8 +1,8 @@
 "use client";
 
 import { Instrument } from "@/app/api/network/interfaces";
-import { Button, Card, CardBody, CardHeader, Link } from "@nextui-org/react";
-import { CalibrationTable } from "./calibration-table";
+// import { Button, Card, CardBody, CardHeader, Link } from "@nextui-org/react";
+// import { CalibrationTable } from "./calibration-table";
 import { useState } from "react";
 import { MyForm } from '@/components/myForm';
 
@@ -109,14 +109,14 @@ const onCancel = () => {
             // onChange={onChange} 
             onChange={(value:any) => onChange(value)
                 .then((response: { data: { id: any; }; }) => {
-                    console.log("Go To the subsample page: " , response.data.id )
+                    console.log("Go To the instrument page: " , response.data.id )
                     // router.push(`samples/${response.data.id}`)
                     // const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}`
                     const path = `/instruments/${response.data.id}`
                     router.push(path)
                 })
                 .catch((error: any) => {
-                    console.error("Error adding subsample:", error)
+                    console.error("Error adding instrument:", error)
                     // Handle error (e.g., show error message to user)
                 })
             } 
@@ -131,8 +131,7 @@ const onCancel = () => {
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
           <div className="text-center justify-center">
             <h1>Instrument</h1>
-                <InstrumentForm />
-                
+                <InstrumentForm />     
           </div>
         </section>
     </>

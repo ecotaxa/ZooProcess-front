@@ -802,6 +802,33 @@ export const sampleid_formElements=[
     ]
     
 
+
+
+    export const DriveElements = [
+        {
+            title: "Drive Settings",
+            section:
+            [
+                { name:"name", placeholder:'Name to represent your drive, like "Zooscan Archive"', label:'Drive Name',
+                    tag: "TextField", type:"text", //value:'Zooscan Archive',
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:true, 
+                    xs:12, sm:12, size:"small"
+                },
+                { name:"url", placeholder:'The path where your scan will be save', label:'Path',
+                    tag: "TextField", type:"text", //value:'Zooscan Archive',
+                    required:true, disabled:false,
+                    variant:"outlined", fullWidth:true, 
+                    xs:12, sm:12, size:"small"
+                },
+            ]
+        }
+    ]
+
+    export const DriveForm = [
+        DriveElements,
+    ];
+
     export const scanningOptions = [
         {
             title:"Scanning Option",
@@ -1039,6 +1066,7 @@ export const sampleid_formElements=[
         }
     ]
     
+
     export const scannerForm= [
         // scanningOptions,
         scannerElements,
