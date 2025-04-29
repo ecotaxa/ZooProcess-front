@@ -1,7 +1,7 @@
 "use client";
 
 
-import { Instrument, IScan, Project } from "@/app/api/network/interfaces"
+import { Background, Instrument, IScan, Project } from "@/app/api/network/interfaces"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Dispatch, useCallback, useEffect, useMemo, useState } from "react"
 import { eState, timelist } from "./eStateBackground"
@@ -67,9 +67,9 @@ export function BackgroundTimeline( param: {
     let [current, setCurrent ] = useState<eState>( param.initialState || definePage(state))
 
 
- 
+//  
     const [error, setError] = useState<Array<any>>([]);
-
+    
 
     interface IBackgroundScans {
         image: string|boolean,
@@ -83,6 +83,7 @@ export function BackgroundTimeline( param: {
         merge: string | undefined,
         fileUrl: any|undefined,
         taskId: string | undefined,
+        textButton: string
     }
 
     const [scanData, setScanData]/*:[IBackgroundScans,Dispatch<IBackgroundScans>]*/ = useState( param.initialScanData || {
@@ -252,7 +253,9 @@ export function BackgroundTimeline( param: {
     // }, [current, scanData.background1, scanData.background2]);
 
     useEffect(() => {
+        console.debug("Call UseEffect([current, scanData.background1, scanData.background2])")
         const createAndRunTask = async () => {
+            console.debug("BackgroundTimeline::UseEffect::createAndRunTask()")
             
             if (current === eState.process && !scanData.taskId) {
                 try {
@@ -365,47 +368,69 @@ export function BackgroundTimeline( param: {
                 return renderStep(eState.preview, () => <Preview {...params} />);
             }
             case eState.scan1:{
+                // const onChange = async (fileUrl: any) => {
+                //     console.debug("onChange scan1", fileUrl);
+                //     try {
+                //         if ( scanData.scan !== fileUrl.url) {
+                //             setScanData((prevState:IBackgroundScans) => ({ ...scanData, scan: fileUrl.url, fileUrl }));
+                //             if (isTiff(fileUrl.url)) {
+                //                 const data = { src: pathToRealStorage(fileUrl.url) };
+                //                 const response = await converttiff2jpg(data);
+                //                 const imageUrl = await response.text();
+                //                 // const localPath = pathToSessionStorage(imageUrl.replace(/"/g, ""), "/");
+                //                 const localPath = pathToSessionStorage(imageUrl.replace(/"/g, ""), "/").replace(/^\/\//, '/');
+                //                 console.debug("localPath: ", localPath);
+   
+                //                 // store the background
+                //                 console.debug("previous value scanData.background: ", scanData.background1);
+                //                 if ( scanData.background1 !== localPath ) {
+                //                     // setBackground(localPath);
+                //                     console.debug("scanData.background !== localPath ");
+                //                     // setScanData(prevState => ({ ...scanData, background: localPath }))
+                //                     // setScanData({ ...scanData, background1: localPath , fileUrl })
+                //                     setScanData((prevState:IBackgroundScans) => ({ ...scanData, scan: localPath, background1: data.src, fileUrl }));
+                //                 }                    
+                //             } else {
+                //                 // setScanData({ ...scanData, scan: fileUrl.url, fileUrl });
+                //                 setScanData((prevState:IBackgroundScans) => ({ ...scanData, scan: fileUrl.url, background1: fileUrl.url, fileUrl }));
+                //             }
+                //         }
+                //     }
+                //     catch (error) {
+                //         console.error("Error in onChange: ", error);
+                //         setError(error as any[]);
+                //     }
+                // };
                 const onChange = async (fileUrl: any) => {
                     console.debug("onChange scan1", fileUrl);
                     try {
-                        if ( scanData.scan !== fileUrl.url) {
-                            setScanData((prevState:IBackgroundScans) => ({ ...scanData, scan: fileUrl.url, fileUrl }));
-                            if (isTiff(fileUrl.url)) {
-                                const data = { src: pathToRealStorage(fileUrl.url) };
-                                const response = await converttiff2jpg(data);
-                                const imageUrl = await response.text();
-                                // const localPath = pathToSessionStorage(imageUrl.replace(/"/g, ""), "/");
-                                const localPath = pathToSessionStorage(imageUrl.replace(/"/g, ""), "/").replace(/^\/\//, '/');
-                                console.debug("localPath: ", localPath);
-   
-                                // store the background
-                                console.debug("previous value scanData.background: ", scanData.background1);
-                                if ( scanData.background1 !== localPath ) {
-                                    // setBackground(localPath);
-                                    console.debug("scanData.background !== localPath ");
-                                    // setScanData(prevState => ({ ...scanData, background: localPath }))
-                                    // setScanData({ ...scanData, background1: localPath , fileUrl })
-                                    setScanData((prevState:IBackgroundScans) => ({ ...scanData, scan: localPath, background1: data.src, fileUrl }));
-                                }                    
-                            } else {
-                                // setScanData({ ...scanData, scan: fileUrl.url, fileUrl });
-                                setScanData((prevState:IBackgroundScans) => ({ ...scanData, scan: fileUrl.url, background1: fileUrl.url, fileUrl }));
-                            }
-                        }
+                        // if (scanData.scan !== fileUrl.url) {
+                            // Just update the scan URL - the MyImage component will handle TIFF conversion
+                            setScanData((prevState:IBackgroundScans) => ({ 
+                                ...prevState, 
+                                scan: fileUrl.url, 
+                                background1: fileUrl.url, // or pathToRealStorage(fileUrl.url) if you need the real path
+                                realPathBackground1: pathToRealStorage(fileUrl.url),
+                                fileUrl 
+                            }));
+                        // }
                     }
                     catch (error) {
                         console.error("Error in onChange: ", error);
-                        setError(error as any[]);
+                        // setError(error as any[]);
+                        setError([error]);
+                        // setError(error);
                     }
                 };
-    
+
                 const onValid = async () => {
-                    console.debug("onValid");
+                    console.debug("onValid1");
                     console.debug("scanData: ", scanData);
     
                     if (scanData.fileUrl == undefined) return;
                     const fileUrl = scanData.fileUrl;
     
+                    try {
                         let furl = { ...fileUrl, url: pathToRealStorage(fileUrl.url) };
                         // let furl: IScan = { 
                         //     url: scanData.fileUrl,
@@ -413,35 +438,116 @@ export function BackgroundTimeline( param: {
                         //     projectId: project.id,
                         //     instrumentId: instrument.id
                         // }
-                        console.debug("Calling addBackground with:", furl);
-                        const scanResponse = await addBackground(furl);
+                        console.debug("1 Calling addBackground with:", furl, ", type: RAW_BACKGROUND");
+                        const scanResponse:Background = await addBackground(furl, "RAW_BACKGROUND");
                         // console.debug("Calling addBackground with:", fileUrl);
                         // const scanResponse = await addBackground(fileUrl);
-                        if  ( scanResponse){
-                            console.debug("Scan response:", scanResponse);
-                            // if (scanData.image !== scanResponse.id) {
-                            // if (scanData.backgroundId1 !== scanResponse.id) {
-                                // setScanData(prevState => ({ ...scanData, image: scanResponse.id }));
-                                setScanData((prevState:IBackgroundScans) => ({ ...prevState, backgroundId1: scanResponse.id , background1: scanResponse.url }));
-                            // }
-                            console.log("Go To the next page");
-                        }
-                        else {
+                        if  ( scanResponse ){
+                            if (scanResponse.error) {
+                                console.error("Error adding background:", scanResponse.error);
+                                setError([scanResponse.error]);
+                                setScanData((prevState:IBackgroundScans) => ({ ...prevState, textButton: "retry to Validate" }));
+                            } else {
+                                console.debug("Scan response:", scanResponse);
+                                // if (scanData.image !== scanResponse.id) {
+                                // if (scanData.backgroundId1 !== scanResponse.id) {
+                                    // setScanData(prevState => ({ ...scanData, image: scanResponse.id }));
+                                    setScanData((prevState:IBackgroundScans) => ({ ...prevState, backgroundId1: scanResponse.id , background1: scanResponse.url }));
+                                // }
+                                console.log("Go To the next page");
+                                setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: imagePlaceholder, fileUrl, textButton: "Validate" }));
+                                setError([])
+                                nextStep()   
+                            }
+                        } else {
                             console.error("Error adding scan");
+                            setError([{ message: "Error adding scan - no response received" }]);
+                            setScanData((prevState:IBackgroundScans) => ({ ...prevState, textButton: "retry to Validate" }));
                         }
     
-                        setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: imagePlaceholder, fileUrl }));
-                        nextStep()   
+                        // setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: imagePlaceholder, fileUrl }));
+                        // nextStep()  
+                    } catch (error:any) {
+                        console.error("Error in onValid: ", error);
+                        console.error("message:", error.message)
+                        console.error("digest:",error.digest)
+                    //     // Extract useful information from the error
+                    //     let errorMessage = "An unknown error occurred";
+                    //     let errorDetails = {};
+                        
+                    //     // Handle different error formats
+                    //     if (error.response && error.response.data) {
+                    //         const responseData = error.response.data;
+                            
+                    //         if (responseData.error) {
+                    //             // Extract the specific error information
+                    //             errorMessage = responseData.error.message || "Drive access error";
+                    //             errorDetails = {
+                    //                 name: responseData.error.name || "Error",
+                    //                 url: responseData.error.url || "",
+                    //                 stack: responseData.error.stack || ""
+                    //             };
+                    //         } else {
+                    //             errorMessage = responseData.message || "API error";
+                    //         }
+                    //     } else if (error.message) {
+                    //         errorMessage = error.message;
+                    // }    
+                    //     // Create a clean error object with only the information we need
+                    //     const cleanError = {
+                    //         message: errorMessage,
+                    //         ...errorDetails,
+                    //         originalError: process.env.NODE_ENV === 'development' ? JSON.stringify(error) : undefined
+                    //     };
+                        
+                    //     setError([cleanError]);        
+                        
+                       // setError([error]); ErrorComponent must manage the error but there is a a bug in it
+                        // if (typeof error === 'object' && error !== null) {
+                        //     // This will handle the error object thrown from background.ts
+                            // setError([error]);
+                        // } else {
+                        //     // Fallback for other error types
+                        //     setError([{ message: "An unknown error occurred" }]);
+                        // }
+                        // setError(error);
+                          // Try to parse the serialized error
+                        let errorObj;
+                        try {
+                            // Check if the error message contains a JSON string
+                            if (error.message && error.message.startsWith('{') && error.message.endsWith('}')) {
+                            errorObj = JSON.parse(error.message);
+                            } else {
+                            // If not, create a basic error object
+                            errorObj = {
+                                message: error.message || "An unknown error occurred",
+                                name: error.name || "Error"
+                            };
+                            }
+                        } catch (parseError) {
+                            // If parsing fails, use a fallback error object
+                            errorObj = {
+                            message: error.message || "An unknown error occurred",
+                            name: error.name || "Error"
+                            };
+                        }
+                        
+                        // Set the parsed error in the state
+                        setError([errorObj]);
+                        setScanData((prevState:IBackgroundScans) => ({ ...prevState, textButton: "retry to Validate" }));
+                    } 
                 }
                 
                 const params = {
                     project,
                     onChange,
                     onValid// : nextStep
-                    ,scan:scanData.scan
+                    ,scan:scanData.scan,
+                    textButton:scanData.textButton = "Validate"
                 }
-                return renderStep(current, () => <Scan {...params} />);
+                return renderStep(current, () => <Scan {...params} textButton={scanData.textButton} />);            
             }
+
             case eState.thirtys1:{
     
                 const params = {
@@ -452,78 +558,172 @@ export function BackgroundTimeline( param: {
     
                 return renderStep(current, () => <ThirtySeconds {...params} /> )
             }
+
             case eState.scan2:{
+                // const onChange = async (fileUrl: any) => {
+                //     console.debug("onChange scan2", fileUrl);
+                //     try {
+                //         if ( scanData.scan !== fileUrl.url) {
+                //             setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: fileUrl.url, fileUrl }));
+                //             if (isTiff(fileUrl.url)) {
+                //                 const data = { src: pathToRealStorage(fileUrl.url) };
+                //                 const response = await converttiff2jpg(data);
+                //                 const imageUrl = await response.text();
+                //                 // const localPath = pathToSessionStorage(imageUrl.replace(/"/g, ""), "/");
+                //                 const localPath = pathToSessionStorage(imageUrl.replace(/"/g, ""), "/").replace(/^\/\//, '/');
+                //                 console.debug("localPath: ", localPath);
+                //                 // store the background
+                //                 console.debug("previous value scanData.background: ", scanData.background2);
+                //                 if ( scanData.background2 !== localPath ) {
+                //                     // setBackground(localPath);
+                //                     console.debug("scanData.background !== localPath ");
+                //                     // setScanData(prevState => ({ ...scanData, background: localPath }))
+                //                     // setScanData({ ...scanData, background2: localPath , fileUrl })
+                //                     setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: localPath, background2: data.src, fileUrl }));
+                //                 }                    
+                //             } else {
+                //                 setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: fileUrl.url, background2: fileUrl.url, fileUrl }));
+                //             }
+                //         }
+                //     }
+                //     catch (error) {
+                //         console.error("Error in onChange: ", error);
+                //         setError(error as any[]);
+                //     }
+                // };
                 const onChange = async (fileUrl: any) => {
                     console.debug("onChange scan2", fileUrl);
                     try {
-                        if ( scanData.scan !== fileUrl.url) {
-                            setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: fileUrl.url, fileUrl }));
-                            if (isTiff(fileUrl.url)) {
-                                const data = { src: pathToRealStorage(fileUrl.url) };
-                                const response = await converttiff2jpg(data);
-                                const imageUrl = await response.text();
-                                // const localPath = pathToSessionStorage(imageUrl.replace(/"/g, ""), "/");
-                                const localPath = pathToSessionStorage(imageUrl.replace(/"/g, ""), "/").replace(/^\/\//, '/');
-                                console.debug("localPath: ", localPath);
-                                // store the background
-                                console.debug("previous value scanData.background: ", scanData.background2);
-                                if ( scanData.background2 !== localPath ) {
-                                    // setBackground(localPath);
-                                    console.debug("scanData.background !== localPath ");
-                                    // setScanData(prevState => ({ ...scanData, background: localPath }))
-                                    // setScanData({ ...scanData, background2: localPath , fileUrl })
-                                    setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: localPath, background2: data.src, fileUrl }));
-                                }                    
-                            } else {
-                                setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: fileUrl.url, background2: fileUrl.url, fileUrl }));
-                            }
-                        }
+                        // if (scanData.scan !== fileUrl.url) {
+                            // Just update the scan URL - the MyImage component will handle TIFF conversion
+                            setScanData((prevState:IBackgroundScans) => ({ 
+                                ...prevState, 
+                                scan: fileUrl.url, 
+                                // background1: fileUrl.url, // the web local path
+                                background2: pathToRealStorage(fileUrl.url), // the real path
+                                realPathBackground2: pathToRealStorage(fileUrl.url),
+                                fileUrl 
+                            }));
+                        // }
                     }
                     catch (error) {
                         console.error("Error in onChange: ", error);
-                        setError(error as any[]);
+                        // setError(error as any[]);
+                        setError([error])
+                        // setError(error);
                     }
                 };
-    
+                
                 const onValid = async () => {
-                    console.debug("onValid");
+                    console.debug("onValid2");
                     console.debug("scanData: ", scanData);
     
                     if (scanData.fileUrl == undefined) return;
                     const fileUrl = scanData.fileUrl;
     
+                    try {
                         let furl = { ...fileUrl, url: pathToRealStorage(fileUrl.url) };
                         // let furl: IScan = { 
                         //     url: scanData.fileUrl,
                         //     projectId: project.id,
                         //     instrumentId: instrument.id
                         // }
-                        console.debug("Calling addBackground with:", furl);
-                        const scanResponse = await addBackground(furl);
+                        console.debug("2 Calling addBackground with:", furl, ", type: RAW_BACKGROUND");
+                        const scanResponse = await addBackground(furl, "RAW_BACKGROUND");
                         if  ( scanResponse){
-                            console.debug("Scan response:", scanResponse);
-    
-                            // if (scanData.image !== scanResponse.id) {
-                            // if (scanData.backgroundId2 !== scanResponse.id) {
-                                setScanData((prevState:IBackgroundScans) => ({ ...prevState, backgroundId2: scanResponse.id, background2: scanResponse.url }));
-                            // }
-                            console.log("Go To the next page");
-                        }
-                        else {
+                            if (scanResponse.error) {
+                                console.error("Error adding background:", scanResponse.error);
+                                setError([scanResponse.error]);
+                            } else{
+                                console.debug("Scan response:", scanResponse);
+        
+                                // if (scanData.image !== scanResponse.id) {
+                                // if (scanData.backgroundId2 !== scanResponse.id) {
+                                    setScanData((prevState:IBackgroundScans) => ({ ...prevState, backgroundId2: scanResponse.id, background2: scanResponse.url }));
+                                // }
+                                console.log("Go To the next page");
+                                setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: imagePlaceholder, fileUrl }));
+                                setError([])
+                                nextStep()
+                            }
+                        } else {
                             console.error("Error adding scan");
+                            setError([{ message: "Error adding scan - no response received" }]);
                         }
 
-                    setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: imagePlaceholder, fileUrl }));
-                    nextStep()   
+                    // setScanData((prevState:IBackgroundScans) => ({ ...prevState, scan: imagePlaceholder, fileUrl }));
+                    // nextStep()   
+                    } catch (error:any) {
+                        console.error("Error in onValid: ", error);
+                        
+                    //     // Extract useful information from the error
+                    //     let errorMessage = "An unknown error occurred";
+                    //     let errorDetails = {};
+                        
+                    //     // Handle different error formats
+                    //     if (error.response && error.response.data) {
+                    //         const responseData = error.response.data;
+                            
+                    //         if (responseData.error) {
+                    //             console.debug("responseData.error:",responseData.error)
+                    //             // Extract the specific error information
+                    //             errorMessage = responseData.error.message || "Drive access error";
+                    //             errorDetails = {
+                    //                 name: responseData.error.name || "Error",
+                    //                 url: responseData.error.url || "",
+                    //                 stack: responseData.error.stack || ""
+                    //             };
+                    //         } else {
+                    //             errorMessage = responseData.message || "API error";
+                    //         }
+                    //     } else if (error.message) {
+                    //         errorMessage = error.message;
+                    //     }
+                        
+                    //     // Create a clean error object with only the information we need
+                    //     const cleanError = {
+                    //         message: errorMessage,
+                    //         ...errorDetails,
+                    //         originalError: process.env.NODE_ENV === 'development' ? JSON.stringify(error) : undefined
+                    //     };
+                        
+                    //     setError([cleanError]);
+                        // setError(error);
+                        // setError([error])
+                        let errorObj;
+                        try {
+                            // Check if the error message contains a JSON string
+                            if (error.message && error.message.startsWith('{') && error.message.endsWith('}')) {
+                            errorObj = JSON.parse(error.message);
+                            } else {
+                            // If not, create a basic error object
+                            errorObj = {
+                                message: error.message || "An unknown error occurred",
+                                name: error.name || "Error"
+                            };
+                            }
+                        } catch (parseError) {
+                            // If parsing fails, use a fallback error object
+                            errorObj = {
+                            message: error.message || "An unknown error occurred",
+                            name: error.name || "Error"
+                            };
+                        }
+                        
+                        // Set the parsed error in the state
+                        setError([errorObj]);
+                    }
                 }
                 
                 const params = {
                     project,
                     onChange,
                     onValid,
-                    scan:scanData.scan
+                    scan:scanData.scan,
+                    textButton:scanData.textButton = "Validate"
                 }
-                return renderStep(current, () => <Scan {...params} />);
+                // return renderStep(current, () => <Scan {...params} />);
+                return renderStep(current, () => <Scan {...params} textButton={scanData.textButton} />);            
             }
             case eState.process:{
                 // let taskCreate = false
@@ -616,13 +816,14 @@ export function BackgroundTimeline( param: {
 
         
     const showError = (error:any) => { 
-        // console.error("showError")
+        console.error("showError(",error,")")
 
         // if (error.length > 0) {
         if (error.message != undefined) {
             console.error("PRINT THE ERROR")
                 return (
                     <>
+                        <Debug params={error} title="error" open={true} />
                         <ErrorComponent error={error} />
                     </>
                 // <div className="alert alert-danger" role="alert">
@@ -662,7 +863,10 @@ return (
             {/* {error && showError(error)} */}
             {/* { step(current) } */}
             {/* {error.length > 0 && showError(error)} */}
-            {showError(error)}
+            {/* {showError(error)} */}
+            <Debug params={error} title="error" open={true} />
+            {/* {error && <ErrorComponent error={error} />} */}
+            {error && error.length > 0 && <ErrorComponent error={error} />}
             {/* {renderCurrentStep} */}
             <Debug params={scanData} title="ScanData" open={true} pre={true} />
             {step(current)}

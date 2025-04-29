@@ -5,9 +5,8 @@
 
 
 
-import { Project } from "next/dist/build/swc"
 // import { eState } from "./state"
-import { Sample, SubSample } from "@/app/api/network/interfaces";
+import { Project, Sample, SubSample } from "@/app/api/network/interfaces";
 import SubSampleForm from "./SubSampleFormUpdate";
 
 

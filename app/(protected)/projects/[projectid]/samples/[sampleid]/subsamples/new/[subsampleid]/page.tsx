@@ -13,6 +13,7 @@ import { getSubSample } from "@/app/api/data/subsamples";
 import { getProject } from "@/app/api/data/projects";
 import { getSample } from "@/app/api/data/samples";
 import { ProcessTimeline } from "./ProcessTimeline";
+import { getProjectBackgrounds } from "@/app/api/data/background";
 
 type pageProps = {
     params:{
@@ -41,6 +42,7 @@ const ScanPage : FC<pageProps> = async ({params}) => {
 const project = await getProject(projectid);
 const sample = await getSample(projectid, sampleid);
 const subsample = await getSubSample(projectid, sampleid, subsampleid);
+const backgrounds = await getProjectBackgrounds(project.id)
 
 console.debug("ScanPage subsample: ", subsample)
 
@@ -50,7 +52,7 @@ console.debug("ScanPage subsample: ", subsample)
     return (
      
 
-        <ProcessTimeline project={project} sample={sample} subsample={subsample} />
+        <ProcessTimeline project={project} sample={sample} subsample={subsample} backgrounds={backgrounds} />
     )
 
 }

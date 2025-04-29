@@ -2,7 +2,8 @@
 
 import {  useShowScan } from "@/app/api/background";
 // import { converttiff2jpg } from "@/app/api/convert";
-import { Background } from "@/app/api/network/zooprocess-api";
+// import { Background } from "@/app/api/network/zooprocess-api";
+import { Background } from "@/app/api/network/interfaces";
 import { Debug } from "@/components/Debug";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { MySpinner } from "@/components/mySpinner";

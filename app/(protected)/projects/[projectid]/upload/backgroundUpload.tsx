@@ -37,6 +37,8 @@ const BackgroundUpload : FC<pageProps> = ({params}) => {
 
     const {project} = params;
 
+    console.debug("BackgroundUpload()::project:",project)
+
     const router = useRouter();
     // const {projectid, sampleid, subsampleid} = params;
     // // const {project, isError, isLoading} = useProject(projectid);
@@ -70,11 +72,11 @@ const BackgroundUpload : FC<pageProps> = ({params}) => {
     const [scan2 , setScan2] = useState<string | undefined>(undefined)
 
     const onClick = () => {
-        console.log("validate scan")
+        console.debug("onClick - validate scan")
         if ( image ) {
             // const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${subsampleid}/process/?image=${image}`
             const path = `/projects/${project.id}`
-            console.log("path: ", path)
+            console.debug("onClick - path: ", path)
 
             // {src: '/Users/sebastiengalvagno/Drives/26-06-2024/20240112_1518_back_large_2-1719398042478-934961769.tif', dst: '/Users/sebastiengalvagno/Drives/26-06-2024/2024011…1518_back_large_2-1719398042478-934961769.tif.jpg'}
 
@@ -744,6 +746,7 @@ const BackgroundUpload : FC<pageProps> = ({params}) => {
         // if (error.length > 0) {
         if (error.message != undefined) {
             console.error("PRINT THE ERROR")
+            console.trace("trace")
                 return (
                     <ErrorComponent error={error} />
                 // <div className="alert alert-danger" role="alert">

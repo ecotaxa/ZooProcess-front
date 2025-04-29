@@ -3,99 +3,91 @@
 import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 import { Project } from "@/app/api/network/interfaces";
 import { Loader } from "../samples/[sampleid]/subsamples/new/[subsampleid]/Loader";
-// import { useCallback, useState } from "react";
-// import file from "@/app/api/file";
 import { Debug } from "@/components/Debug";
-// import { useState } from "react";
+import { MyImage } from "@/components/myImage"; 
+import { useEffect, useState } from "react";
+import { ErrorComponent } from "@/components/ErrorComponent";
 
-// const imagePlaceholder : string = "/images/placeholder-image.jpg";
+const imagePlaceholder : string = "/images/placeholder-image.jpg";
+
 
 export function Scan (params:{
     project: Project|any, 
     onChange:(fileUrl:any) => Promise<any>,
     onValid:()=>void
-    scan: string,
+    scan?: string,
+    textButton?:string
 }) {
 
 
-    // const [ scan, setScan] = useState<string|undefined>(undefined);
-    // const [ scanned, setScan] = useState<string>(imagePlaceholder);
+    let { project, onChange, onValid, scan: scanned = imagePlaceholder } = params;
+
+    // const textButton = params.textButton || "Scan";
+    const [textButton, setTextButton] = useState(params.textButton || "Validate");
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        console.log("Scan.tsx::useEffect()");
+        setTextButton(params.textButton || "Validate");
+    }, [params.textButton]);
 
 
-    // let scanned = imagePlaceholder
-    // const [ scanned, setScan] = useState<string>(imagePlaceholder);
-
-    let { project, onChange, onValid, scan: scanned } = params;
-
-    function onLoad(fileUrl:any){
-
-        console.log("onLoad(",fileUrl,")")
-
-        // setScan(fileUrl)    
-        // scanned = fileUrl
-        // setScan(fileUrl)
-        onChange(fileUrl)
+    async function onLoad(fileUrl:any){
+        console.log("background/scan::onLoad(",fileUrl,")")
+        try {
+          setError(null);
+          await onChange(fileUrl);
+      } catch (err:any) {
+          console.error("Error in Scan component:", err);
+          setError(err);
+      }    
     }
     
-    // // const showImage = useCallback((url:string|undefined) => {
-    // const showImage = useCallback((url:string) => {
-
-    //     // if (!url) {
-    //     //     return <></>;
-    //     // }
-
-    //     return (
-    //     <>
-    //         <div className="flex-row">
-    //           <Image
-    //             className="height-auto"
-    //             src={url}
-    //             alt="uploaded image"
-    //             height={446}
-    //           />
-    //         </div>
-
-    //         <Button
-    //           color="primary"
-    //           variant="solid"
-    //           data-testid="newProjectBtn"
-    //           onPress={() => { onValid() }}
-    //         >
-    //           Validate
-    //         </Button>
-    //     </>
-    //     )
-    // }, [onValid]);
-
  
     return (
       <>
         <Card className="inline-block size-full" data-testid="ScanCard">
-          <CardBody>
+          <CardBody className="flex flex-col gap-4">
+            <div className="w-full">
               <Loader project={project} onChange={onLoad} />
-          </CardBody>
+            </div>
+
+            {error && <ErrorComponent error={error} />}
+
+            <div className="w-full mb-4">
+              <MyImage
+                // className="height-auto"
+                src={scanned}
+                alt="uploaded image"
+                // height={446}
+                legend="Scan preview"
+                className="max-h-[400px] object-contain"
+              />
+            </div>
+            
+            </CardBody>
+
+
 
           <CardFooter className="flex flex-row-reverse py-3">
             {/* {showImage(scanned)} */}
-            <Debug params={{scanned}} title={"Scan"} open={true} />
-            <div className="flex-row">
-              <Image
-                className="height-auto"
-                src={scanned}
-                alt="uploaded image"
-                height={446}
-              />
+            {/* <div className="flex-row"> */}
+
+
+            <div className="flex justify-end w-full">
+              {/* <Debug params={{scanned}} title={"Scan"} open={true} /> */}
+              <Debug params={{scanned, error}} title={"Scan"} open={true} />
+              <Button
+                color="primary"
+                variant="solid"
+                data-testid="validateScanBtn"
+                onPress={() => { onValid() }}
+                isDisabled={scanned === imagePlaceholder || error !== null}
+              >
+                {/* Validate */}
+                {textButton}
+              </Button>
             </div>
-
-            <Button
-              color="primary"
-              variant="solid"
-              data-testid="newProjectBtn"
-              onPress={() => { onValid() }}
-            >
-              Validate
-            </Button>
-
           </CardFooter>
         </Card>
       </>

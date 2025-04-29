@@ -8,8 +8,8 @@ import BackgroundUpload from "./backgroundUpload";
 type pageProps = {
     params:{
         projectid: string,
-        sampleid: string,
-        subsampleid: string,    
+        // sampleid: string,
+        // subsampleid: string,    
     }
 }
 
@@ -17,9 +17,11 @@ type pageProps = {
 
 const BackgroundScanPage : FC<pageProps> = async ({params}) => {
 
-    const {projectid, sampleid, subsampleid} = params;
+    // const {projectid, sampleid, subsampleid} = params;
+    const {projectid } = params;
 
-    const project = await getProject(projectid);
+    // const project = await getProject(projectid);
+  const project : Project = await getProject(projectid);
 
 
 

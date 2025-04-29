@@ -50,17 +50,7 @@ export function ScannerSettings(param: {
 
             <CardFooter className="flex flex-row-reverse py-3">
 
-                <Button 
-                    // disabled={ isError || isLoading || !image }
-                    color="primary"
-                    // showAnchorIcon
-                    variant="solid"
-                    data-testid="ScannerNextBtn"
-                    // >Scan {actions[nextAction(action)]}</Button>
-                    // onPress={() =>{ console.debug("I'm using " + project.instrument?.sn);   setCurrent(nextState) }}
-                    onPress={() =>{ console.debug("I'm using " + instrument.sn);   onValid() }}
-                    // onPress={onClick}
-                >Continue - {"I'm using " + instrument.sn}</Button>
+            <div className="flex flex-row justify-end gap-4">
 
                 <Button 
                     // disabled={ isError || isLoading || !image }
@@ -73,6 +63,21 @@ export function ScannerSettings(param: {
                     onPress={() =>{ console.debug("cancel scanning"); onCancel() }}
                     // onPress={onClick}
                 >Cancel</Button>
+
+                <Button 
+                    // disabled={ isError || isLoading || !image }
+                    color="primary"
+                    // showAnchorIcon
+                    variant="solid"
+                    data-testid="ScannerNextBtn"
+                    // >Scan {actions[nextAction(action)]}</Button>
+                    // onPress={() =>{ console.debug("I'm using " + project.instrument?.sn);   setCurrent(nextState) }}
+                    onPress={() =>{ console.debug("I'm using " + instrument.sn);   onValid() }}
+                    // onPress={onClick}
+                >Continue - {"I'm using " + instrument.sn}</Button>
+
+
+                </div>
             </CardFooter>
         </Card>               
         </>

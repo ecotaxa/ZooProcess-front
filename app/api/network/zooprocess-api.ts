@@ -86,12 +86,22 @@ export async function getProject(projectId: string) {
 
       return response.data;
   } catch (error: any) {
-      console.error('Project fetch error:', {
-          projectId,
-          error: error.response?.data || error.message,
-          status: error.response?.status
-      });
-      throw error;
+      // console.error('Project fetch error:', {
+      //     projectId,
+      //     error: error.response?.data || error.message,
+      //     status: error.response?.status,
+      //     code: error.response?.data.code
+      // });
+      // throw error;
+      const myError = {
+        projectId,
+        error: error.response?.data || error.message,
+        status: error.response?.status,
+        code: error.response?.data.code,
+        axios:error
+      }
+      console.error('Project fetch error:',  myError)
+      throw myError
   }
 }
 
@@ -934,10 +944,10 @@ export async function getVignettes(url:string){
 
 
 export enum TaskType {
-  separate = "separate",
-  background = "background",
-  vignette = "vignette",
-  process = "process",
+  separate = "SEPARATE",
+  background = "BACKGROUND",
+  vignette = "VIGNETTE",
+  process = "PROCESS", // "process",
 }
 
 // export async function addTask(subsampleid:string, task:TaskType ){
@@ -986,7 +996,11 @@ export async function addTask(data:any){
 export async function runTask(taskId: string) {
   console.log("API runTask(", taskId, ")");
 
-  const api = await axiosInstanse({});
+  const api = await axiosInstanse({
+    params: {
+      timeout: 60000, // 60 secondes
+    }
+  });
   console.log("runTask() api:", api);
   const data = { taskId };
 
@@ -1001,6 +1015,7 @@ export async function runTask(taskId: string) {
       console.log("runTask(): Task run successfully:", JSON.stringify(response.data));
       return response.data; // Renvoie les données de succès
     } else {
+      console.error("runTask() Task failed to start. Server response:", response.data);
       throw new Error(
         `Task failed to start. Server response: ${JSON.stringify(response.data)}`
       );
@@ -1008,12 +1023,30 @@ export async function runTask(taskId: string) {
   } catch (error: any) {
     console.error("runTask() Error: ", error.toJSON?.() || error.message);
 
-    // Lever une erreur pour signaler un échec au frontend
+    //   // Lever une erreur pour signaler un échec au frontend
+    //   throw new Error(
+    //     error.response?.data?.error?.message || "Failed to start task"
+    //   );
+    // }
+    // console.log("je me casse de runTask()")
+    // Extract the actual error message from the API response
+    if (error.response && error.response.data) {
+      console.log("API Error Response:", error.response.data);
+      
+      // Check if the error data contains an error message
+      const errorMessage = 
+        typeof error.response.data === 'string' 
+          ? error.response.data 
+          : error.response.data.error || error.response.data.message || JSON.stringify(error.response.data);
+      
+      throw new Error(errorMessage);
+    }
+    
+    // If we can't extract a specific error message, use the default one
     throw new Error(
-      error.response?.data?.error?.message || "Failed to start task"
+      error.message || "Failed to start task"
     );
   }
-  console.log("je me casse de runTask()")
 }
 
 

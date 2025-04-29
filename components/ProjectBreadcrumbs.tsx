@@ -30,7 +30,7 @@ export const ProjectBreadcrumbs : FC<BreadcrumbsProps> = ({list/*,name*/, separa
           <BreadcrumbItem key={url}>
             <Link href={url}>{data}</Link>
           </BreadcrumbItem>
-      )
+        )
     }
 
     const makeBreadcrumbItems = (list : Array<string>, mode = "ID") => {
@@ -53,29 +53,39 @@ export const ProjectBreadcrumbs : FC<BreadcrumbsProps> = ({list/*,name*/, separa
         // const elem = `<BreadcrumbItem><Link href="${url}">${list[item]}</Link></BreadcrumbItem>`
         const elem =  makeBreadItem(url, list[item])
 
-        // console.log("elem: ", elem)
+        console.log("breadcrumbItems elem: ", elem)
 
         breadcrumbItems.push(elem)
       }
 
+      console.debug("breadcrumbItems",breadcrumbItems)
       return breadcrumbItems
     }
+    
+    const makeBreadcrumbItem = (item:string) => {
+      return (
+        <BreadcrumbItem key={item}>
+          <Link href={"/projects/" + item}>{item}</Link>
+        </BreadcrumbItem>
+      )
+    } 
     
     //const separator = ( mode == "ID" ) ? "/" : "_"
     
     return (
+      <>
+       -+- 
         <Breadcrumbs
           separator={separator}
           itemClasses={{
             separator: "px-2"
           }}
-        >
+        > -+-
         {/* { makeBreadcrumbItems(splitted).map(item => item) } */}
-        { makeBreadcrumbItems(list).map(item => item) }
-
-
-
+        {/* { makeBreadcrumbItems(list).map(item => item) } */}
+        { list.map(item => makeBreadcrumbItem(item) ) }
       </Breadcrumbs>
+      </>
     ); 
 
 }

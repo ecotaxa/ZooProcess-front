@@ -26,7 +26,7 @@ export function Scan (params:{
     // current:eState, 
     // nextState: eState, 
     // scan?: string, 
-    background: string, 
+    background?: string, 
     // scanId: string, 
     project: Project|any, 
     sample: Sample, 
@@ -151,6 +151,44 @@ export function Scan (params:{
             </div>
 
 
+            {/* <Button
+            //   disabled={isError || isLoading || !image}
+              color="primary"
+              variant="solid"
+              data-testid="newProjectBtn"
+              onPress={() => {
+                // if (current == eState.scan1) {
+                //   console.debug("go to Process");
+                // //   setBackground(imagePlaceholder)
+                //   setCurrent(nextState);
+                // } else {
+                //   console.debug("go to onClick");
+                // //   setBackground(imagePlaceholder)
+                //   onClick();
+                // }
+                onValid()
+              }}
+            >
+              Validate
+            </Button> */}
+        </>
+        )
+    }
+
+    return (
+      <>
+        {/* <h3>Scan {step}</h3> */}
+        <Card className="inline-block size-full" data-testid="ScanCard">
+          <CardBody>
+              {/* <Loader project={project} sample={sample} subsample={subsample} onChange={onChange} /> */}
+              <Loader project={project} onChange={onChange} />
+              {/* <Loader props={loaderProps} /> */}
+          </CardBody>
+
+          { showImage() }
+
+          <CardFooter className="flex flex-row-reverse py-3">
+
             <Button
             //   disabled={isError || isLoading || !image}
               color="primary"
@@ -171,22 +209,7 @@ export function Scan (params:{
             >
               Validate
             </Button>
-        </>
-        )
-    }
 
-    return (
-      <>
-        {/* <h3>Scan {step}</h3> */}
-        <Card className="inline-block size-full" data-testid="ScanCard">
-          <CardBody>
-              {/* <Loader project={project} sample={sample} subsample={subsample} onChange={onChange} /> */}
-              <Loader project={project} onChange={onChange} />
-              {/* <Loader props={loaderProps} /> */}
-          </CardBody>
-
-          <CardFooter className="flex flex-row-reverse py-3">
-            { showImage() }
           </CardFooter>
         </Card>
       </>

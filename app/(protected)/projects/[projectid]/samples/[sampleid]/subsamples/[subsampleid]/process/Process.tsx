@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { IProcess, IProcessMultiple, Project, Sample, Scan, SubSample } from "@/app/api/network/interfaces";
 import { useRouter } from "next/navigation";
 import { MyImage } from "@/components/myImage";
+import { Debug } from "@/components/Debug";
 
 
 const Process = (params:{
@@ -260,6 +261,8 @@ const Process = (params:{
 
     return (
         <>
+            <Debug title="ProcessNewScanPage" params={params} />
+
             {ErrorMsg()}
             {/* <div>
                     {error && (

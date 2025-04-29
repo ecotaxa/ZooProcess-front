@@ -21,6 +21,7 @@ function pathToRealStorage(path:string) : string {
 
 
 const isTiff = (fileUrl: string) : boolean => {
+    if (fileUrl == undefined) return false
     console.log("fileUrl: ", fileUrl)
     return fileUrl.endsWith(".tif") || fileUrl.endsWith(".tiff")
 }

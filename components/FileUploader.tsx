@@ -2,248 +2,162 @@
 
 import { Input } from "@nextui-org/input";
 import Image from "next/image";
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useState, useRef } from "react";
 import { Debug } from "@/components/Debug";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "@nextui-org/button";
 import { CameraIcon } from "@radix-ui/react-icons";
-// import { addBackground } from "@/app/api/network/zooprocess-api";
-import { auth } from "@/auth";
-// import { add, set } from "date-fns";
 import { add } from "date-fns";
-// import { image } from "@nextui-org/theme";
-// import styles from "./FileUploader.module.scss";
+import { Progress } from "@nextui-org/react";
+// import { Progress } from "@/components/ui/progress"; // Assurez-vous d'importer votre composant Progress de HeroUI
 
 type pageProps = {
-  // props:{
-      projectId: string,
-      sampleId?: string,
-      subsampleId?: string,  
-      instrumentId: string,
-  // },
+  projectId: string,
+  sampleId?: string,
+  subsampleId?: string,  
+  instrumentId: string,
   onChange: (data:any) => void,
-  // imageRGB: string,
 }
 
-// // const FileUploader: FC<pageProps> = ({props,onChange}) => {
-//   const FileUploader: FC<pageProps> = ({instrumentId, onChange }) => {
-//   // const FileUploader: FC<pageProps> = ({instrumentId, onChange, imageRGB}) => {
-    const FileUploader: FC<pageProps> = (props) => {
-
-      console.log("FileUploader(props):", props);
-
-        // const {instrumentId, projectId, sampleId, subsampleId, onChange} = props;
-        const {instrumentId, projectId, onChange} = props;
-
-  // const {projectid, sampleid, subsampleid, instrumentId} = props;
-  // const {instrumentId} = props;
-
-  // console.log("FileUploader: ", props);
-  // console.log("projectid: ", projectid);
-  // console.log("sampleid: ", sampleid);
-  // console.log("subsampleid: ", subsampleid);
-  
+const FileUploader: FC<pageProps> = (props) => {
+  console.log("FileUploader(props):", props);
+  const {instrumentId, projectId, onChange} = props;
   console.log("FileUploader instrumentId: ", instrumentId);
   
   const imagePlaceholder = "/images/placeholder-image.jpg";
-  // const [imageUrl, setImageUrl] = useState(imagePlaceholder);
   const [imageUrl, setImageUrl] = useState(imagePlaceholder);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [fileSize, setFileSize] = useState<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // // let backgroundImage = undefined
-  // if ( imageRGB ) { 
-  //   // backgroundImage = image
-  //   setImageUrl(imageRGB)
-  // } 
-  // // else {
-  // //   // backgroundImage = imagePlaceholder
-  // //   setImageUrl(imagePlaceholder)
-  // // }
-
-  const [isUploading, setIsUploading] = useState<boolean>(false)
-
-  // const transmit = async (image: {url:string, instrumentId:string, projectId:string, sampleId?:string, subsampleId?:string}) => {
   const transmit = async (image: {url:string, instrumentId:string, projectId:string}) => {
-      console.log("transmitting: ", image.url );
-    // addBackground(image)   
-    // à mettre dans la fonction qui appelle  plus besoin de passer project, sample et subsample
-    // instrumentId oui pour quand il faudra attaquer le scanner avec l'API
-    onChange(image)
+    console.log("transmitting: ", image.url);
+    onChange(image);
   };
-
-  // const isTiff = (fileUrl:string) : boolean => {
-  //   console.log("fileUrl: ", fileUrl)
-  //   return fileUrl.endsWith(".tif") || fileUrl.endsWith(".tiff")
-  // }
-
-
-  // ne marche pas car le fileUrl est une url locale au server que je ne peux pas transmettre au convertisseur :(
-  // function printImage(fileUrl:string){
-
-  //   setImageUrl(fileUrl);
-
-  //   if (isTiff(fileUrl) ){
-  //     const data = {
-  //       src: fileUrl,
-  //     }
-  //     console.log("data: ", data)
-
-  //     const server = "http://localhost:8000"
-  //     const url = server + "/convert/"
-  //     const response = fetch( url , {
-  //       method: "POST",
-  //       body: JSON.stringify(data),
-  //       headers: {
-  //         "Content-Type": "application/text",
-  //       },
-  //     })
-  //     .then((response) => {
-  //       console.log("response: ", response)
-  //       response.text()
-  //         .then((imageUrl) => {
-  //           setImageUrl(imageUrl);
-  //         })
-  //         .catch((error) => {
-  //           console.log("Cannot convert Tiff to Jpg error: ", error)
-  //         })
-  //     })
-  //   }
-
-  // }
 
   const onImageFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target;
 
-    if (!fileInput.files) {
+    if (!fileInput.files || fileInput.files.length === 0) {
       console.warn("no file was chosen");
       return;
     }
 
-    if (!fileInput.files || fileInput.files.length === 0) {
-      console.warn("files list is empty");
-      return;
-    }
-
     const file = fileInput.files[0];
-
+    setFileSize(file.size);
+    
     const formData = new FormData();
     formData.append("file", file);
 
-    setIsUploading(true)
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
+    setIsUploading(true);
+    setUploadProgress(0);
 
-      if (!res.ok) {
-        console.error("something went wrong, check your server console.");
-        return;
+    // Utiliser XMLHttpRequest au lieu de fetch pour suivre la progression
+    const xhr = new XMLHttpRequest();
+    
+    xhr.upload.addEventListener("progress", (event) => {
+      if (event.lengthComputable) {
+        const percentComplete = Math.round((event.loaded / event.total) * 100);
+        setUploadProgress(percentComplete);
+        console.log(`Upload progress: ${percentComplete}%`);
       }
+    });
 
-      console.log("res: ", res)
-
-      const data: { fileUrl: string , filename: string } = await res.json();
-
-      // const a = await auth()
-      // const userId = a?.user.id
-      // const userId = "658dd7ea24bc10a4bf1e37e2"
-      // if (!userId) {
-      //   console.error("no user id found")
-      //   throw new Error("no user id found")
-      // }
-      // const instrumentId = "65c4e0994653afb2f69b11ce"
-
-      const data2api = {
-        url: data.fileUrl,
-        // userId,
-        projectId,
-        // sampleId,
-        // subsampleId,
-        instrumentId
+    xhr.addEventListener("load", async () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          
+          const data2api = {
+            url: data.fileUrl,
+            projectId,
+            instrumentId
+          };
+          
+          console.log("data2api: ", data2api);
+          await transmit(data2api);
+          setImageUrl(data.fileUrl);
+        } catch (error) {
+          console.error("Error processing response:", error);
+        }
+      } else {
+        console.error("Upload failed with status:", xhr.status);
       }
-      console.log("data2api: ", data2api)
-      await transmit(data2api);
+      setIsUploading(false);
+    });
 
-      setImageUrl(data.fileUrl);
-      // printImage(data.fileUrl)
-    } catch (error) {
-      console.error("something went wrong, check your server console. (2)");
-    } finally {
-      setIsUploading(false)
-    }
+    xhr.addEventListener("error", () => {
+      console.error("Upload failed");
+      setIsUploading(false);
+    });
+
+    xhr.addEventListener("abort", () => {
+      console.log("Upload aborted");
+      setIsUploading(false);
+    });
+
+    xhr.open("POST", "/api/upload");
+    xhr.send(formData);
 
     /** Reset file input */
-    // e.target.type = "text";
     e.target.type = "file";
   };
 
   const ShowURL = () => {
     if (imageUrl !== imagePlaceholder) {
-      return (<Label >{imageUrl}</Label>)
+      return (<Label>{imageUrl}</Label>);
     }
+    return null;
+  };
 
-  }
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return bytes + ' B';
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
+    else if (bytes < 1073741824) return (bytes / 1048576).toFixed(2) + ' MB';
+    else return (bytes / 1073741824).toFixed(2) + ' GB';
+  };
 
   return (
+    <div className="flex flex-col p-3">
+    {/* <div className="flex flex-col p-3 min-h-[150px]"> */}
+      <div className="mb-4">
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">
+          Upload file
+        </label>
+
+        <input 
+          className="mb-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" 
+          id="file_input" 
+          type="file" 
+          name="csv" 
+          onChange={onImageFileChange}
+          disabled={isUploading}
+          ref={fileInputRef}
+        />
+        
+        <ShowURL />
+      </div>
       
-      <div className="flex items-center p-3">
-        <div className="">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">Upload file</label>
-
-          <input className="mb-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" 
-                  id="file_input" type="file" 
-                  name="csv" onChange={onImageFileChange}
-          />
-          {/* <Button onChange={onImageFileChange}><CameraIcon />Upload Scan</Button> */}
-          {/* <p className="mb-2 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">Text file only.</p> */}
-          {/* <button className="border p-2" type="submit">Upload</button> */}
-          <ShowURL/>
-        </div>
-        {/* <div className="flex-row">
-          { ! isUploading && (
-            <Image className="height-auto"
-              src={imageUrl}
-              alt="uploaded image"
-              width={720}
-              height={446}
-              priority={true}
-            />
-          )}
-
-          {isUploading && (
-            <div className="pl-4">
-              uploading
+      {isUploading && (
+        <div className="mb-4">
+          <div className="flex justify-between mb-1">
+            <span className="text-sm font-medium">Uploading...</span>
+            <span className="text-sm font-medium">{uploadProgress}%</span>
+          </div>
+          <Progress value={uploadProgress} className="w-full" />
+          {fileSize !== null && (
+            <div className="text-xs mt-1 text-gray-500">
+              File size: {formatFileSize(fileSize)}
             </div>
           )}
-        </div> */}
-        <Debug params={{ imageUrl }} open={true} />
+        </div>
+      )}
+      
+      {/* <Debug params={{ imageUrl, uploadProgress, fileSize }} open={true} /> */}
+      <div className="mb-16"></div>
+    </div>
+  );
+};
 
-      </div>
-
-  )
-
-  // return (
-  //   <label
-  //     // className={styles["file-uploader"]}
-  //     style={{ paddingTop: `calc(100% * (${446} / ${720}))` }}
-  //   >
-  //     <Image
-  //       src={imageUrl}
-  //       alt="uploaded image"
-  //       width={720}
-  //       height={446}
-  //       priority={true}
-  //     />
-  //     <input
-  //       style={{ display: "none" }}
-  //       type="file"
-  //       onChange={onImageFileChange}
-  //     />
-  //   </label>
-  // );
-
-}
-
-
-export default FileUploader
-
+export default FileUploader;

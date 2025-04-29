@@ -85,6 +85,7 @@ export interface Background {
   user: User
   instrument: Instrument
   createdAt: string // Date
+  error?:object
 }
 
 export interface ICalibrationForm {

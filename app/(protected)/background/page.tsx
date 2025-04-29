@@ -6,7 +6,6 @@ import { Timeline_scan } from "@/components/timeline-scan";
 import { Button, getKeyValue } from "@nextui-org/react";
 // import { FC, useEffect, useState } from "react"
 import { FC } from "react"
-// import FileUploader from "@/components/FileUploader";
 import { useRouter } from "next/navigation";
 // import { MySelect } from "@/components/mySelect5";
 // import { useProject } from "@/app/api/projects";

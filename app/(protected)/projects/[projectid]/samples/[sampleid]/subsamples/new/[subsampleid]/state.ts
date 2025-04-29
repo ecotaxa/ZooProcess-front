@@ -4,6 +4,9 @@ export enum eState {
 
     scannerSettings , // = 1,
     info , //= 2,
+
+    background,
+
     preview , //= 3,
     // thirtys1 = 4,
     scan1 ,//= 5,
@@ -16,6 +19,7 @@ export enum eState {
 export const timelist = [
     { text: "Metadata", checked: false },
     { text: "Scanner Info", checked: false },
+    { text: "Background", checked: false },
     { text: "Prepare", checked: false },
     { text: "Preview", checked: false },
 

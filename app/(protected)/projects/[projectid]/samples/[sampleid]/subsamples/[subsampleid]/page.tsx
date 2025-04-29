@@ -15,7 +15,7 @@ import { FC, useState } from "react";
 import React, { SyntheticEvent } from "react"
 import axios from "axios"
 
-import FileUploader from "@/components/FileUploader";
+// import FileUploader from "@/components/FileUploader";
 import { Timeline_scan } from "@/components/timeline-scan";
 
 

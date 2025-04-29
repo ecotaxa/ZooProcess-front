@@ -92,32 +92,13 @@ export function MyImage(props){
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     // const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-    const [windowSize, setWindowSize] = useState({
-        width: typeof window !== 'undefined' ? window.innerWidth : 0,
-        height: typeof window !== 'undefined' ? window.innerHeight : 0
-    });
-    const containerRef = useRef(null);
+    // const containerRef = useRef(null);
 
     const placeholder = "/images/placeholder-image.jpg"
 
     const changeToJpgExtension = (path) => {
         return path.replace(/\.tif?$/i, '.jpg')
       }
-
-    // // Mettre à jour la taille de la fenêtre lors du redimensionnement
-    // useEffect(() => {
-    //     if (typeof window === 'undefined') return;
-        
-    //     const handleResize = () => {
-    //         setWindowSize({
-    //             width: window.innerWidth,
-    //             height: window.innerHeight
-    //         });
-    //     };
-        
-    //     window.addEventListener('resize', handleResize);
-    //     return () => window.removeEventListener('resize', handleResize);
-    // }, []);
 
     useEffect( () => {
         if (props.src && isTiff(props.src)) {
@@ -157,7 +138,7 @@ export function MyImage(props){
                 });
         } else if (props.src) {
             // Not a TIFF, just use the original
-            setProcessedImage(placeholder);
+            setProcessedImage(null);
             setIsLoading(false);
             setError(null);
         }
@@ -210,68 +191,32 @@ export function MyImage(props){
 
     const handleLoad = (e) => {
         const img = e.target
-        // setIsPortrait(img.naturalHeight > img.naturalWidth)
-        const isPortraitOrientation = img.naturalHeight > img.naturalWidth;
-        setIsPortrait(isPortraitOrientation);
+        setIsPortrait(img.naturalHeight > img.naturalWidth)
+
         // // Store the image dimensions
         // setDimensions({
         //     width: img.naturalWidth,
         //     height: img.naturalHeight
         // });
-
-        // Force la taille du conteneur après le chargement de l'image
-        if (containerRef.current) {
-            // const container = containerRef.current;
-            // const availableWidth = windowSize.width * 0.9; // 90% de la largeur de la fenêtre
-            // const availableHeight = windowSize.height * 0.8; // 80% de la hauteur de la fenêtre
-            
-            if (isPortraitOrientation) {
-                const container = containerRef.current;
-                const aspectRatio = img.naturalWidth / img.naturalHeight;
-
-
-            //     // Pour les images portrait, on inverse largeur et hauteur
-            //     container.style.width = `${Math.min(img.naturalHeight, availableHeight)}px`;
-            //     container.style.height = `${Math.min(img.naturalWidth, availableWidth)}px`;
-            // } else {
-            //     container.style.width = `${Math.min(img.naturalWidth, availableWidth)}px`;
-            //     container.style.height = `${Math.min(img.naturalHeight, availableHeight)}px`;
-                // Calculer la taille optimale pour éviter les espaces blancs
-                const containerWidth = Math.min(window.innerHeight * 0.7, img.naturalHeight);
-                const containerHeight = containerWidth * aspectRatio;
-                
-                container.style.width = `${containerWidth}px`;
-                container.style.height = `${containerHeight}px`;
-            }    
-        }
-    };
-
+    }
 
     let newProps = { ...props }
-    // if (newProps.src === undefined) {
-    //     newProps.src = placeholder
-    // }
-    newProps.src = placeholder;
-    if (props.src !== undefined) {
-        newProps.src = processedImage || pathToSessionStorage(props.src);
+    if (newProps.src === undefined) {
+        newProps.src = placeholder
     }
-    // console.log("MyImage() | props :", props)
-    // console.log('props.src type:', typeof props.src, 'props.src value:', props.src || placeholder );
 
-    // if ( newProps.src !== placeholder){
-    //     newProps.src = processedImage || pathToSessionStorage(props.src)
-    // }
-    // newProps.onLoad = handleLoad
-    // // const rotateClass = isPortrait ? "rotate-90" : ""
-    // // newProps.className = `mx-auto ${rotateClass}`
-    // // newProps.className = `mx-auto ${props.className || ""}`;
-    // // newProps.className = `max-w-full max-h-full object-contain ${props.className || ""}`;
-    // newProps.className = `object-contain ${props.className || ""}`;
+    console.log("MyImage() | props :", props)
+    console.log('props.src type:', typeof props.src, 'props.src value:', props.src || placeholder );
 
-    // let imgSrc = placeholder;
-    // if (props.src !== undefined) {
-    //     imgSrc = processedImage || pathToSessionStorage(props.src);
-    // }
+    if ( newProps.src !== placeholder){
+        newProps.src = processedImage || pathToSessionStorage(props.src)
+    }
+    newProps.onLoad = handleLoad
+    // const rotateClass = isPortrait ? "rotate-90" : ""
+    // newProps.className = `mx-auto ${rotateClass}`
+    // newProps.className = `mx-auto ${props.className || ""}`;
+    // newProps.className = `max-w-full max-h-full object-contain ${props.className || ""}`;
+    newProps.className = `object-contain ${props.className || ""}`;
 
        // Apply rotation to the container if the image is portrait
     //    const containerRotateClass = isPortrait ? "rotate-90 transform-origin-center" : "";
@@ -309,42 +254,18 @@ export function MyImage(props){
         //         border border-gray-200 mx-auto
         //     `}>
         // <div className="relative flex justify-center">
-        // <div className="relative flex flex-col items-center">
-        // <div className="flex justify-center items-center" style={{ minHeight: '50vh' }}>
-        <div className="flex flex-col items-center w-full">
-
-           {/* Conteneur principal centré horizontalement */}
-           <div className="flex justify-center items-center w-full" style={{ height: isPortrait ? 'auto' : '70vh' }}>
-
+        <div className="relative flex flex-col items-center">
             {/* <div 
                 className="border border-gray-200 flex justify-center items-center"
                 style={containerStyle}
             > */}
         {/* // <div className="  border border-gray-200"> */}
         {/* <div className="flex justify-center"> */}
-        {/* <div className={`
+        <div className={`
                 image-container
                 border border-gray-200
                 ${isPortrait ? 'portrait-mode' : 'landscape-mode'}
-            `}> */}
-
-            {/* Conteneur de l'image avec rotation */}
-            <div 
-                ref={containerRef}
-                className={`
-                    relative border border-slate-200
-                    ${isPortrait ? 'transform rotate-90' : ''}
-                    transition-transform duration-300
-                `}
-                style={{ 
-                    // minWidth: '300px', 
-                    // minHeight: '300px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    overflow: 'hidden'
-                }}
-            >
+            `}>
             {/* <div 
                 ref={containerRef}
                 className={`
@@ -357,29 +278,16 @@ export function MyImage(props){
                     transition: 'width 0.3s, height 0.3s'
                 }}
             > */}
-            {/* {isLoading && (
+            {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-10">
                     <div className="text-center">
                         <Spinner color="primary" size="lg" />
                         <p className="mt-2 text-sm text-gray-600">Converting image...</p>
                     </div>
                 </div>
-            )} */}
-                {isLoading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
-                        <Spinner color="primary" size="lg" />
-                    </div>
-                )}
+            )}
 
-            {/* <Image {...newProps} radius="none" className="max-w-full max-h-full object-contain"/> */}
-
-             <img 
-                    // src={imgSrc}
-                    src={newProps.src}
-                    alt={props.alt || "Image"}
-                    onLoad={handleLoad}
-                    className="max-w-full max-h-full object-contain"
-                />
+            <Image {...newProps} radius="none"/>
 
             {error && (
                 <div className="absolute bottom-0 left-0 right-0 bg-red-500 text-white p-2 text-sm text-center">
@@ -387,18 +295,17 @@ export function MyImage(props){
                 </div>
             )}
             </div>
-            </div>
             {/* </div> */}
             {props.legend && (
                 // <div className="legend text-center text-sm text-gray-600 mt-2">
                 // <div className="text-center text-sm text-gray-600 mt-2">
-                <div className="text-center text-sm text-gray-600 mt-4 w-full">
+                <div className="text-center text-sm text-gray-600 mt-2 w-full">
                     {props.legend}
                 </div>
             )}
-            {/* <div>
+            <div>
                 <h3>{newProps.src}</h3>
-                </div> */}
+            </div>
         </div>
     )
 

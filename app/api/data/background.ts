@@ -30,3 +30,4 @@ export async function getProjectBackgrounds(projectid:string): Promise<Array<Bac
       throw error;
     }
   }
+  

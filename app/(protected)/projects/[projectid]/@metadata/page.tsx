@@ -8,7 +8,7 @@ import { updateProject } from "@/app/api/projects";
 // import { MySpinner } from "@/components/mySpinner";
 import { projectForm } from "@/config/formElements";
 import { FC, useEffect, useState } from 'react';
-import { Stack } from '@mui/material';
+// import { Stack } from '@mui/material';
 
 // import { Project as IProject } from '@/app/api/network/zooprocess-api';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -204,12 +204,12 @@ const Metadata : FC<pageProps> = (params) => {
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
 
           <div className="text-center justify-center">
-            <Stack spacing={3}>
+            {/* <Stack spacing={3}> */}
             <h1>Metadata</h1>
             <Debug params={params.project} title='project'/>
             <Debug params={projectData} title='projectData'/>
             <ProjectForm/>
-            </Stack>
+            {/* </Stack> */}
           </div>
         </section>
         </>

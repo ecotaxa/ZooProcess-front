@@ -113,7 +113,7 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
 
     let _params : CreateAxiosDefaults<any> = {
         baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
-        timeout: 5000,
+        timeout: 30000, //5000,
     }
 
     // if ( useAuth == false ) {
