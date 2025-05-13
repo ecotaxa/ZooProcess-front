@@ -124,10 +124,23 @@ export function MyImage(props){
             setIsLoading(true);
             setError(null);
 
+             // Create a daily folder path
+            const today = new Date();
+            const dateFolder = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+            const uploadFolder = `/uploads/${dateFolder}`;
+
+            // Extract the filename
+            const filename = props.src.split('/').pop();
+            const jpgFilename = filename.replace(/\.tiff?$/i, '.jpg');
+            
+            // Create the destination path
+            const destPath = `${process.env.NEXT_PUBLIC_REAL_FOLDER}${uploadFolder.substring(1)}/${jpgFilename}`;
+
             const data = { 
                 src: pathToRealStorage(props.src),
-                dst: changeToJpgExtension(pathToSessionStorage(props.src, ""))
                 // dst: changeToJpgExtension(props.src)
+                // dst: changeToJpgExtension(pathToSessionStorage(props.src, ""))
+                dst: destPath
              }
             
             console.debug("MyImage() | data :", data)

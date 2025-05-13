@@ -1,34 +1,36 @@
 "use client";
 
-import {  useShowScan } from "@/app/api/background";
+import {  useShowScan } from "@/app/api/useBackgrounds";
 // import { converttiff2jpg } from "@/app/api/convert";
 // import { Background } from "@/app/api/network/zooprocess-api";
 import { Background } from "@/app/api/network/interfaces";
 import { Debug } from "@/components/Debug";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { MySpinner } from "@/components/mySpinner";
-import { pathToSessionStorage } from "@/lib/gateway";
+import { pathToSessionStorage, isTiff  } from "@/lib/gateway";
 import { Card, CardBody, CardHeader, Image, Spacer } from "@nextui-org/react";
 import { FC } from "react";
 
 
 interface pageProps {
-    
+    params: {
         projectid: string,
-        backgroundId: string,
+        backgroundId: string
+    }
 }
 
 
 // const showBackgroundScan : FC<pageProps> = ({projectid, backgroundId}) => {
-const showBackgroundScan : FC<pageProps> = (params) => {
+const showBackgroundScan : FC<pageProps> = ({params}) => {
 
-    const projectId = params.params.projectid ;
-    const backgroundId = params.params.backgroundId ;
+    const projectId = params.projectid ;
+    const backgroundId = params.backgroundId ;
+    // const {projectid, backgroundId} = params
     console.log("Metadata params: ", params);
-    console.log("Metadata params projectid: ", params.params.projectid);
-    console.log("Metadata params backgroundId: ", params.params.backgroundId);
+    console.log("Metadata params projectid: ", params.projectid);
+    console.log("Metadata params backgroundId: ", params.backgroundId);
     console.log("Metadata params projectid: ", projectId);
-    // console.log("Metadata params backgroundId: ", backgroundId);
+    console.log("Metadata params backgroundId: ", backgroundId);
     
     
     const {scan, isLoading, isError} = useShowScan(backgroundId)
@@ -39,12 +41,13 @@ const showBackgroundScan : FC<pageProps> = (params) => {
     }
 
     // const showImage = (scan: Background) => {
-    const ShowImage : FC<MyScanProps> = (props: MyScanProps) => {
+    const ShowImage_old : FC<MyScanProps> = (props: MyScanProps) => {
         if ( isLoading ) { return <MySpinner /> }
         if ( isError ) { return <ErrorComponent error={isError}/> }
 
-        if ( props.scan.url === "undefined" ) {
-            console.log("scan.url === undefined")
+        if ( !props.scan || !props.scan.url || props.scan.url === "undefined" ) {
+            console.debug("scan.url === undefined")
+            console.log("scan is undefined or has no valid URL");
             return <div>No scan</div>
         }
 
@@ -57,8 +60,13 @@ const showBackgroundScan : FC<pageProps> = (params) => {
         }
 
         // let locapPath = undefined // pathToSessionStorage(path, "/")
-        let locapPath = pathToSessionStorage(path, "/")
-       
+        // let locapPath = pathToSessionStorage(path, "/")
+        let localPath;
+        try {
+          localPath = pathToSessionStorage(path, "/");
+          console.debug("Generated localPath:", localPath);
+
+
             // const scanProps : MyScanProps = {scan}
         // const ttt = async (path:string) => {
         // try {
@@ -105,23 +113,69 @@ const showBackgroundScan : FC<pageProps> = (params) => {
 
     // const localPath = ttt(path)
 
-        if ( locapPath == undefined){
+        // if ( locapPath == undefined){
+        if (!localPath) {
+            console.error("pathToSessionStorage returned falsy value:", localPath);
             return <div>Error: Cannot convert the scan</div>
+        }
+        } catch (error) {
+            console.error("Error in pathToSessionStorage:", error);
+            return <div>Error: Failed to process the scan path</div>;
         }
 
         return (
             <>
-                <Image src={locapPath} />
+                <Image src={localPath} />
                 <h2>path: {path}</h2>
-                <h2>localpath: {locapPath}</h2>
+                <h2>localpath: {localPath}</h2>
             </>
         )
     }
 
 
+    const ShowImage: FC<MyScanProps> = (props) => {
+        if (isLoading) { return <MySpinner /> }
+        if (isError) { return <ErrorComponent error={isError} /> }
+        
+        if (!props.scan || !props.scan.url || props.scan.url === "undefined") {
+            console.log("scan is undefined or has no valid URL");
+            return <div>No scan</div>;
+        }
+        
+        let path = props.scan.url;
+        
+        // If the path is a TIFF file, we need to convert it to JPG and use the daily folder
+        let localPath;
+        if (isTiff(path)) {
+            // This will create a path to the converted JPG in today's folder
+            localPath = pathToSessionStorage(path, "/");
+        } else {
+            // For non-TIFF files, use the normal path conversion
+            if (path.substring(0, 1) !== '/') {
+                path = "/" + path;
+            }
+            localPath = pathToSessionStorage(path, "/");
+        }
+        
+        if (!localPath) {
+            return <div>Error: Cannot convert the scan</div>;
+        }
+        
+        return (
+            <>
+                <Image src={localPath} alt="Background scan" />
+                <h2>Original path: {path}</h2>
+                <h2>Web path: {localPath}</h2>
+            </>
+        );
+    };
+
+
     return (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-        <Debug params={scan} title="scan" />
+        {/* <Debug params={scan} title="scan" /> */}
+        {scan && <Debug params={scan} title="scan" />}
+
         <h3>params: {JSON.stringify(params)}</h3>
         <h3>projectId: {projectId}</h3>
         <h3>backgroundId: {backgroundId}</h3>

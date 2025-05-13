@@ -14,7 +14,7 @@
 
 
 
-export async function converttiff2jpg ( data:any ) : Promise<string> {
+export async function converttiff2jpg_old ( data:any ) : Promise<string> {
             // "use server";
 
             const bodytext = JSON.stringify(data)
@@ -110,3 +110,61 @@ export async function converttiff2jpg ( data:any ) : Promise<string> {
 // module.exports = {
 //     convertTiff2Jpg
 // }
+
+
+export async function converttiff2jpg(data: any): Promise<string> {
+    const bodytext = JSON.stringify(data);
+    console.debug("bodytext: ", bodytext);
+
+    // Create a daily folder path
+    const today = new Date();
+    const dateFolder = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+
+    const uploadFolder = `/uploads/${dateFolder}`;
+    
+    // Create the folder if it doesn't exist (server-side)
+    const fullUploadPath = `${process.env.NEXT_PUBLIC_REAL_FOLDER}${uploadFolder}`;
+    
+    // Extract the filename from the original path
+    const originalPath = data.src;
+    const filename = originalPath.split('/').pop();
+    
+    // Create the destination path for the converted file
+    const destinationPath = `${uploadFolder}/${filename.replace(/\.tiff?$/, '.jpg')}`;
+    
+    // Update the data object with the new destination
+    const modifiedData = {
+        ...data,
+        dst: `${process.env.NEXT_PUBLIC_REAL_FOLDER}${destinationPath}`
+    };
+    
+    console.debug("converttiff2jpg modified data: ", modifiedData);
+    
+    const server = "http://zooprocess.imev-mer.fr:8000";
+    const url = server + "/convert/";
+    
+    const datafetched = fetch(url, {
+        method: "POST",
+        body: JSON.stringify(modifiedData),
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "User-Agent": "Zooprocess v10",
+        },
+    });
+
+    return datafetched
+        .then((response: Response) => {
+            if (response.ok) {
+                console.log("converttiff2jpg fetch response: ", response);
+                return response.text()
+                    .then((imageUrl) => {
+                        // Return the web-accessible path instead of the file system path
+                        return destinationPath;
+                    });
+            } else {
+                throw new Error(`Conversion failed with status: ${response.status}`);
+            }
+        });
+}
+

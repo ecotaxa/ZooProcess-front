@@ -43,7 +43,11 @@ function splitPath(path: string) {
  * @returns 
  */
 // async 
-function pathToSessionStorage(path:string , sessionFolder = process.env.NEXT_PUBLIC_UPLOAD_FOLDER || "") : string {
+function pathToSessionStorage_old(path:string , sessionFolder = process.env.NEXT_PUBLIC_UPLOAD_FOLDER || "") : string {
+
+    if (!path) return "";
+
+
     console.log( "pathToSessionStorage() | path :", path)
     console.log('path type:', typeof path, 'path value:', path);
 
@@ -60,6 +64,47 @@ function pathToSessionStorage(path:string , sessionFolder = process.env.NEXT_PUB
 
     console.debug("pathToSessionStorage =>:", realFolder + path)
     return realFolder + path
+}
+
+function pathToSessionStorage(path: string, sessionFolder = process.env.NEXT_PUBLIC_UPLOAD_FOLDER || ""): string {
+    if (!path) return null;
+
+    console.log("pathToSessionStorage() | path:", path);
+    
+    // If the path is already a web-accessible path (starts with /uploads/)
+    if (path.startsWith('/uploads/')) {
+        console.debug("Already a web path:", path);
+        return path;
+    }
+    
+    // If this is a TIFF file that needs conversion
+    if (isTiff(path)) {
+        // Create a daily folder path
+        const today = new Date();
+        const dateFolder = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+        const uploadFolder = `/uploads/${dateFolder}`;
+        
+        // Extract the filename
+        const filename = path.split('/').pop();
+        
+        // Create a web-accessible path for the converted JPG
+        const jpgPath = `${uploadFolder}/${filename.replace(/\.tiff?$/, '.jpg')}`;
+        console.debug("Created JPG path:", jpgPath);
+        
+        return jpgPath;
+    }
+    
+    // For other file types or paths, use the original logic
+    const realFolder = process.env.NEXT_PUBLIC_REAL_FOLDER;
+    
+    if (realFolder && path.startsWith(realFolder)) {
+        const newPath = path.substring(realFolder.length);
+        console.debug("newPath:", newPath);
+        return newPath.startsWith('/') ? newPath : `/${newPath}`;
+    }
+    
+    // If all else fails, return the original path with a leading slash if needed
+    return path.startsWith('/') ? path : `/${path}`;
 }
 
 
