@@ -1,6 +1,6 @@
 // import { getDrives } from "@/app/api/network/zooprocess-api"
 import * as I from '@/app/api/network/interfaces'
-import { fileExists } from '@/app/api/file-exists';
+// import { fileExists } from '@/app/api/file-exists';
 
 // const realFolder =  process.env.NEXT_PUBLIC_REAL_FOLDER // process.env.REAL_FOLDER || '/Users/sebastiengalvagno/Work/test/nextui/ZooprocessFront/public/' ///uploads'
 const realFolder = process.env.NEXT_PUBLIC_REAL_FOLDER 
