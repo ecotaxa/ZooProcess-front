@@ -120,6 +120,7 @@ export function MyImage(props){
     // }, []);
 
     useEffect( () => {
+        console.debug("MyImage useEffect")
         if (props.src && isTiff(props.src)) {
             setIsLoading(true);
             setError(null);
@@ -132,12 +133,20 @@ export function MyImage(props){
             // Extract the filename
             const filename = props.src.split('/').pop();
             const jpgFilename = filename.replace(/\.tiff?$/i, '.jpg');
-            
+
+            // Fix: Ensure path has proper separator between folder and filename
+            // Add trailing slash to NEXT_PUBLIC_REAL_FOLDER if it doesn't have one
+            const realFolder = process.env.NEXT_PUBLIC_REAL_FOLDER || '';
+            const normalizedRealFolder = realFolder.endsWith('/') ? realFolder : `${realFolder}/`;
+
             // Create the destination path
-            const destPath = `${process.env.NEXT_PUBLIC_REAL_FOLDER}${uploadFolder.substring(1)}/${jpgFilename}`;
+            // const destPath = `${process.env.NEXT_PUBLIC_REAL_FOLDER}${uploadFolder.substring(1)}/${jpgFilename}`;
+            const destPath = `${normalizedRealFolder}${uploadFolder.substring(1)}/${jpgFilename}`;
+            const webPath = `${uploadFolder}/${jpgFilename}`;
 
             const data = { 
                 src: pathToRealStorage(props.src),
+                // src: props.src,
                 // dst: changeToJpgExtension(props.src)
                 // dst: changeToJpgExtension(pathToSessionStorage(props.src, ""))
                 dst: destPath
@@ -160,7 +169,35 @@ export function MyImage(props){
                     setProcessedImage(normalizedPath);
                     setIsLoading(false);
                 })
-                
+
+                // .then(response => {
+                //     console.debug("converttiff2jpg response:", response);
+                //     // Use the web path for display
+                //     return `${uploadFolder}/${jpgFilename}`;
+                // })
+                // .then(webPath => {
+                //     console.debug("Setting processed image path:", webPath);
+                //     setProcessedImage(webPath);
+                //     setIsLoading(false);
+                // })
+
+                // .then(response => { 
+                //     console.debug("converttiff2jpg return", response);
+                //     return response;
+                // })
+                // .then(imageUrl => pathToSessionStorage(imageUrl.replace(/"/g, ""), ""))
+                // .then(path => {
+                //     console.debug("------------------------------------------------")
+                //     console.debug("MyImage() | sessionPath:", path);
+                //     return path;
+                // })
+                // .then(sessionPath => sessionPath.replace(/^\/+/, '/'))
+                // .then(normalizedPath => {
+                //     console.debug("Setting processed image path:", normalizedPath);
+                //     setProcessedImage(normalizedPath);
+                //     setIsLoading(false);
+                // })
+
                 .catch(e => {
                     console.error("CATCH MyImage Error converting TIFF to JPG:", e);
                     // return "/images/404.jpg"
@@ -169,7 +206,13 @@ export function MyImage(props){
                     setIsLoading(false);
                 });
         } else if (props.src) {
+            console.debug("MyImage() | props.src :", props.src)
+            setProcessedImage(pathToSessionStorage(props.src));
+            setIsLoading(false);
+            setError(null);
+        } else {
             // Not a TIFF, just use the original
+            console.debug("Not a TIFF, using original");
             setProcessedImage(placeholder);
             setIsLoading(false);
             setError(null);

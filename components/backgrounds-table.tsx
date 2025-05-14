@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 // import { useRouter } from "next/navigation";
 // import { Button } from "@mui/material";
 
@@ -9,6 +9,8 @@ import { key } from '@/app/api/key';
 import { Debug } from '@/components/Debug';
 import { useAsyncList } from "react-stately";
 import { EyeIcon } from "./auth/EyeIcon";
+import { MyImage } from "@/components/myImage";
+
 
 interface IColumn {
     name: string,
@@ -36,9 +38,18 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
     const {projectId, backgrounds=[]} = props
     const stripped = true;
 
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const [ imageURL, setImageURL ] = useState<string>("")
+    
     console.log("BackgroundsTable projectId= ", projectId);
     console.log("BackgroundsTable backgrounds= ", backgrounds);
 
+
+    function setShowImage(image: any): void {
+        console.log("setShowImage", image);
+        setImageURL(image)
+        onOpen()
+    }
 
     let list = useAsyncList({
         async load({signal}) {
@@ -175,7 +186,8 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
                     size="sm" 
                     color="primary" 
                     as={Link}
-                    href={`/projects/${projectId}/background/${background.id}`}
+                    // href={`/projects/${projectId}/background/${background.id}`}
+                    onPress={() => setShowImage(background.name)}
                     // onPress={ (projectid,sampleid=background.id) => onDetail(projectid,sampleid) }                
                 >
                     {/* EYE */}
@@ -215,6 +227,27 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
         )}
       </TableBody>
     </Table>
+    <Modal isOpen={isOpen} placement="auto" onOpenChange={onOpenChange} size="3xl">
+        <ModalContent>
+            {(onClose) => (
+                <>
+                <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+                <ModalBody>
+                    <MyImage src={imageURL} />
+                    <p>{imageURL}</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" variant="light" onPress={onClose}>
+                    Close
+                    </Button>
+                    {/* <Button color="primary" onPress={onClose}>
+                    Action
+                    </Button> */}
+                </ModalFooter>
+                </>
+            )}
+        </ModalContent>
+    </Modal>
     </>
   );
 }

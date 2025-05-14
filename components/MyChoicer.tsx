@@ -90,7 +90,7 @@ export const MyChoicer: React.FC<MyChoicerProps> = ({ backgrounds, onSelect, sel
                 </TableBody>
             </Table>     
             
-            <Modal isOpen={isOpen} placement="auto" onOpenChange={onOpenChange}>
+            <Modal isOpen={isOpen} placement="auto" onOpenChange={onOpenChange} size="3xl">
                 <ModalContent>
                 {(onClose) => (
                     <>
