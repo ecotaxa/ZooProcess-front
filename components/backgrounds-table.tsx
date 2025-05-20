@@ -26,7 +26,6 @@ const columns = [
     // {name: "SAMPLE", uid: "background"},
     // {name: "SCAN", uid: "scan"},
     // {name: "FRACTION/SUBSAMPLE", uid:"fraction"},
-    // {name: "CREATE AT", uid: "createdAt"},
     // {name: "UPDATED AT", uid: "updatedAt"},
     {name: "Time", uid: "time", allowSorting:true},
     {name: "DATE", uid: "date", allowSorting:true},
