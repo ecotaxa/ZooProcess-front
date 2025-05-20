@@ -22,7 +22,7 @@ const columns /*: Array<IColumn>*/ = [
     // {name: "SAMPLE", uid: "sample"},
     {name: "SCAN", uid: "scans", allowSorting:true},
     {name: "FRACTION/SUBSAMPLE", uid:"fraction", allowSorting:true},
-    {name: "CREATE AT", uid: "createdAt", allowSorting:true},
+    {name: "CREATED AT", uid: "createdAt", allowSorting:true},
     {name: "UPDATED AT", uid: "updatedAt", allowSorting:true},
     {name: "STATUS", uid: "status", allowSorting:true},
     {name: "ACTIONS", uid: "actions", allowSorting:false},

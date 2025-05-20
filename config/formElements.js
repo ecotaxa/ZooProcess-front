@@ -88,7 +88,7 @@ export const sampleid_formElements=[
                 placeholder:"Bottom depth (m)", label:'Bottom depth',
                 variant:"outlined", required:true, 
                 xs:12, sm:6, fullWidth:true,
-                minValue:0, helperText:'value greather than zero',
+                minValue:0, helperText:'value greater than zero',
                 endAdornment:{pos:'end', text:'m'},
             },
             { tag:"DateField", name:"sampling_date", type:"date", 

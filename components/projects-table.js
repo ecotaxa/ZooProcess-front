@@ -30,7 +30,7 @@ import { deleteProject } from "@/app/api/data/projects";
     {name: "DRIVE", uid: "drive", allowSorting:true},
     {name: "SAMPLE", uid: "sample", allowSorting:true},
     {name: "SCAN", uid: "scan", allowSorting:true},
-    {name: "CREATE AT", uid: "createdAt", allowSorting:true},
+    {name: "CREATED AT", uid: "createdAt", allowSorting:true},
     {name: "UPDATED AT", uid: "updatedAt", allowSorting:true},
     {name: "QC", uid:"qc", allowSorting:true},
     {name: "ACTIONS", uid: "actions", allowSorting:false},

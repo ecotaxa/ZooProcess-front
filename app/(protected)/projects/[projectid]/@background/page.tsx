@@ -189,7 +189,7 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
                           // showAnchorIcon
                           variant="solid"
                           data-testid="newBackBtn"
-                          >NEW BACK
+                          >NEW BACKGROUND using upload
                         </Button>
                         <Button 
                           // href={`/projects/${projectId}/samples/new`} cannot open this page ????
@@ -199,7 +199,7 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
                           // showAnchorIcon
                           variant="solid"
                           data-testid="newBackBtn"
-                          >NEW BACK using upload
+                          >NEW BACKGROUND
                         </Button>
                 </CardHeader>
                 <CardBody>

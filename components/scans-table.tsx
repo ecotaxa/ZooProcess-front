@@ -24,7 +24,6 @@ const columns : Array<IColumn> = [
     // {name: "SAMPLE", uid: "scan"},
     // {name: "SCAN", uid: "scan"},
     // {name: "FRACTION/SUBSAMPLE", uid:"fraction"},
-    // {name: "CREATE AT", uid: "createdAt"},
     // {name: "UPDATED AT", uid: "updatedAt"},
     // {name: "Time", uid: "time"},
     // {name: "DATE", uid: "date"},

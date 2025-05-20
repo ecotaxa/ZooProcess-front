@@ -15,7 +15,7 @@ const columns = [
     {name: "DESCRIPTION", uid: "description"},
     // {name: "SAMPLES", uid: "samplecount"},
     // {name: "SUBSAMPLES", uid:"subsamplecount"},
-    {name: "CREATE AT", uid: "createdAt"},
+    {name: "CREATED AT", uid: "createdAt"},
     {name: "ACTIONS", uid: "actions"},
   ];
 
