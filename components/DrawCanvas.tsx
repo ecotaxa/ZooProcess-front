@@ -1,9 +1,12 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
+import pako from "pako";
+
 
 interface DrawCanvasProps {
   imagePath: string;
   onApply?: (matrix: number[][]) => void;
   strokeColor?: string;
+  initialMatrix?: number[][];
 }
 
 type Tool = "brush" | "eraser";
@@ -47,7 +50,135 @@ export function mergeImageWithMatrix(
   return canvas;
 }
 
-const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor = "red" }) => {
+export function saveMatrixAsCompressedBinary(matrix: number[][], filename = "matrix.gz") {
+  const height = matrix.length;
+  const width = matrix[0]?.length || 0;
+  const rowBytes = Math.ceil(width / 8);
+  const raw = new Uint8Array(8 + height * rowBytes);
+
+  const view = new DataView(raw.buffer);
+  view.setUint32(0, width, true);
+  view.setUint32(4, height, true);
+
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const byteIndex = 8 + y * rowBytes + (x >> 3);
+      const bit = 7 - (x % 8);
+      if (matrix[y][x]) {
+        raw[byteIndex] |= 1 << bit;
+      }
+    }
+  }
+
+  const compressed = pako.deflate(raw);
+
+  const blob = new Blob([compressed], { type: "application/gzip" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+
+
+ 
+
+export function saveMatrixToFile(matrix: number[][], filename = "matrix.json") {
+  const blob = new Blob([JSON.stringify(matrix)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function saveMatrixAsBinary(matrix: number[][], filename = "matrix.bin") {
+  const height = matrix.length;
+  const width = matrix[0]?.length || 0;
+  const rowBytes = Math.ceil(width / 8);
+  const buffer = new Uint8Array(8 + height * rowBytes);
+
+  // Stocker dimensions (4 octets pour width, 4 pour height)
+  const view = new DataView(buffer.buffer);
+  view.setUint32(0, width, true);   // Little endian
+  view.setUint32(4, height, true);
+
+  // Encoder les bits ligne par ligne
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const byteIndex = 8 + y * rowBytes + (x >> 3);
+      const bit = 7 - (x % 8);
+      if (matrix[y][x]) {
+        buffer[byteIndex] |= 1 << bit;
+      }
+    }
+  }
+
+  const blob = new Blob([buffer], { type: "application/octet-stream" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Read the mask matrix
+ * How to use it 
+ * import { readMatrixFromCompressedBinary } from "@/components/DrawCanvas";
+ * const buffer = await file.arrayBuffer();
+ * const matrix = readMatrixFromCompressedBinary(buffer); 
+ */
+export function readMatrixFromBinary(buffer: ArrayBuffer): number[][] {
+  const view = new DataView(buffer);
+  const width = view.getUint32(0, true);
+  const height = view.getUint32(4, true);
+  const rowBytes = Math.ceil(width / 8);
+  const data = new Uint8Array(buffer, 8); // skip header
+
+  const matrix: number[][] = [];
+  for (let y = 0; y < height; y++) {
+    const row: number[] = [];
+    for (let x = 0; x < width; x++) {
+      const byte = data[y * rowBytes + (x >> 3)];
+      const bit = 7 - (x % 8);
+      row.push((byte >> bit) & 1);
+    }
+    matrix.push(row);
+  }
+
+  return matrix;
+}
+
+
+export function readMatrixFromCompressedBinary(buffer: ArrayBuffer): number[][] {
+  const decompressed = pako.inflate(new Uint8Array(buffer));
+  const view = new DataView(decompressed.buffer, decompressed.byteOffset, decompressed.byteLength);
+
+  const width = view.getUint32(0, true);
+  const height = view.getUint32(4, true);
+  const rowBytes = Math.ceil(width / 8);
+  const data = new Uint8Array(decompressed.buffer, decompressed.byteOffset + 8);
+
+  const matrix: number[][] = [];
+  for (let y = 0; y < height; y++) {
+    const row: number[] = [];
+    for (let x = 0; x < width; x++) {
+      const byte = data[y * rowBytes + (x >> 3)];
+      const bit = 7 - (x % 8);
+      row.push((byte >> bit) & 1);
+    }
+    matrix.push(row);
+  }
+
+  return matrix;
+}
+
+const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor = "red", initialMatrix }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -66,6 +197,22 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
       setImage(img);
     };
   }, [imagePath]);
+
+  useEffect(() => {
+    if (initialMatrix && overlayRef.current) {
+      const ctx = overlayRef.current.getContext("2d");
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
+      ctx.fillStyle = strokeColor;
+      for (let y = 0; y < initialMatrix.length; y++) {
+        for (let x = 0; x < initialMatrix[y].length; x++) {
+          if (initialMatrix[y][x] === 1) {
+            ctx.fillRect(x, y, CANVAS_POINT_SIZE, CANVAS_POINT_SIZE);
+          }
+        }
+      }
+    }
+  }, [initialMatrix, canvasSize, strokeColor]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
