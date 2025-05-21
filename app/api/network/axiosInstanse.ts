@@ -19,21 +19,21 @@ import getServerSession from "next-auth";
 // import { options } from "@/api/_auth/[...nextauth]/options";
 
 const axiosInstancev = axios.create({
-    baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
+    baseURL: process.env.API_SERVER,
     timeout: 5000,
 });
 
 import { headers } from 'next/headers';
 
 
-// arg ne fonctionne pas 
+// arg ne fonctionne pas
 // car auth() n'est pas encore initialisé
 // ça se mort la queue  avec l'initialisation de Auth.ts
 // faut passer le tout dans une fonction
 // axiosInstance.interceptors.request.use(
 //     async config => {
 //         // Do something before request is sent
-  
+
 //         console.log("Config interceptor");
 
 //         const token = await auth()
@@ -54,14 +54,14 @@ import { headers } from 'next/headers';
 
 const axiosInstanceSimple = async ({useAuth = true, token = undefined, params = {}}:{useAuth?:boolean,token?:string|undefined, params?:any}): Promise<AxiosInstance> => {
     let _params : CreateAxiosDefaults<any> = {
-        baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
+        baseURL: process.env.API_SERVER,
         timeout: 5000,
     }
 
     return auth()
     .then((session) => {
-        // console.log("axiosInstance - auth session: ", session) 
-        let token = undefined   
+        // console.log("axiosInstance - auth session: ", session)
+        let token = undefined
         if (session) {
             token = session.user.token
             // console.log("axiosInstance - session.user.token: ", token)
@@ -80,9 +80,9 @@ const axiosInstanceSimple = async ({useAuth = true, token = undefined, params = 
 
             // console.log("axiosInstance - paramsUpdated: ", paramsUpdated)
             let instance = axios.create(paramsUpdated);
-    
+
             const axiosInst = setupCache(instance)
-        
+
             return axiosInst
         }
         else {
@@ -107,12 +107,12 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
 
     // const session = useSession().data
     // console.log("axiosInstance - session: ", session)
-    // const auth = getServerSession().auth()   
-    
+    // const auth = getServerSession().auth()
+
 
 
     let _params : CreateAxiosDefaults<any> = {
-        baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
+        baseURL: process.env.API_SERVER,
         timeout: 30000, //5000,
     }
 
@@ -121,7 +121,7 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
     //     let instance = axios.create(_params);
 
     //     const axiosInst = setupCache(instance)
-    
+
     //     return axiosInst
     // }
 
@@ -136,7 +136,7 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
             headers: {
                 Authorization: header
             }
-        }             
+        }
         console.log("axiosInstance - paramsUpdated: ", paramsUpdated)
         let instance = axios.create(paramsUpdated);
         const axiosInst = setupCache(instance)
@@ -166,7 +166,7 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
 
         // console.log("axiosInstance - auth session: ", session)
 
-        if ( ! session?.expires ) { 
+        if ( ! session?.expires ) {
             // console.log("BAD session  *****************************************")
                 throw ("Bad Session")
         }
@@ -181,14 +181,14 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
         // console.debug("axiosInstance - expirationDate.getMilliseconds < now: " , expirationDate.getMilliseconds() , " < " , now.getMilliseconds() , expirationDate.getMilliseconds() < now.getMilliseconds())
         // console.debug("axiosInstance - expirationDate.getTime < now: " , expirationDate.getTime() , " < " , now.getTime() , expirationDate.getTime() < now.getTime())
 
-        if ( expirationDate.getTime() < now.getTime() ) 
+        if ( expirationDate.getTime() < now.getTime() )
         {
             // console.log("Session expired -------------------------------------- ************** ")
             throw("Session Expired")
         }
 
-        // console.log("axiosInstance - auth session: ", session) 
-        let token = undefined   
+        // console.log("axiosInstance - auth session: ", session)
+        let token = undefined
         if (session) {
             token = session.user.token
             // console.log("axiosInstance - session.user.token: ", token)
@@ -216,13 +216,13 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
             } else {
                 console.log("axiosInstance - No token")
             }
-        
+
 
         // console.info("axiosInstance params", _params)
         // let instance = axios.create(_params);
-    
+
         // const axiosInst = setupCache(instance)
-    
+
         // return axiosInst
 
         return _params
@@ -258,8 +258,8 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
 
     //         console.log("axiosInstance - getServerSession - session: ", session)
 
-    //         token = session?.user?.token    
-    //     }    
+    //         token = session?.user?.token
+    //     }
     // }
 
     // if (session) {
@@ -267,7 +267,7 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
     // }
 
     // // const session = await auth()
-    
+
     // if (session) {
     //     const token = session.user.token
 

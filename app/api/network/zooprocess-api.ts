@@ -15,7 +15,7 @@ import * as I from './interfaces'
 
 
 
-  
+
 
 
 
@@ -32,7 +32,7 @@ export async function getProjects() : Promise<I.Projects> {
 
     console.debug("getProjects response: ", response.status);
 
-    return response.data; 
+    return response.data;
 }
 
 
@@ -45,7 +45,7 @@ export async function getProject_old(url: string): Promise<I.Project> {
   const api = await axiosInstanse(params)
 
   const response = await api.get<I.Project>(url)
-  
+
   if (response.status === 200) {
     return response.data
   } else {
@@ -69,17 +69,17 @@ export async function getProject_old(url: string): Promise<I.Project> {
 // }
 
 
-export async function getProject(projectId: string) {  
+export async function getProject(projectId: string) {
   console.log('Requesting project:', projectId)
   console.log('Full URL:', `/projects/${projectId}`)
   try {
       const params = {}
       const axios = await axiosInstanse(params)
-      const baseURL = "http://zooprocess.imev-mer.fr:8081/v1"
+      const baseURL = process.env.API_SERVER;
 
       // const response = await axios.get(`${baseURL}/project/${projectId}`);
         const fullUrl = `${baseURL}/projects/${projectId}`
-        
+
         console.log('Making request to:', fullUrl)
         const response = await axios.get(fullUrl)
         console.log('Response received:', response.status)
@@ -129,10 +129,10 @@ export async function getProcess(url:string) : Promise<I.IProcess> {
 
 export async function getUserMe(url:string=`/users/me`){
   // export async function getUserById(url:string){
-  
+
   //   const token = await auth();
     console.log("getUserMe token: ");
-  
+
   //   const api = axios.create({
   //     baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
   //     timeout: 5000,
@@ -142,15 +142,15 @@ export async function getUserMe(url:string=`/users/me`){
   // });
     // const token = await auth()
     const api = await axiosInstanse({})
-  
+
     const response = await api.get<I.User>(url);
-  
+
     console.log("getUserMe response: ", response.status);
-  
-    return response.data; 
+
+    return response.data;
   }
 
-  
+
 export async function getUserByEmail(url:string){
   const api = await axiosInstanse({})
 
@@ -158,7 +158,7 @@ export async function getUserByEmail(url:string){
 
   console.debug("getUserByEmail response: ", response.status);
 
-  return response.data; 
+  return response.data;
 }
 
 // import axios from 'axios';
@@ -244,10 +244,10 @@ export async function getUserById(url: string, token: string) {
 
 export async function getUserByIdWithAuth(url:string, token:string){
   // export async function getUserById(url:string){
-  
+
   //   const token = await auth();
     // console.log("getUserByIdWithAuth token: ", token);
-  
+
   //   const api = axios.create({
   //     baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
   //     timeout: 5000,
@@ -258,12 +258,12 @@ export async function getUserByIdWithAuth(url:string, token:string){
     // const token = await auth()
     // const api = await axiosInstanse({useAuth:false, token})
     const api = await axiosInstanse({})
-  
+
     const response = await api.get<I.User>(url);
-  
+
     // console.log("getUserByEmail response: ", response);
-  
-    return response.data; 
+
+    return response.data;
   }
 
 
@@ -292,7 +292,7 @@ export async function getUsers(){
 
   console.log("getUsers response: ", response);
 
-  return response.data; 
+  return response.data;
 }
 
 
@@ -407,7 +407,7 @@ export async function getMetadata(url:string){
 
   console.log("getMetadata response: ", response.status);
 
-  return response.data; 
+  return response.data;
 }
 
 
@@ -418,7 +418,7 @@ export async function getMetadata(url:string){
 
 //   console.log("getProject response: ", response);
 
-//   return response.data; 
+//   return response.data;
 // }
 
 export async function addProject(data:I.Project){
@@ -465,7 +465,7 @@ export async function addProject(data:I.Project){
 
   }
 
-  
+
   export async function updateProject(data:any){
 
     if (data.id == undefined) throw("Cannot update, project has no id defined");
@@ -500,7 +500,7 @@ export async function addProject(data:I.Project){
   }
 
   export async function updateDrive(drive:any) : Promise<I.Drive>{
-    
+
     const api = await axiosInstanse({})
     return await api.post('/drives', drive)
       .then(function (response) {
@@ -542,10 +542,10 @@ export async function addProject(data:I.Project){
   export async function getDrives(){
     const api = await axiosInstanse({})
     const response = await api.get<Array<I.Drive>>(`/drives`);
-    
+
     // console.log("getDrives response: ", response);
 
-    return response.data; 
+    return response.data;
   }
 
 
@@ -555,19 +555,19 @@ export async function getInstruments(full:boolean=false){
   let url = `/instruments`
   if (full) url += "?full=true";
   const response = await api.get<Array<I.Instrument>>(url);
-  
+
   console.log("getInstruments response: ", response.status);
 
-  return response.data; 
+  return response.data;
 }
 
 export async function getInstrument(url:string){
   const api = await axiosInstanse({})
   const response = await api.get<I.Instrument>(url);
-  
+
   console.log("getInstrument response: ", response.status);
 
-  return response.data; 
+  return response.data;
 }
 
 
@@ -699,8 +699,8 @@ export async function addSample(projectId:string, data:I.Sample){
   //     // const errorMessage = error.response?.data || error.message;
   //     // throw errorMessage;
   //             // Create a plain string error
-  //         //     const message = typeof error.response?.data === 'string' ? 
-  //         //     error.response.data : 
+  //         //     const message = typeof error.response?.data === 'string' ?
+  //         //     error.response.data :
   //         //     'Failed to add sample';
   //         // throw new Error(message);
 
@@ -718,7 +718,7 @@ export async function addSample(projectId:string, data:I.Sample){
     console.log("api updateSubSample sampleId:", sampleId);
     console.log("api updateSubSample subSampleId:", subSampleId);
     console.log("api updateSubSample data:", data);
-  
+
     const api = await axiosInstanse({})
     return await api.patch(`/projects/${projectId}/samples/${sampleId}/subsamples/${subSampleId}`, data)
         .then(function (response) {
@@ -746,7 +746,7 @@ export async function addSample(projectId:string, data:I.Sample){
           console.log(error.config);
           throw(error);
         });
-  
+
   }
 
 
@@ -811,7 +811,7 @@ export async function addSample(projectId:string, data:I.Sample){
 
     console.log("getSamples response: ", response.status);
 
-    return response.data; 
+    return response.data;
 }
 
 export async function getSubSamples(url:string){
@@ -829,7 +829,7 @@ export async function getSubSamples(url:string){
 
   console.log("getSubSamples response: ", response.status);
 
-  return response.data; 
+  return response.data;
 }
 
 export async function getSubSample(url:string){
@@ -847,7 +847,7 @@ export async function getSubSample(url:string){
 
   console.log("getSubSample response: ", response.status);
 
-  return response.data; 
+  return response.data;
 }
 
 // export async function getSubSample(url:string){
@@ -865,7 +865,7 @@ export async function getSubSample(url:string){
 
 //   console.log("getSubSample response: ", response);
 
-//   return response.data; 
+//   return response.data;
 // }
 
 export async function getSample(url:string, options?: any){
@@ -877,7 +877,7 @@ export async function getSample(url:string, options?: any){
 
   console.log("getSample response: ", response.status);
 
-  return response.data; 
+  return response.data;
 }
 
 
@@ -977,7 +977,7 @@ export async function addTask(data:any){
   //   "type": task
   // }
   // const taskId = await api.post(`/separate`, data)
-  // const taskId = 
+  // const taskId =
   return api.post(`/task`, data)
   .then((response) => {
     console.log("addTask response: ", response.status);
@@ -989,7 +989,7 @@ export async function addTask(data:any){
     // return undefined
     throw(error);
   })
-  // return taskId  
+  // return taskId
 }
 
 
@@ -1032,16 +1032,16 @@ export async function runTask(taskId: string) {
     // Extract the actual error message from the API response
     if (error.response && error.response.data) {
       console.log("API Error Response:", error.response.data);
-      
+
       // Check if the error data contains an error message
-      const errorMessage = 
-        typeof error.response.data === 'string' 
-          ? error.response.data 
+      const errorMessage =
+        typeof error.response.data === 'string'
+          ? error.response.data
           : error.response.data.error || error.response.data.message || JSON.stringify(error.response.data);
-      
+
       throw new Error(errorMessage);
     }
-    
+
     // If we can't extract a specific error message, use the default one
     throw new Error(
       error.message || "Failed to start task"

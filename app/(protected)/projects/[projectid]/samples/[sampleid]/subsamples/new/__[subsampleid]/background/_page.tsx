@@ -28,7 +28,7 @@ type pageProps = {
     params:{
         projectid: string,
         sampleid: string,
-        subsampleid: string,    
+        subsampleid: string,
     }
 }
 
@@ -55,7 +55,7 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
 
     //         {
     //             backgrounds.map( (background: Background) => {
-    //                 return (   
+    //                 return (
     //                     <TableRow key={background.id}>
     //                         <TableCell>{background.createdAt}</TableCell>
     //                         <TableCell>{background.user.name}</TableCell>
@@ -103,7 +103,7 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
     const [isLoading, setIsLoading] = React.useState(true);
 
 
-    const baseURL = "http://zooprocess.imev-mer.fr:8081/v1"
+    const baseURL = process.env.API_SERVER;
 
     // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OGRkN2VhMjRiYzEwYTRiZjFlMzdlMiIsImlhdCI6MTcwODA3OTQzNywiZXhwIjoxNzA4MzM4NjM3fQ.TJb59x0v4M6a8Up0pos9sKzjOM6fae6cPxpZ_lS1T9Q"
 
@@ -133,10 +133,10 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
             });
             let backgrounds = await res.json();
             setIsLoading(false);
-    
+
             console.log("backgrounds", backgrounds)
             // const rows = []
-            
+
             const rows = backgrounds.map( (background: Background) => {
                 return {
                     key: background.id,
@@ -168,11 +168,11 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
                     console.log("second", second)
 
                     let cmp = (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
-            
+
                     if (sortDescriptor.direction === "descending") {
                         cmp *= -1;
                     }
-        
+
                     return cmp;
                 }),
             };
@@ -182,16 +182,16 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
 
 
 //     const ShowData = () => {
-//         if (isLoading) return 
+//         if (isLoading) return
 //             (
 //                 // <Table aria-label="Backgrounds associated to the instrument"
 //                 //     color="secondary"
-//                 //     selectionMode="multiple" 
-//                 // >              
+//                 //     selectionMode="multiple"
+//                 // >
 //                 // <TableHeader columns={columns}>
 //                 //     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
 //                 // </TableHeader>
-//                 // <TableBody 
+//                 // <TableBody
 //                 //     emptyContent={ () => { return (<MySpinner />)}    }>{[]}
 //                 // </TableBody>
 //                 // </Table>
@@ -202,7 +202,7 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
 
 //         // const colors = ["default", "primary", "secondary", "success", "warning", "danger"];
 //         // const [selectedColor, setSelectedColor] = React.useState("default");
-      
+
 //         const rows = backgrounds.map( (background: Background) => {
 //             return {
 //                 key: background.id,
@@ -217,7 +217,7 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
 //         return (
 //             <Table aria-label="Backgrounds associated to the instrument"
 //                 color={selectColor}
-//                 selectionMode="multiple" 
+//                 selectionMode="multiple"
 //                 // defaultSelectedKeys={["1", "2"]}
 //                 // disallowEmptySelection
 //                 selectedKeys={selectedKeys}
@@ -228,11 +228,11 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
 //                 classNames={{
 //                     table: "min-h-[400px]",
 //                 }}
-//             >              
+//             >
 //                 <TableHeader columns={columns}>
 //                     {(column) => <TableColumn key={column.key} allowsSorting={column.sort}>{column.label}</TableColumn>}
 //                 </TableHeader>
-//                 <TableBody 
+//                 <TableBody
 //                     emptyContent={"No background scan"}
 //                     items={rows}>
 //                     {(item) => (
@@ -246,10 +246,10 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
 
         // return (
         //     <div className="flex flex-col gap-3">
-        //         <Table 
+        //         <Table
         //             color="secondary"
-        //             selectionMode="multiple" 
-        //             defaultSelectedKeys={["2", "3"]} 
+        //             selectionMode="multiple"
+        //             defaultSelectedKeys={["2", "3"]}
         //             aria-label="Example static collection table"
         //         >
         //             <TableHeader>
@@ -262,7 +262,7 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
         //             <TableBody>
         //             {
         //                 backgrounds.map( (background: Background) => {
-        //                 return (   
+        //                 return (
         //                     <TableRow key={background.id}>
         //                         <TableCell>{background.createdAt}</TableCell>
         //                         <TableCell>{background.user.name}</TableCell>
@@ -276,21 +276,21 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
         //             </TableBody>
         //         </Table>
 
-        //         {/* <RadioGroup 
+        //         {/* <RadioGroup
         //             label="Selection color"
         //             orientation="horizontal"
-        //             value={selectedColor} 
+        //             value={selectedColor}
         //             onValueChange={setSelectedColor}
         //         >
         //             {colors.map((color) => (
         //             <Radio
         //                 key={color}
-        //                 color={color}  
+        //                 color={color}
         //                 value={color}
         //                 className="capitalize"
         //             >
         //                 {color}
-        //             </Radio>  
+        //             </Radio>
         //             ))}
         //         </RadioGroup> */}
         //     </div>
@@ -307,7 +307,7 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
             {/* <ShowData /> */}
             <Table aria-label="Backgrounds associated to the instrument"
                 color={selectColor}
-                selectionMode="multiple" 
+                selectionMode="multiple"
                 selectionBehavior="toggle"
                 defaultSelectedKeys={defaultSelectedKeys}
                 // disallowEmptySelection
@@ -320,13 +320,13 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
                 classNames={{
                     table: "min-h-[400px]",
                 }}
-            >              
+            >
                 <TableHeader columns={columns}>
                     {(column) => <TableColumn key={column.key} allowsSorting={column.sort}>{column.label}</TableColumn>}
                 </TableHeader>
 
-                <TableBody 
-                    items={list.items} 
+                <TableBody
+                    items={list.items}
                     isLoading={isLoading}
                     loadingContent={<MySpinner />}
                     emptyContent={"No background scan"}

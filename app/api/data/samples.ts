@@ -3,14 +3,14 @@
 
 import { Sample, Samples } from '../network/interfaces';
 
-import * as api from '@/app/api/network/zooprocess-api' 
+import * as api from '@/app/api/network/zooprocess-api'
 
 
 export async function getSamples(projectid:string): Promise<Samples> {
   try {
     // const project = await api.getProject(projectid);
     // const samples = await api.getSamples(`/projects/${projectid}/samples`)
-    const baseURL = "http://zooprocess.imev-mer.fr:8081/v1"
+    const baseURL = process.env.API_SERVER;
     const fullUrl = `${baseURL}/projects/${projectid}/samples`
     const samples = await api.getSamples(fullUrl)
     return samples;
@@ -19,12 +19,12 @@ export async function getSamples(projectid:string): Promise<Samples> {
     throw error;
   }
 }
-  
+
 export async function getSample(projectid:string, sampleid:string) : Promise<Sample>{
 
   try {
     // const sample = await api.getSample(`/projects/${projectid}/samples/${sampleid}`)
-    const baseURL = "http://zooprocess.imev-mer.fr:8081/v1"
+    const baseURL = process.env.API_SERVER;
     const fullUrl = `${baseURL}/projects/${projectid}/samples/${sampleid}`
     const sample = await api.getSample(fullUrl)
 
