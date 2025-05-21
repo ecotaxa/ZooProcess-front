@@ -1,90 +1,98 @@
-"use client"
+"use client";
 
+import { useState } from "react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from "@nextui-org/react";
+import DrawCanvas, { mergeImageWithMatrix } from "@/components/DrawCanvas";
 
-// import { title } from "@/components/primitives";
-// import { Timeline_scan } from "@/components/timeline-scan";
-// import { Card, CardBody, CardFooter, Input, Link, Select, SelectItem, Spinner, Switch } from "@nextui-org/react";
+export default function TestCanvasPage() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-// import ArcticMap from '@/components/ArcticMap';
-import MapComponent from "@/components/MapComponent";
-// import Planisfer from "@/components/Planisfer";
-import { useEffect, useRef, useState } from "react";
-// import AntarcticMap from "@/components/AntarcticMap";
+  const imagePath = "/test/apero2023_pp_wp2_001_st01_d_d1_1_567.jpg";
 
+  const handleApply = (matrix: number[][]) => {
+    const img = new Image();
+    img.src = imagePath;
+    img.onload = () => {
+      const resultCanvas = mergeImageWithMatrix(img, matrix);
+      const dataUrl = resultCanvas.toDataURL("image/png");
+      setImageUrl(dataUrl);
+      onClose();
+    };
+  };
 
-// import dotenv from 'dotenv';
-// dotenv.config();
-// const { useEnviron } = require('@next/npm/env');
+  const handleSave = () => {
+    if (!imageUrl) return;
+    const link = document.createElement("a");
+    link.href = imageUrl;
+    link.download = "fusion-result.png";
+    link.click();
+  };
 
-// useEnviron({
-//   database: 'your-database-url',
-//   username: 'your-username',
-//   password: 'your-password'
-// });
+  return (
+    <div className="p-6">
+      <h1 className="text-xl font-bold mb-4">Test Masquage Image</h1>
 
-// import { env } from 'node:process';
-// import env;
+      <img
+        src={imagePath}
+        alt="Miniature"
+        className="w-48 cursor-pointer border border-gray-400 rounded"
+        onClick={onOpen}
+      />
 
-const startCoords :[number,number] = [43.3, 7.4]    
-const endCoords :[number,number] = [41.4, 7.4]
-
-function handleCoordsChange(start: [number,number], end :[number,number]|void){
-    console.log("handleCoordsChange", start, end)
-}
-
-type Coord =  [number,number]
-
-export default function AboutPage() {
-
-    const initialStartCoords :Coord = [43.3, 7.1]
-    const initialEndCoords :Coord = [41.3, 8.1]
-
-    // const [folder, setFolder] = useState<string | undefined>();
-    // useEffect(() => {
-    //     setFolder(process.env.NEXT_PUBLIC_REAL_FOLDER);
-    // }, []);
-
-    const onCoordsChange = (start: Coord, end :Coord|void) : any => {
-        console.log("onCoordsChange", start, end)
-    }
- 
-    const test = () => {
-        const folder = process.env.NEXT_PUBLIC_REAL_FOLDER // || "toto"
-        // console.log("process.env.REAL_FOLDER", folder)
-
-        return (
-            <div>
-                <h1>Folder: {folder}</h1>
+      <Modal isOpen={isOpen} onClose={onClose} size="full" backdrop="blur">
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">Masquage interactif</ModalHeader>
+          <ModalBody>
+            <div
+              style={{
+                margin: "0 auto",
+                maxWidth: "75vw",
+                maxHeight: "75vh",
+                overflow: "auto",
+              }}
+            >
+              <DrawCanvas
+                imagePath={imagePath}
+                strokeColor="red"
+                onApply={handleApply}
+              />
             </div>
-        )
+          </ModalBody>
+          <ModalFooter>
+            <Button color="default" onPress={onClose}>
+              Fermer
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
-    }
-
-	return (
-        <div className="w-screen max-w-none overflow-x-hidden px-6" >
-
-        {test()}
-        {/* <h1>t{process.env.REAL_FOLDER}</h1> */}
-        {/* <h1>{process.env.NEXT_PUBLIC_REAL_FOLDER}</h1> */}
-
- 
-        <MapComponent start={initialStartCoords} end={initialEndCoords} onChange={onCoordsChange} />
-
+      {imageUrl && (
+        <div className="mt-8 text-center">
+          <h2 className="text-lg font-semibold mb-2">Image fusionnée</h2>
+          <div className="overflow-auto border p-2 inline-block max-w-full">
+            <img
+              src={imageUrl}
+              alt="Fusion"
+              className="block"
+              style={{ maxWidth: "100%", height: "auto" }}
+            />
+          </div>
+          <div className="mt-4">
+            <Button color="primary" onPress={handleSave}>
+              Sauvegarder l’image
+            </Button>
+          </div>
         </div>
-	);
+      )}
+    </div>
+  );
 }
-
-
-// 	<h1 className={title()}>About</h1>
-		// 	<Spinner/>
-		// 	<div className="flex flex-col gap-4">
-        //     <Link href={"/blog/123"} className="bg-green-400 w-fit rounded-lg p-4">
-        //         Single param
-        //     </Link>
-        //     <Link href={"blog/a/b"} className="bg-blue-400 w-fit rounded-lg p-4">
-        //         Multiple Params
-        //     </Link>
-        //     <Link href={"blog"} className="bg-amber-400 w-fit rounded-lg p-4">
-        //         Optional
-        //     </Link>
-        //  </div>
