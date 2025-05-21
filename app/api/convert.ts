@@ -49,7 +49,8 @@ export async function converttiff2jpg(data: any): Promise<string> {
     
     console.debug("converttiff2jpg modified data: ", modifiedData);
     
-    const server = "http://zooprocess.imev-mer.fr:8000";
+    // const server = "http://zooprocess.imev-mer.fr:8000";
+    const server= process.env.API_TOOLS_SERVER;
     const url = server + "/convert/";
 
     // console.debug("await fetch url: ", url)
