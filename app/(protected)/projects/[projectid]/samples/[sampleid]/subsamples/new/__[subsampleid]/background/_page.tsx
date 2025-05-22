@@ -103,7 +103,7 @@ const BackgroundPage : FC<pageProps> = ({params}) => {
     const [isLoading, setIsLoading] = React.useState(true);
 
 
-    const baseURL = process.env.API_SERVER;
+    const baseURL = process.env.NEXT_PUBLIC_API_SERVER
 
     // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OGRkN2VhMjRiYzEwYTRiZjFlMzdlMiIsImlhdCI6MTcwODA3OTQzNywiZXhwIjoxNzA4MzM4NjM3fQ.TJb59x0v4M6a8Up0pos9sKzjOM6fae6cPxpZ_lS1T9Q"
 
