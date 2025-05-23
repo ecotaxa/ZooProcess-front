@@ -19,7 +19,7 @@ import getServerSession from "next-auth";
 // import { options } from "@/api/_auth/[...nextauth]/options";
 
 const axiosInstancev = axios.create({
-    baseURL: process.env.API_SERVER,
+    baseURL: process.env.NEXT_PUBLIC_API_SERVER,
     timeout: 5000,
 });
 
@@ -54,7 +54,7 @@ import { headers } from 'next/headers';
 
 const axiosInstanceSimple = async ({useAuth = true, token = undefined, params = {}}:{useAuth?:boolean,token?:string|undefined, params?:any}): Promise<AxiosInstance> => {
     let _params : CreateAxiosDefaults<any> = {
-        baseURL: process.env.API_SERVER,
+        baseURL: process.env.NEXT_PUBLIC_API_SERVER,
         timeout: 5000,
     }
 
@@ -112,7 +112,7 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
 
 
     let _params : CreateAxiosDefaults<any> = {
-        baseURL: process.env.API_SERVER,
+        baseURL: process.env.NEXT_PUBLIC_API_SERVER,
         timeout: 30000, //5000,
     }
 
