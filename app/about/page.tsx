@@ -11,13 +11,15 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
-import DrawCanvas, {
+import DrawCanvas from "@/components/DrawCanvas";
+
+import {
   mergeImageWithMatrix,
   saveMatrixAsCompressedBinary,
   readMatrixFromCompressedBinary,
   readMatrixFromBinary,
   saveMatrixAsBinary
-} from "@/components/DrawCanvas";
+} from "@/components/DrawCanvasTools";
 
 export default function TestCanvasPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();

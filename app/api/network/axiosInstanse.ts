@@ -68,7 +68,7 @@ const axiosInstance = async ({useAuth = true, token = undefined, params = {}}:{u
 
     let _params : CreateAxiosDefaults<any> = {
         baseURL: process.env.NEXT_PUBLIC_API_SERVER,
-        timeout: 30000, //5000,
+        timeout: 30000, 
     }
 
       if (token && useAuth) {
