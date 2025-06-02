@@ -91,7 +91,7 @@ function pathToRealStorage(path: string, projectBasePath?: string): string {
 
 const isTiff = (fileUrl: string) : boolean => {
     if (fileUrl == undefined) return false
-    console.log("fileUrl: ", fileUrl)
+    console.log("fileUrl in gateway.ts: ", fileUrl)
     return fileUrl.endsWith(".tif") || fileUrl.endsWith(".tiff")
 }
 

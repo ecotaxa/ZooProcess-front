@@ -116,7 +116,7 @@ const BackgroundUpload : FC<pageProps> = ({params}) => {
     }
 
     const isTiff = (fileUrl:string) : boolean => {
-        console.log("fileUrl: ", fileUrl)
+        console.log("fileUrl in backgroundUpload.tsx: ", fileUrl)
         // return true
         return fileUrl.endsWith(".tif") || fileUrl.endsWith(".tiff")
 
