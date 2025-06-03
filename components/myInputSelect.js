@@ -1,4 +1,4 @@
-import { Autocomplete, AutocompleteItem, Select, SelectItem } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem, Select, SelectItem } from "@heroui/react";
 import { useState } from "react";
 import { Debug } from "@/components/Debug";
 

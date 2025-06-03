@@ -4,7 +4,7 @@
 import { Project } from "@/app/api/network/interfaces";
 import { addBackgroundTask } from "@/app/api/tasks";
 import { MyImage } from "@/components/myImage";
-import { Button, Card, CardBody, CardFooter, Image, Spinner } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, Image, Spinner } from "@heroui/react";
 import { useEffect, useState } from "react";
 // import { add } from "date-fns";
 

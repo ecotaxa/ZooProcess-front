@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter } from "@heroui/react";
 
 
     export function Prepare (params:{

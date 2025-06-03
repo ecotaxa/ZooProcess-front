@@ -1,6 +1,6 @@
 import React from "react";
-import {Breadcrumbs, BreadcrumbItem} from "@nextui-org/breadcrumbs";
-import { Link } from "@nextui-org/link";
+import {Breadcrumbs, BreadcrumbItem} from "@heroui/breadcrumbs";
+import { Link } from "@heroui/link";
 // import { url } from "inspector";
 import { FC } from "react";
 

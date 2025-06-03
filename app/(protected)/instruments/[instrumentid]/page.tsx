@@ -10,7 +10,7 @@ import { FC, useState } from 'react';
 // import { MyForm } from '@/components/myForm';
 // import { useInstrument } from '@/app/api/instruments';
 // import { CalibrationTable } from './calibration-table';
-// import { Button, Card, CardBody, CardHeader } from '@nextui-org/react';
+// import { Button, Card, CardBody, CardHeader } from '@heroui/react';
 // import Link from 'next/link';
 import { getInstrument } from '@/app/api/data/instrument';
 

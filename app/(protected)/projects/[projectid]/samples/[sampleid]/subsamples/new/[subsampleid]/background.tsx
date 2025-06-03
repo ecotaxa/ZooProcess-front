@@ -14,9 +14,9 @@ import { getProjectBackgrounds } from "@/app/api/data/background";
 import { Project, Sample, SubSample } from "@/app/api/network/interfaces";
 import { Debug } from "@/components/Debug";
 import {MyChoicer, ChoicerInterface} from "@/components/MyChoicer";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 // import { MySelect } from "@/components/mySelect5";
-// import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
+// import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@heroui/react";
 import { useEffect, useState } from "react";
 
 

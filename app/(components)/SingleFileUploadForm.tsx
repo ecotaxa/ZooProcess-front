@@ -1,5 +1,5 @@
 // import Image from "next/image";
-import { Image } from "@nextui-org/react";
+import { Image } from "@heroui/react";
 import { ChangeEvent, MouseEvent, useState } from "react";
 
 const SingleFileUploadForm = () => {

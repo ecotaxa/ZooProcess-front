@@ -1,14 +1,14 @@
 "use client";
 
-import { Input } from "@nextui-org/input";
+import { Input } from "@heroui/input";
 import Image from "next/image";
 import { ChangeEvent, FC, useState, useRef } from "react";
 import { Debug } from "@/components/Debug";
 import { Label } from "@radix-ui/react-label";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { CameraIcon } from "@radix-ui/react-icons";
 import { add } from "date-fns";
-import { Progress } from "@nextui-org/react";
+import { Progress } from "@heroui/react";
 // import { Progress } from "@/components/ui/progress"; // Assurez-vous d'importer votre composant Progress de HeroUI
 
 type pageProps = {

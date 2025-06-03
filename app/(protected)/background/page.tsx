@@ -2,8 +2,8 @@
 
 import { Debug } from "@/components/Debug"
 import { Timeline_scan } from "@/components/timeline-scan";
-// import { Button, Card, CardBody, CardFooter, getKeyValue } from "@nextui-org/react";
-import { Button, getKeyValue } from "@nextui-org/react";
+// import { Button, Card, CardBody, CardFooter, getKeyValue } from "@heroui/react";
+import { Button, getKeyValue } from "@heroui/react";
 // import { FC, useEffect, useState } from "react"
 import { FC } from "react"
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ import React from "react";
 import { MySpinner } from "@/components/mySpinner";
 // import { ErrorComponent } from "@/components/ErrorComponent";
 
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, RadioGroup, Radio} from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, RadioGroup, Radio} from "@heroui/react";
 // import { map } from "zod";
 // import { Background } from "@/app/api/network/zooprocess-api";
 

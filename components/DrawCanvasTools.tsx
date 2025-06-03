@@ -1,10 +1,15 @@
 
 import pako from "pako";
+// import fs from 'fs/promises';
 
 
+/** 
+color = [R,G,B,A]
+*/
 export function mergeImageWithMatrix(
   backgroundImg: HTMLImageElement,
-  binaryMatrix: number[][]
+  binaryMatrix: number[][],
+  color: [number, number, number, number] = [255, 255, 255, 255] // ⬅️ default white
 ): HTMLCanvasElement {
   const width = backgroundImg.width;
   const height = backgroundImg.height;
@@ -25,10 +30,10 @@ export function mergeImageWithMatrix(
     for (let x = 0; x < width; x++) {
       const index = (y * width + x) * 4;
       if (binaryMatrix[y][x] === 1) {
-        data[index] = 255;
-        data[index + 1] = 255;
-        data[index + 2] = 255;
-        data[index + 3] = 255;
+        data[index] = color[0];     // R
+        data[index + 1] = color[1]; // G
+        data[index + 2] = color[2]; // B
+        data[index + 3] = color[3]; // A
       }
     }
   }
@@ -164,3 +169,6 @@ export function readMatrixFromCompressedBinary(buffer: ArrayBuffer): number[][] 
 
   return matrix;
 }
+
+
+

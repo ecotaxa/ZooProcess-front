@@ -2,8 +2,8 @@
 
 // "use server"; //par en boucle d'erreur
 import { auth } from '@/auth'
-import { Button } from '@nextui-org/button'
-import { Link } from '@nextui-org/link'
+import { Button } from "@heroui/button"
+import { Link } from "@heroui/link"
 import { signOut } from 'next-auth/react'
 // import { useRouter } from 'next/navigation'
 import { handleSignOut } from "./serverActions"
@@ -89,40 +89,32 @@ if ( status === "unauthenticated" ) {
 // }
 
   return (
-    // Your JSX here
-    <div>
-                <h1>Settings Page</h1>
-                {/* {userInfo()} */}
-    
-                {/* {JSON.stringify(session)} */}
-    
-    
-                <ul>
-                        {/* <Label htmlFor="name" className="label">Session Validity :</Label> */}
-                        <li>Name: {session?.user.name}</li>
-                        <li>ID: {session?.user.id}</li>
-                        <li>Email: {session?.user.email}</li>
-                        <li>Role: {session?.user.role}</li>
-                        {picture()}
-                        <li></li>
-                        <li>Session expiration date: {session?.expires}</li>
-                        <li>Session token: {session?.user.token}</li>
-                </ul>
-    
-                <br/>
-                <hr/>
-                <br/>
-                <Button href="projects" as={Link} color="primary">My Projects</Button>
-    
-                <form action={handleSignOut}>
-                    <Button color="danger" type="submit">
-                        Sign Out
-                    </Button>
-                </form>
-            </div>
-
-
-
-  )
+      // Your JSX here
+      <div>
+          <h1>Settings Page</h1>
+          {/* {userInfo()} */}
+          {/* {JSON.stringify(session)} */}
+          <ul>
+                  {/* <Label htmlFor="name" className="label">Session Validity :</Label> */}
+                  <li>Name: {session?.user.name}</li>
+                  <li>ID: {session?.user.id}</li>
+                  <li>Email: {session?.user.email}</li>
+                  <li>Role: {session?.user.role}</li>
+                  {picture()}
+                  <li></li>
+                  <li>Session expiration date: {session?.expires}</li>
+                  <li>Session token: {session?.user.token}</li>
+          </ul>
+          <br/>
+          <hr/>
+          <br/>
+          <Button href="projects" as={Link} color="primary">My Projects</Button>
+          <form action={handleSignOut}>
+              <Button color="danger" type="submit">
+                  Sign Out
+              </Button>
+          </form>
+      </div>
+  );
 }
 export default AsyncAuthComponent

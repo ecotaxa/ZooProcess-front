@@ -2,7 +2,7 @@
 
 import { Instrument, Project } from "@/app/api/network/interfaces";
 // import { eState } from "./state";
-import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter } from "@heroui/react";
 import { Debug } from "@/components/Debug";
 import { useRouter } from "next/navigation";
 // import { on } from "events";

@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Card, CardBody, Link, Spacer } from "@nextui-org/react";
+import { Button, Card, CardBody, Link, Spacer } from "@heroui/react";
 
 
 import { ArrowDownIcon, ArrowDownTrayIcon, CloudIcon, PlusIcon } from "@heroicons/react/20/solid";

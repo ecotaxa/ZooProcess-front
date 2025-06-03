@@ -2,7 +2,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, Button, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, Button, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from '@heroicons/react/24/outline';
 
 
@@ -34,7 +34,7 @@
 //             const scaledWidth = img.naturalWidth * 3;
             
 //             // Update modal size
-//             const modal = img.closest('.nextui-modal-content') as HTMLElement;
+//             const modal = img.closest('.heroui-modal-content') as HTMLElement;
 //             if (modal) {
 //                 modal.style.height = `${scaledHeight}px`;
 //                 modal.style.width = `${scaledWidth}px`;
@@ -229,7 +229,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, Button, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, Button, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -356,7 +356,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, Button, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, Button, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -486,7 +486,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -617,7 +617,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -748,7 +748,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -878,7 +878,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -1008,7 +1008,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -1138,7 +1138,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -1266,7 +1266,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -1399,7 +1399,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -1532,7 +1532,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -1665,7 +1665,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -1806,7 +1806,7 @@
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {
@@ -1955,7 +1955,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { eState } from "../state"
-import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+import { Modal, ModalBody, ModalContent } from "@heroui/react";
 import { EyeIcon } from "@heroicons/react/24/outline";
 
 export function Check(param: {
@@ -2105,7 +2105,7 @@ export function Check(param: {
 
 // import { useEffect, useRef, useState } from "react";
 // import { eState } from "./state";
-// import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
+// import { Modal, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from "@heroicons/react/24/outline";
 
 // export function Check(param: {

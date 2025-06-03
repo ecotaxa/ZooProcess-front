@@ -1,7 +1,7 @@
 "use client";
 
 import { Instrument } from "@/app/api/network/interfaces";
-import { Button, Card, CardBody, CardHeader, Link } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Link } from "@heroui/react";
 import { CalibrationTable } from "./calibration-table";
 import { useState } from "react";
 import { MyForm } from '@/components/myForm';
@@ -126,7 +126,7 @@ const onCancel = () => {
       return (
         // <Button disabled>Add new calibration {noFilteredArray.length}</Button>
         <Button disabled>Add new setting</Button>
-      )
+      );
     } 
 
     return (

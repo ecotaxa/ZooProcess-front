@@ -6,7 +6,7 @@ import { ErrorComponent } from "@/components/ErrorComponent";
 // import { BackgroundTable } from "@/components/backgrounds-table";
 import { MySpinner } from "@/components/mySpinner";
 import { ScanTable } from "@/components/scans-table";
-import { Button, Card, CardBody, CardHeader, Link, Spacer} from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Link, Spacer} from "@heroui/react";
 import { FC, useEffect, useState } from "react";
 
 interface pageProps {

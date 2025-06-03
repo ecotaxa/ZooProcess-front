@@ -1,7 +1,7 @@
 "use client";
 
 import { Instrument, Project } from "@/app/api/network/interfaces";
-import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter } from "@heroui/react";
 import { Debug } from "@/components/Debug";
 
 

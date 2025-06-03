@@ -12,7 +12,7 @@
 // import { Url } from 'next/dist/shared/lib/router/router';
 // import Link from 'next/link';
 // import { Icon } from 'next/dist/lib/metadata/types/metadata-types';
-// // import { Link } from '@nextui-org/link';
+// // import { Link } from '@heroui/link';
 
 // // export type NLink = {
 // //     icon: React.ReactElement // String,

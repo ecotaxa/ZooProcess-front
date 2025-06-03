@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 // import {  FormControl, InputLabel, FormHelperText, TextField, InputAdornment, Input } from "@mui/material"
 import {   TextField, InputAdornment } from "@mui/material"
-import { Textarea } from "@nextui-org/input";
+import { Textarea } from "@heroui/input";
 
 export function MyTextField(props) {
     // let state = {
@@ -242,26 +242,25 @@ export function MyTextField(props) {
         // <FormControl  error={hasError} {...form_props} autoComplete="off" >
         //   {/* <InputLabel htmlFor="name">{props.name}</InputLabel> */}
         //    {/* <InputLabel {...label_keys} htmlFor="name" shrink></InputLabel> */}
-            // <TextField {...props}
-            <TextField {...field_props} 
-            // <Input {...field_props} InputLabelProps={{ shrink: true }}
-                onChange={event => handleChange(event.target.value)}
-                onFocus={handleFocus}
-                // {typeField} === "date" && }
-                // InputLabelProps={{ shrink: true }}  - à mettre pour date seul
-                InputLabelProps={shrinked()}
-                // endAdornment={<InputAdornment position="end">Kg</InputAdornment>}
-                // endAdornment={props.endAdornment && "<InputAdornment position='"+props.endAdornment.pos+"'>"+props.endAdornment.text+"</InputAdornment>"}
-                // endAdornment={props.endAdornment && <InputAdornment position='end'>Kg</InputAdornment>}
-                // InputProps={ props.endAdornment && { startAdornment: <InputAdornment position='end'>Kg</InputAdornment> } }
-                // InputProps={ props.endAdornment && { endAdornment: <InputAdornment position={props.endAdornment.pos}>{props.endAdornment.text}</InputAdornment> } }
-                InputProps={adornment()}
-                error={hasError}
-                helperText={hasError ? (props.helperText ? props.helperText : "Error - not an acceptable value") : '' }
-            />
-            
-            // {hasError && <FormHelperText>This is required!</FormHelperText>}
+        // <TextField {...props}
+        // {hasError && <FormHelperText>This is required!</FormHelperText>}
         // </FormControl>
+        <TextField {...field_props} 
+        // <Input {...field_props} InputLabelProps={{ shrink: true }}
+            onChange={event => handleChange(event.target.value)}
+            onFocus={handleFocus}
+            // {typeField} === "date" && }
+            // InputLabelProps={{ shrink: true }}  - à mettre pour date seul
+            InputLabelProps={shrinked()}
+            // endAdornment={<InputAdornment position="end">Kg</InputAdornment>}
+            // endAdornment={props.endAdornment && "<InputAdornment position='"+props.endAdornment.pos+"'>"+props.endAdornment.text+"</InputAdornment>"}
+            // endAdornment={props.endAdornment && <InputAdornment position='end'>Kg</InputAdornment>}
+            // InputProps={ props.endAdornment && { startAdornment: <InputAdornment position='end'>Kg</InputAdornment> } }
+            // InputProps={ props.endAdornment && { endAdornment: <InputAdornment position={props.endAdornment.pos}>{props.endAdornment.text}</InputAdornment> } }
+            InputProps={adornment()}
+            error={hasError}
+            helperText={hasError ? (props.helperText ? props.helperText : "Error - not an acceptable value") : '' }
+        />
     );
 
     // onSelect={handleSelect}

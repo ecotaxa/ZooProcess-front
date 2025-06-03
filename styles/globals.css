@@ -10,3 +10,12 @@
         @apply underline font-bold;
     }
 }
+
+
+.debug-border {
+  border: 2px solid limegreen;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+

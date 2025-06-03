@@ -1,4 +1,4 @@
-import { Card, CardBody, Spacer } from "@nextui-org/react";
+import { Card, CardBody, Spacer } from "@heroui/react";
 
 
 import { ArrowDownIcon, ArrowDownTrayIcon, CloudIcon, PlusIcon } from "@heroicons/react/20/solid";

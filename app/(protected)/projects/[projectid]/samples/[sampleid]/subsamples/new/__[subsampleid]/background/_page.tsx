@@ -2,7 +2,7 @@
 
 import { Debug } from "@/components/Debug"
 import { Timeline_scan } from "@/components/timeline-scan";
-import { Button, Card, CardBody, CardFooter, getKeyValue } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, getKeyValue } from "@heroui/react";
 import { FC } from "react"
 // import FileUploader from "@/components/FileUploader";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ import { useBackgrounds } from '@/app/api/background';
 import { MySpinner } from "@/components/mySpinner";
 import { ErrorComponent } from "@/components/ErrorComponent";
 
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, RadioGroup, Radio} from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, RadioGroup, Radio} from "@heroui/react";
 // import { map } from "zod";
 import { Background } from "@/app/api/network/zooprocess-api";
 

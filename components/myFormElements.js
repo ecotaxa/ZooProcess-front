@@ -15,15 +15,15 @@ import { MyTextArea } from "./myTextArea"
 // import { DatePicker } from "@mui/x-date-pickers"
 import { MyDatePicker } from "./myDatePicker.old"
 // import { TextareaAutosize } from "@mui/material"
-// import { Input, Textarea } from "@nextui-org/input";
-// import { Select, SelectItem } from "@nextui-org/react";
+// import { Input, Textarea } from "@heroui/input";
+// import { Select, SelectItem } from "@heroui/react";
 // import { DateTimeField, LocalizationProvider, deDE } from "@mui/x-date-pickers";
 // import {  DateTimePicker, LocalizationProvider, deDE } from "@mui/x-date-pickers";
 
 // import {MyInput}from "@/components/mySelect4.js"
 import Drives from "./drives";
 import Instruments from "./instruments";
-import { Input } from "@nextui-org/input"
+import { Input } from "@heroui/input"
 // import MapComponent from "./MapComponent"
 import MyMap from "./myMap"
 import ScannerComponent from "./Scanner"

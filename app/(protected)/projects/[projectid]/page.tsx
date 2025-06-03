@@ -1,8 +1,8 @@
 // "use client"
 "use server";
 
-// import { Card, CardBody, CardHeader, Spacer } from "@nextui-org/react";
-// import { Tab, Tabs } from "@nextui-org/tabs";
+// import { Card, CardBody, CardHeader, Spacer } from "@heroui/react";
+// import { Tab, Tabs } from "@heroui/tabs";
 // import SamplesTab from "./@samples/page";
 // import Stats from "./@stats/page";
 // import Scans from "./@scans/page";

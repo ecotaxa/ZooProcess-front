@@ -5,7 +5,7 @@ import { ErrorComponent } from "@/components/ErrorComponent";
 import { MySpinner } from "@/components/mySpinner";
 import { useEffect, useState } from "react";
 import { UsersTable } from "./users-table";
-import { Button, Card, CardBody, CardHeader, Spacer } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Spacer } from "@heroui/react";
 import Link from "next/link";
 
 const Users = () => {

@@ -1,6 +1,6 @@
 'use client'
 
-import { Tab, Tabs } from "@nextui-org/react";
+import { Tab, Tabs } from "@heroui/react";
 import Metadata from "./@metadata/page";
 import Stats from "./@stats/page";
 // import * as api from '@/app/api/network/zooprocess-api'

@@ -1,5 +1,5 @@
 import React from "react";
-import {Textarea} from "@nextui-org/react";
+import {Textarea} from "@heroui/react";
 import { Debug } from "./Debug";
 
 export function MyTextArea(props) {

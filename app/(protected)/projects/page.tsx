@@ -3,7 +3,7 @@ import { GetServerSideProps, NextPage } from 'next'
 import { MySpinner } from '@/components/mySpinner'
 import { ErrorComponent } from '@/components/ErrorComponent'
 import { ProjectsTableNextUI as ProjectsTable } from '@/components/projects-table'
-import { Button, Card, CardBody, CardHeader, Link, Spacer } from '@nextui-org/react'
+import { Button, Card, CardBody, CardHeader, Link, Spacer } from "@heroui/react"
 import * as api from '@/app/api/network/zooprocess-api'
 // import { Project } from '@/app/api/network/zooprocess-api'
 import { Project, Projects } from '@/app/api/network/interfaces'
