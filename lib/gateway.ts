@@ -49,6 +49,12 @@ function pathToRealStorage(path: string, projectBasePath?: string): string {
         return path;
     }
 
+    // @ts-ignore
+    if (path.startsWith(process.env.NEXT_PUBLIC_API_SERVER)) {
+        return path;
+    }
+
+
     // look for the projectBasePath, if provided
     // if (projectBasePath) {
     //     if (path.startsWith(projectBasePath)) {
