@@ -1,5 +1,5 @@
 // obsolette ? old version
-// import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
+// import { Button, Card, CardBody, CardFooter } from "@heroui/react";
 
 
 

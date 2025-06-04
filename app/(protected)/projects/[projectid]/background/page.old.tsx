@@ -3,7 +3,7 @@
 
 import { Debug } from "@/components/Debug"
 import { Timeline_scan } from "@/components/timeline-scan";
-import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, Image } from "@heroui/react";
 import { FC, useEffect, useState } from "react"
 import FileUploader from "@/components/FileUploader";
 import { useRouter } from "next/navigation";

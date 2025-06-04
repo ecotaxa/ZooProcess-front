@@ -1,5 +1,5 @@
 // import { Card, CardContent, Typography } from "@mui/material"
-import { Card, CardBody, Button } from "@nextui-org/react"
+import { Card, CardBody, Button } from "@heroui/react"
 import { useRouter } from "next/navigation"
 
 export const ErrorComponent = ({error}) => {

@@ -1,10 +1,10 @@
 "use client";
 
-// import { Link } from "@nextui-org/link";
+// import { Link } from "@heroui/link";
 
 import Custom404 from "@/app/pages/404";
-import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/link";
+import { Button } from "@heroui/button";
+import { Link } from "@heroui/link";
 import { useRouter } from "next/navigation";
 import { clientID } from "./api/_auth/[...nextauth]/options";
 // import { Router } from "next/ro";
@@ -23,6 +23,7 @@ export default function NotFound() {
     }
 
     return (
+        // <Custom404/>
         <div className="flex flex-col items-center justify-center h-screen">
             {/* <img src="static/images/404.jpg" alt="404 error" /> */}
             <img src="/images/404.jpg" alt="404 error" />
@@ -41,7 +42,6 @@ export default function NotFound() {
                     }}>Go back</Button> */}
             </div>
         </div>
-        // <Custom404/>
-    )
+    );
 }
 

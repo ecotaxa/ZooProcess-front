@@ -6,7 +6,7 @@
 
 
 import { SamplesTableNextUI as SamplesTable } from '@/components/samples-table'
-import { Button, Card, CardBody, CardHeader, Spacer, Link } from '@nextui-org/react';
+import { Button, Card, CardBody, CardHeader, Spacer, Link } from "@heroui/react";
 // import { MySpinner } from '@/components/mySpinner';
 // import { ErrorComponent } from '@/components/ErrorComponent';
 import { FC, useEffect, useState } from 'react';

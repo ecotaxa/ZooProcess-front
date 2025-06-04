@@ -13,7 +13,7 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import {useFormState, useFormStatus} from "react-dom";
 
 import { authenticate } from '@/lib/actions';
-import { Button } from '@nextui-org/button';
+import { Button } from '@heroui/button';
 import { useEffect } from 'react';
  
 export default function LoginForm() {

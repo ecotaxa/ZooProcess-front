@@ -75,7 +75,7 @@ export async function getProject(projectId: string) {
   try {
       const params = {}
       const axios = await axiosInstanse(params)
-      const baseURL = process.env.API_SERVER;
+      const baseURL = process.env.NEXT_PUBLIC_API_SERVER
 
       // const response = await axios.get(`${baseURL}/project/${projectId}`);
         const fullUrl = `${baseURL}/projects/${projectId}`

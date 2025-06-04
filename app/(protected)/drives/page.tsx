@@ -7,7 +7,7 @@
 // import { MySpinner } from '@/components/mySpinner'
 // import { ErrorComponent } from '@/components/ErrorComponent'
 import { DrivesTable } from './drives-table'
-import { Button, Card, CardBody, CardHeader, Link, Spacer } from '@nextui-org/react';
+import { Button, Card, CardBody, CardHeader, Link, Spacer } from "@heroui/react";
 import { getDrives } from '@/app/api/network/zooprocess-api';
 // import { useDrives } from '@/api/drives';
 

@@ -22,8 +22,8 @@ import { CardWrapper } from "@/components/auth/card-wrapper"
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { register } from "@/actions/register";
-import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/link";
+import { Button } from "@heroui/button";
+import { Link } from "@heroui/link";
 
 export const RegisterForm = () => {
   const searchParams = useSearchParams();

@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Card, CardBody, CardFooter, Textarea } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, Textarea } from "@heroui/react";
 
 import { useEffect, useRef, useState } from "react";
 

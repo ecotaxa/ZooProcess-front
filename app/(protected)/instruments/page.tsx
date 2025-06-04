@@ -6,7 +6,7 @@
 // import { MySpinner } from '@/components/mySpinner'
 // import { ErrorComponent } from '@/components/ErrorComponent'
 import { InstrumentsTable } from './instruments-table'
-import { Button, Card, CardBody, CardHeader, Link, Spacer } from '@nextui-org/react';
+import { Button, Card, CardBody, CardHeader, Link, Spacer } from "@heroui/react";
 // import { useInstruments } from '@/api/instruments'
 import { getInstruments } from '@/app/api/data/instrument';
 

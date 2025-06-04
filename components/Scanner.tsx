@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Debug } from "@/components/Debug"
 // import Instruments from "./instruments";
-import { Select, SelectItem } from "@nextui-org/react";
+import { Select, SelectItem } from "@heroui/react";
 
 
 interface ScannerComponentProps {
@@ -207,7 +207,7 @@ const ScannerComponent = (props:any) => {
                     <span>{setting?.ySize ?? "N/A"}</span>
                 </div>
             </div>
-        )
+        );
     }
 
     // return (

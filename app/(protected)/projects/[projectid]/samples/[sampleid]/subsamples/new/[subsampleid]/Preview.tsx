@@ -2,7 +2,7 @@
 
 
 import { ScannerEffect } from "@/components/ScannerEffect";
-import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter } from "@heroui/react";
 import { eState } from "./state";
 import { TemporizedButton } from "@/components/temporized_button";
 

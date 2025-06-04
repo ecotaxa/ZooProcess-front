@@ -1,5 +1,5 @@
-import { Input } from "@nextui-org/input";
-import { Button, Table, TableBody, TableCell, TableHeader, TableRow } from "@nextui-org/react";
+import { Input } from "@heroui/input";
+import { Button, Table, TableBody, TableCell, TableHeader, TableRow } from "@heroui/react";
 
 interface IFraction  {
     min: number

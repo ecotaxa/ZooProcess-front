@@ -1,6 +1,6 @@
 "useClient";
 
-import {Code, Switch, Tooltip} from "@nextui-org/react";
+import {Code, Switch, Tooltip} from "@heroui/react";
 import { useState } from "react";
 
 import {debug} from "../config/settings"

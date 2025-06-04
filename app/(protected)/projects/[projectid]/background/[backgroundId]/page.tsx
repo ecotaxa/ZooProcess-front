@@ -8,7 +8,7 @@ import { Debug } from "@/components/Debug";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { MySpinner } from "@/components/mySpinner";
 import { pathToSessionStorage, isTiff  } from "@/lib/gateway";
-import { Card, CardBody, CardHeader, Image, Spacer } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Image, Spacer } from "@heroui/react";
 import { FC } from "react";
 
 

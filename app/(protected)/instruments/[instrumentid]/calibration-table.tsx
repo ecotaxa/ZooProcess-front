@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-import {  Link, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip} from "@nextui-org/react";
+import {  Link, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip} from "@heroui/react";
 import { key } from '@/api/key';
 import { useRouter } from "next/navigation";
 import { useAsyncList } from "react-stately";

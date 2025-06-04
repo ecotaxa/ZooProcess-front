@@ -2,7 +2,7 @@
 
 import { Debug } from "@/components/Debug"
 import { Timeline_scan } from "@/components/timeline-scan";
-import { Button, Card, CardBody, CardFooter, Image, Spinner } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, Image, Spinner } from "@heroui/react";
 import { FC, useEffect, useState } from "react"
 import FileUploader from "@/components/FileUploader";
 import { useRouter } from "next/navigation";
@@ -229,7 +229,7 @@ const BackgroundUpload : FC<pageProps> = ({params}) => {
                         const errormsg = { ...response, message:"Cannot convert Tiff to Jpg error"}
                         throw errormsg
                     }
-                })
+                });
 
             }
             catch (error) {
@@ -748,14 +748,14 @@ const BackgroundUpload : FC<pageProps> = ({params}) => {
             console.error("PRINT THE ERROR")
             console.trace("trace")
                 return (
+                    // <div className="alert alert-danger" role="alert">
+                    //     <h4 className="alert-heading">Error</h4>
+                    //     <p>
+                    //         {JSON.stringify(error)}
+                    //     </p>
+                    // </div>
                     <ErrorComponent error={error} />
-                // <div className="alert alert-danger" role="alert">
-                //     <h4 className="alert-heading">Error</h4>
-                //     <p>
-                //         {JSON.stringify(error)}
-                //     </p>
-                // </div>
-            )
+                );
         }
         return <></>
 

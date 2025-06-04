@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { MySpinner } from '@/components/mySpinner'
 import { ErrorComponent } from '@/components/ErrorComponent'
 import { MetadataTable } from '@/components/metadata-table'
-import { Button, Card, CardBody, CardFooter, CardHeader, Link, Spacer } from '@nextui-org/react';
+import { Button, Card, CardBody, CardFooter, CardHeader, Link, Spacer } from "@heroui/react";
 
 // import { Projects } from "@/app/api/network/zooprocess-api"
 

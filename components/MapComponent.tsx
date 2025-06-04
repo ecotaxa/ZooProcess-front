@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { Input, Card, CardBody, Select, SelectItem, Button, Switch, CardFooter } from '@nextui-org/react';
+import { Input, Card, CardBody, Select, SelectItem, Button, Switch, CardFooter } from "@heroui/react";
 import 'leaflet/dist/leaflet.css';
 
 // polar projection

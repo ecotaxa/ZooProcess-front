@@ -2,7 +2,7 @@
 
 // class gateway{}
 
-import { Image, Spinner } from "@nextui-org/react"
+import { Image, Spinner } from "@heroui/react"
 
 import {isTiff, pathToSessionStorage, pathToRealStorage }  from "@/lib/gateway"
 import { converttiff2jpg } from "@/app/api/convert";
@@ -97,7 +97,7 @@ export function MyImage(props){
     const placeholder = "/images/placeholder-image.jpg"
 
     const changeToJpgExtension = (path) => {
-        return path.replace(/\.tif?$/i, '.jpg')
+        return path.replace(/\.tif?$/i, '.jpg');
       }
 
     useEffect( () => {
@@ -259,55 +259,55 @@ export function MyImage(props){
                 className="border border-gray-200 flex justify-center items-center"
                 style={containerStyle}
             > */}
-        {/* // <div className="  border border-gray-200"> */}
-        {/* <div className="flex justify-center"> */}
-        <div className={`
-                image-container
-                border border-gray-200
-                ${isPortrait ? 'portrait-mode' : 'landscape-mode'}
-            `}>
-            {/* <div 
-                ref={containerRef}
-                className={`
-                    border border-gray-200 flex justify-center items-center overflow-hidden
-                    ${isPortrait ? 'transform rotate-90' : ''}
-                `}
-                style={{
-                    maxWidth: '90vw',
-                    maxHeight: '70vh',
-                    transition: 'width 0.3s, height 0.3s'
-                }}
-            > */}
-            {isLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-10">
-                    <div className="text-center">
-                        <Spinner color="primary" size="lg" />
-                        <p className="mt-2 text-sm text-gray-600">Converting image...</p>
+            {/* // <div className="  border border-gray-200"> */}
+            {/* <div className="flex justify-center"> */}
+            <div className={`
+                    image-container
+                    border border-gray-200
+                    ${isPortrait ? 'portrait-mode' : 'landscape-mode'}
+                `}>
+                {/* <div 
+                    ref={containerRef}
+                    className={`
+                        border border-gray-200 flex justify-center items-center overflow-hidden
+                        ${isPortrait ? 'transform rotate-90' : ''}
+                    `}
+                    style={{
+                        maxWidth: '90vw',
+                        maxHeight: '70vh',
+                        transition: 'width 0.3s, height 0.3s'
+                    }}
+                > */}
+                {isLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-10">
+                        <div className="text-center">
+                            <Spinner color="primary" size="lg" />
+                            <p className="mt-2 text-sm text-gray-600">Converting image...</p>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            <Image {...newProps} radius="none"/>
+                <Image {...newProps} radius="none"/>
 
-            {error && (
-                <div className="absolute bottom-0 left-0 right-0 bg-red-500 text-white p-2 text-sm text-center">
-                    {error}
+                {error && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-red-500 text-white p-2 text-sm text-center">
+                        {error}
+                    </div>
+                )}
                 </div>
-            )}
-            </div>
             {/* </div> */}
             {props.legend && (
                 // <div className="legend text-center text-sm text-gray-600 mt-2">
                 // <div className="text-center text-sm text-gray-600 mt-2">
-                <div className="text-center text-sm text-gray-600 mt-2 w-full">
+                (<div className="text-center text-sm text-gray-600 mt-2 w-full">
                     {props.legend}
-                </div>
+                </div>)
             )}
             <div>
                 <h3>{newProps.src}</h3>
             </div>
         </div>
-    )
+    );
 
 }
 

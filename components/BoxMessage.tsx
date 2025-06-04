@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Link } from "@nextui-org/react";
+import { Button, Card, CardBody, Link } from "@heroui/react";
 import React, { FC } from "react";
 
 export interface IBoxMessage {

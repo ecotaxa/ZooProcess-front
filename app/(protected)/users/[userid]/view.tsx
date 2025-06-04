@@ -4,7 +4,7 @@
 import { useUserByIdWithAuth } from "@/app/api/user";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { MySpinner } from "@/components/mySpinner";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { User } from "next-auth";
 import { useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";

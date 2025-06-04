@@ -8,8 +8,8 @@ import { useState,
   // useMemo,
    useEffect } from "react";
 import { FormElements } from "@/components/myFormElements";
-import { Button } from "@nextui-org/button";
-import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@heroui/react";
 import { Debug } from "@/components/Debug";
 // import { el } from "date-fns/locale";
 
@@ -639,114 +639,113 @@ const onSubmitHandler = async (event) => {
     // const stringifiedData = useMemo(() => JSON.stringify(myform, null, 2), [myform]);
 
     return (
-        // <ThemeProvider theme={theme}>
-        // <div className="App">
-          // <div className="grid">
+      // <ThemeProvider theme={theme}>
+      // <div className="App">
+      // <div className="grid">
 
-          <form onSubmit={onSubmitHandler}>
-            <Card>
-              <CardHeader className="flex flex-col">
-                <h1
-                  color="primary">
-                    {title}
-                </h1>
-                <h4 variant="subtitle1" 
-                  color="textSecondary">
-                    {subtitle}
-                </h4>
-              
-              <Debug params={forms} title="forms"/>
-              <Debug params={value} title="value"/>
-              <Debug params={myValues} title="myValues" open={true}/>
-              <Debug params={error} title="error" open={true}/>
-              <Debug params={errorMessage} title="errorMessage" open={true}/>
+      // </div>
+      // </div>
+      // </ThemeProvider>
+      <form onSubmit={onSubmitHandler}>
+        <Card>
+          <CardHeader className="flex flex-col">
+            <h1
+              color="primary">
+                {title}
+            </h1>
+            <h4 variant="subtitle1" 
+              color="textSecondary">
+                {subtitle}
+            </h4>
+          
+          <Debug params={forms} title="forms"/>
+          <Debug params={value} title="value"/>
+          <Debug params={myValues} title="myValues" open={true}/>
+          <Debug params={error} title="error" open={true}/>
+          <Debug params={errorMessage} title="errorMessage" open={true}/>
 
-              {/* <Debug params={myValues} title="myform"/> */}
+          {/* <Debug params={myValues} title="myform"/> */}
 
-              </CardHeader>
-              <CardBody>
+          </CardHeader>
+          <CardBody>
 
-                  <div className="grid" key="form">
-                    {
-                      forms.map( input => formElements(input) )
-                      // myForms.map( input => formElements(input) )
-                    }
-    
-                  </div>
-    
-                  {/* {error && (
-        <div className="text-danger mt-2">
-            {error.message || error}
-        </div> 
-       )}*/}
+              <div className="grid" key="form">
+                {
+                  forms.map( input => formElements(input) )
+                  // myForms.map( input => formElements(input) )
+                }
 
-              </CardBody>
-              <CardFooter>
-              <div className="gridjustify-items-end"
-                      >
-                        {/* {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>} */}
-                        {error && <div style={{ color: 'red' }}>{error}</div>}
-                        {isDataUpdated && <div>Data have been updated</div>}
+              </div>
 
-                        <div className="flex flex-row-reverse">
-                      <Button 
-                        type="submit" 
-                        variant="solid" 
-                        color="primary"
-                        // onClick={props.onChange}
+              {/* {error && (
+    <div className="text-danger mt-2">
+        {error.message || error}
+    </div> 
+   )}*/}
 
-                        isDisabled={!isDataModified}
-                        // isDisabled={!isDataModified|| isUpdating}
-                        // isDisabled={!hasChanges() || isUpdating}
+          </CardBody>
+          <CardFooter>
+          <div className="gridjustify-items-end"
+                  >
+                    {/* {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>} */}
+                    {error && <div style={{ color: 'red' }}>{error}</div>}
+                    {isDataUpdated && <div>Data have been updated</div>}
 
-                      >
-                        {/* {isUpdating ? btn.updating : btn.submit } */}
-                        {isUpdating ? btn.submitting : btn.submit }
-                      </Button>
-                      <Spacer x={2}/>
+                    <div className="flex flex-row-reverse">
+                  <Button 
+                    type="submit" 
+                    variant="solid" 
+                    color="primary"
+                    // onClick={props.onChange}
 
-                      <Button
-                        type="reset" 
-                        variant="flat" 
-                        color="primary" 
-                        onClick={cancel}
-                      >{btn.cancel}</Button>
-     
-                      <Spacer x={2}/>
+                    isDisabled={!isDataModified}
+                    // isDisabled={!isDataModified|| isUpdating}
+                    // isDisabled={!hasChanges() || isUpdating}
 
-                      {/* <Button
-                        type="reset" 
-                        variant="faded" 
-                        color="primary" 
-                        onClick={init}
-                      >Refill</Button> */}
-                      </div>
+                  >
+                    {/* {isUpdating ? btn.updating : btn.submit } */}
+                    {isUpdating ? btn.submitting : btn.submit }
+                  </Button>
+                  <Spacer x={2}/>
 
-                      {/* <Button style={margin} key="refill"
-                        type="reset" 
-                        variant="outlined" 
-                        color="primary" 
-                        onClick={init}
-                      >Refill</Button>
-                      <Button style={margin}  key="reset"
-                        type="reset" 
-                        variant="outlined" 
-                        color="primary" 
-                        onClick={reset}
-                      >Cancel</Button>
-                      <Button type="submit"  key="submit"
-                        variant="contained" 
-                        color="primary"
-                      >Submit</Button> */}
-                    </div>
-              </CardFooter>
-            </Card>
-            </form>
+                  <Button
+                    type="reset" 
+                    variant="flat" 
+                    color="primary" 
+                    onClick={cancel}
+                  >{btn.cancel}</Button>
  
-          // </div>
-        // </div>
-        // </ThemeProvider>
-        );
+                  <Spacer x={2}/>
+
+                  {/* <Button
+                    type="reset" 
+                    variant="faded" 
+                    color="primary" 
+                    onClick={init}
+                  >Refill</Button> */}
+                  </div>
+
+                  {/* <Button style={margin} key="refill"
+                    type="reset" 
+                    variant="outlined" 
+                    color="primary" 
+                    onClick={init}
+                  >Refill</Button>
+                  <Button style={margin}  key="reset"
+                    type="reset" 
+                    variant="outlined" 
+                    color="primary" 
+                    onClick={reset}
+                  >Cancel</Button>
+                  <Button type="submit"  key="submit"
+                    variant="contained" 
+                    color="primary"
+                  >Submit</Button> */}
+                </div>
+          </CardFooter>
+        </Card>
+      </form>
+    );
 }
 
 

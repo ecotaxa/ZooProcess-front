@@ -3,9 +3,9 @@
 
 import SingleFileUploadForm from "@/app/(components)/SingleFileUploadForm";
 import { ProjectBreadcrumbs } from "@/components/ProjectBreadcrumbs";
-// import { /*Image,*/ Input } from "@nextui-org/react";
+// import { /*Image,*/ Input } from "@heroui/react";
 // import Image from "next/image"
-import { Image, Input } from "@nextui-org/react";
+import { Image, Input } from "@heroui/react";
 import { FC, useState } from "react";
 
 import React, { SyntheticEvent } from "react"
@@ -120,7 +120,7 @@ const SubsamplePage : FC<pageProps> = ({params}) => {
     //         <Image
     // //   width={300}
     //   alt="NextUI hero Image"
-    // // src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+    // // src="https://heroui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
     // src="http://photos.galvagno.info/images/paroxantus.jpg"
     // // src="/images/hero-card-complete.jpeg"
     // // src="/images/background.jpg"

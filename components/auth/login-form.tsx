@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { LoginSchema } from "@/schemas";
 // import { Input } from "@/components/ui/input";
-import {Input} from "@nextui-org/input";
+import {Input} from "@heroui/input";
 import {
   Form,
   FormControl,
@@ -25,8 +25,8 @@ import { CardWrapper } from "@/components/auth/card-wrapper"
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { login } from "@/actions/login";
-import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/link";
+import { Button } from "@heroui/button";
+import { Link } from "@heroui/link";
 
 import {EyeFilledIcon} from "./EyeFilledIcon";
 import {EyeSlashFilledIcon} from "./EyeSlashFilledIcon";

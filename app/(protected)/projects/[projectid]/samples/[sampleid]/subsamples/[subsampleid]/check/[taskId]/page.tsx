@@ -10,7 +10,7 @@ import { ErrorComponent } from "@/components/ErrorComponent";
 import { sep } from "path";
 // import { Separator, Vignette } from "@/app/api/network/zooprocess-api";
 import { pathToSessionStorage } from "@/lib/gateway";
-import { Image } from "@nextui-org/react";
+import { Image } from "@heroui/react";
 // import { BorderDottedIcon } from "@radix-ui/react-icons";
 import { Debug } from "@/components/Debug";
 

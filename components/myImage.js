@@ -2,7 +2,7 @@
 
 // class gateway{}
 
-import { Image, Spinner } from "@nextui-org/react"
+import { Image, Spinner } from "@heroui/react"
 
 import {isTiff, pathToSessionStorage, pathToRealStorage }  from "@/lib/gateway"
 import { converttiff2jpg } from "@/app/api/convert";
@@ -101,7 +101,7 @@ export function MyImage(props){
     const placeholder = "/images/placeholder-image.jpg"
 
     const changeToJpgExtension = (path) => {
-        return path.replace(/\.tif?$/i, '.jpg')
+        return path.replace(/\.tif?$/i, '.jpg');
       }
 
     // // Mettre à jour la taille de la fenêtre lors du redimensionnement
@@ -368,95 +368,94 @@ export function MyImage(props){
         // <div className="relative flex flex-col items-center">
         // <div className="flex justify-center items-center" style={{ minHeight: '50vh' }}>
         <div className="flex flex-col items-center w-full">
+            {/* Conteneur principal centré horizontalement */}
+            <div className="flex justify-center items-center w-full" style={{ height: isPortrait ? 'auto' : '70vh' }}>
 
-           {/* Conteneur principal centré horizontalement */}
-           <div className="flex justify-center items-center w-full" style={{ height: isPortrait ? 'auto' : '70vh' }}>
+             {/* <div 
+                 className="border border-gray-200 flex justify-center items-center"
+                 style={containerStyle}
+             > */}
+         {/* // <div className="  border border-gray-200"> */}
+         {/* <div className="flex justify-center"> */}
+         {/* <div className={`
+                 image-container
+                 border border-gray-200
+                 ${isPortrait ? 'portrait-mode' : 'landscape-mode'}
+             `}> */}
 
-            {/* <div 
-                className="border border-gray-200 flex justify-center items-center"
-                style={containerStyle}
-            > */}
-        {/* // <div className="  border border-gray-200"> */}
-        {/* <div className="flex justify-center"> */}
-        {/* <div className={`
-                image-container
-                border border-gray-200
-                ${isPortrait ? 'portrait-mode' : 'landscape-mode'}
-            `}> */}
+             {/* Conteneur de l'image avec rotation */}
+             <div 
+                 ref={containerRef}
+                 className={`
+                     relative border border-slate-200
+                     ${isPortrait ? 'transform rotate-90' : ''}
+                     transition-transform duration-300
+                 `}
+                 style={{ 
+                     // minWidth: '300px', 
+                     // minHeight: '300px',
+                     display: 'flex',
+                     justifyContent: 'center',
+                     alignItems: 'center',
+                     overflow: 'hidden'
+                 }}
+             >
+             {/* <div 
+                 ref={containerRef}
+                 className={`
+                     border border-gray-200 flex justify-center items-center overflow-hidden
+                     ${isPortrait ? 'transform rotate-90' : ''}
+                 `}
+                 style={{
+                     maxWidth: '90vw',
+                     maxHeight: '70vh',
+                     transition: 'width 0.3s, height 0.3s'
+                 }}
+             > */}
+             {/* {isLoading && (
+                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-10">
+                     <div className="text-center">
+                         <Spinner color="primary" size="lg" />
+                         <p className="mt-2 text-sm text-gray-600">Converting image...</p>
+                     </div>
+                 </div>
+             )} */}
+                 {isLoading && (
+                     <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
+                         <Spinner color="primary" size="lg" />
+                     </div>
+                 )}
 
-            {/* Conteneur de l'image avec rotation */}
-            <div 
-                ref={containerRef}
-                className={`
-                    relative border border-slate-200
-                    ${isPortrait ? 'transform rotate-90' : ''}
-                    transition-transform duration-300
-                `}
-                style={{ 
-                    // minWidth: '300px', 
-                    // minHeight: '300px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    overflow: 'hidden'
-                }}
-            >
-            {/* <div 
-                ref={containerRef}
-                className={`
-                    border border-gray-200 flex justify-center items-center overflow-hidden
-                    ${isPortrait ? 'transform rotate-90' : ''}
-                `}
-                style={{
-                    maxWidth: '90vw',
-                    maxHeight: '70vh',
-                    transition: 'width 0.3s, height 0.3s'
-                }}
-            > */}
-            {/* {isLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-10">
-                    <div className="text-center">
-                        <Spinner color="primary" size="lg" />
-                        <p className="mt-2 text-sm text-gray-600">Converting image...</p>
-                    </div>
-                </div>
-            )} */}
-                {isLoading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
-                        <Spinner color="primary" size="lg" />
-                    </div>
-                )}
+             {/* <Image {...newProps} radius="none" className="max-w-full max-h-full object-contain"/> */}
 
-            {/* <Image {...newProps} radius="none" className="max-w-full max-h-full object-contain"/> */}
+              <img 
+                     // src={imgSrc}
+                     src={newProps.src}
+                     alt={props.alt || "Image"}
+                     onLoad={handleLoad}
+                     className="max-w-full max-h-full object-contain"
+                 />
 
-             <img 
-                    // src={imgSrc}
-                    src={newProps.src}
-                    alt={props.alt || "Image"}
-                    onLoad={handleLoad}
-                    className="max-w-full max-h-full object-contain"
-                />
-
-            {error && (
-                <div className="absolute bottom-0 left-0 right-0 bg-red-500 text-white p-2 text-sm text-center">
-                    {error}
-                </div>
-            )}
-            </div>
-            </div>
+             {error && (
+                 <div className="absolute bottom-0 left-0 right-0 bg-red-500 text-white p-2 text-sm text-center">
+                     {error}
+                 </div>
+             )}
+             </div>
+             </div>
             {/* </div> */}
             {props.legend && (
                 // <div className="legend text-center text-sm text-gray-600 mt-2">
                 // <div className="text-center text-sm text-gray-600 mt-2">
-                <div className="text-center text-sm text-gray-600 mt-4 w-full">
+                (<div className="text-center text-sm text-gray-600 mt-4 w-full">
                     {props.legend}
-                </div>
+                </div>)
             )}
             {/* <div>
                 <h3>{newProps.src}</h3>
                 </div> */}
         </div>
-    )
+    );
 
 }
 

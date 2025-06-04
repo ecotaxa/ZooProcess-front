@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, Image } from "@heroui/react";
 // import { eState } from "./state";
 import { Project, Sample, SubSample } from "@/app/api/network/interfaces";
 // import { Loader, MyLoaderProps } from "./Loader";

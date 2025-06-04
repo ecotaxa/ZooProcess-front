@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link } from "@heroui/react";
 // import { useRouter } from "next/navigation";
 // import { Button } from "@mui/material";
 
@@ -34,7 +34,7 @@ const columns : Array<IColumn> = [
     {name: "Observation", uid: "observation", allowSorting:true},
 
     {name: "QC", uid: "qc", allowSorting:true},
-    {name: "ACTION", uid: "action", allowSorting: false},
+    // {name: "ACTION", uid: "action", allowSorting: false},
   ];
 
 export function ScanTable(props:{projectId:String, scans:any}) {
@@ -115,7 +115,7 @@ export function ScanTable(props:{projectId:String, scans:any}) {
 
     const renderCell = React.useCallback((scan:any, columnKey:any) => {
 
-        console.log("render cell :columnKey ", columnKey); 
+        // console.log("render cell :columnKey ", columnKey); 
 
         const cellValue = scan[columnKey];
 

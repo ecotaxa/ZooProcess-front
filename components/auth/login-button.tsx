@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { useRouter } from "next/navigation";
 
 // import {
@@ -43,10 +43,10 @@ export const LoginButton = ({
 
   return (
     // <span onClick={onClick} className="cursor-pointer">
-      // {/* {children} */}
-      <Button color="secondary" onPress={onClick} >
-          {children}
-      </Button>
+    // {/* {children} */}
     // </span>
+    <Button color="secondary" onPress={onClick} >
+      {children}
+    </Button>
   );
 };

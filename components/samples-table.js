@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link } from "@heroui/react";
 // import { useRouter } from "next/navigation";
 // import { Button } from "@mui/material";
 

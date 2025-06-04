@@ -3,7 +3,7 @@
 
 // import { title } from "@/components/primitives";
 // import { Timeline_scan } from "@/components/timeline-scan";
-// import { Card, CardBody, CardFooter, Input, Link, Select, SelectItem, Spinner, Switch } from "@nextui-org/react";
+// import { Card, CardBody, CardFooter, Input, Link, Select, SelectItem, Spinner, Switch } from "@heroui/react";
 
 // import ArcticMap from '@/components/ArcticMap';
 import MapComponent from "@/components/MapComponent";
