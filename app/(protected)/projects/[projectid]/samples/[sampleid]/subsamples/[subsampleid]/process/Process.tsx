@@ -284,9 +284,9 @@ const Process = (params:{
                     <h1 className="text-center">Processing.</h1>
                     <br/><br/>
                     <div className="flex flex-col items-center justify-center h-screen">
-                    <h1>project id: {project.id}</h1>
-                    <h1>sample id: {sample.id}</h1>
-                    <h1>subsample id: {subsample.id}</h1>
+                    <h1>project id: {project.name}</h1>
+                    <h1>sample id: {sample.name}</h1>
+                    <h1>subsample id: {subsample.name}</h1>
                         <h1>bg: {background}</h1>
                         <h1>sc: {scan}</h1>
                         <h1>scanId: {scanId}</h1>
