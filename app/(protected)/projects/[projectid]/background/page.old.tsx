@@ -430,10 +430,6 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
                         <div >
                             <Debug params={project} title="project"/>
                             { project.instrument?.sn && <b>Your project use Zooscan : {project.instrument?.sn}</b>}
-                            <br/>
-                            <b>project.instrumentId: {project.instrumentId}</b>
-                            {/* <b>Your project use Zooscan : {project.instrument?.sn||""}</b> */}
-                            {/* <b>Your project use Zooscan : {project.instrumentId} {project.instrument.serial}</b> */}
                         </div>
                     </div>
                 </CardBody>
@@ -441,25 +437,17 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
                 <CardFooter className="flex flex-row-reverse py-3">
 
                     <Button 
-                        // disabled={ isError || isLoading || !image }
                         color="primary"
-                        // showAnchorIcon
                         variant="solid"
                         data-testid="scanBackgroundBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
                         onPress={() =>{ console.debug("I'm using " + project.instrument?.sn);   setCurrent(nextState) }}
-                        // onPress={onClick}
                     >Continue - {"I'm using " + project.instrument?.sn}</Button>
 
                     <Button 
-                        // disabled={ isError || isLoading || !image }
                         color="secondary"
-                        // showAnchorIcon
                         variant="solid"
                         data-testid="backgroundCancelBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
                         onPress={() =>{ console.debug("cancel scanning"); router.push('/projects'); }}
-                        // onPress={onClick}
                     >Cancel</Button>
                 </CardFooter>
             </Card>               
@@ -488,10 +476,6 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
                                 <li>Place the suitable frame (LARGE/NARROW) on the glass and adjust its position.</li>
                                 <li>Add the sample</li>
                                 <li>Adjust the water level just above the first step of the transparent frame (the meniscus must be above the step).</li>
-                                {/* <li>Spread the specimens homogeneously, but avoid placing specimens close and parallel to the borders.<br/>
-                                The number of objects will be adapted to their size, and it's important to limit the number of touching objects (multiple).</li>
-                                <li>Help floating specimens to sink on the glass.</li>
-                                <li>Separate the touching objects.</li> */}
                             </ul>
                         </div>
                     </div>
@@ -500,14 +484,10 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
                 <CardFooter className="flex flex-row-reverse py-3">
 
                     <Button 
-                        // disabled={ isError || isLoading || !image }
                         color="primary"
-                        // showAnchorIcon
                         variant="solid"
                         data-testid="PreviewBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
                         onPress={() =>{ console.debug("go to Preview");   setCurrent(nextState) }}
-                        // onPress={onClick}
                     >Done - Launch Preview</Button>
                 </CardFooter>
             </Card>
@@ -515,46 +495,19 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
         )
     }
 
-    const Preview = (nextState: state ) => {
-        // if ( current != state.preview ) {
-        //     return <></>
-        }
+    // const Preview = (nextState: state ) => {
+    // }
 
-        // const afterScanComplete = () => {
-        //     // setTemporized(false)
-        //     console.log("Scan completed!");
-
-        //     // if ( temporized == false ){
-        //         // setTemporized(true)
-        //     // } else {
-        //         // setResetCounter(prev => prev + 1);
-        //     // }
-        //     setTimeout(() => {
-        //         setTemporized(true);
-        //         setResetCounter(prev => prev + 1);
-        //     }, 100); // Adjust this delay as needed
-
-        //     setTriggerScan(false);
-        // }
-
-        // useEffect( () => {
-
-        // },[scanCompleted])
 
         const onPreviewClick = () => {
             console.log("onPreviewClick - TODO drive the scanner")
             console.debug("renew Preview");
-        //     setTemporized(false)
-        //     // setTemporized(true)
-        //     // setResetCounter(prev => prev + 1);
 
             setTriggerScan(true);
             return Promise.resolve() 
         }
 
         const handleScan = () => {
-            // console.log("Starting scan");
-            // setTriggerScan(true);
             setCurrent(nextState) 
         };
     
@@ -563,7 +516,6 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
             setCurrent(nextState);
         };
 
-        //setTriggerScan(true);
 
         return (
             <>
@@ -576,11 +528,6 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
                         <ScannerEffect 
                             imageSrc="/demo/demo_background.jpg" 
                             scanDuration={1000} 
-                            // onScanComplete={() => {
-                            //     // Your function to run after the scan is complete
-                            //     // You can call any function or perform any action here
-                            //     afterScanComplete()
-                            // }}
                             onScanComplete={() => {
                                 console.log("Scan completed!");
                                 setTriggerScan(false);
@@ -593,34 +540,9 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
 
                 <CardFooter className="flex flex-row-reverse py-3">
 
-                {/* <Button 
-                        // isDisabled={ isError || isLoading }
-                        color="secondary"
-                        // showAnchorIcon
-                        variant="solid"
-                        data-testid="newProjectBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
-                        // onPress={onClick}
-                        onPress={() =>{ console.debug("renew Preview");  onPreviewClick()  }}
-                    >Preview</Button> */}
-
-                    {/* <Button 
-                        // isDisabled={ isError || isLoading }
-                        color="danger"
-                        // showAnchorIcon
-                        variant="solid"
-                        data-testid="newProjectBtn"
-                        // >Scan {actions[nextAction(action)]}</Button>
-                        // onPress={onClick}
-                        onPress={() =>{ console.debug("go to wait 30s");   setCurrent(nextState) }}
-                    >Scan</Button> */}
-                    {/* <TemporizedButton  run={temporized} resetTrigger={resetCounter} onClick={() =>{ console.debug("go to wait 30s");   setCurrent(nextState) }}/> */}
                     <TimedScanButton
                         onScan={handleScan}
                         onPreview={() =>{  return  onPreviewClick() } }
-                        // onValidate={handleValidate}
-                        // scanDuration={1000}
-                        // waitDuration={30}
                         initialTime={30}
                         scanCompleted={scanCompleted}
                     />
