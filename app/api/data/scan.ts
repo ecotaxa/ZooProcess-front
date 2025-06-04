@@ -57,28 +57,27 @@ import axiosInstanse from '@/network/axiosInstanse';
 
 //   }
 
-export async function linkScanToSubsample(scanId: string, subsampleId: string): Promise<void> {
+export async function linkScanToSubsample(projectId: string, sampleId: string, subsampleId: string, scanId: string): Promise<void> {
   const api = await axiosInstanse({});
-  const url = '/link';
+  const url = `/projects/${projectId}/samples/${sampleId}/subsamples/${subsampleId}/link`;
   const body = {
     scanId: scanId,
-    subSampleId: subsampleId
   };
-  
+
   console.debug("url: ", url);
   console.debug("body: ", body);
-  
+
   try {
     const response = await api.post(url, body);
     console.log("linkScanToSubsample response: ", response);
     return response.data;
   } catch (error: any) {
     console.error("linkScanToSubsample Error: ", error);
-    
+
     // Si l'erreur vient de l'API avec un message structuré
     if (error.response && error.response.data) {
       const errorData = error.response.data;
-      
+
       // Remonter l'erreur avec les détails
       throw {
         message: errorData.message || "Server error",
@@ -87,7 +86,7 @@ export async function linkScanToSubsample(scanId: string, subsampleId: string): 
         path: errorData.path || null
       };
     }
-    
+
     // Erreur de timeout ou de réseau
     if (error.code === 'ECONNABORTED') {
       throw {
@@ -96,7 +95,7 @@ export async function linkScanToSubsample(scanId: string, subsampleId: string): 
         code: "TIMEOUT"
       };
     }
-    
+
     // Autres erreurs
     throw {
       message: error.message || "An unknown error occurred",

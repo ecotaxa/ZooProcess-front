@@ -275,7 +275,7 @@ export function ProcessTimeline(param: {
                     try {
                         if(scanData.backgroundId){
                             updateScan(scanData.backgroundId)
-                            await linkScanToSubsample(scanData.backgroundId ,subsample.id)
+                            await linkScanToSubsample(project.id, sample.id, subsample.id, scanData.backgroundId)
                         }
                     }
                     catch(error){
