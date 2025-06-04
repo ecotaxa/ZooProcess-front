@@ -97,8 +97,8 @@ const FileUploader: FC<pageProps> = (props) => {
       setIsUploading(false);
     });
 
-    xhr.open("POST", "/api/upload");
-    xhr.send(formData);
+    xhr.open("POST", process.env.NEXT_PUBLIC_API_SERVER+"/upload");
+    xhr.send(formData); // TODO: no auth
 
     /** Reset file input */
     e.target.type = "file";
