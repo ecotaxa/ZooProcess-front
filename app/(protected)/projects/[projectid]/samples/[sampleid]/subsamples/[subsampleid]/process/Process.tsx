@@ -109,7 +109,9 @@ const Process = (params:{
         let interval = setInterval(async () => {
             try {
                 const task = await fetchTask(taskId);
-                const sub = await fetchSubSample(project.id,sample.id,subsample.id)
+                const sub_rsp = await fetchSubSample(project.id,sample.id,subsample.id)
+                const sub = sub_rsp.data;
+                console.log("Sub sample:", sub);
                 const mask = sub.scan.find( (s:Scan) => s.type == "MASK" &&  s.deleted == false && s.archived == false )
                 const vis = sub.scan.find( (s:Scan) => s.type == "VIS" &&  s.deleted == false && s.archived == false )
                 const out = sub.scan.find( (s:Scan) => s.type == "OUT" &&  s.deleted == false && s.archived == false )
@@ -125,7 +127,7 @@ const Process = (params:{
                     clearInterval(interval);
                 }
             } catch (error) {
-                console.log("Error fetching task:", error);
+                console.log("Error fetching task or Sub sample:", error);
                 clearInterval(interval);
             }
         }, 5000);
