@@ -65,8 +65,8 @@ export async function linkScanToSubsample(scanId: string, subsampleId: string): 
     subSampleId: subsampleId
   };
   
-  console.debug("url: ", url);
-  console.debug("body: ", body);
+  console.debug("linkScanToSubsample::url: ", url);
+  console.debug("linkScanToSubsample::body: ", body);
   
   try {
     const response = await api.post(url, body);

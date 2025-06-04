@@ -60,7 +60,7 @@ const FileUploader: FC<pageProps> = (props) => {
       if (event.lengthComputable) {
         const percentComplete = Math.round((event.loaded / event.total) * 100);
         setUploadProgress(percentComplete);
-        console.log(`Upload progress: ${percentComplete}%`);
+        // console.log(`Upload progress: ${percentComplete}%`);
       }
     });
 
@@ -75,7 +75,7 @@ const FileUploader: FC<pageProps> = (props) => {
             instrumentId
           };
           
-          console.log("data2api: ", data2api);
+          // console.log("data2api: ", data2api);
           await transmit(data2api);
           setImageUrl(data.fileUrl);
         } catch (error) {
@@ -120,7 +120,6 @@ const FileUploader: FC<pageProps> = (props) => {
 
   return (
     <div className="flex flex-col p-3">
-    {/* <div className="flex flex-col p-3 min-h-[150px]"> */}
       <div className="mb-4">
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">
           Upload file

@@ -3,7 +3,7 @@ export enum eState {
     // metadata = 0,
     scannerSettings = 0, // = 1,
     info , //= 2,
-    // preview , //= 3,
+    preview , //= 3,
     scan1 ,//= 5,
     // thirtys1 , //= 4,
     scan2 ,//= 5,

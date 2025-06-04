@@ -1,8 +1,6 @@
 "use client";
 
 import {  useShowScan } from "@/app/api/useBackgrounds";
-// import { converttiff2jpg } from "@/app/api/convert";
-// import { Background } from "@/app/api/network/zooprocess-api";
 import { Background } from "@/app/api/network/interfaces";
 import { Debug } from "@/components/Debug";
 import { ErrorComponent } from "@/components/ErrorComponent";
@@ -20,12 +18,10 @@ interface pageProps {
 }
 
 
-// const showBackgroundScan : FC<pageProps> = ({projectid, backgroundId}) => {
 const showBackgroundScan : FC<pageProps> = ({params}) => {
 
     const projectId = params.projectid ;
     const backgroundId = params.backgroundId ;
-    // const {projectid, backgroundId} = params
     console.log("Metadata params: ", params);
     console.log("Metadata params projectid: ", params.projectid);
     console.log("Metadata params backgroundId: ", params.backgroundId);
@@ -40,7 +36,6 @@ const showBackgroundScan : FC<pageProps> = ({params}) => {
         scan: Background|any,
     }
 
-    // const showImage = (scan: Background) => {
     const ShowImage_old : FC<MyScanProps> = (props: MyScanProps) => {
         if ( isLoading ) { return <MySpinner /> }
         if ( isError ) { return <ErrorComponent error={isError}/> }
@@ -54,66 +49,15 @@ const showBackgroundScan : FC<pageProps> = ({params}) => {
 
         let path = props.scan.url
         if ( path.substring(0, 1) != '/' ) {
-            // path = path.substring(1)
-            // path = "/Users/sebastiengalvagno/" + path
             path = "/" + path
         }
 
-        // let locapPath = undefined // pathToSessionStorage(path, "/")
-        // let locapPath = pathToSessionStorage(path, "/")
         let localPath;
         try {
           localPath = pathToSessionStorage(path, "/");
           console.debug("Generated localPath:", localPath);
 
 
-            // const scanProps : MyScanProps = {scan}
-        // const ttt = async (path:string) => {
-        // try {
-            // return await converttiff2jpg(path)
-            // let locapPath = await converttiff2jpg(path)
-            //     .then(async (response:Response) => {
-            //         console.log("converttiff2jpg response: ", response)
-            //         response.text()
-            //         .then(async (imageUrl) => {
-            //             // show the converted image
-            //             // setImageUrl(imageUrl);
-            //             console.log("imageUrl: ", imageUrl)
-            //             // if ( imageUrl[0] == '"' ) {
-            //             //     console.error("arrrggggggggg !!!!!")
-            //             //     imageUrl=imageUrl.substring(1)
-            //             // }
-            //             // console.debug("imageUrl[-1]: ", imageUrl[-1])
-            //             // if ( imageUrl[-1] == '"'){
-            //             //     console.error("arrrggggggggg !!!!!")
-            //             //     imageUrl=imageUrl.substring(0,imageUrl.length-1)
-            //             // }
-            //             // const
-            //             const locapPath = pathToSessionStorage(imageUrl)
-            //             console.log("localPath: ", locapPath)
-            //             // setBackground(localPath)
-            //             return locapPath
-            //         })
-            //         .catch((error) => {
-            //             console.error("addBackground catch error: ", error)
-            //             // return Promise.reject(error)
-            //             // return <div>Error: {error}</div>
-            //             return undefined
-            //         })
-            //     })
-            //     .catch(error => {
-            //         return undefined                    
-            //     })
-        // }
-        // catch (error:any) {
-        //     return <div>Error: {error}</div>
-        // }
-
-    // }
-
-    // const localPath = ttt(path)
-
-        // if ( locapPath == undefined){
         if (!localPath) {
             console.error("pathToSessionStorage returned falsy value:", localPath);
             return <div>Error: Cannot convert the scan</div>

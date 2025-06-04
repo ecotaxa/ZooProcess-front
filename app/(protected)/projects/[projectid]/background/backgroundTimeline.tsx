@@ -10,7 +10,7 @@ import { Prepare } from "./Prepare";
 import { Preview } from "./Preview";
 import { Scan } from "./Scan";
 import { pathToRealStorage, pathToSessionStorage } from "@/lib/gateway";
-import { converttiff2jpg } from "@/app/api/convert";
+// import { converttiff2jpg } from "@/app/api/convert";
 import { addBackground } from "@/app/api/network/background";
 import { ThirtySeconds } from "./ThirtySeconds";
 import { Process } from "./Process";
