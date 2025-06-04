@@ -73,11 +73,11 @@ export async function linkScanToSubsample(projectId: string, sampleId: string, s
     return response.data;
   } catch (error: any) {
     console.error("linkScanToSubsample Error: ", error);
-    
+
     // Si l'erreur vient de l'API avec un message structuré
     if (error.response && error.response.data) {
       const errorData = error.response.data;
-      
+
       // Remonter l'erreur avec les détails
       throw {
         message: errorData.message || "Server error",
@@ -86,7 +86,7 @@ export async function linkScanToSubsample(projectId: string, sampleId: string, s
         path: errorData.path || null
       };
     }
-    
+
     // Erreur de timeout ou de réseau
     if (error.code === 'ECONNABORTED') {
       throw {
@@ -95,7 +95,7 @@ export async function linkScanToSubsample(projectId: string, sampleId: string, s
         code: "TIMEOUT"
       };
     }
-    
+
     // Autres erreurs
     throw {
       message: error.message || "An unknown error occurred",
