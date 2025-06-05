@@ -68,7 +68,7 @@ import * as I from './interfaces'
     
 export async function addScan(image: {url:string, instrumentId:string, projectId:string, sampleId:string, subsampleId:string}) {
     console.debug("addScan:", image);
-    
+
     try {
       const api = await axiosInstanse({
         params: {
