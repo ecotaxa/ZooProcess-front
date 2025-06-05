@@ -399,7 +399,13 @@ export function ProcessTimeline(param: {
                       }
                       
                       const fileUrl = scanData.fileUrl;
-                      let furl = { ...fileUrl, url: pathToRealStorage(fileUrl.url), subsampleId: subsample.id };
+                      let furl = { 
+                        ...fileUrl, 
+                        url: pathToRealStorage(fileUrl.url), 
+                        projectId: project.id,
+                        sampleId: sample.id,
+                        subsampleId: subsample.id 
+                      };
                       console.debug("Calling addScan with:", furl);
                       
                       try {
