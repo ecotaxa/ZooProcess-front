@@ -7,6 +7,10 @@ import { Navbar } from "@/components/navbar";
 import { Link } from "@heroui/link";
 import clsx from "clsx";
 
+import DebugInitProvider from '@/components/DebugInitProvider';
+
+
+
 export const metadata: Metadata = {
 	title: {
 		default: siteConfig.name,

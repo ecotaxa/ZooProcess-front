@@ -4,12 +4,8 @@ import { Project, Sample, SubSample } from "@/app/api/network/interfaces";
 import { eState, timelist } from "./state";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-// import { addScan } from "@/app/api/network/zooprocess-api";
 import { pathToRealStorage, pathToSessionStorage, isTiff } from "@/lib/gateway";
-import { converttiff2jpg } from "@/app/api/convert";
 import { Debug } from "@/components/Debug";
-// import { Check } from "./Check";
-// import { Process } from "./Process";
 import { Preview } from "./Preview";
 import { ScannerSettings } from "./ScannerSettings";
 import { Prepare } from "./Prepare";
@@ -17,7 +13,6 @@ import { Metadata } from "./Metadata";
 import { Timeline_scan } from "@/components/timeline-scan";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { Scan } from "./Scan";
-// import { addScan } from "@/app/api/network/scan";
 import { addScan } from "@/app/actions/scan-actions"
 import { Background } from "./background";
 import { linkScanToSubsample } from "@/app/api/data/scan";
@@ -27,7 +22,6 @@ import { linkScanToSubsample } from "@/app/api/data/scan";
 
 
 export function ProcessTimeline(param: {
-    // project: Project|any,
     project: Project|any,
     sample: Sample,
     subsample: SubSample,
@@ -42,8 +36,8 @@ export function ProcessTimeline(param: {
 
     const definePage = (state: string|null) => {
         switch (state) {
-            case "preview":
-                return eState.preview
+            // case "preview":
+            //     return eState.preview
             case "metadata":
                 console.debug("goto metadata step")
                 return eState.metadata
@@ -63,24 +57,14 @@ export function ProcessTimeline(param: {
                 return eState.metadata
         }
     }
-    // let initState = eState.metadata
     let initState = definePage(state)
-    // console.debug("state", state)
-    // if (state == "preview") {
-    //     initState = eState.preview
-    // }
 
-    
 
     if ( project.instrument == undefined ) {
         throw new Error("No intrument defined")
-        // return <ErrorComponent error={"No intrument defined"} />
     }
 
     const imagePlaceholder : string = "/images/placeholder-image.jpg";
-    // const [image , setImage] = useState(false);
-    // const [background, setBackground] = useState(imagePlaceholder)
-    // const [scan, setScan] = useState<string|undefined>(undefined)
 
     const [scanData, setScanData] = useState({
         // fields to play with image to show
@@ -93,10 +77,6 @@ export function ProcessTimeline(param: {
         backgroundId: undefined as string | undefined, // the background associated to the scan
       });
 
-    //   useEffect(() => {
-    //     console.log("Current scanData:", scanData);
-    // }, [scanData]);
-
     const noError : Array<any>= []
     const [error, setError] = useState(noError);
     const router = useRouter();
@@ -104,13 +84,8 @@ export function ProcessTimeline(param: {
 
 
 
-    // const isTiff = (fileUrl: string) : boolean => {
-    //     console.log("fileUrl: ", fileUrl)
-    //     return fileUrl.endsWith(".tif") || fileUrl.endsWith(".tiff")
-    // }
 
     const onCancel = () => {
-        // router.back()
         router.push(`/projects/${project.id}/samples/${sample.id}`)
     }
 
@@ -435,7 +410,6 @@ export function ProcessTimeline(param: {
                           setScanData(prevState => ({ ...scanData, image: response.id }));
                         }
                         // // remove the await because addScan take too time , and i got a timeout
-                        // addScan(furl);
                         console.log("Go To the next page");
                         nextStep();
                       } catch (error: any) {
@@ -463,174 +437,23 @@ export function ProcessTimeline(param: {
                     }
                   };
 
-                // const onValid = async () => {
-                //     try {
-                //     console.debug("eState.scan1 onValid");
-                //     console.debug("scanData: ", scanData);
-
-                //     // if (scanData.fileUrl == undefined) return; // showError("Please select a file");
-                //     if (scanData.fileUrl == undefined) {
-                //         setError(["Please select a file"]);
-                //         return;
-                //       }
-                    
-                //     const fileUrl = scanData.fileUrl;
-                //     // if (isTiff(fileUrl.url)) {
-
-                //         let furl = { ...fileUrl, url: pathToRealStorage(fileUrl.url), subsampleId:subsample.id };
-                //         console.debug("Calling addScan with:", furl);
-                //         // const scanResponse = await addScan(furl);
-                //         // if  ( scanResponse ){
-                //         //     console.debug("Scan response:", scanResponse);
-
-                //         //     // setImage(scanResponse.id);
-                //         //     if (scanData.image !== scanResponse.id) {
-                //         //         setScanData(prevState => ({ ...scanData, image: scanResponse.id }));
-                //         //     }
-                //         //     console.log("Go To the next page");
-                //         // }
-                //         // else {
-                //         //     console.error("Error adding scan");
-                //         //     setError(["Error adding scan"]);
-                //         //     return
-                //         // }
-
-                //         // await addScan(furl)
-                //         // .then(response => {
-                //         //     console.debug("2 Scan response:", response);
-                //         //     // setImage(response.id);
-                //         //     if (scanData.image !== response.id) {
-                //         //         setScanData(prevState => ({ ...scanData, image: response.id }));
-                //         //     }
-                //         //     console.log("Go To the next page 2");
-                //         // })
-                //         // .catch(error => {
-                //         //     console.error("Error adding scan 2", error);
-                //         //     setError([error.message]);
-                //         // });
-
-                //         try {
-                //             const response = await addScan(furl);
-                //             console.debug("Scan response:", response);
-                            
-                //             if (scanData.image !== response.id) {
-                //               setScanData(prevState => ({ ...scanData, image: response.id }));
-                //             }
-                //             console.log("Go To the next page");
-                //             nextStep();
-                //           } catch (error: any) {
-                //             console.error("Error adding scan:", error);
-                //             // Essayer de parser le message d'erreur JSON
-                //             try {
-                //                 // Vérifier si le message d'erreur est une chaîne JSON
-                //                 const errorMessage = error.message || error;
-                //                 const errorObj = JSON.parse(typeof errorMessage === 'string' ? errorMessage : '{}');
-                                
-                //                 setError([
-                //                 `${errorObj.message || "Failed to add scan"}`,
-                //                 errorObj.details ? `Details: ${errorObj.details}` : null,
-                //                 errorObj.path ? `Path: ${errorObj.path}` : null
-                //                 ].filter(Boolean)); // Filtrer les valeurs null
-                //             } catch (parseError) {
-                //                 // Si le parsing échoue, utiliser le message d'erreur brut
-                //                 setError([error.message || error || "Unknown error occurred"]);
-                //             }
-
-                //     // } else { // not a Tiff
-
-                //     //     if ( scanData.background !== fileUrl.url ) {
-                //     //         setScanData(prevState => ({ ...scanData, background: fileUrl.url }))
-                //     //     }
-                //     //     let furl = { ...fileUrl, url: pathToRealStorage(fileUrl.url) };
-                //     //     console.debug("2 Calling addScan with:", furl);
-                //     //     const scanResponse = await addScan(furl);
-                //     //     if  ( scanResponse){
-                //     //         console.debug("2 Scan response:", scanResponse);
-                //     //         // setImage(scanResponse.id);
-                //     //         if (scanData.image !== scanResponse.id) {
-                //     //             setScanData(prevState => ({ ...scanData, image: scanResponse.id }));
-                //     //         }
-                //     //         console.log("Go To the next page 2");
-                //     //     } else {
-                //     //         console.error("Error adding scan 2");
-                //     //     }
-
-                //     // }
-
-                //             // addScan a été fait au dessus
-
-                //     nextStep()
-                //     }
-                //     catch (error: any) {
-                //         console.error("Error in handleFileUploaderChange:", error);
-                //         // Vous pouvez afficher l'erreur dans un toast ou une notification
-                //         // toast.error(error.message);
-                //         setError([error.message]);
-
-                //       }
-                // }
-                
-
-
-
-                // const onValid = () => {
-                //     console.debug("onValid");
-
-                //     console.debug("scanData: ", scanData);
-
-                //     // addScan a été fait au dessus
-
-                //     nextStep()   
-                // }
+ 
 
                 const params = {
-                    // current,
-                    // nextState: eState.process,
-                    // scan,
                     background: scanData.background,
-                    // scanId:"1",
                     project,
                     sample,
                     subsample,
-                    // setCurrent:setCurrentFn,
-                    // onCancel,
                     onChange,
-                    // onClick //: onPreview // a fouiller dans l'ancienn page
                     onValid // :nextStep
                 }
                 return renderStep(eState.scan1, Scan(params));
 
             }
             case eState.process:
-                // {
-                //     const params = {
-                //         current, 
-                //         nextState: eState.check, 
-                //         scan, 
-                //         background,  
-                //         project, 
-                //         sample, 
-                //         subsample,
-                //         setCurrentFn, 
-                //         onCancel,
-                //         scanId : "42", ///TODO put the good value here
-                //     }
-                // return renderStep(eState.process, Process(params));
-
-                // }
 
                 router.push(`/projects/${project.id}/samples/${sample.id}/subsamples/${subsample.id}/process`)
                 return (<></>)
-            // case eState.check:
-            //     // return Scan(2,eState.end)
-            //     {
-            //         const params = {current, nextState: eState.end, setCurrent: setCurrentFn, onCancel }
-            //         return ( <Check {...params} />)
-            //     }
-
-            // case eState.end:
-            //     router.push(`/projects/${project.id}/samples/${sample.id}/subsamples/${subsample.id}`)
-            //     // router.back()
 
             default:
                 return (

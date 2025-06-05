@@ -7,7 +7,7 @@ export enum eState {
 
     background,
 
-    preview , //= 3,
+    // preview , //= 3,
     // thirtys1 = 4,
     scan1 ,//= 5,
     process,// = 6,
@@ -21,7 +21,7 @@ export const timelist = [
     { text: "Scanner Info", checked: false },
     { text: "Background", checked: false },
     { text: "Prepare", checked: false },
-    { text: "Preview", checked: false },
+    // { text: "Preview", checked: false },
 
     { text: "Scan", checked: false },
     { text: "Process", checked: false },

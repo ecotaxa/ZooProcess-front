@@ -25,8 +25,6 @@ export function ScannerSettings(param: {
                     <div >
                         <Debug params={project} title="project"/>
                         { instrument.sn && <b>Your project use Zooscan : {instrument.sn}</b>}
-                        <br/>
-                        <b>project.instrumentId: {instrument.id}</b>
                     </div>
                 </div>
             </CardBody>
