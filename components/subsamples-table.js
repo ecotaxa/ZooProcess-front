@@ -110,8 +110,8 @@ export function SubSamplesTable(props) {
 
     const renderCell = React.useCallback((sample, columnKey) => {
 
-        console.log("render cell :sample ", sample);
-        console.log("render cell :columnKey ", columnKey); 
+        console.log("render cell :subsample ", sample);
+        console.log("render cell :columnKey ", columnKey);
 
         // const cellValue = sample[columnKey];
         let cellValue = sample[columnKey]
