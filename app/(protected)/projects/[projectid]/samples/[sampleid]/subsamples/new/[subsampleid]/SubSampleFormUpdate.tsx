@@ -148,6 +148,7 @@ const SubSampleForm : FC<pageProps> = (params ) => {
             "fraction_max_mesh":subsample.fraction_max_mesh,
             "spliting_ratio":subsample.spliting_ratio,
             "observation":subsample.observation,
+            "submethod":subsample.submethod
         }
     
         console.log("formatData() data: ", data);

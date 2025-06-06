@@ -533,17 +533,19 @@ export const sampleid_formElements=[
                 xs:12, sm:12, fullWidth:true,
                 endAdornment:{pos:'end', text:'1/x'},
                 minValue:0, helperText:'value greather than or equal to zero'
+            }, 
+                // TODO: below should be { tag:"InputSelect", name:"submethod", type:"select", 
+                //  but then the value is not read or sent via API 
+            { tag:"TextField", name:"submethod", type:"text", 
+                placeholder:"Pick or enter one", label:'Sub Method',
+                variant:"outlined", fullWidth:true, required:true, 
+                xs:12, sm:6, //sx:{m:0, minWith:300},
+                choice:[
+                    {id:1, value:"Motoda"},
+                    {id:2, value:"Johnson"},
+                    {id:3, value:"<NAME>"},
+                ]
             },
-            // { tag:"InputSelect", name:"submethod", type:"select", 
-            //     placeholder:"SSubMethod", label:'SubMethod',
-            //     variant:"outlined", fullWidth:true, required:true, 
-            //     xs:12, sm:6, //sx:{m:0, minWith:300},
-            //     choice:[
-            //         {id:1, value:"Motoda"},
-            //         {id:2, value:"Johnson"},
-            //         {id:3, value:"<NAME>"},
-            //     ]
-            // },
             { tag:"TextField", name:"observation", type:"text", 
                 placeholder:"Observation", label:'Observation',
                 variant:"outlined", required:true, 
