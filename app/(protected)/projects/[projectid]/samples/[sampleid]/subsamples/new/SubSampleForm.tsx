@@ -216,6 +216,8 @@ const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
 
         const emptyData = {
             "scanning_operator":user.name, // "Seb"  // 
+            "fraction_id":"",
+            "fraction_id_suffix":""
         }
     
         const updatedForm = forms

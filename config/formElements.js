@@ -454,7 +454,7 @@ export const sampleid_formElements=[
                     },
                 update: {
                     params:"{fraction_id,fraction_id_suffix}",
-                     func:'return String(fraction_id_suffix)?(String(fraction_id)+"_"+String(fraction_id_suffix)):String(fraction_id)'
+                     func:'return fraction_id_suffix!==""?(String(fraction_id)+"_"+String(fraction_id_suffix)):String(fraction_id)'
                 }
             },
 

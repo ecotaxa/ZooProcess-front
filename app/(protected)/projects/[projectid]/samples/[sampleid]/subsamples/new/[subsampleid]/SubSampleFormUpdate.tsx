@@ -140,7 +140,7 @@ const SubSampleForm : FC<pageProps> = (params ) => {
 
         const data = {
             "scan_id":subsample.scan_id,
-            "fraction_number":subsample.fraction_number,
+            "fraction_id":subsample.fraction_id,
             "fraction_id_suffix":subsample.fraction_id_suffix,
             "scanning_operator":subsample.user.name, // "Seb"  // 
 

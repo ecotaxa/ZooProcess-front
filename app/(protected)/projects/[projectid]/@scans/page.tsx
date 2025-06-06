@@ -414,7 +414,7 @@ const Scans : FC<pageProps> = ({projectid}) => {
             console.log("subsample:",subsample.name)
 
             const metadata = subsample.metadata
-            const fraction_id = metadata.find(m => m.name == "fraction_number")
+            const fraction_id = metadata.find(m => m.name == "fraction_id")
             const frac_min = metadata.find(m => m.name == "fraction_min_mesh")
             const frac_sup = metadata.find(m => m.name == "fraction_max_mesh")
             const observation = metadata.find(m => m.name == "observation")

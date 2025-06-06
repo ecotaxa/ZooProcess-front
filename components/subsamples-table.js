@@ -135,40 +135,40 @@ export function SubSamplesTable(props) {
 
 
         switch (columnKey) {
-        case "id":
-            return (
-            <div className="flex flex-col" >
-                <p className="text-bold text-sm capitalize">{cellValue}</p>
-            </div>
-            );
-            
-        case "name":
-            return (
-                <div className="flex flex-col" >
-                    <p className="text-bold text-sm capitalize">{cellValue}</p>
-                </div>
-            );
-            
-                    
-        case "operator":
-          return (
-              <div className="flex flex-col" >
-                  <p className="text-bold text-sm capitalize">{cellValue}</p>
-              </div>
-          );
-          
-        case "fraction_id":
-        case "fraction_number":
-        case "fraction_max_mesh":
-        case "fraction_min_mesh":
-        case "observation":
-          console.log("render cell: ", cellValue);
-        return (
-                <div className="flex flex-col" >
-                    <p className="text-bold text-sm">{cellValue}</p>
-                </div>
-            );
-  
+            case "id":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize">{cellValue}</p>
+                    </div>
+                );
+
+            case "name":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize">{cellValue}</p>
+                    </div>
+                );
+
+
+            case "operator":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize">{cellValue}</p>
+                    </div>
+                );
+
+            case "fraction_id":
+            case "fraction_id_suffix":
+            case "fraction_max_mesh":
+            case "fraction_min_mesh":
+            case "observation":
+                console.log("render cell: ", cellValue);
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm">{cellValue}</p>
+                    </div>
+                );
+
 
         case "qc":
             return (
