@@ -186,7 +186,7 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
                     color="primary" 
                     as={Link}
                     // href={`/projects/${projectId}/background/${background.id}`}
-                    onPress={() => setShowImage(background.name)}
+                    onPress={() => setShowImage(background.action)}
                     // onPress={ (projectid,sampleid=background.id) => onDetail(projectid,sampleid) }                
                 >
                     {/* EYE */}
