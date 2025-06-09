@@ -136,7 +136,7 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
         case "name":
             return (
                 <div className="flex flex-col" >
-                    <p className="text-bold text-sm capitalize">{cellValue}</p>
+                    <p className="text-bold text-sm ">{cellValue}</p>
                 </div>
             );
             
