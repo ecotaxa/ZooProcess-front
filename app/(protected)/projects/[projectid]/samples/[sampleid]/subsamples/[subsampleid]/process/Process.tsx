@@ -117,7 +117,7 @@ const Process = (params:{
                 const out = sub.scan.find( (s:Scan) => s.type == "OUT" &&  s.deleted == false && s.archived == false )
                 // setCurrentProcess(task);
 
-                const s = { mask,vis,out , taskId, status: task.status }
+                const s = { mask,vis,out , taskId, status: task.status, log:task.log }
                 console.debug("*************", s)
 
                 setCurrentProcess(s);
@@ -222,7 +222,7 @@ const Process = (params:{
             </div>
                 {data.log && <Textarea className="max-w-md" value={data.log} readOnly={true} />}
 
-                {showState(data)}
+                {/*{showState(data)}*/}
                 {taskId != "" && <div>taskId: {taskId}</div>}
             </> 
         )
@@ -282,15 +282,15 @@ const Process = (params:{
 
                 <div  className="bg-100 p-6">
                     <h1 className="text-center">Processing.</h1>
-                    <br/><br/>
+                    {/*<br/><br/>*/}
                     <div className="flex flex-col items-center justify-center h-screen">
-                    <h1>project id: {project.name}</h1>
-                    <h1>sample id: {sample.name}</h1>
-                    <h1>subsample id: {subsample.name}</h1>
-                        <h1>bg: {background}</h1>
-                        <h1>sc: {scan}</h1>
+                    <h1>project: {project.name}</h1>
+                    <h1>sample: {sample.name}</h1>
+                    <h1>subsample: {subsample.name}</h1>
+                        {/*<h1>bg: {background}</h1>*/}
+                        {/*<h1>sc: {scan}</h1>*/}
                         <h1>scanId: {scanId}</h1>
-                        <h1>taskId: {taskId}</h1>
+                        {/*<h1>taskId: {taskId}</h1>*/}
                     </div>
 
                     <div>
