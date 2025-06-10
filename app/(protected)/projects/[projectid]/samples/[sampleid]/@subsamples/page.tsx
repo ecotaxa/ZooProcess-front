@@ -142,7 +142,7 @@ const SubSamples : FC<pageProps> = (params) => {
         <Debug params={disabled} title='disabled' open={true} />
           <div className="text-center justify-center">
               <h1 data-testid="title">
-                  Samples {projectId}
+                  SubSamples in {sample.name}
               </h1>
               <Spacer y={5}/>
               <Card 
