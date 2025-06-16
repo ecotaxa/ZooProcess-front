@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link, Tooltip } from "@heroui/react";
 
-// import { useRouter } from "next/navigation";
-// import { Button } from "@mui/material";
-
-// import { formatDate , formatTime }  from '@/api/formatDateAndTime.js';
 import { key } from '@/api/key';
 import { IMetadata, IScan, Sample } from '@/app/api/network/interfaces';
 
@@ -13,6 +9,7 @@ import { useAsyncList } from "react-stately";
 import { sub } from "date-fns";
 import { EyeIcon } from "./icons/EyeIcon";
 
+/// Documentation for the columns array
 // interface IColumn {
 //   name: string,
 //   uid: string
@@ -21,16 +18,8 @@ import { EyeIcon } from "./icons/EyeIcon";
 
 const columns /*: Array<IColumn>*/ = [
     {name: "ID", uid: "id", allowSorting:true},
-    // {name: "DRIVE", uid: "drive"},
     {name: "NAME", uid: "name", allowSorting:true},
-    // {name: "SAMPLE", uid: "sample"},
-    // {name: "SCAN OPERATOR", uid: "operator", allowSorting:true},
-    // {name: "FRACTION ID", uid:"fractionid", allowSorting:true},
-    // {name: "FRAC MIN", uid: "fracmin", allowSorting:true},
-    // {name: "FRAC SUP", uid: "fracsup", allowSorting:true},
-    // {name: "OBSERVATION", uid: "obs", allowSorting:true},
     {name: "SCAN OPERATOR", uid: "operator", allowSorting:true},
-    // {name: "FRACTION ID", uid:"fraction_number", allowSorting:true},
     {name: "FRACTION ID", uid:"fraction_id", allowSorting:true},
     {name: "FRAC MIN", uid: "fraction_min_mesh", allowSorting:true},
     {name: "FRAC SUP", uid: "fraction_max_mesh", allowSorting:true},
@@ -49,15 +38,6 @@ export function SubSamplesTable(props) {
 
     let list = useAsyncList({
       async load({signal}) {
-      //   let res = await fetch('https://swapi.py4e.com/api/people/?search', {
-      //     signal,
-      //   });
-      //   let json = await res.json();
-      //   setIsLoading(false);
-  
-      //   return {
-      //     items: json.results,
-      //   };
           return {
               items: subsamples,
           };
@@ -84,8 +64,6 @@ export function SubSamplesTable(props) {
 
     const updateddata = subsamples.map( (sample) => { sample['key']=sample.id ; return sample;} )
     console.log("SubSamplesTable updateddata: ",updateddata)
-    // const [rows, setRows] = useState(updateddata)
-
 
 
     const QCString = (status) => {
@@ -105,7 +83,6 @@ export function SubSamplesTable(props) {
       const value = data.find( (m/*:IScan*/) => m.type == type)
       console.log("getScan value: ",  value);
       return value?.url || null
-      // return 1
     }
 
     const renderCell = React.useCallback((sample, columnKey) => {
@@ -113,15 +90,9 @@ export function SubSamplesTable(props) {
         console.log("render cell :sample ", sample);
         console.log("render cell :columnKey ", columnKey); 
 
-        // const cellValue = sample[columnKey];
         let cellValue = sample[columnKey]
         if ( cellValue == undefined ) {
           const subsample = sample.metadata.find((item) => item.name == columnKey);
-          // if (subsample == undefined) return (
-          //   <div subsample="flex flex-col" >
-          //     <p className="text-bold text-sm capitalize">-</p>
-          //   </div>
-          // );
           if ( subsample != undefined ) {
             console.log("render cell :subsample ", subsample.value);
             cellValue = subsample.value;
@@ -262,7 +233,6 @@ export function SubSamplesTable(props) {
           </TableColumn>
         )}
       </TableHeader>
-      {/* <TableBody items={subsamples}> */}
       <TableBody items={list.items}>
         {(item) => (
           <TableRow key={key(item.id,"tr")}>
