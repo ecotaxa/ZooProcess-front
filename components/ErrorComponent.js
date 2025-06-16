@@ -7,59 +7,61 @@ export const ErrorComponent = ({error}) => {
   const router = useRouter()
   
   // Fonction pour extraire le message d'erreur selon le type d'entrée
-  const extractErrorMessage = (err) => {
-    // Prevent circular references
-    if (!err) return "Unknown error";
-    
-    // Check for API authentication error structure
-    if ((err.response && err.response.data && err.response.data?.code === 'AUTH_TOKEN_EXPIRED')
-        || err.code === 'AUTH_TOKEN_EXPIRED'
-    ) {
-      return err.response?.data?.message || 'Your session has expired. Please log in again.';
-    }
+const extractErrorMessage = (err) => {
+  // Prevent circular references or null
+  if (!err) return "Unknown error";
 
-    // if (err.response && err.response.data && err.response.data?.message) {
-    //   return err.response.data.message;
-    // }
+  // Handle expired session
+  if (
+    (err.response?.data?.code === "AUTH_TOKEN_EXPIRED") ||
+    err.code === "AUTH_TOKEN_EXPIRED"
+  ) {
+    return err.response?.data?.message || "Your session has expired. Please log in again.";
+  }
 
-    // Si c'est un tableau, prendre le premier élément
-    if (Array.isArray(err)) {
-      console.debug("ErrorComponent - Array")
-      // return err.length > 0 ? String(err[0]) : "Unknown error";
-      if (err.length > 0) {
-          const firstError = err[0];
-        // If the first element is an object with a message property, use that
-        if (typeof firstError === 'object' && firstError !== null && firstError.message) {
-          return firstError.message;
-        }
-        // Otherwise try to convert to string
-        return String(firstError);
+  // Handle DataNotValidException format with .errors[]
+  if (Array.isArray(err.errors)) {
+    return err.message || "Input validation failed. Please review your input.";
+  }
+
+  // Handle array of errors directly
+  if (Array.isArray(err)) {
+    console.debug("ErrorComponent - Array");
+    if (err.length > 0) {
+      const first = err[0];
+      if (typeof first === "object" && first?.msg) {
+        return first.msg;
       }
-      return "Unknown error";
+      if (first?.message) {
+        return first.message;
+      }
+      return String(first);
     }
-    
-    // Handle DriveAccessException specifically
-    if (err.name === 'DriveAccessException' || 
-      (err.error && err.error.name === 'DriveAccessException')) {
-        console.debug("ErrorComponent - DriveAccessException")
-      const errorObj = err.error || err;
-      return `Permission denied: Cannot access or create directory at "${errorObj.url}". Please check if the network drive is mounted and you have write permissions.`;
-    }
+    return "Unknown error";
+  }
 
-    // Si c'est un objet avec une propriété message
-    if (err && typeof err === 'object' && err.message) {
-      console.debug("ErrorComponent - message")
-      return String(err.message);
-    }
-    
-    // Sinon, convertir en chaîne
-    try {
-      console.debug("ErrorComponent - String")
-      return String(err);
-    } catch (e) {
-      return "Error cannot be displayed";
-    }
-  };
+  // Handle DriveAccessException specifically
+  if (err.name === "DriveAccessException" || (err.error?.name === "DriveAccessException")) {
+    console.debug("ErrorComponent - DriveAccessException");
+    const errorObj = err.error || err;
+    return `Permission denied: Cannot access or create directory at "${errorObj.url}". Please check if the network drive is mounted and you have write permissions.`;
+  }
+
+  // Generic object with message
+  if (typeof err === "object" && err.message) {
+    console.debug("ErrorComponent - message");
+    return String(err.message);
+  }
+
+  // Fallback string conversion
+  try {
+    console.debug("ErrorComponent - String fallback");
+    return String(err);
+  } catch {
+    return "Error cannot be displayed";
+  }
+};
+
   
   // Obtenir le message principal
   let message;
@@ -107,6 +109,21 @@ export const ErrorComponent = ({error}) => {
       );
     }
     
+    if (error.errors && Array.isArray(error.errors)) {
+      return (
+        <>
+          <h2>Validation errors</h2>
+          <ul>
+            {error.errors.map((e, i) => (
+              <li key={i}>
+                <strong>{e.loc?.join(" > ")}:</strong> {e.msg}
+              </li>
+            ))}
+          </ul>
+        </>
+      );
+    }
+
     // Si c'est un objet, afficher ses propriétés de manière sécurisée
     if (error && typeof error === 'object') {
       // Create a safe copy without circular references

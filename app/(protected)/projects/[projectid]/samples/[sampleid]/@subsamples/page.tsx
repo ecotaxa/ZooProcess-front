@@ -28,38 +28,19 @@ interface pageProps {
 }
 
 const SubSamples : FC<pageProps> = (params) => {
-    // const router = useRouter()
-    // const projectid = router.query.projectid //as string
-    // const sampleid = router.query.sampleid //as string
 
-  console.log("Samples params: ", params);
-  console.log("Samples params: ", params.projectid);
-  // console.log("Samples params: ", params.sampleid);
-  // console.log("SubSamples params: ", params.subsampleid);
+  console.debug("SubSamples params: ", params);
+  console.debug("SubSamples params: ", params.projectid);
+  
+  const { sample, projectid:projectId } = params;
+  const sampleId = sample.id ;
 
-  // const sampleName = "mon Sample";
+  const disabled = sample.project.instrumentId == null
+  const tooltipMessage = disabled ? "Instrument not defined" : "Add a subsample"
 
-    // const sampleid = 10;
-    // const projectId = params.projectid ;
-    // // const sampleId = params.sampleid ;
-    // const sampleId = params.sample.id ;
-    // // const subsampleId = params.subsampleid ;
-
-    const { sample, projectid:projectId } = params;
-    const sampleId = sample.id ;
-
-    const disabled = sample.project.instrumentId == null
-    const tooltipMessage = disabled ? "Instrument not defined" : "Add a subsample"
-
-    // const { subsamples, isLoading, isError } = useSubSamples(projectId, sampleId)
-    const [ subsampleList, setSubSampleList ] = useState(params.sample.subsample)
+  const [ subsampleList, setSubSampleList ] = useState(params.sample.subsample)
 
 
-
-    // const formatData = (data:any) => {
-    //   console.log("formatData: ",data);
-    //   return data;
-    // }
 
     // const formatData = (data:any) => {
 

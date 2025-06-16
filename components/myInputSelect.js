@@ -9,10 +9,7 @@ export function MyInputSelect(props){
 
 
     const handleChange = (value  /* event: SelectChangeEvent*/) => {
-    // const handleChange = (event) => {
-        // console.log("typeof event: ", typeof(event));
-        // const value = event.target.value;
-        console.log("handleChange: ", value)
+        console.debug("handleChange: ", value)
 
 
         if ( value != "" ){
@@ -42,7 +39,6 @@ export function MyInputSelect(props){
 
     let opt = {
         id: props.name,
-        // items: props.choice,
         items: choice,
         label: props.label,
         placeholder: props.placeholder,
@@ -50,24 +46,14 @@ export function MyInputSelect(props){
         isDisabled: props.disabled
     }
 
-    // if (props.value) { opt['defaultSelectedKeys'] = [props.value]; }
     if (props.required == true) { opt['isRequired'] = true; }
-
-    // if (value) { opt['selectedKeys'] = [value] }
-
-    // console.log("OPT:" , opt);
-
     return (
         <>
         <Debug params={[{props:props},{opt:opt}]}  title={props.name} />
 
         <Autocomplete
-            // selectedKeys={[String(value)]}
             selectedKeys={[value]}
             onChange={(event) => handleChange(event.target.value)}
-            // onChange={handleChange}
-            // onSelectionChange={handleChange}
-            // items= {choice}
             allowsCustomValue
             {...opt}
         >

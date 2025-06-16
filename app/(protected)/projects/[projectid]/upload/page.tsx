@@ -4,6 +4,7 @@
 import { getProject } from "@/app/api/network/zooprocess-api";
 import { FC } from "react"
 import BackgroundUpload from "./backgroundUpload";
+import { Project } from "@/app/api/network/interfaces";
 
 type pageProps = {
     params:{
@@ -32,7 +33,6 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
     )
 
 }
-
 
 
 export default BackgroundScanPage;

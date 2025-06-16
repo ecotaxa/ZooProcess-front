@@ -125,8 +125,8 @@ interface pageProps {
 
                                 console.log("Full error details:", JSON.stringify(error, null, 2));
 
-                                const errorObject = { message: "An error occurred", digest: "3967790229" };
-                                console.log("typeof error: ", typeof error);
+                                // const errorObject = { message: "An error occurred", digest: "3967790229" };
+                                // console.log("typeof error: ", typeof error);
                                 const cleanedObject = removeDigestFromError(error);
 
                                 console.log("Cleaned Object:", cleanedObject);
