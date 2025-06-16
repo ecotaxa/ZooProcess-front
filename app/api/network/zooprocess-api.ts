@@ -1,20 +1,10 @@
-// "use server"
 'use strict';
 
 
-
-import { string } from 'prop-types';
 import axiosInstanse from '@/network/axiosInstanse';
-// import Samples from '@/app/projects/[projectid]/@samples/page';
 import { AuthError } from 'next-auth';
 
-// import { headers } from 'next/headers';
-// import { subSeconds } from 'date-fns';
 import * as I from './interfaces'
-// import { ca } from 'date-fns/locale';
-
-
-
 
 
 
@@ -26,8 +16,6 @@ export async function getProjects() : Promise<I.Projects> {
     console.debug("getProjects");
 
     const api = await axiosInstanse({})
-    // const pageSize = 12;
-    // const response = await api.get<Projects>(`/projects?limit=${pageSize}&offset=${pageSize * (page - 1)}`);
     const response = await  api.get<I.Projects>(`/projects`);
 
     console.debug("getProjects response: ", response.status);
@@ -37,10 +25,6 @@ export async function getProjects() : Promise<I.Projects> {
 
 
 export async function getProject_old(url: string): Promise<I.Project> {
-  // const headersList = headers()
-  // const token = headersList.get('authorization')
-
-  // const params = token ? { token } : {}
   const params = {}
   const api = await axiosInstanse(params)
 
@@ -54,20 +38,6 @@ export async function getProject_old(url: string): Promise<I.Project> {
 }
 
 
-// export async getProject(projectId: string) {
-//   try {
-//       const response = await axios.get(`${this.baseUrl}/project/${projectId}`);
-//       return response.data;
-//   } catch (error) {
-//       console.error('Project fetch error:', {
-//           projectId,
-//           error: error.response?.data || error.message,
-//           status: error.response?.status
-//       });
-//       throw error;
-//   }
-// }
-
 
 export async function getProject(projectId: string) {
   console.log('Requesting project:', projectId)
@@ -77,7 +47,6 @@ export async function getProject(projectId: string) {
       const axios = await axiosInstanse(params)
       const baseURL = process.env.NEXT_PUBLIC_API_SERVER
 
-      // const response = await axios.get(`${baseURL}/project/${projectId}`);
         const fullUrl = `${baseURL}/projects/${projectId}`
 
         console.log('Making request to:', fullUrl)
@@ -86,13 +55,6 @@ export async function getProject(projectId: string) {
 
       return response.data;
   } catch (error: any) {
-      // console.error('Project fetch error:', {
-      //     projectId,
-      //     error: error.response?.data || error.message,
-      //     status: error.response?.status,
-      //     code: error.response?.data.code
-      // });
-      // throw error;
       const myError = {
         projectId,
         error: error.response?.data || error.message,
@@ -128,23 +90,10 @@ export async function getProcess(url:string) : Promise<I.IProcess> {
 }
 
 export async function getUserMe(url:string=`/users/me`){
-  // export async function getUserById(url:string){
-
-  //   const token = await auth();
     console.log("getUserMe token: ");
 
-  //   const api = axios.create({
-  //     baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
-  //     timeout: 5000,
-  //     headers:{
-  //       Authorization: 'Bearer ' + token
-  //     }
-  // });
-    // const token = await auth()
     const api = await axiosInstanse({})
-
     const response = await api.get<I.User>(url);
-
     console.log("getUserMe response: ", response.status);
 
     return response.data;
@@ -153,7 +102,6 @@ export async function getUserMe(url:string=`/users/me`){
 
 export async function getUserByEmail(url:string){
   const api = await axiosInstanse({})
-
   const response = await api.get<I.User>(url);
 
   console.debug("getUserByEmail response: ", response.status);
@@ -161,9 +109,6 @@ export async function getUserByEmail(url:string){
   return response.data;
 }
 
-// import axios from 'axios';
-// import { auth } from '@/auth';
-// import { da } from 'date-fns/locale';
 
 
 
@@ -184,11 +129,7 @@ export async function getUserByIdOld(url: string, token: string): Promise<I.User
   // console.debug("getUserById url: ", url);
   // console.debug("getUserById token: ", token);
 
-  // const api = await axiosInstanse({useAuth:false, token})
   const api = await axiosInstanse({useAuth:true, token})
-
-  // console.debug("getUserById api: ", api);
-
   const response = await api.get<I.User>(url).then(
     (response) => {
       // console.debug("getUserById response: ", response.status);
@@ -243,24 +184,8 @@ export async function getUserById(url: string, token: string) {
 
 
 export async function getUserByIdWithAuth(url:string, token:string){
-  // export async function getUserById(url:string){
-
-  //   const token = await auth();
-    // console.log("getUserByIdWithAuth token: ", token);
-
-  //   const api = axios.create({
-  //     baseURL: "http://zooprocess.imev-mer.fr:8081/v1",
-  //     timeout: 5000,
-  //     headers:{
-  //       Authorization: 'Bearer ' + token
-  //     }
-  // });
-    // const token = await auth()
-    // const api = await axiosInstanse({useAuth:false, token})
     const api = await axiosInstanse({})
-
     const response = await api.get<I.User>(url);
-
     // console.log("getUserByEmail response: ", response);
 
     return response.data;
@@ -749,51 +674,60 @@ export async function addSample(projectId:string, data:I.Sample){
 
   }
 
+export async function addSubSample(projectId: string, sampleId: string, data: I.Sample) {
+  console.log("api addSubSample projectId:", projectId);
+  console.log("api addSubSample sampleId:", sampleId);
+  console.log("api addSubSample data:", data);
 
-  export async function addSubSample(projectId:string, sampleId: string, data:I.Sample){
+  const api = await axiosInstanse({});
 
-    console.log("api addSubSmaple projectId:", projectId);
-    console.log("api addSubSmaple sampleId:", sampleId);
-    console.log("api addSubSample data:", data);
+  try {
+    const response = await api.post(
+      `/projects/${projectId}/samples/${sampleId}/subsamples`,
+      data
+    );
+    console.log("✅ addSubSample response:", response.status);
+    return response.data;
+  } catch (error: any) {
+    console.log("❌ addSubSample Error:", error);
 
-    const api = await axiosInstanse({})
-    return await api.post(`/projects/${projectId}/samples/${sampleId}/subsamples`, data)
-      .then(function (response) {
-        console.log("addSubSample response: ", response.status);
-        return response.data;
-      })
-      .catch((error) => {
-        console.log("addSubSample Error: ", error.toJSON());
-        if (error.response) {
 
-          if (error.response.status == "409"){
-            const msg = {
-              //error:{
-                message: error.response.data || "Duplicate value"
-              //}
-            }
-            throw(msg)
-          }
 
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.error(error.response.data);
-          console.error(error.response.status);
-          console.error(error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.error(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.error('Error', error.message);
-        }
-        console.error(error.config);
-        throw(error);
-      });
+    let raw =
+      error?.response?.data ||
+      error?.response?.data?.error ||
+      error?.response?.data?.message ||
+      error?.message || error ||
+      "Unknown server error";
 
+      if (error.response) console.debug("🔴 error.response:", error.response)
+      if (error.response?.data) console.debug("🟢 error.response.data:", error.response?.data)
+
+      console.debug("🔎 raw:", raw)
+
+    if (error?.response?.status === 409) {
+      if (typeof raw !== "string") raw = JSON.stringify(raw);
+      throw raw;
+    }
+
+    if (error?.response?.status === 422) {
+      if (typeof raw !== "string") raw = JSON.stringify(raw);
+      // throw raw;
+      throw error;
+    }
+
+    if (error.request) {
+      throw "Server do not respond";
+    }
+
+    if (typeof raw !== "string") {
+      raw = JSON.stringify(raw);
+    }
+
+    throw raw;
   }
+}
+
 
   // export async function getSamples(projectId:string){
   export async function getSamples(url:string) : Promise<I.Samples> {
@@ -1060,3 +994,26 @@ export  async function getTask(url:string){
     return response.data;
 }
 
+
+
+async function makeApiCall<T>(
+  endpoint: string, 
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
+  data?: unknown,
+  options?: { useAuth?: boolean; timeout?: number }
+): Promise<T> {
+  const api = await axiosInstanse(options || {});
+  const response = await api.request({ method, url: endpoint, data });
+  return response.data;
+}
+
+function handleApiError(error: any, context: string) {
+  const standardError = {
+    context,
+    message: error.response?.data?.message || error.message,
+    status: error.response?.status,
+    timestamp: new Date().toISOString()
+  };
+  console.error(`API Error in ${context}:`, standardError);
+  throw standardError;
+}

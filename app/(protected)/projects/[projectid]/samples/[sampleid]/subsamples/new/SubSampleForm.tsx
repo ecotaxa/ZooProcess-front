@@ -1,6 +1,7 @@
 "use client"
 
 import { FC } from "react";
+import { useState } from "react";
 
 
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
@@ -11,11 +12,15 @@ import { fraction_inputFormElments } from '@/config/formElements';
 import { useRouter } from 'next/navigation';
 
 import { Sample, User } from '@/app/api/network/interfaces';
-import { addSubSample } from '@/app/api/subsamples';
+// import { addSubSample } from '@/app/api/subsamples';
+import { CustomError, removeDigestFromError } from "@/app/api/digest";
+import { addSubSample } from "@/app/api/data/subsamples";
+
 
 // import { useProject } from '@/app/api/projects';
 // import { auth } from '@/auth';
- 
+ import { ValidationError } from "@/lib/errors";
+
 
 
 
@@ -69,6 +74,9 @@ interface pageProps {
 // const SubSampleForm : FC<pageProps> = (params ) => {
 // const SubSampleForm =  ( params: pageProps) => {
 const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
+
+
+    const [formErrors, setFormErrors] = useState(null);
 
     const router = useRouter()
     
@@ -128,30 +136,75 @@ const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
     // }
 
 
-    const onChange = async (value:any) => {
-        console.log("App onChange:", value)
-        // setData(JSON.stringify(value, null, 2))
-        
-        const data = {
-            name: `${projectid}_${value.sample_id}`,
-            metadataModelId: "6565df171af7a84541c48b20",
-            data:value,
-        }
-
-        console.log("newData: ", data);
-        
-        return addSubSample({
-            projectId: projectid, 
-            sampleId: sampleid,
-            data
-        })
-
-
-    }
-
-    // const onChange = (value:any) => {
-    //     // "use server"
+    // const onChange = async (value:any) => {
     //     console.log("App onChange:", value)
+    //     // setData(JSON.stringify(value, null, 2))
+        
+    //     const data = {
+    //         name: `${projectid}_${value.sample_id}`,
+    //         metadataModelId: "6565df171af7a84541c48b20",
+    //         data:value,
+    //     }
+
+    //     console.log("newData: ", data);
+        
+    //     return addSubSample({
+    //         projectId: projectid, 
+    //         sampleId: sampleid,
+    //         data
+    //     })
+
+
+    // }
+
+    async function handleChange(values:any, sampleId: string, projectId: string) {
+        console.debug("PPPPPPPPPPPPPPPPPPP SubSampleForm::handleChange()")
+    try {
+        // const formattedData = {
+        //     name: values.scan_id || `${projectId}_${sampleId}_subsample`,
+        //     metadataModelId: "", // You might need to set this
+        //     data: values,
+        // };
+    
+        // console.log("🔍 Sending formatted data:", formattedData);
+    
+        // const res = await addSubSample(projectId, sampleId, formattedData);
+          const res = await addSubSample(projectId, sampleId, values);
+
+      // succès : redirect
+      const id = res.data.id;
+      router.push(
+        `/projects/${projectId}/samples/${sampleId}/subsamples/new/${id}?state=scanner`,
+      );
+    } catch (err:any) {
+
+        // Add more detailed error logging
+        // console.error("🔥 Full error details:", {
+        //     message: err.message,
+        //     payload: err.payload, // This should show validation details
+        //     stack: err.stack
+        // });
+        console.error("🔥 Full error details:", err);
+
+      if (err instanceof ValidationError) {
+        // on garde les erreurs dans l'état pour les afficher
+        // setFormErrors((err as ValidationError).payload.errors);
+        console.error("🟪 Validation Error payload:", err.payload);
+        // Set the form errors to be displayed by MyForm
+        setFormErrors(err.payload?.errors || err.payload || { general: "Validation failed" });
+ 
+        return;
+      }
+      // erreur inattendue
+    //   console.error("🟩 onChange:",err);
+    //   alert(err.message ?? "Unexpected server error");
+            setFormErrors({ general: err.message || "An unexpected error occurred" });
+            console.error("🟩 onChange:", err);
+    throw err
+    }
+  }    // const onChange = (value:any) => {
+    //     // "use server"
+    //     console.log("App onChange:", val  ue)
     //     // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
     //     // stringifiedData = JSON.stringify(value, null, 2);
 
@@ -246,20 +299,61 @@ const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
                 sample={sample.name}
 
                 // onChange={onChange}
-                onChange={(value:any) => onChange(value)
-                    .then((response: { data: { id: any; }; }) => {
-                        console.log("Go To the subsample page: " , response.data.id )
-                        // router.push(`samples/${response.data.id}`)
-                        const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}?state=scanner`
-                        router.push(path)
-                    })
-                    .catch((error: any) => {
-                        console.error("Error adding subsample:", error)
-                        // Handle error (e.g., show error message to user)
-                    })
-                } 
+                // onChange={(value:any) => onChange(value)
+                //     .then((response: { data: { id: any; }; }) => {
+                //         console.log("Go To the subsample page: " , response.data.id )
+                //         // router.push(`samples/${response.data.id}`)
+                //         const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}?state=scanner`
+                //         router.push(path)
+                //     })
+                //     .catch((error: any) => {
+                //         console.error("Error adding subsample:", error)
+                //         console.log("🔥 Full error:", JSON.stringify(error, null, 2));
+
+                //         // Handle error (e.g., show error message to user)
+                //         throw(error.message)
+                //     })
+                // }
+                // onChange={handleChange}
+                onChange={(values: any) => handleChange(values, sampleid, projectid)}
+
+
+                // onChange={async (value:any) => {
+                //     try {
+                //         const response = await onChange(value);
+                //         console.log("Go To the subsample page" );
+                //         const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}?state=scanner`
+                //         router.push(path)
+                //         return Promise.resolve(response)// response;
+                //     } catch (error:any) {
+
+
+                //         const customError = error as CustomError;
+                //         console.log("Error adding sample:", error); 
+                //         console.log("customError adding sample:", customError); 
+                //         console.log("customError.obj adding sample:", customError.obj || "no obj"); 
+                //         console.error("customError.digest adding sample:", customError?.digest);  // Safely check digest
+
+                //         console.log("Full error details:", JSON.stringify(error, null, 2));
+
+                //         const errorObject = { message: "An error occurred", digest: "3967790229" };
+                //         console.log("typeof error: ", typeof error);
+                //         const cleanedObject = removeDigestFromError(error);
+
+                //         console.log("Cleaned Object:", cleanedObject);
+                //         // throw cleanedObject.message;
+                //         throw 'toto';
+
+
+
+                //     }
+                // }}
+
+
                 onCancel={onCancel}
                 button={formButtons}
+                errors={formErrors} // ← Pass the errors to MyForm
+
             />
         )
         // }

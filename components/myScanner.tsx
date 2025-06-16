@@ -27,7 +27,7 @@ export function MyScanner(props: any) {
 
       return (
         <>
-        <Debug title="MyScanner" params={{value,props}} />
+        {/* <Debug title="MyScanner" params={{value,props}} /> */}
 
         <ScannerComponent value={value} onChange={handleChange} />
         </>

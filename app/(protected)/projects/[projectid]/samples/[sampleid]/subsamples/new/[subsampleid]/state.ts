@@ -13,6 +13,11 @@ export enum eState {
     process,// = 6,
     check , //= 7,
     end , //= 8
+
+    // moved to the end, to not generate bugs
+    // need to move back when we will use the scanner 
+    preview , //= 3,
+    thirtys1 = 4,
 }
 
 

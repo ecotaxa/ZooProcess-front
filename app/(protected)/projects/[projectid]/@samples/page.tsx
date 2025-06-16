@@ -89,7 +89,7 @@ const SamplesTab: FC<pageProps> = ({ projectid }) => {
               as={Link}
               color="primary"
               variant="solid"
-              data-testid="newProjectBtn"
+              data-testid="newSampleBtn"
             >
               Add new sample
             </Button>

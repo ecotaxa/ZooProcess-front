@@ -40,6 +40,7 @@ export function MyForm(props){
     // const forms = props.forms;
     // const {forms,onChange,onCancel} = props;
     const {forms, value, title, subtitle, error:errorMessage} = props;
+    const [fieldErrors, setFieldErrors] = useState(null);
 
     const button = props.button
 
@@ -91,7 +92,22 @@ export function MyForm(props){
 
     useEffect(()=>{
       console.debug("=============> errorMessage has changed:", errorMessage);
-      setError(errorMessage)
+      // setError(errorMessage)
+
+    // Display general errors
+    if (errorMessage?.general) {
+        // Show general error message
+        setError(errorMessage.general)
+    }
+    
+    // Display field-specific errors
+    if (errorMessage && typeof errorMessage === 'object') {
+        // Map errors to specific form fields
+        // This depends on how your MyForm component is structured
+        setError(errorMessage.message)
+    }
+
+
       setIsUpdating(false)
     },[errorMessage])
 
@@ -219,11 +235,13 @@ export function MyForm(props){
       // console.log("-+-+-+---------------------------------");
 
         return (
+          // <div className="form-container" key={()=>`containeur_${formitem.name}`}>
             <Grid key={formitem.name}
               xs={formitem.xs}
               sm={formitem.sm}
               item={true}
             >
+              <Debug title="" params={formitem.name} open={true}/>
               <FormElements {...formitem} key={formitem.name}
                 project={props.project}
                 sample={props.sample}
@@ -233,6 +251,7 @@ export function MyForm(props){
                 onChange={(n,v) => onChangeElement(n,v)} // ne fonctionne pas
                 />
             </Grid>
+            // </div>
         )
     }
 
@@ -456,196 +475,66 @@ export function MyForm(props){
 
       }
 
-      // const refresh = (elementNameToRefresh, name, value) => {
-      //   // if ( formitem.refresh ) {
-      //     // console.debug("formitem.refresh PRESENT")
-      //     // elementToRefresh = element.refresh
-      //     console.log("refresh(", elementNameToRefresh, ")");
-      //     const element = findElement(elementNameToRefresh)
-      //     if (element){
-      //       console.log("element", element);
-      //       if (element.update){
-      //         update(element,name,value)
-      //       }
-      //     }
-      // }
 
-      // const update = (formitem,name,value) => {
-      //   if ( formitem.update ) {
-      //     console.debug("Element to update PRESENT")
-
-
-
-      //     const valueUpdated = updateValue(formitem.update, myValues, value)
-      //     // console.debug("opts: ", opts);
-      //     console.debug("FORM VALUE for ", formitem.name, " = " , valueUpdated , " <= " , formitem['value'] );
-      //     formitem['value'] = valueUpdated
-      //     // formitem['onChange'](valueUpdated)
-      //     // props.onChangeElement(formitem.name,valueUpdated)
-      //     let copiedValues = myValues
-      //     // copiedValues[formitem.name] = valueUpdated
-      //     // setMyValues(copiedValues)
-      //     setValeur({ name: formitem.name, value: valueUpdated })
-      //   }
-
-      // }
-
-
-    //   const findElement = (name) => { 
-    //     // var found = false;
-    //     var type = undefined;
-    //     console.debug("findElement(", name,")");
-    
-    //     const element = forms.flatMap((form) => {
-    //       console.log("form", form);
-    //         form.flatMap(group => 
-    //         //   group.section.flatMap(element => {
-    //         //     console.log("name:", name , " === " , element.name , "=", element.type);
-    //         //     if ( element.name == name ) { 
-    //         //       console.log("found",name);
-    //         //       //found = true;
-    //         //       //type = element.type;
-    //         //       return element
-    //         //     }    
-    //         //   })
-    //         // )
-    //         group.section.filter(element => { element.name == name })
-    //       )
-    //     });
-    //     console.log("element", element);
-    //     if ( element ) {
-    //       return element[0]
-    //     }
-    //     console.log("findElement not found",name);
-    //     return undefined
-    // }
-
-
-
-      // const findElement = (name/*:string*/) => {
-      //   console.debug("findElement(", name,")");
-      //   console.debug("forms",forms);
-
-      //   const elements = forms.flatMap( (form) => {
-      //     console.debug("chapter",form);
-      //     return form.flatMap
-      //     return form.filter( (element) => {
-      //         console.debug("element", element);
-      //         return element.name == name
-      //       }
-      //     )
-      //   })
-
-
-      //   return  elements[0]
-      // }
 
     const cancel = () => {
       console.debug("cancel()");
-        // const data = {};
-        // const keys = Object.keys(myValues);
-        // console.log(keys)
-        // keys.forEach(element => {
-        //     data[element]=''
-        // });
-        // console.log("data", data)
-        // setMyForm(data);
         setMyValues(defaultValue)
         props.onCancel();
     }
     
-  // const onSubmitHandler = async (event /*: React.FormEvent<HTMLFormElement>*/) => {
-  //       console.debug("onSubmitHandler");
-  //       event.preventDefault(); // 👈️ prevent page refresh
-  //       setIsDataModified(false) // Set loading to true when the request starts
-  //       setError(null) // Clear previous errors when a new request starts
 
-  //       setIsUpdating(true); // Set updating effect on button before the API call
-
-
-  //       const formData = new FormData(event.currentTarget)
-  //       console.log("formData: ", formData)
-
-
-  //       console.log("onSubmitHandler event", event);
-  //       console.log("event.timeStamp", event.timeStamp);
-  //       console.log("onSubmitHandler submit form", myValues);
-  //       console.log("onChange(", values);
-        
-  //       // setIsUpdating(true)
-  //       // props.onChange(values)
-
-  //       try {
-  //       props.onChange(myValues)
-  //       .then( (response) => {
-  //         // console.log("onChange OK");
-  //         console.debug("---------------------------------------------------");
-  //         console.log("onChange OK " , response);
-  //         // console.log("Data Updated")
-  //         setValues(response)
-  //         // defaultValue = values;
-  //         defaultValue = response;
-  //         setIsDataUpdated(true)
-  //         setIsUpdating(false)
-  //       })
-  //       .catch( (error) => {
-  //         // const message = error
-  //         const errorMessage = error?.message || error?.toString() || "An error occurred";
-  //         console.debug("-%-%-%---------------------------------------------");
-  //         // console.error("onChange Error", message);
-  //         console.error("onChange Error", errorMessage);
-  //         setIsUpdating(false)
-  //         setIsDataModified(true)
-  //         // setError(message)
-  //         // console.error(error)
-  //         setError(errorMessage)
-  //         throw error; // Propagate error
-  //       })
-  //     }
-  //     catch (error) {
-  //       const errorMessage = error?.message || error?.toString() || "An error occurred";
-  //       console.debug("-%-%-%---------------------------------------%-%-%-");
-  //       // console.error("Catch on change exception:", error)
-  //       console.error("Catch on change exception:", errorMessage)
-  //       setIsUpdating(false)
-  //       setIsDataModified(true)
-  //       // setError(error)
-  //       setError(errorMessage)
-  //     } 
-
-  //   }  
 
   // Update error handling in onSubmitHandler
-const onSubmitHandler = async (event) => {
-  event.preventDefault();
-  setIsUpdating(true);
+// const onSubmitHandler = async (event) => {
+//   event.preventDefault();
+//   setIsUpdating(true);
   
-  try {
-      const response = await props.onChange(myValues);
-      setValues(response);
-      defaultValue = response;
-      setIsDataUpdated(true);
-      setIsDataModified(false);
-      setError(null);
-  } catch (error) {
-      setError(error.message || error);
-      setIsDataModified(true);
-  } finally {
-      setIsUpdating(false);
-  }
-}
+//   try {
+//       const response = await props.onChange(myValues);
+//       setValues(response);
+//       defaultValue = response;
+//       setIsDataUpdated(true);
+//       setIsDataModified(false);
+//       setError(null);
+//   } catch (error) {
+//       setError(error.message || error);
+//       setIsDataModified(true);
+//   } finally {
+//       setIsUpdating(false);
+//   }
+// }
 
+    const onSubmitHandler = async (event) => {
+        event.preventDefault();
+        setIsUpdating(true);
+        
+        try {
+            const response = await props.onChange(myValues);
+            setValues(response);
+            defaultValue = response;
+            setIsDataUpdated(true);
+            setIsDataModified(false);
+            setError(null);
+            setFieldErrors(null); // Clear field errors on success
+        } catch (error) {
+            // Check if it's a validation error with detailed field errors
+            if (error.fieldErrors) {
+                setFieldErrors(error.fieldErrors);
+                setError(error.message || "Please check the form fields.");
+            } else {
+                setError(error.message || error);
+                setFieldErrors(null);
+            }
+            setIsDataModified(true);
+        } finally {
+            setIsUpdating(false);
+        }
+  }
     // to print the debug json
     // const stringifiedData = useMemo(() => JSON.stringify(myform, null, 2), [myform]);
 
     return (
-      // <ThemeProvider theme={theme}>
-      // <div className="App">
-      // <div className="grid">
-
-      // </div>
-      // </div>
-      // </ThemeProvider>
       <form onSubmit={onSubmitHandler}>
         <Card>
           <CardHeader className="flex flex-col">
@@ -672,16 +561,10 @@ const onSubmitHandler = async (event) => {
               <div className="grid" key="form">
                 {
                   forms.map( input => formElements(input) )
-                  // myForms.map( input => formElements(input) )
                 }
 
               </div>
 
-              {/* {error && (
-    <div className="text-danger mt-2">
-        {error.message || error}
-    </div> 
-   )}*/}
 
           </CardBody>
           <CardFooter>
@@ -696,14 +579,11 @@ const onSubmitHandler = async (event) => {
                     type="submit" 
                     variant="solid" 
                     color="primary"
-                    // onClick={props.onChange}
 
                     isDisabled={!isDataModified}
-                    // isDisabled={!isDataModified|| isUpdating}
-                    // isDisabled={!hasChanges() || isUpdating}
+
 
                   >
-                    {/* {isUpdating ? btn.updating : btn.submit } */}
                     {isUpdating ? btn.submitting : btn.submit }
                   </Button>
                   <Spacer x={2}/>
@@ -717,30 +597,10 @@ const onSubmitHandler = async (event) => {
  
                   <Spacer x={2}/>
 
-                  {/* <Button
-                    type="reset" 
-                    variant="faded" 
-                    color="primary" 
-                    onClick={init}
-                  >Refill</Button> */}
+ 
                   </div>
 
-                  {/* <Button style={margin} key="refill"
-                    type="reset" 
-                    variant="outlined" 
-                    color="primary" 
-                    onClick={init}
-                  >Refill</Button>
-                  <Button style={margin}  key="reset"
-                    type="reset" 
-                    variant="outlined" 
-                    color="primary" 
-                    onClick={reset}
-                  >Cancel</Button>
-                  <Button type="submit"  key="submit"
-                    variant="contained" 
-                    color="primary"
-                  >Submit</Button> */}
+ 
                 </div>
           </CardFooter>
         </Card>
@@ -748,25 +608,3 @@ const onSubmitHandler = async (event) => {
     );
 }
 
-
-// Page.getLayout = (page) => (
-//     <DashboardLayout>
-//       {page}
-//     </DashboardLayout>
-//   );
-
-
-// export async function getStaticPaths() {
-//     // Return a list of possible value for id
-//     return [1,2]
-// }
-
-// export async function getStaticProps({ params }) {
-//     // Fetch necessary data for the blog post using params.id
-//     const samples = {
-        
-//     }
-//     return sample
-// }
-
-// export default Page;
