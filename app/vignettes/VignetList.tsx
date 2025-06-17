@@ -70,7 +70,11 @@ export default function VignetList({
   useEffect(() => {
     const selectedVignette = vignettes[selectedIndex];
     if (selectedVignette?.mask) {
-      setZoomMaskSrc(`/${folder}/${selectedVignette.mask}`.replace(/\\/g, '/').replace(/\/\/+/, '/'));
+      if (folder.startsWith("http")) {
+        setZoomMaskSrc(`${folder}/${selectedVignette.mask}`);
+      } else {
+        setZoomMaskSrc(`/${folder}/${selectedVignette.mask}`.replace(/\\/g, '/').replace(/\/\/+/, '/'));
+      }
     } else {
       setZoomMaskSrc(null);
     }
@@ -167,13 +171,23 @@ const getItemSize = (index: number) => {
     setEditIndex(index);
     setEditMatrix(undefined); // Reset pour forcer rechargement
     const gzFile = vignettes[index].matrix;
-    const matrixUrl = `/${folder}/${gzFile}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+    let matrixUrl;
+    if (folder.startsWith("http")) {
+      matrixUrl = `${folder}/${gzFile}`;
+    } else {
+      matrixUrl = `/${folder}/${gzFile}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+    }
     try {
       const matrix = await loadMatrixFromGz(matrixUrl); // Utilise ta fonction de chargement .gz
       setEditMatrix(matrix);
     } catch (e) {
       // fallback matrice zéro si erreur
-      const imgPath = `/${folder}/${vignettes[index].scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+      let imgPath;
+      if (folder.startsWith("http")) {
+        imgPath = `${folder}/${vignettes[index].scan}`;
+      } else {
+        imgPath = `/${folder}/${vignettes[index].scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+      }
       const img = new window.Image();
       img.src = imgPath;
       img.onload = () => {
@@ -205,8 +219,13 @@ const handleApply = async (matrix: number[][]) => {
 
 
   const editVignette = editIndex !== null ? vignettes[editIndex] : null;
-  const imagePath = editVignette ? `/${folder}/${editVignette.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/') : '';
-
+  let imagePath;
+  if (folder.startsWith("http")) {
+    imagePath = editVignette ? `${folder}/${editVignette.scan}` : '';
+  } else {
+    imagePath = editVignette ? `/${folder}/${editVignette.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/') : '';
+  }
+ 
   useEffect(() => {
   if (!imagePath) return;
 

@@ -82,7 +82,7 @@ export default function VignetItem({
     if (!vignette.mask) {
       const folderParam = folder.replace(/^\/+/g, '');
       fetch(
-        `/api/generateMask?scan=${encodeURIComponent(vignette.scan)}&folder=${encodeURIComponent(
+        `/api/generatedMask?scan=${encodeURIComponent(vignette.scan)}&folder=${encodeURIComponent(
           folderParam
         )}&matrix=${encodeURIComponent(vignette.matrix || '')}`
       )
@@ -101,11 +101,17 @@ export default function VignetItem({
     }
   }, [isVisible, vignette.scan, vignette.mask, folder, vignette.matrix, onUpdate]);
 
-  const scanSrc = `/${folder}/${vignette.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
-  const maskSrc = vignette.mask
-    ? `/${folder}/${vignette.mask}`.replace(/\\/g, '/').replace(/\/\/+/, '/') +
-      (maskRefreshKey ? `?t=${maskRefreshKey}` : '')
-    : '';
+  let scanSrc, maskSrc;
+  if (folder.startsWith("http")) {
+    scanSrc = `${folder}/${vignette.scan}`;
+    maskSrc = vignette.mask ? `${folder}/${vignette.mask}`+ (maskRefreshKey ? `?t=${maskRefreshKey}` : ''): '';
+  } else {
+    scanSrc = `/${folder}/${vignette.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+    maskSrc = vignette.mask
+        ? `/${folder}/${vignette.mask}`.replace(/\\/g, '/').replace(/\/\/+/, '/') +
+        (maskRefreshKey ? `?t=${maskRefreshKey}` : '')
+        : '';
+  }
 
   return (
  
@@ -148,7 +154,8 @@ export default function VignetItem({
       {vignette.vignettes?.map((img, i) => (
       <SmartImage
         key={i}
-        src={`/${folder}/${img}`.replace(/\\/g, '/').replace(/\/\/+/, '/')}
+        src={folder.startsWith("http")?`${folder}/${img}`
+            :`/${folder}/${img}`.replace(/\\/g, '/').replace(/\/\/+/, '/')}
         alt={`Vignette ${i}`}
       />
     ))}

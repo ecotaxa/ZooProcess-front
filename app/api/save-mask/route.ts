@@ -17,15 +17,24 @@ export async function POST(req: NextRequest) {
 
   try {
     // 1. Sauve le .gz
-    await fs.writeFile(savePath, buffer);
+    if (!folder.startsWith("http")) {
+      await fs.writeFile(savePath, buffer);
+    }
 
     // 2. Relis la matrice
     const matrix = readMatrixFromCompressedBinary(buffer.buffer);
 
     // 3. Trouve le fichier image source
     const base = gzFilename.replace(/_mask\.gz$/, '');
-    const scanFilename = base + '.jpg'; // adapte si besoin
-    const imgPath = path.join(REAL_FOLDER, folder, scanFilename);
+    let imgPath;
+    if (folder.startsWith("http")) {
+      // Original multiple is in another directory
+      const scanFilename = base.replace(/multiples_vis:/, 'multiples:'); 
+      imgPath = folder + "/" + scanFilename;
+    } else {
+      const scanFilename = base + '.jpg'; // adapte si besoin
+      imgPath = path.join(REAL_FOLDER, folder, scanFilename);
+    }
 
     // 4. Charge l’image source
     const img = await loadImage(imgPath);
@@ -56,12 +65,48 @@ export async function POST(req: NextRequest) {
 
     // 6. Save PNG
     const maskPngFilename = gzFilename.replace(/\.gz$/, '.png');
-    const maskPngPath = path.join(REAL_FOLDER, folder, maskPngFilename);
     const bufferPng = canvas.toBuffer('image/png');
-    await fs.writeFile(maskPngPath, bufferPng);
+    if (folder.startsWith("http")) {
+      const maskPngPath = folder + "/" + maskPngFilename;
+      await sendBufferToServer(maskPngPath, bufferPng);
+    } else {
+      const maskPngPath = path.join(REAL_FOLDER, folder, maskPngFilename);
+      await fs.writeFile(maskPngPath, bufferPng);
+    }
 
     return NextResponse.json({ ok: true });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
+async function sendBufferToServer(url: string, buffer: Buffer) {
+  try {
+    // Create a new FormData object
+    const formData = new FormData();
+
+    // Create a file from the buffer
+    // The File constructor takes (parts, filename, options)
+    const file = new File([buffer], path.basename(url), { 
+      type: 'image/png' 
+    });
+
+    // Append the file to the FormData
+    formData.append('file', file);
+
+    // Send the FormData as the request body
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      // Note: Don't set Content-Type header when sending FormData
+      // It will be set automatically with the correct boundary
+    });
+
+    const result = await response.json();
+    console.log('Upload successful:', result);
+    return result;
+  } catch (error) {
+    console.error('Error uploading buffer:', error);
+    throw error;
   }
 }
