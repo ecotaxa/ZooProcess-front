@@ -32,8 +32,15 @@ export async function POST(req: NextRequest) {
 
     // 3. Trouve le fichier image source
     const base = gzFilename.replace(/_mask\.gz$/, '');
-    const scanFilename = base + '.jpg'; // adapte si besoin
-    const imgPath = path.join(REAL_FOLDER, folder, scanFilename);
+    let imgPath;
+    if (folder.startsWith("http")) {
+      // Original multiple is in another directory
+      const scanFilename = base.replace(/multiples_vis:/, 'multiples:'); 
+      imgPath = folder + "/" + scanFilename;
+    } else {
+      const scanFilename = base + '.jpg'; // adapte si besoin
+      imgPath = path.join(REAL_FOLDER, folder, scanFilename);
+    }
 
     // 4. Charge l’image source
     const img = await loadImage(imgPath);
@@ -64,9 +71,14 @@ export async function POST(req: NextRequest) {
 
     // 6. Save PNG
     const maskPngFilename = gzFilename.replace(/\.gz$/, '.png');
-    const maskPngPath = path.join(REAL_FOLDER, folder, maskPngFilename);
     const bufferPng = canvas.toBuffer('image/png');
-    await fs.writeFile(maskPngPath, bufferPng);
+    if (folder.startsWith("http")) {
+      const maskPngPath = folder + "/" + maskPngFilename;
+      await sendBufferToServer(maskPngPath, bufferPng);
+    } else {
+      const maskPngPath = path.join(REAL_FOLDER, folder, maskPngFilename);
+      await fs.writeFile(maskPngPath, bufferPng);
+    }
 
     return NextResponse.json({ ok: true });
   } catch (err: any) {
