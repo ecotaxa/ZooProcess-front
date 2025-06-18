@@ -70,7 +70,7 @@ export default function VignetList({
   useEffect(() => {
     const selectedVignette = vignettes[selectedIndex];
     if (selectedVignette?.mask) {
-      if (folder.startsWith("http")) {
+      if (folder.startsWith("/api/backend")) {
         setZoomMaskSrc(`${folder}/${selectedVignette.mask}`);
       } else {
         setZoomMaskSrc(`/${folder}/${selectedVignette.mask}`.replace(/\\/g, '/').replace(/\/\/+/, '/'));
@@ -160,7 +160,7 @@ export default function VignetList({
 const getItemSize = (index: number) => {
   const h = rowHeights[index];
   if (!h || h < 96) {
-    console.warn('⚠️ Missing or too small height for index', index, '→ fallback 120');
+    console.warn('⚠️ Missing or too small height',h,' for index', index, '→ fallback 120');
     return 120;
   }
   return h;
@@ -172,7 +172,7 @@ const getItemSize = (index: number) => {
     setEditMatrix(undefined); // Reset pour forcer rechargement
     const gzFile = vignettes[index].matrix;
     let matrixUrl;
-    if (folder.startsWith("http")) {
+    if (folder.startsWith("/api/backend")) {
       matrixUrl = `${folder}/${gzFile}`;
     } else {
       matrixUrl = `/${folder}/${gzFile}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
@@ -183,7 +183,7 @@ const getItemSize = (index: number) => {
     } catch (e) {
       // fallback matrice zéro si erreur
       let imgPath;
-      if (folder.startsWith("http")) {
+      if (folder.startsWith("/api/backend")) {
         imgPath = `${folder}/${vignettes[index].scan}`;
       } else {
         imgPath = `/${folder}/${vignettes[index].scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
@@ -220,7 +220,7 @@ const handleApply = async (matrix: number[][]) => {
 
   const editVignette = editIndex !== null ? vignettes[editIndex] : null;
   let imagePath;
-  if (folder.startsWith("http")) {
+  if (folder.startsWith("/api/backend")) {
     imagePath = editVignette ? `${folder}/${editVignette.scan}` : '';
   } else {
     imagePath = editVignette ? `/${folder}/${editVignette.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/') : '';

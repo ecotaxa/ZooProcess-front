@@ -26,6 +26,7 @@ export function SmartImage({ src, alt, onClick, onLoad }: SmartImageProps) {
     src={src}
     alt={alt}
     onLoad={() => setLoaded(true)}
+    onError={() => console.error("load error")}
     className={`transition-opacity duration-300 object-contain w-full h-full ${
       loaded ? "opacity-100" : "opacity-0"
     }`}

@@ -102,7 +102,7 @@ export default function VignetItem({
   }, [isVisible, vignette.scan, vignette.mask, folder, vignette.matrix, onUpdate]);
 
   let scanSrc, maskSrc;
-  if (folder.startsWith("http")) {
+  if (folder.startsWith("/api/backend")) {
     scanSrc = `${folder}/${vignette.scan}`;
     maskSrc = vignette.mask ? `${folder}/${vignette.mask}`+ (maskRefreshKey ? `?t=${maskRefreshKey}` : ''): '';
   } else {
@@ -154,7 +154,7 @@ export default function VignetItem({
       {vignette.vignettes?.map((img, i) => (
       <SmartImage
         key={i}
-        src={folder.startsWith("http")?`${folder}/${img}`
+        src={folder.startsWith("/api/backend")?`${folder}/${img}`
             :`/${folder}/${img}`.replace(/\\/g, '/').replace(/\/\/+/, '/')}
         alt={`Vignette ${i}`}
       />

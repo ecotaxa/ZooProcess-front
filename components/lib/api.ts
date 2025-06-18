@@ -73,7 +73,7 @@ export async function fetchVignetteData(): Promise<VignetteResponse> {
 
   const { data, folder } = await response.json();
   let folderClean;
-  if (folder.startsWith('http')) {
+  if (folder.startsWith("/api/backend")) {
     folderClean = folder;
   } else {
     folderClean = folder.replace(/^\/+/, '');

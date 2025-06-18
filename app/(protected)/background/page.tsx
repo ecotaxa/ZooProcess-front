@@ -67,7 +67,7 @@ const BackgroundPage: FC<pageProps> = ({ params }) => {
 
     const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set());
     const [isLoading, setIsLoading] = React.useState(true);
-    const baseURL = process.env.NEXT_PUBLIC_API_SERVER;
+    const baseURL = process.env.NEXT_PUBLIC_API_SERVER
     let defaultSelectedKeys: Set<string> = new Set();
 
     const onSelected = (event: any) => {

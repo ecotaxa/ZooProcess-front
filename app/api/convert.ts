@@ -9,17 +9,16 @@ export async function converttiff2jpg(data: any): Promise<string> {
     const dateFolder = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
 
     const uploadFolder = `/uploads/${dateFolder}`;
-
+    
     // Create the folder if it doesn't exist (server-side)
     const fullUploadPath = `${process.env.NEXT_PUBLIC_REAL_FOLDER}${uploadFolder}`;
-
+    
     // Extract the filename from the original path
     const originalPath = data.src;
     const filename = originalPath.split('/').pop();
-
+    
     // Create the destination path for the converted file
     const destinationPath = `${uploadFolder}/${filename.replace(/\.tiff?$/, '.jpg')}`;
-
     
 
     // Update the data object with the new destination
@@ -27,9 +26,9 @@ export async function converttiff2jpg(data: any): Promise<string> {
         ...data,
         dst: `${process.env.NEXT_PUBLIC_REAL_FOLDER}${destinationPath}`
     };
-
+    
     console.debug("converttiff2jpg modified data: ", modifiedData);
-
+    
     // const server = "http://zooprocess.imev-mer.fr:8000";
     const server= process.env.NEXT_PUBLIC_API_SERVER;
     const url = server + "/convert/";

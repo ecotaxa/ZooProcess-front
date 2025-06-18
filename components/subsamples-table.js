@@ -135,40 +135,40 @@ export function SubSamplesTable(props) {
 
 
         switch (columnKey) {
-            case "id":
-                return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-sm capitalize">{cellValue}</p>
-                    </div>
-                );
-
-            case "name":
-                return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-sm capitalize">{cellValue}</p>
-                    </div>
-                );
-
-
-            case "operator":
-                return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-sm capitalize">{cellValue}</p>
-                    </div>
-                );
-
-            case "fraction_id":
-            case "fraction_id_suffix":
-            case "fraction_max_mesh":
-            case "fraction_min_mesh":
-            case "observation":
-                console.log("render cell: ", cellValue);
-                return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-sm">{cellValue}</p>
-                    </div>
-                );
-
+        case "id":
+            return (
+            <div className="flex flex-col" >
+                <p className="text-bold text-sm capitalize">{cellValue}</p>
+            </div>
+            );
+            
+        case "name":
+            return (
+                <div className="flex flex-col" >
+                    <p className="text-bold text-sm capitalize">{cellValue}</p>
+                </div>
+            );
+            
+                    
+        case "operator":
+          return (
+              <div className="flex flex-col" >
+                  <p className="text-bold text-sm capitalize">{cellValue}</p>
+              </div>
+          );
+          
+        case "fraction_id":
+        case "fraction_id_suffix":
+        case "fraction_max_mesh":
+        case "fraction_min_mesh":
+        case "observation":
+          console.log("render cell: ", cellValue);
+        return (
+                <div className="flex flex-col" >
+                    <p className="text-bold text-sm">{cellValue}</p>
+                </div>
+            );
+  
 
         case "qc":
             return (
@@ -190,8 +190,8 @@ export function SubSamplesTable(props) {
           let button = ""
           // switch ( cellValue ) {
           //   case "UNPROCESSED":
-          //     url = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/process`
-          //     button = "PROCESS"
+          url = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/process`
+          button = "PROCESS"
           //     break;
           //   case "TODO":
           //   case undefined:
@@ -220,16 +220,16 @@ export function SubSamplesTable(props) {
                   </Link>
                 </Tooltip>
                 
-                {/* <Button 
+                {button ? (<Button
                     data-testid="action_btn"
-                    variant="flat" 
-                    size="sm" 
-                    color="primary" 
+                    variant="flat"
+                    size="sm"
+                    color="primary"
                     as={Link}
                     href={url}
                 >
                     {button}
-              </Button> */}
+              </Button>) : ""}
               </div>
               );
             

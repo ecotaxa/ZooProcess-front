@@ -209,21 +209,23 @@ const Process = (params:{
                     className="max-w-md"
                 /> */}
 
-            <div className="grid grid-cols-3 gap-4">
+                {data.log && <Textarea className="max-w-md" value={data.log} readOnly={true} />}
+
+                {/*{showState(data)}*/}
+                {taskId != "" && <div>taskId: {taskId}</div>}
+
+            {/*<div className="grid grid-cols-3 gap-4">*/}
+            <div className="h-1/2">
 
                 {/* {data.mask && <img src={data.mask.url} alt="mask" style={{width: "50%"}} />}
                 {data.out && <img src={data.out.url} alt="out" style={{width: "50%"}} />}
                 {data.vis && <img src={data.vis.url} alt="vis" style={{width: "50%"}} />}
                  */}
-                {data.mask && <MyImage src={String(data.mask.url)} legend="Mask" alt="mask" style={{width: "50%"}} />}
-                {data.out && <MyImage src={String(data.out.url)} legend="Out" alt="out" style={{width: "50%"}} />}
-                {data.vis && <MyImage src={String(data.vis.url)} legend="Vis" alt="vis" style={{width: "50%"}} />}
+                {data.mask && <MyImage src={String(data.mask.url)} legend="Mask" alt="mask"  />}
+                {/*{data.out && <MyImage src={String(data.out.url)} legend="Out" alt="out" style={{width: "50%"}} />}*/}
+                {/*{data.vis && <MyImage src={String(data.vis.url)} legend="Vis" alt="vis" style={{width: "50%"}} />}*/}
  
             </div>
-                {data.log && <Textarea className="max-w-md" value={data.log} readOnly={true} />}
-
-                {/*{showState(data)}*/}
-                {taskId != "" && <div>taskId: {taskId}</div>}
             </> 
         )
     }
@@ -283,7 +285,7 @@ const Process = (params:{
                 <div  className="bg-100 p-6">
                     <h1 className="text-center">Processing.</h1>
                     {/*<br/><br/>*/}
-                    <div className="flex flex-col items-center justify-center h-screen">
+                    <div className="flex flex-col items-center justify-center">
                     <h1>project: {project.name}</h1>
                     <h1>sample: {sample.name}</h1>
                     <h1>subsample: {subsample.name}</h1>

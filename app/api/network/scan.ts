@@ -65,10 +65,10 @@ import * as I from './interfaces'
 
 //     console.debug("addScan out");
 // }
-
+    
 export async function addScan(image: {url:string, instrumentId:string, projectId:string, sampleId:string, subsampleId:string}) {
     console.debug("addScan:", image);
-
+    
     try {
       const api = await axiosInstanse({
         params: {
@@ -76,12 +76,12 @@ export async function addScan(image: {url:string, instrumentId:string, projectId
         }
       });
       console.debug("addScan: api OK");
-
+      
       const data = { url: image.url, instrumentId: image.instrumentId };
       const url = `/projects/${image.projectId}/samples/${image.sampleId}/subsamples/${image.subsampleId}/scan_url`;
       console.log("addScan url:", url);
       console.log("addScan data:", data);
-
+      
       const response = await api.post(url, data);
       console.log("addScan response: ", response);
       return response.data;

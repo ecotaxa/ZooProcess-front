@@ -17,7 +17,13 @@ export async function POST(req: NextRequest) {
 
   try {
     // 1. Sauve le .gz
-    if (!folder.startsWith("http")) {
+    if (folder.startsWith("/api/backend")) {
+      // Just send the updated mask and let backend deal with it
+      const mask_post_url = process.env.NEXT_PUBLIC_API_SERVER+"/vignette_mask/"+gzFilename;
+      console.log("uploading mask_post_url", mask_post_url);
+      await sendBufferToServer(mask_post_url, "application/gzip", buffer);
+      return NextResponse.json({ ok: true });
+    } else  {
       await fs.writeFile(savePath, buffer);
     }
 
@@ -26,15 +32,8 @@ export async function POST(req: NextRequest) {
 
     // 3. Trouve le fichier image source
     const base = gzFilename.replace(/_mask\.gz$/, '');
-    let imgPath;
-    if (folder.startsWith("http")) {
-      // Original multiple is in another directory
-      const scanFilename = base.replace(/multiples_vis:/, 'multiples:'); 
-      imgPath = folder + "/" + scanFilename;
-    } else {
-      const scanFilename = base + '.jpg'; // adapte si besoin
-      imgPath = path.join(REAL_FOLDER, folder, scanFilename);
-    }
+    const scanFilename = base + '.jpg'; // adapte si besoin
+    const imgPath = path.join(REAL_FOLDER, folder, scanFilename);
 
     // 4. Charge l’image source
     const img = await loadImage(imgPath);
@@ -65,14 +64,9 @@ export async function POST(req: NextRequest) {
 
     // 6. Save PNG
     const maskPngFilename = gzFilename.replace(/\.gz$/, '.png');
+    const maskPngPath = path.join(REAL_FOLDER, folder, maskPngFilename);
     const bufferPng = canvas.toBuffer('image/png');
-    if (folder.startsWith("http")) {
-      const maskPngPath = folder + "/" + maskPngFilename;
-      await sendBufferToServer(maskPngPath, bufferPng);
-    } else {
-      const maskPngPath = path.join(REAL_FOLDER, folder, maskPngFilename);
-      await fs.writeFile(maskPngPath, bufferPng);
-    }
+    await fs.writeFile(maskPngPath, bufferPng);
 
     return NextResponse.json({ ok: true });
   } catch (err: any) {
@@ -80,7 +74,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function sendBufferToServer(url: string, buffer: Buffer) {
+async function sendBufferToServer(url: string, mimeType: string, buffer: Buffer) {
   try {
     // Create a new FormData object
     const formData = new FormData();
@@ -88,7 +82,7 @@ async function sendBufferToServer(url: string, buffer: Buffer) {
     // Create a file from the buffer
     // The File constructor takes (parts, filename, options)
     const file = new File([buffer], path.basename(url), { 
-      type: 'image/png' 
+      type: mimeType 
     });
 
     // Append the file to the FormData
