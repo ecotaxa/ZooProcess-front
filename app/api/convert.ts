@@ -9,46 +9,26 @@ export async function converttiff2jpg(data: any): Promise<string> {
     const dateFolder = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
 
     const uploadFolder = `/uploads/${dateFolder}`;
-
+    
     // Create the folder if it doesn't exist (server-side)
     const fullUploadPath = `${process.env.NEXT_PUBLIC_REAL_FOLDER}${uploadFolder}`;
-
+    
     // Extract the filename from the original path
     const originalPath = data.src;
     const filename = originalPath.split('/').pop();
-
+    
     // Create the destination path for the converted file
     const destinationPath = `${uploadFolder}/${filename.replace(/\.tiff?$/, '.jpg')}`;
-
-    // // internal API to check if file exist (we need to go the server side)
-    // try {
-    //     const fileCheckResponse = await fetch('/api/file-exists', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ filePath: fullDestinationPath }),
-    //     });
-
-    //     const { exists } = await fileCheckResponse.json();
-
-    //     if (exists) {
-    //         console.log("File already exists, returning path");
-    //         return destinationPath;
-    //     }
-    // } catch (error) {
-    //     console.error("Error checking if file exists:", error);
-    //     // Continue with conversion if check fails
-    // }
+    
 
     // Update the data object with the new destination
     const modifiedData = {
         ...data,
         dst: `${process.env.NEXT_PUBLIC_REAL_FOLDER}${destinationPath}`
     };
-
+    
     console.debug("converttiff2jpg modified data: ", modifiedData);
-
+    
     // const server = "http://zooprocess.imev-mer.fr:8000";
     // const server= process.env.NEXT_PUBLIC_API_SERVER;
     const server= process.env.NEXT_PUBLIC_API_TOOLS_SERVER;
