@@ -2,26 +2,14 @@
 
 import { FC } from "react";
 import { useState } from "react";
-
-
-// import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-// import { ProjectsTable } from 'src/sections/projects/projects-table';
-import { MyForm } from '@/components/myForm';
-import { fraction_inputFormElments } from '@/config/formElements';
-
 import { useRouter } from 'next/navigation';
 
+import { MyForm } from '@/components/myForm';
+import { fraction_inputFormElments } from '@/config/formElements';
 import { Sample, User } from '@/app/api/network/interfaces';
-// import { addSubSample } from '@/app/api/subsamples';
 import { CustomError, removeDigestFromError } from "@/app/api/digest";
 import { addSubSample } from "@/app/api/data/subsamples";
-
-
-// import { useProject } from '@/app/api/projects';
-// import { auth } from '@/auth';
  import { ValidationError } from "@/lib/errors";
-
-
 
 
 
@@ -61,18 +49,11 @@ const forms = [
 ]
 
 interface pageProps {
-    // params: {
-        // projectid: string
-        // sampleid: string
         sample: Sample
 
         user: User
-        // subsampleid?: string
-    // }
 }
 
-// const SubSampleForm : FC<pageProps> = (params ) => {
-// const SubSampleForm =  ( params: pageProps) => {
 const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
 
 
@@ -80,95 +61,22 @@ const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
 
     const router = useRouter()
     
-    // console.debug("SubSampleForm params: ", params);
     console.debug("SubSampleForm params: ", {sample, user});
-    // console.log("NewSample params projectid: ", params.projectid);
-    // console.log("NewSample params sampleid: ", params.sampleid);
-    // console.log("NewSample params projectid: ", params.projectid);
-
-    // const projectid = router.query.projectid //as string
-    // const projectid = params.params.projectid;
-    // const sampleid = params.params.sampleid;
-    // const projectid = params.projectid;
-    // const sampleid = params.sampleid;
 
     const project = sample.project;
     const projectid = project.id;
     const sampleid = sample.id;
 
-    // const projectId = params.projectid;
-    // const user = params.user
-
-    // const {sample,user}= 
- 
- 
 
     console.log("NewSample params projectid: ", projectid);
     console.log("NewSample params sampleid: ", sampleid);
 
-    // const emptyData = {
-    //     "scanning_operator":user.name, // "Seb"  // 
-    // }
-
-    // const updatedForm = forms
-
-    // const form : any = []
-    //     form['forms']=updatedForm
-    //     form['value']=emptyData//testData//
-    //     form['title']='Sub Sample metadata'
-    //     form['subtitle']='Fill all the mandatory fields.'
-
-
-
-    // const [stringifiedData,setData] = useState(JSON.stringify(testData, null, 2))
-
-    // const [stringifiedData, setData] = useState("")
-    // var stringifiedData = "" ;
-
-    // const prepareData = (data:any) => {
-
-    //     let newData = {
-    //         ...data,
-    //         sampleId: sampleid
-    //     }
-    //     console.log("newData: ", newData);
-    //     return newData;
-    // }
-
-
-    // const onChange = async (value:any) => {
-    //     console.log("App onChange:", value)
-    //     // setData(JSON.stringify(value, null, 2))
-        
-    //     const data = {
-    //         name: `${projectid}_${value.sample_id}`,
-    //         metadataModelId: "6565df171af7a84541c48b20",
-    //         data:value,
-    //     }
-
-    //     console.log("newData: ", data);
-        
-    //     return addSubSample({
-    //         projectId: projectid, 
-    //         sampleId: sampleid,
-    //         data
-    //     })
-
-
-    // }
 
     async function handleChange(values:any, sampleId: string, projectId: string) {
-        console.debug("PPPPPPPPPPPPPPPPPPP SubSampleForm::handleChange()")
+        console.debug("SubSampleForm::handleChange()")
     try {
-        // const formattedData = {
-        //     name: values.scan_id || `${projectId}_${sampleId}_subsample`,
-        //     metadataModelId: "", // You might need to set this
-        //     data: values,
-        // };
+ 
     
-        // console.log("🔍 Sending formatted data:", formattedData);
-    
-        // const res = await addSubSample(projectId, sampleId, formattedData);
           const res = await addSubSample(projectId, sampleId, values);
 
       // succès : redirect
@@ -188,76 +96,19 @@ const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
 
       if (err instanceof ValidationError) {
         // on garde les erreurs dans l'état pour les afficher
-        // setFormErrors((err as ValidationError).payload.errors);
-        console.error("🟪 Validation Error payload:", err.payload);
-        // Set the form errors to be displayed by MyForm
+        console.error("❌ Validation Error payload:", err.payload);
         setFormErrors(err.payload?.errors || err.payload || { general: "Validation failed" });
  
         return;
       }
-      // erreur inattendue
-    //   console.error("🟩 onChange:",err);
-    //   alert(err.message ?? "Unexpected server error");
             setFormErrors({ general: err.message || "An unexpected error occurred" });
             console.error("🟩 onChange:", err);
     throw err
     }
-  }    // const onChange = (value:any) => {
-    //     // "use server"
-    //     console.log("App onChange:", val  ue)
-    //     // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
-    //     // stringifiedData = JSON.stringify(value, null, 2);
-
-    //     // setData(JSON.stringify(value, null, 2))
-    //     // console.log("App onChange:", stringifiedData)
-
-    //     // const newData = prepareData(value)
-
-    //     const data = {
-    //         name: value.scan_id, //"Sample XXXX",
-    //         metadataModelId: "", //"6565df171af7a84541c48b20",
-    //         data: value,
-    //     }
-
-    //     console.log("newData: ", data);
-    //     // try {
-
-    //         console.log("----- projectId: ", projectid);
-    //         console.log("----- sampleId: ", sampleid);
-    //         // console.log("----- params.projectid : ",params.projectid);
-    //         // console.log("----- params : ",params);
-    //         // console.log("----- params.params : ",params.params);
-
-    //         // addSample(projectId, data)
-    //         return addSubSample({
-    //             projectId: projectid, // : params.params.projectid,
-    //             sampleId: sampleid, 
-    //             data
-    //         })
-    //         .then((response) => {
-    //             console.log("Go To the infos page" )
-    //             // router.push(`${response.data.id}`)
-    //             // const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
-    //             const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}`
-    //             router.push(path)
-    //         })
-    //         .catch((error) => {
-    //             return Promise.reject(error)
-    //         })
-
-    //     // }
-    //     // catch (e:any){
-    //     //     console.log(e);
-            
-    //     // }
-    // }
-
+  } 
+ 
     const onCancel = () => {
         router.back()
-        // router.push({
-        //     pathname: '/projects/[projectid]',
-        //     query: { projectid: projectid },                                         
-        // })
     }
 
     const formButtons = {
@@ -268,7 +119,7 @@ const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
         console.log("formatData() ");
 
         const emptyData = {
-            "scanning_operator":user.name, // "Seb"  // 
+            "scanning_operator":user.name,
             "fraction_id":"",
             "fraction_id_suffix":""
         }
@@ -277,7 +128,7 @@ const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
     
         const form : any = []
             form['forms']=updatedForm
-            form['value']=emptyData//testData//
+            form['value']=emptyData // testData
             form['title']='Sub Sample metadata'
             form['subtitle']='Fill all the mandatory fields.'
     
@@ -286,12 +137,6 @@ const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
 
 
     const showForm = (use:User|any) => {
-
-
-
-        // if ( ! user) return <ErrorComponent error={isError} />
-
-        // else {
         const form = formatData(user)
 
         return (
@@ -300,67 +145,14 @@ const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
                 project={project.name}
                 sample={sample.name}
 
-                // onChange={onChange}
-                // onChange={(value:any) => onChange(value)
-                //     .then((response: { data: { id: any; }; }) => {
-                //         console.log("Go To the subsample page: " , response.data.id )
-                //         // router.push(`samples/${response.data.id}`)
-                //         const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}?state=scanner`
-                //         router.push(path)
-                //     })
-                //     .catch((error: any) => {
-                //         console.error("Error adding subsample:", error)
-                //         console.log("🔥 Full error:", JSON.stringify(error, null, 2));
-
-                //         // Handle error (e.g., show error message to user)
-                //         throw(error.message)
-                //     })
-                // }
-                // onChange={handleChange}
                 onChange={(values: any) => handleChange(values, sampleid, projectid)}
-
-
-                // onChange={async (value:any) => {
-                //     try {
-                //         const response = await onChange(value);
-                //         console.log("Go To the subsample page" );
-                //         const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}?state=scanner`
-                //         router.push(path)
-                //         return Promise.resolve(response)// response;
-                //     } catch (error:any) {
-
-
-                //         const customError = error as CustomError;
-                //         console.log("Error adding sample:", error); 
-                //         console.log("customError adding sample:", customError); 
-                //         console.log("customError.obj adding sample:", customError.obj || "no obj"); 
-                //         console.error("customError.digest adding sample:", customError?.digest);  // Safely check digest
-
-                //         console.log("Full error details:", JSON.stringify(error, null, 2));
-
-                //         const errorObject = { message: "An error occurred", digest: "3967790229" };
-                //         console.log("typeof error: ", typeof error);
-                //         const cleanedObject = removeDigestFromError(error);
-
-                //         console.log("Cleaned Object:", cleanedObject);
-                //         // throw cleanedObject.message;
-                //         throw 'toto';
-
-
-
-                //     }
-                // }}
-
-
                 onCancel={onCancel}
                 button={formButtons}
                 errors={formErrors} // ← Pass the errors to MyForm
 
             />
         )
-        // }
     }
-
 
     return (
         <>
@@ -368,6 +160,5 @@ const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
         </>
     );
 }
-
 
 export default SubSampleForm;

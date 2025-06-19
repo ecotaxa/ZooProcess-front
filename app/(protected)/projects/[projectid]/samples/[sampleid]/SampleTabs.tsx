@@ -11,6 +11,7 @@ import { Debug } from "@/components/Debug";
 import { useHash } from "@/lib/useHash";
 import { Project, Sample } from "@/app/api/network/interfaces";
 import SubSamples from "./@subsamples/page";
+import { useSearchParams } from "next/navigation";
 
 export function SampleTabs({ sample, params }:{sample:Sample, params:any}) {
 
@@ -21,19 +22,28 @@ export function SampleTabs({ sample, params }:{sample:Sample, params:any}) {
 //     return ['qc'];
 //   };
 
+    const searchParams = useSearchParams()
+    const state = searchParams.get('state') 
+    console.debug("state:",state)
+
   let selectedKey="stats"
+  // if ( state && state == "stats" || state == "metadata" || state == "subsamples") {selectedKey = state}
 
-  const hash = useHash().replace('#','')
-  console.log("path:",hash)
+  // const hash = useHash().replace('#','')
+  // console.log("path:",hash)
 
-  switch (hash){ 
+  // switch (hash){ 
+  switch (state){ 
     case "stats":
+    case "stat":
+      selectedKey = "stats"
     case "metadata":
+      selectedKey = "metadata"
     case "subsamples":
-    // case "background":
-    // case "scans":
-    // case "qc":
-      selectedKey = hash
+    case "subsample":
+    case "scans":
+    case "scan":
+      selectedKey = "subsamples"
   }
   return (
     // <Tabs aria-label="Sample tabs" disabledKeys={isQcTabDisabled(project)} defaultSelectedKey={selectedKey}>
@@ -44,7 +54,7 @@ export function SampleTabs({ sample, params }:{sample:Sample, params:any}) {
       <Tab key="metadata" title="Metadata" >
           <Metadata sample={sample}  {...params}/>
       </Tab>
-      <Tab key="samples" title="Sub Samples">
+      <Tab key="subsamples" title="Sub Samples">
           <SubSamples sample={sample} {...params}/>
           <Debug params={params}/>
       </Tab>

@@ -1,98 +1,51 @@
 "use client"
 
-// import {  Card, CardContent, Grid, Typography } from "@mui/material";
 import {   Grid , Typography} from "@mui/material";
 
-// import { FormElements, fraction_inputFormElments, inputFormElements, inputFormElements_tow_type_vertical, sampleid_formElements } from '../services/formElements';
 import { useState, 
-  // useMemo,
    useEffect } from "react";
 import { FormElements } from "@/components/myFormElements";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter, CardHeader, Spacer } from "@heroui/react";
 import { Debug } from "@/components/Debug";
-// import { el } from "date-fns/locale";
-
-// import { Debug } from "@/components/Debug";
-
-// import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-
 // MyForm
 // props.forms must contain a form template or a list of form templates
 // props.value can contain form values if need to prefill the form
 export function MyForm(props){
 
-  console.debug("AAAAAARRRRRRRGGGGGGG  MyForm(props): ", props );
+  console.debug("#️⃣  MyForm(props): ", props );
 
-// const Page = () => {
+  const {forms, value, title, subtitle, error:errorMessage} = props;
+  const [fieldErrors, setFieldErrors] = useState(null);
 
-    // const router = useRouter()
-    // const props = router.query.props //as string
+  const button = props.button
 
-    // const props = 
-
-    // const forms = [
-    //     sampleid_formElements, 
-    //     inputFormElements, 
-    //     inputFormElements_tow_type_vertical, 
-    //     fraction_inputFormElments
-    //   ]      
-    // const forms = props.forms;
-    // const {forms,onChange,onCancel} = props;
-    const {forms, value, title, subtitle, error:errorMessage} = props;
-    const [fieldErrors, setFieldErrors] = useState(null);
-
-    const button = props.button
-
-    const btn = {
-      cancel:button?.cancel||"Cancel",
-      submit:button?.submit||"Submit",
-      submitting:button?.updating||'Updating...',
-      // updating:button?.updating||'Updating...',
-    }
+  const btn = {
+    cancel:button?.cancel||"Cancel",
+    submit:button?.submit||"Submit",
+    submitting:button?.updating||'Updating...',
+  }
 
 
-    // const [myForms, setMyForm] = useState(forms);
+  console.log("MyForm : " , forms);
 
-
-    console.log("-----------> MyForm(props): ", props );
-
-    console.log("MyForm : " , forms);
-    // const [myform, setMyForm] = useState({});
-    // setMyForm(props.value)
-
-    // keep value to reset it
-    let defaultValue = {...props.value}
-    console.debug("defaultValue", defaultValue);
+  // keep value to reset it
+  let defaultValue = {...props.value}
+  console.debug("defaultValue", defaultValue);
  
 
-    // const testData2 = {sample_id:'b', scientific_program:'dyfamed_wp2_2023_biotom_sn001', latitude_ns:2}
-    // const [myform, setMyForm] = useState(props.value?props.value:{});
-    // const [myValues, setMyValues] = useState(value || {});
-    const [myValues, setMyValues] = useState(value || defaultValue || {});
+  const [myValues, setMyValues] = useState(value || defaultValue || {});
 
-    // const [myform, setMyForm] = useState({});
-    // setMyForm(testData2)
-    // const [title, setTitle] = useState(props.title?props.title:"Title");
-    // const [subtitle, setSubTitle] = useState(props.subtitle?props.subtitle:"subTitle");
 
-    // const [isLoading, setIsLoading] = useState<boolean>(false)
-    // const [error, setError] = useState<string | null>(null)
+  const [isDataModified, setIsDataModified] = useState(false)
+  const [error, setError] = useState(null)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [isDataUpdated, setIsDataUpdated] = useState(false)
 
-    // const [defaultValue,setDefaultValue] = useState(props.value)
-    const [isDataModified, setIsDataModified] = useState(false)
-    const [error, setError] = useState(null)
-    const [isUpdating, setIsUpdating] = useState(false)
-    const [isDataUpdated, setIsDataUpdated] = useState(false)
-
-    const [values, setValues] = useState(defaultValue?defaultValue:{});
-    // const [values, setValues] = useState(props.value || {});
-
-    // const [rand,setRand] = useState(Math.random())
+  const [values, setValues] = useState(defaultValue?defaultValue:{});
 
     useEffect(()=>{
-      console.debug("=============> errorMessage has changed:", errorMessage);
-      // setError(errorMessage)
+      console.debug("⚠️ errorMessage has changed:", errorMessage);
 
     // Display general errors
     if (errorMessage?.general) {
@@ -113,25 +66,13 @@ export function MyForm(props){
 
     useEffect(()=>{
       console.debug("=============> myValues has changed:", myValues);
-      // setRand(Math.random())
-      // console.log("rand", rand);
-    //   setValues(myValues)
-
-      // setMyForm(forms)
     },[myValues])
-    // },[props.value])
 
-    // const margin={margin:"0 5px"}
-
-    // const init = () => {
-    //     setMyValues(defaultValue)
-    // }
 
 
 
     
     const updateValue = (update, myValues, value) => {
-      //if (props.fn2) {
         console.log("updateValue(update)  : ", update );
         console.log("updateValue(myValues): ", myValues );
         console.log("updateValue(value)   : ", value );
@@ -149,11 +90,8 @@ export function MyForm(props){
         });
 
         const prefix = new Function( update.params, update.func );
-        // opt['prefix'] = prefix(param)  // mui/material ?
-        // opt['startContent'] = prefix(param) // NextUI
         const v = prefix(param)
         return v
-      //}
     }
 
 
@@ -161,7 +99,6 @@ export function MyForm(props){
 
     // inject the values given in parameter in the form
     const myElement = (formitem) => {
-      // console.debug("myElement: ", formitem);
 
       if ( ! 'name' in formitem ){
         console.debug("myElement: ", formitem);
@@ -171,33 +108,13 @@ export function MyForm(props){
       if ( formitem.name ){
         let value = myValues[formitem.name];
 
-        // setRand(Math.random())
-        // if ( value !== formitem['value'] ){
-          // console.debug("FORM VALUE for ", formitem.name, " = " , value , " <= " , formitem['value'] );
-
         if ( value != undefined ){
 
-        // const c = { update: {
-        //     params:"{fraction_number,fraction_id_suffix}",
-        //      func:'return String(fraction_number)+"_"+String(fraction_id_suffix)'
-        // }}
-
-          // if ( formitem.update ){
-          //   console.debug("formitem.update PRESENT")
-          //   const opts = updateValue(formitem.update, myValues, value)
-          //   console.debug("opts: ", opts);
             console.debug("FORM VALUE for ", formitem.name, " = " , value , " <= " , formitem['value'] );
-          // }
-        //   else {
-            // console.log("NO UPDATE fn");
-            // value = formitem['value']
-          // }
 
           formitem['value'] = value ;
         } else {
-          // console.log("UNDEFINED");
           if ( formitem['value'] != undefined) {
-            // console.log("OVERRIDE")
             myValues[formitem.name] = formitem['value']
             let form = myValues
             form[formitem.name] = formitem['value'] ;
@@ -209,33 +126,22 @@ export function MyForm(props){
         if ( formitem.update ){
           console.debug("formitem.update PRESENT")
           const valueUpdated = updateValue(formitem.update, myValues, value)
-          // console.debug("opts: ", opts);
           console.debug("FORM VALUE for ", formitem.name, " = " , valueUpdated , " <= " , formitem['value'] );
           formitem['value'] = valueUpdated
-          // formitem['onChange'](valueUpdated)
-          // props.onChangeElement(formitem.name,valueUpdated)
           let copiedValues = myValues
           copiedValues[formitem.name] = valueUpdated
-          // setMyValues(copiedValues)
         }
 
 
       } else {
         console.error("formitem.name is undefined");
         formitem['name']="empty_" + String(Math.floor(Math.random() * 100)) // j'aime pas mais j'ai pas mieux pour le moment
-        //throw ("formitem.name is undefined: ", formitem )
       }
 
       // injecte les values dans le composant
       formitem['myValues'] = myValues
 
-      // console.log("-+-+-+---------------------------------");
-      // // console.log("myform: ", myform);
-      // console.log("formitem: ", formitem);
-      // console.log("-+-+-+---------------------------------");
-
         return (
-          // <div className="form-container" key={()=>`containeur_${formitem.name}`}>
             <Grid key={formitem.name}
               xs={formitem.xs}
               sm={formitem.sm}
@@ -246,17 +152,13 @@ export function MyForm(props){
                 project={props.project}
                 sample={props.sample}
                 subsample={props.subsample}
-                // onChange={() => onChangeElement()} // ne fonctionne pas
-                // onChange={onChangeElement}
-                onChange={(n,v) => onChangeElement(n,v)} // ne fonctionne pas
+                onChange={(n,v) => onChangeElement(n,v)}
                 />
             </Grid>
-            // </div>
         )
     }
 
     const formElements = (myJsonForm=[]) => {
-      // console.log("formElements: ", myJsonForm);
 
         return (       
           myJsonForm.map(input => 
@@ -292,12 +194,9 @@ export function MyForm(props){
         var type = undefined;
     
         forms.map((form) => {
-          // console.log("form",form);
             form.map(group => 
               group.section.map(element => {
-                // console.log("name:", name , " === " , element.name , "=", element.type);
                 if ( element.name == name ) { 
-                  // console.log("found",name);
                   found = true;
                   type = element.type;
                   return element.type; 
@@ -308,46 +207,29 @@ export function MyForm(props){
         return type
     }
 
-    // setRand(Math.random())
-
     const [valeur, setValeur] = useState({})
     
     useEffect(()=>{
       console.log("valeur has changed:", valeur);
-      //setValues(valeur)
-
       const name = valeur.name
       const value = valeur.value
 
       const type = searchtypeof(name);
-      console.log("type:", type);
-  
+      console.log("type:", type);  
       console.log("onChangeElement myValues", myValues);
-      // console.log("onChangeElement rand", rand);
 
       if (type === "number" ) {
         const newForm = {...myValues, [name]: Number(value)};
-        // setMyForm({...myform, [name]: Number(value)});
-        // const nform = { ...form
         setMyValues({...newForm});
       } else {
         const newForm = {...myValues, [name]: value};
         console.log("newForm", newForm);
         setMyValues({...newForm});
-        // setMyForm({...myform, name: value});
       }
       setIsDataModified(true)
       setIsDataUpdated(false)
       console.log("onChangeElement form values", myValues);
-
-      // cascade(name, value)
-
     },[valeur])
-
-  //   useEffect(() => {
-  //     const hasChanges = JSON.stringify(myValues) !== JSON.stringify(defaultValue);
-  //     setIsDataModified(hasChanges);
-  // }, [myValues, defaultValue]);
 
   // Add deep comparison function
   const isEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
@@ -364,115 +246,31 @@ export function MyForm(props){
   }, [myValues]);
 
 
-    // const cascade = ( name, value) => {
-
-    //   console.log("cascade( ", name);
-
-    //   const element = findElement(name)
-    //   if (element){
-    //     console.log("element", element);
-    //     if ( element.refresh ) {
-    //       console.debug("element.refresh PRESENT")
-    //       // elementToRefresh = element.refresh
-    //       console.log("element To Refresh", element.refresh);
-    //       refresh(element.refresh, name , value)
-    //     }
-    //     // refresh(element)
-    //     //update(element)
-    //   }
-    //   else {
-    //     console.log("element not found", name)
-    //   } 
-
-    // }
-
-
     const findElement = (name) => { 
-      // var found = false;
-      // var type = undefined;
   
       return forms.flatMap((form) => {
           console.log("form",form);
           return form.flatMap(group => 
             group.section.filter(element => {
-              // console.log("name:", name , " === " , element.name , "=", element.type);
               if ( element.name == name ) { 
                 console.log("found", name);
-              //   // found = true;
-              //   // type = element.type;
-              //   // return element.type; 
-              //   return element;
               return true
               }
-              // element.name == name
               return false
             })
           )
       })[0];
-      // return type
   }
 
     const onChangeElement = (name, value) => {
         console.log("onChangeElement before setValeur :", name, "-- value: ", value);
-
         setValeur({name:name, value:value})
-        
-        // const type = searchtypeof(name);
-        // console.log("type:",type);
-    
         console.log("onChangeElement myValues", myValues);
-        // // console.log("onChangeElement rand", rand);
-
-        // if (type === "number" ) {
-        //   const newForm = {...myValues, [name]: Number(value)};
-        //   // setMyForm({...myform, [name]: Number(value)});
-        //   // const nform = { ...form
-        //   setMyValues({...newForm});
-        // } else {
-        //   const newForm = {...myValues, [name]: value};
-        //   console.log("newForm",newForm);
-        //   setMyValues({...newForm});
-        //   // setMyForm({...myform, name: value});
-          
-        // }
-        // setIsDataModified(true)
-        // setIsDataUpdated(false)
-        // console.log("onChangeElement form values", myValues);
 
         setIsUpdating(false); // Reset updating state
-        // setIsDataModified(true); // Set modified flag
         const updatedValues = {...myValues, [name]: value};
         const isChanged = JSON.stringify(updatedValues) !== JSON.stringify(defaultValue);
         setIsDataModified(isChanged);
-
-  
-        // to cascade()
-        // const element = findElement(name)
-        // if (element){
-        //   console.log("element", element);
-        //   if ( element.refresh ) {
-        //     console.debug("element.refresh PRESENT")
-        //     // elementToRefresh = element.refresh
-        //     console.log("element To Refresh", element.refresh);
-        //     refresh(element.refresh)
-        //   }
-        //   // refresh(element)
-        //   //update(element)
-        // }
-        // else {
-        //   console.log("element not found", name)
-        // } 
-
-        // const elements = forms.filter( (form) => form.name == name)
-        // elements.map( (element) => {
-        //   if (element.refresh) {
-        //     forms.map( (element) => {
-        //     console.log("element",element);
-        //     update(element)
-        //     }
-        //   }
-        // })
-
       }
 
 
@@ -482,28 +280,6 @@ export function MyForm(props){
         setMyValues(defaultValue)
         props.onCancel();
     }
-    
-
-
-  // Update error handling in onSubmitHandler
-// const onSubmitHandler = async (event) => {
-//   event.preventDefault();
-//   setIsUpdating(true);
-  
-//   try {
-//       const response = await props.onChange(myValues);
-//       setValues(response);
-//       defaultValue = response;
-//       setIsDataUpdated(true);
-//       setIsDataModified(false);
-//       setError(null);
-//   } catch (error) {
-//       setError(error.message || error);
-//       setIsDataModified(true);
-//   } finally {
-//       setIsUpdating(false);
-//   }
-// }
 
     const onSubmitHandler = async (event) => {
         event.preventDefault();
@@ -531,8 +307,6 @@ export function MyForm(props){
             setIsUpdating(false);
         }
   }
-    // to print the debug json
-    // const stringifiedData = useMemo(() => JSON.stringify(myform, null, 2), [myform]);
 
     return (
       <form onSubmit={onSubmitHandler}>
@@ -547,13 +321,13 @@ export function MyForm(props){
                 {subtitle}
             </h4>
           
+          {/* 
           <Debug params={forms} title="forms"/>
           <Debug params={value} title="value"/>
           <Debug params={myValues} title="myValues" open={true}/>
           <Debug params={error} title="error" open={true}/>
-          <Debug params={errorMessage} title="errorMessage" open={true}/>
-
-          {/* <Debug params={myValues} title="myform"/> */}
+          <Debug params={errorMessage} title="errorMessage" open={true}/> 
+          */}
 
           </CardHeader>
           <CardBody>
@@ -570,7 +344,6 @@ export function MyForm(props){
           <CardFooter>
           <div className="gridjustify-items-end"
                   >
-                    {/* {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>} */}
                     {error && <div style={{ color: 'red' }}>{error}</div>}
                     {isDataUpdated && <div>Data have been updated</div>}
 

@@ -1,11 +1,6 @@
 "use server"
 
 import { Card, CardBody, CardHeader, Spacer } from "@heroui/react";
-// import { Tab, Tabs } from "@heroui/tabs";
-// import SubSamples from "./@subsamples/page";
-// import Stats from "./@stats/page";
-// import Metadata from "./@metadata/page";
-// import Samples from "./@samples/page";
 
 import { FC } from "react";
 import { Debug } from "@/components/Debug";
@@ -22,7 +17,6 @@ interface pageProps {
     }
 }
 
-// const Project = ({ params }: { params: { projectid: string; }} ) => {
 const SamplePage : FC<pageProps> = async ({params}) => {
 
 
@@ -32,28 +26,26 @@ const SamplePage : FC<pageProps> = async ({params}) => {
 
 
     const sample : Sample = await getSample(projectid,sampleid);
-    // console.log("SamplePage", sample);
-
-    // const projectName = "MOCK ;) Zooscan_ptb_wp2_2021_journee";
+ 
 
     return (
         <div>
-
+{/* 
             <Card>
                 <CardHeader>
                     <h1>Project</h1>
                 </CardHeader>
                 <CardBody>
-                    {/* <h1>{projectName}</h1> */}
-                    <h3>{projectid}</h3>
+                    <Debug params={sample} title="Sample" />
+                    <h1>{projectName}</h1> 
+                     <h3>{projectid}</h3>
                     <h3>{sampleid}</h3>
                     <h3>{sample.project.name} / {sample?sample.name:"Sample"}</h3>
-                    {/* <Debug params={sample} title="Sample" /> */}
                     <ProjectBreadcrumbs list={[projectid, sampleid]}  separator="/"/>
-                    <ProjectBreadcrumbs list={[sample.project.name, sample.name]}  separator="/"/>
+                    <ProjectBreadcrumbs list={[sample.project.name, sample.name]}  separator="/"/> 
                 </CardBody>
             </Card>
-            <Spacer y={20}/>
+            <Spacer y={20}/>  */}
 
 
         <SampleTabs sample={sample} params={params}/>
