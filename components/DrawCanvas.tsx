@@ -1,3 +1,4 @@
+import { cleanDigitSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
 import React, { useRef, useEffect, useState } from "react";
 
 interface DrawCanvasProps {
@@ -120,6 +121,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
 
       if (e.key === "b") setTool("brush");
       if (e.key === "e") setTool("eraser");
+      if (e.key === "c") cleanMatrix();
       if (e.key === "+") zoomAroundPoint(Math.min(zoom * ZOOM_FACTOR, MAX_ZOOM));
       if (e.key === "-") zoomAroundPoint(Math.max(zoom / ZOOM_FACTOR, MIN_ZOOM));
       if (e.key === "0") {
@@ -179,6 +181,12 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
     }
     forceUpdate();
   };
+
+  const cleanMatrix = () => {
+    if (!persistentMatrixRef.current) return;
+    persistentMatrixRef.current = persistentMatrixRef.current.map(row => row.fill(0));
+    forceUpdate();
+  }
 
   const handlePointerDown = (e: React.MouseEvent) => {
     setIsDrawing(true);
@@ -274,11 +282,12 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
           />
         </div>
         <div style={{ marginLeft: 16, display: "flex", flexDirection: "column", gap: 8 }}>
-          <button onClick={() => setTool("brush")}>Crayon (b)</button>
-          <button onClick={() => setTool("eraser")}>Gomme (e)</button>
-          <button onClick={() => setZoom(z => Math.min(z * ZOOM_FACTOR, MAX_ZOOM))}>Zoom +</button>
+          <button onClick={() => setTool("brush")}>Pencil (b)</button>
+          <button onClick={() => setTool("eraser")}>Rubber (e)</button>
+          <button onClick={() => cleanMatrix()}>Clear (c)</button>
+          <button onClick={() => setZoom(z => Math.min(z * ZOOM_FACTOR, MAX_ZOOM))}>Zoom (+)</button>
           <button onClick={() => { setZoom(1); setScroll({ x: 0, y: 0 }); }}>Taille originale (0)</button>
-          <button onClick={() => setZoom(z => Math.max(z / ZOOM_FACTOR, MIN_ZOOM))}>Zoom -</button>
+          <button onClick={() => setZoom(z => Math.max(z / ZOOM_FACTOR, MIN_ZOOM))}>Zoom (-)</button>
           <button onClick={applyMatrix}>Apply</button>
           <div style={{ marginTop: 8, fontSize: 12 }}>Zoom: x{zoom.toFixed(2)}</div>
         </div>

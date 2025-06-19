@@ -3,7 +3,7 @@ import { fetchVignetteData } from '@/components/lib/api';
 
 
 import dynamic from 'next/dynamic'
-const VignetList = dynamic(() => import('./VignetList'), { ssr: false })
+const VignetList = dynamic(() => import('@/components/VignetList'), { ssr: false })
 
 export default async function TestPage() {
   const { data, folder } = await fetchVignetteData();

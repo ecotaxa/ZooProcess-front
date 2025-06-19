@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import VignetItem from './VignetItem';
+import VignetItem from '@/components/VignetItem';
 import { VignetteData } from '@/components/lib/api';
 // import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import { VariableSizeList as List, ListChildComponentProps } from 'react-window';
@@ -113,9 +113,9 @@ export default function VignetList({
           folder={folder}
           onUpdate={(newData: any) => updateVignette(index, newData)}
           index={index}
-          selected={index === selectedIndex}
+          selected={index === selectedIndex} // move scroll on this ligne and show the zoomed scan with its segmentation lines on the right side
           onClick={() => setSelectedIndex(index)}
-          onEditMask={() => handleEditMask(index)}
+          onEditMask={() => {setSelectedIndex(index); handleEditMask(index);}} // open the editor
           onImageLoaded={(height:number) => {
               console.log('👀 imageLoaded', index, height);
 
@@ -252,42 +252,42 @@ const handleApply = async (matrix: number[][]) => {
               draggable={false}
             />
           </div>
-        )}
+      )}
       {editIndex !== null && editMatrix && (
 
-<Modal
-  isOpen={editIndex !== null && !!editMatrix}
-  onClose={handleCloseEdit}
-  backdrop="blur"
-  placement="center"
-  className="!max-w-none !w-auto !h-auto"
->
-  <ModalContent className="h-full">
-    <ModalHeader>Mask edit</ModalHeader>
-    <ModalBody className="flex-1 overflow-auto flex justify-center items-center p-2">
-        <div
-        style={{
-          display: 'inline-block',
-          maxWidth: 'calc(100vw - 64px)',
-          maxHeight: 'calc(100vh - 64px)',
-        }}
-  >
-  
-      <DrawCanvas
-        imagePath={imagePath}
-        initialMatrix={editMatrix}
-        strokeColor="red"
-        onApply={handleApply}
-      />
-  </div>
-    </ModalBody>
-    <ModalFooter>
-      <Button onPress={handleCloseEdit}>Fermer</Button>
-    </ModalFooter>
-  </ModalContent>
-</Modal>
+        <Modal
+          isOpen={editIndex !== null && !!editMatrix}
+          onClose={handleCloseEdit}
+          backdrop="blur"
+          placement="center"
+          className="!max-w-none !w-auto !h-auto"
+        >
+          <ModalContent className="h-full">
+            <ModalHeader>Mask edit</ModalHeader>
+            <ModalBody className="flex-1 overflow-auto flex justify-center items-center p-2">
+              <div
+                style={{
+                  display: 'inline-block',
+                  maxWidth: 'calc(100vw - 64px)',
+                  maxHeight: 'calc(100vh - 64px)',
+                }}
+              >
+          
+                <DrawCanvas
+                  imagePath={imagePath}
+                  initialMatrix={editMatrix}
+                  strokeColor="red"
+                  onApply={handleApply}
+                />  
+              </div>
+            </ModalBody>
+            <ModalFooter>
+              <Button onPress={handleCloseEdit}>Fermer</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
 
-    )}
+      )}
     </div>
   );
 }
