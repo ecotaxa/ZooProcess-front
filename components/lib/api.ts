@@ -55,11 +55,15 @@ export async function writeFakeMatrix(filePath: string, width = 64, height = 64)
   await fs.writeFile(filePath, Buffer.from(buffer));
   // console.log(`🟩 Fichier matrix généré à : ${filePath}`);
 }
-export async function fetchVignetteData(): Promise<VignetteResponse> {
+export async function fetchVignetteData(
+  projectId: string,
+  sampleId: string,
+  subsampleId: string
+): Promise<VignetteResponse> {
   const baseURL = process.env.NEXT_PUBLIC_API_SERVER!;
-  const fullUrl = `${baseURL}/vignettes`;
+  const fullUrl = `${baseURL}/vignettes/${projectId}/${sampleId}/${subsampleId}`;
 
-  console.log('🔍 fetchVignetteData:', { fullUrl });
+  console.log('🔍 fetchVignetteData:', { fullUrl, projectId, sampleId, subsampleId });
 
   const response = await fetch(fullUrl, { cache: 'no-store' });
 
