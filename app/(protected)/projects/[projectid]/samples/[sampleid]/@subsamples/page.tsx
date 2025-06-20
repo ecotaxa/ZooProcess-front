@@ -40,9 +40,9 @@ const SubSamples : FC<pageProps> = (params) => {
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         {/* <Debug params={disabled} title='disabled' open={true} /> */}
           <div className="text-center justify-center">
-              {/* <h1 data-testid="title">
-                  Samples {projectId}
-              </h1> */}
+              <h1 data-testid="title">
+                  SubSamples in {sample.name}
+              </h1>
               <Spacer y={5}/>
               <Card 
                   className="inline-block "

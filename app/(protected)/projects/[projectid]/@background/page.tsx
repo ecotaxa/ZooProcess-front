@@ -33,6 +33,8 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
         const fetchBackgrounds = async () => {
             const fetchedBackgrounds = await getProjectBackgrounds(projectid)
             const formattedData = formatData(fetchedBackgrounds)
+            // Newest entries first, fields date & time both contain the full creation date
+            formattedData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             setBackgroundList(formattedData)
         }
         fetchBackgrounds()
@@ -71,7 +73,7 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
 
             return {
               id: s.id,
-              name: s.url,
+              name: s.id, // It's a project-local id in Python backend
               creator: s.user.name,
               time:s.createdAt,
               date:s.createdAt,

@@ -140,7 +140,7 @@ const SubSampleForm : FC<pageProps> = (params ) => {
 
         const data = {
             "scan_id":subsample.scan_id,
-            "fraction_number":subsample.fraction_number,
+            "fraction_id":subsample.fraction_id,
             "fraction_id_suffix":subsample.fraction_id_suffix,
             "scanning_operator":subsample.user.name, // "Seb"  // 
 
@@ -148,6 +148,7 @@ const SubSampleForm : FC<pageProps> = (params ) => {
             "fraction_max_mesh":subsample.fraction_max_mesh,
             "spliting_ratio":subsample.spliting_ratio,
             "observation":subsample.observation,
+            "submethod":subsample.submethod
         }
     
         console.log("formatData() data: ", data);

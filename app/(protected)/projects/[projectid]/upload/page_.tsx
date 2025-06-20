@@ -59,7 +59,7 @@ const BackgroundScanPage : FC<pageProps> = ({params}) => {
     };
 
     const isTiff = (fileUrl:string) : boolean => {
-        console.log("fileUrl: ", fileUrl)
+        console.log("fileUrl in app/(protected)/projects/[projectid]/upload/page_.tsx: ", fileUrl)
         // return true
         return fileUrl.endsWith(".tif") || fileUrl.endsWith(".tiff")
 

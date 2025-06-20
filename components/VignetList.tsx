@@ -70,7 +70,11 @@ export default function VignetList({
   useEffect(() => {
     const selectedVignette = vignettes[selectedIndex];
     if (selectedVignette?.mask) {
-      setZoomMaskSrc(`/${folder}/${selectedVignette.mask}`.replace(/\\/g, '/').replace(/\/\/+/, '/'));
+      if (folder.startsWith("/api/backend")) {
+        setZoomMaskSrc(`${folder}/${selectedVignette.mask}`);
+      } else {
+        setZoomMaskSrc(`/${folder}/${selectedVignette.mask}`.replace(/\\/g, '/').replace(/\/\/+/, '/'));
+      }
     } else {
       setZoomMaskSrc(null);
     }
@@ -156,7 +160,7 @@ export default function VignetList({
 const getItemSize = (index: number) => {
   const h = rowHeights[index];
   if (!h || h < 96) {
-    console.warn('⚠️ Missing or too small height for index', index, '→ fallback 120');
+    console.warn('⚠️ Missing or too small height',h,' for index', index, '→ fallback 120');
     return 120;
   }
   return h;
@@ -167,13 +171,23 @@ const getItemSize = (index: number) => {
     setEditIndex(index);
     setEditMatrix(undefined); // Reset pour forcer rechargement
     const gzFile = vignettes[index].matrix;
-    const matrixUrl = `/${folder}/${gzFile}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+    let matrixUrl;
+    if (folder.startsWith("/api/backend")) {
+      matrixUrl = `${folder}/${gzFile}`;
+    } else {
+      matrixUrl = `/${folder}/${gzFile}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+    }
     try {
       const matrix = await loadMatrixFromGz(matrixUrl); // Utilise ta fonction de chargement .gz
       setEditMatrix(matrix);
     } catch (e) {
       // fallback matrice zéro si erreur
-      const imgPath = `/${folder}/${vignettes[index].scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+      let imgPath;
+      if (folder.startsWith("/api/backend")) {
+        imgPath = `${folder}/${vignettes[index].scan}`;
+      } else {
+        imgPath = `/${folder}/${vignettes[index].scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+      }
       const img = new window.Image();
       img.src = imgPath;
       img.onload = () => {
@@ -205,8 +219,13 @@ const handleApply = async (matrix: number[][]) => {
 
 
   const editVignette = editIndex !== null ? vignettes[editIndex] : null;
-  const imagePath = editVignette ? `/${folder}/${editVignette.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/') : '';
-
+  let imagePath;
+  if (folder.startsWith("/api/backend")) {
+    imagePath = editVignette ? `${folder}/${editVignette.scan}` : '';
+  } else {
+    imagePath = editVignette ? `/${folder}/${editVignette.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/') : '';
+  }
+ 
   useEffect(() => {
   if (!imagePath) return;
 

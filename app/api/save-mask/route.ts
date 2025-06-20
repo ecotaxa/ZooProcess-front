@@ -17,7 +17,15 @@ export async function POST(req: NextRequest) {
 
   try {
     // 1. Sauve le .gz
-    await fs.writeFile(savePath, buffer);
+    if (folder.startsWith("/api/backend")) {
+      // Just send the updated mask and let backend deal with it
+      const mask_post_url = process.env.NEXT_PUBLIC_API_TOOLS_SERVER+"/vignette_mask/"+gzFilename;
+      console.log("uploading mask_post_url", mask_post_url);
+      await sendBufferToServer(mask_post_url, "application/gzip", buffer);
+      return NextResponse.json({ ok: true });
+    } else  {
+      await fs.writeFile(savePath, buffer);
+    }
 
     // 2. Relis la matrice
     const matrix = readMatrixFromCompressedBinary(buffer.buffer);
@@ -63,5 +71,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
+async function sendBufferToServer(url: string, mimeType: string, buffer: Buffer) {
+  try {
+    // Create a new FormData object
+    const formData = new FormData();
+
+    // Create a file from the buffer
+    // The File constructor takes (parts, filename, options)
+    const file = new File([buffer], path.basename(url), { 
+      type: mimeType 
+    });
+
+    // Append the file to the FormData
+    formData.append('file', file);
+
+    // Send the FormData as the request body
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      // Note: Don't set Content-Type header when sending FormData
+      // It will be set automatically with the correct boundary
+    });
+
+    const result = await response.json();
+    console.log('Upload successful:', result);
+    return result;
+  } catch (error) {
+    console.error('Error uploading buffer:', error);
+    throw error;
   }
 }

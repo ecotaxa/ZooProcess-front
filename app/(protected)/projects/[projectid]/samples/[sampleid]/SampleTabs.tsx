@@ -45,6 +45,9 @@ export function SampleTabs({ sample, params }:{sample:Sample, params:any}) {
     case "scan":
       selectedKey = "subsamples"
   }
+
+  console.debug(" selectedKey:", selectedKey)
+
   return (
     // <Tabs aria-label="Sample tabs" disabledKeys={isQcTabDisabled(project)} defaultSelectedKey={selectedKey}>
     <Tabs aria-label="Sample tabs" defaultSelectedKey={selectedKey}>

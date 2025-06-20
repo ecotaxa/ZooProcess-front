@@ -72,7 +72,12 @@ export async function fetchVignetteData(): Promise<VignetteResponse> {
   }
 
   const { data, folder } = await response.json();
-  const folderClean = folder.replace(/^\/+/, '');
+  let folderClean;
+  if (folder.startsWith("/api/backend")) {
+    folderClean = folder;
+  } else {
+    folderClean = folder.replace(/^\/+/, '');
+  }
   const folderPath = path.resolve('public', folderClean);
 
   // SQUINCHOLE PATCH : Limite à 5 en parallèle

@@ -87,8 +87,8 @@ export function SubSamplesTable(props) {
 
     const renderCell = React.useCallback((sample, columnKey) => {
 
-        console.log("render cell :sample ", sample);
-        console.log("render cell :columnKey ", columnKey); 
+        console.log("render cell :subsample ", sample);
+        console.log("render cell :columnKey ", columnKey);
 
         let cellValue = sample[columnKey]
         if ( cellValue == undefined ) {
@@ -129,7 +129,7 @@ export function SubSamplesTable(props) {
           );
           
         case "fraction_id":
-        case "fraction_number":
+        case "fraction_id_suffix":
         case "fraction_max_mesh":
         case "fraction_min_mesh":
         case "observation":
@@ -156,13 +156,13 @@ export function SubSamplesTable(props) {
         //  console.log("render cell: ", cellValue);
          console.debug("render cell: ", scan);
 
-          let url = scan?.url
-          url = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/check`
+          // let url = scan?.url
+          let urlCheck = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/check`
           let button = ""
           // switch ( cellValue ) {
           //   case "UNPROCESSED":
-          //     url = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/process`
-          //     button = "PROCESS"
+          let urlProcess = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/process`
+          button = "PROCESS"
           //     break;
           //   case "TODO":
           //   case undefined:
@@ -183,7 +183,7 @@ export function SubSamplesTable(props) {
                       size="sm"
                       color="primary" 
                       as={Link}
-                      href={`${url}`}
+                      href={`${urlCheck}`}
                   >
                     <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                       <EyeIcon/>
@@ -191,16 +191,16 @@ export function SubSamplesTable(props) {
                   </Link>
                 </Tooltip>
                 
-                {/* <Button 
+                {button ? (<Button
                     data-testid="action_btn"
-                    variant="flat" 
-                    size="sm" 
-                    color="primary" 
+                    variant="flat"
+                    size="sm"
+                    color="primary"
                     as={Link}
-                    href={url}
+                    href={urlProcess}
                 >
                     {button}
-              </Button> */}
+              </Button>) : ""}
               </div>
               );
             

@@ -57,12 +57,11 @@ import axiosInstanse from '@/network/axiosInstanse';
 
 //   }
 
-export async function linkScanToSubsample(scanId: string, subsampleId: string): Promise<void> {
+export async function linkScanToSubsample(projectId: string, sampleId: string, subsampleId: string, scanId: string): Promise<void> {
   const api = await axiosInstanse({});
-  const url = '/link';
+  const url = `/projects/${projectId}/samples/${sampleId}/subsamples/${subsampleId}/link`;
   const body = {
     scanId: scanId,
-    subSampleId: subsampleId
   };
   
   console.debug("linkScanToSubsample::url: ", url);

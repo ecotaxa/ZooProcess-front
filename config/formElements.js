@@ -448,13 +448,13 @@ export const sampleid_formElements=[
                 xs:12, sm:12, fullWidth:true, // value:1,
                 fn2: { 
                     params:"{project,sample}",
-                     func:'return String(project)+"_"+String(sample)+"_"'
+                     func:'return String(sample)+"_"'
                     // params:"{project,sample,fraction_number}",
                     //  func:'return String(project)+"_"+String(sample)+"_"+String(fraction_number)+"_"'
                     },
                 update: {
-                    params:"{fraction_number,fraction_id_suffix}",
-                     func:'return String(fraction_number)+"_"+String(fraction_id_suffix)'
+                    params:"{fraction_id,fraction_id_suffix}",
+                     func:'return fraction_id_suffix!==""?(String(fraction_id)+"_"+String(fraction_id_suffix)):String(fraction_id)'
                 }
             },
 
@@ -469,8 +469,8 @@ export const sampleid_formElements=[
             //         {id:4, value:"d2_bis"},
             //     ]
             // },
-            { tag:"TextField", name:"fraction_number", type:"text", 
-                placeholder:"Number of scans (frac_id)  tot, d1, d2, ...", label:'Fraction of scans',
+            { tag:"TextField", name:"fraction_id", type:"text",
+                placeholder:"Fraction identifier  tot, d1, d2, ...", label:'Fraction of sample',
                 variant:"outlined", required:true, disabled:false,
                 xs:12, sm:4, fullWidth:true, // value:1,
                 refresh:"scan_id"
@@ -533,17 +533,19 @@ export const sampleid_formElements=[
                 xs:12, sm:12, fullWidth:true,
                 endAdornment:{pos:'end', text:'1/x'},
                 minValue:0, helperText:'value greather than or equal to zero'
+            }, 
+                // TODO: below should be { tag:"InputSelect", name:"submethod", type:"select", 
+                //  but then the value is not read or sent via API 
+            { tag:"TextField", name:"submethod", type:"text", 
+                placeholder:"Pick or enter one", label:'Sub Method',
+                variant:"outlined", fullWidth:true, required:true, 
+                xs:12, sm:6, //sx:{m:0, minWith:300},
+                choice:[
+                    {id:1, value:"Motoda"},
+                    {id:2, value:"Johnson"},
+                    {id:3, value:"<NAME>"},
+                ]
             },
-            // { tag:"InputSelect", name:"submethod", type:"select", 
-            //     placeholder:"SSubMethod", label:'SubMethod',
-            //     variant:"outlined", fullWidth:true, required:true, 
-            //     xs:12, sm:6, //sx:{m:0, minWith:300},
-            //     choice:[
-            //         {id:1, value:"Motoda"},
-            //         {id:2, value:"Johnson"},
-            //         {id:3, value:"<NAME>"},
-            //     ]
-            // },
             { tag:"TextField", name:"observation", type:"text", 
                 placeholder:"Observation", label:'Observation',
                 variant:"outlined", required:true, 

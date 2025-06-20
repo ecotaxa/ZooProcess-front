@@ -49,6 +49,12 @@ function pathToRealStorage(path: string, projectBasePath?: string): string {
         return path;
     }
 
+    // @ts-ignore
+    if (path.startsWith(process.env.NEXT_PUBLIC_API_SERVER)) {
+        return path;
+    }
+
+
     // look for the projectBasePath, if provided
     // if (projectBasePath) {
     //     if (path.startsWith(projectBasePath)) {
@@ -91,7 +97,7 @@ function pathToRealStorage(path: string, projectBasePath?: string): string {
 
 const isTiff = (fileUrl: string) : boolean => {
     if (fileUrl == undefined) return false
-    console.log("fileUrl: ", fileUrl)
+    console.log("fileUrl in gateway.ts: ", fileUrl)
     return fileUrl.endsWith(".tif") || fileUrl.endsWith(".tiff")
 }
 

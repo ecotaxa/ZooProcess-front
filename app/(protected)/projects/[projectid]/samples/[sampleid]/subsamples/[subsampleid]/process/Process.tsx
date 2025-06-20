@@ -109,13 +109,15 @@ const Process = (params:{
         let interval = setInterval(async () => {
             try {
                 const task = await fetchTask(taskId);
-                const sub = await fetchSubSample(project.id,sample.id,subsample.id)
+                const sub_rsp = await fetchSubSample(project.id,sample.id,subsample.id)
+                const sub = sub_rsp.data;
+                console.log("Sub sample:", sub);
                 const mask = sub.scan.find( (s:Scan) => s.type == "MASK" &&  s.deleted == false && s.archived == false )
                 const vis = sub.scan.find( (s:Scan) => s.type == "VIS" &&  s.deleted == false && s.archived == false )
                 const out = sub.scan.find( (s:Scan) => s.type == "OUT" &&  s.deleted == false && s.archived == false )
                 // setCurrentProcess(task);
 
-                const s = { mask,vis,out , taskId, status: task.status }
+                const s = { mask,vis,out , taskId, status: task.status, log:task.log }
                 console.debug("*************", s)
 
                 setCurrentProcess(s);
@@ -125,7 +127,7 @@ const Process = (params:{
                     clearInterval(interval);
                 }
             } catch (error) {
-                console.log("Error fetching task:", error);
+                console.log("Error fetching task or Sub sample:", error);
                 clearInterval(interval);
             }
         }, 5000);
@@ -207,21 +209,23 @@ const Process = (params:{
                     className="max-w-md"
                 /> */}
 
-            <div className="grid grid-cols-3 gap-4">
+                {data.log && <Textarea className="max-w-md" value={data.log} readOnly={true} />}
+
+                {/*{showState(data)}*/}
+                {taskId != "" && <div>taskId: {taskId}</div>}
+
+            {/*<div className="grid grid-cols-3 gap-4">*/}
+            <div className="h-1/2">
 
                 {/* {data.mask && <img src={data.mask.url} alt="mask" style={{width: "50%"}} />}
                 {data.out && <img src={data.out.url} alt="out" style={{width: "50%"}} />}
                 {data.vis && <img src={data.vis.url} alt="vis" style={{width: "50%"}} />}
                  */}
-                {data.mask && <MyImage src={String(data.mask.url)} legend="Mask" alt="mask" style={{width: "50%"}} />}
-                {data.out && <MyImage src={String(data.out.url)} legend="Out" alt="out" style={{width: "50%"}} />}
-                {data.vis && <MyImage src={String(data.vis.url)} legend="Vis" alt="vis" style={{width: "50%"}} />}
+                {data.mask && <MyImage src={String(data.mask.url)} legend="Mask" alt="mask"  />}
+                {/*{data.out && <MyImage src={String(data.out.url)} legend="Out" alt="out" style={{width: "50%"}} />}*/}
+                {/*{data.vis && <MyImage src={String(data.vis.url)} legend="Vis" alt="vis" style={{width: "50%"}} />}*/}
  
             </div>
-                {data.log && <Textarea className="max-w-md" value={data.log} readOnly={true} />}
-
-                {showState(data)}
-                {taskId != "" && <div>taskId: {taskId}</div>}
             </> 
         )
     }
@@ -280,15 +284,15 @@ const Process = (params:{
 
                 <div  className="bg-100 p-6">
                     <h1 className="text-center">Processing.</h1>
-                    <br/><br/>
-                    <div className="flex flex-col items-center justify-center h-screen">
-                    <h1>project id: {project.id}</h1>
-                    <h1>sample id: {sample.id}</h1>
-                    <h1>subsample id: {subsample.id}</h1>
-                        <h1>bg: {background}</h1>
-                        <h1>sc: {scan}</h1>
+                    {/*<br/><br/>*/}
+                    <div className="flex flex-col items-center justify-center">
+                    <h1>project: {project.name}</h1>
+                    <h1>sample: {sample.name}</h1>
+                    <h1>subsample: {subsample.name}</h1>
+                        {/*<h1>bg: {background}</h1>*/}
+                        {/*<h1>sc: {scan}</h1>*/}
                         <h1>scanId: {scanId}</h1>
-                        <h1>taskId: {taskId}</h1>
+                        {/*<h1>taskId: {taskId}</h1>*/}
                     </div>
 
                     <div>

@@ -201,9 +201,9 @@ export function ProcessTimeline(param: {
                         console.log("key: ", key);
                         // setSelectedBackground(new Set([key]))
 
-                        // If no one has been chosen previouly then choose the near date)
-                        console.debug("selectedBackground.size =", selectedBackground)
-                        if (selectedBackground) {
+                        // If no one has been chosen previously then choose the near date)
+                        console.debug("selectedBackground =", selectedBackground)
+                        if (selectedBackground === undefined) {
                             console.debug("== 0")
                             selectedBackground = key //new Set([key])
                             console.debug("selectedBackground: ", selectedBackground);
@@ -250,7 +250,7 @@ export function ProcessTimeline(param: {
                     try {
                         if(scanData.backgroundId){
                             updateScan(scanData.backgroundId)
-                            await linkScanToSubsample(scanData.backgroundId ,subsample.id)
+                            await linkScanToSubsample(project.id, sample.id, subsample.id, scanData.backgroundId)
                         }
                     }
                     catch(error){
@@ -399,7 +399,13 @@ export function ProcessTimeline(param: {
                       }
                       
                       const fileUrl = scanData.fileUrl;
-                      let furl = { ...fileUrl, url: pathToRealStorage(fileUrl.url), subsampleId: subsample.id };
+                      let furl = { 
+                        ...fileUrl, 
+                        url: pathToRealStorage(fileUrl.url), 
+                        projectId: project.id,
+                        sampleId: sample.id,
+                        subsampleId: subsample.id 
+                      };
                       console.debug("Calling addScan with:", furl);
                       
                       try {
