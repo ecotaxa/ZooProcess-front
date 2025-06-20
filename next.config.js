@@ -16,6 +16,23 @@ const nextConfig = {
     // cache options
     // cacheHandler: require.resolve('./cache-handler.js'),
     // cacheMaxMemorySize: 0, // disable default in-memory caching
+
+
+    async redirects() {
+    return [
+      {
+        source: '/projects/:projectid/samples/:sampleid/metadata',
+        destination: '/projects/:projectid/samples/:sampleid?state=metadata',
+        permanent: false,
+      },
+      {
+        source: '/projects/:projectid/samples/:sampleid/subsamples',
+        destination: '/projects/:projectid/samples/:sampleid?state=subsamples',
+        permanent: false,
+      },
+    ]
+  },
+
 }
 
 module.exports = nextConfig
