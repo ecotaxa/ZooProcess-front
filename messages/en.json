@@ -1,0 +1,50 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "enterPassword":"Entrez votre mot de passe"
+  },
+  "Login": {
+    "Email":"Email",
+    "AlreadyExist": "Email already in use with different provider!",
+    "Welcome":"Welcome back",
+    "BackButtonLabel":"Don't have an account?",
+    "Password":"Password",
+    "EnterPassword":"Enter your password",
+    "ForgotPassword":"Forgot password?",
+    "Login":"Login"
+  },
+  "SettingsPage":{
+    "Title":"Settings Page",
+    "Name":"Name",
+    "Email":"Email",
+    "Role":"Role",
+    "SessionExpirationDate":"Session expiration date",
+    "SessionToken":"Session token",
+    "MyProject":"My Projects",
+    "Logout": "Log Out",
+    "ChangePassword": "Change Password"
+  },
+  "ProjectsPage":{
+
+    "Title":"Projects",
+    "Add":"Add new project",
+    "Detail":"Detail",
+    "Delete":"Delete this project",
+    "DRIVE":"Drive",
+    "SAMPLE":"Sample",
+    "SCAN":"Scan",
+    "CREATEDAT":"Create at",
+    "UPDATEDAT":"Updated at",
+    "NAME":"Name",
+    "QC":"QC",
+    "ACTIONS":"Actions",
+        "ModalTitle":"Confirm Project Deletion",
+        "Message":"This action cannot be undone. This will permanently delete the project.",
+        "Label":"Please type <danger>{projectName}</danger> to confirm:",
+        "Cancel":"Cancel",
+        "Submit":"Delete Project"
+  }
+}

@@ -1,0 +1,50 @@
+{
+    "common": {
+        "loading": "Chargement...",
+        "error": "Erreur",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "enterPassword":"Entrez votre mot de passe"
+        },
+    "Login": {
+        "Email":"Email",
+        "AlreadyExist": "Email already in use with different provider!",
+        "Welcome":"Content de vous revoir",
+        "BackButtonLabel":"Je n'ai pas de compte",
+        "Password":"Mot de passe",
+        "EnterPassword":"Entrez votre mot de passe",
+        "ForgotPassword":"Mot de passe oublié",
+        "Login":"Entrer"
+    },
+    "SettingsPage":{
+        "Title":"Settings Page",
+        "Name":"Nom",
+        "Email":"Email",
+        "Role":"Role",
+        "SessionExpirationDate":"Session expiration date",
+        "SessionToken":"Session token",
+        "MyProject":"Mes Projets",
+        "Logout": "Déconnecter",
+        "ChangePassword": "Changer son Password"
+    },
+      "ProjectsPage":{
+
+    "Title":"Projets",
+    "Add":"Nouveau Projet",
+    "Detail":"Details",
+    "Delete":"Supprime le projet",
+    "DRIVE":"Drive",
+    "SAMPLE":"Sample",
+    "SCAN":"Scan",
+    "CREATEDAT":"Créé le",
+    "UPDATEDAT":"Modifié le",
+    "NAME":"Nom",
+    "QC":"QC",
+    "ACTIONS":"Actions",
+        "ModalTitle":"Confirmer le suppression du Projet",
+        "Message":"This action cannot be undone. This will permanently delete the project.",
+        "Label":"Ecrivez le nom du project <danger>{projectName}</danger> pour confirmer:",
+        "Cancel":"Annuler",
+        "Submit":"Supprime le Projet"
+  }
+}

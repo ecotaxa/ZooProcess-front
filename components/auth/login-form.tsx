@@ -31,14 +31,18 @@ import { Link } from "@heroui/link";
 import {EyeFilledIcon} from "./EyeFilledIcon";
 import {EyeSlashFilledIcon} from "./EyeSlashFilledIcon";
 
+import { useTranslations } from 'next-intl' ;
+
 import { cn } from "@/lib/utils"
 
 
 export const LoginForm = () => {
+  const t = useTranslations("Login")
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError = searchParams.get("error") === "OAuthAccountNotLinked"
-    ? "Email already in use with different provider!"
+    ? t("AlreadyExist")
+    // ? "Email already in use with different provider!"
     : "";
 
   // const [showTwoFactor, setShowTwoFactor] = useState(false);
@@ -96,8 +100,10 @@ export const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Welcome back"
-      backButtonLabel="Don't have an account?"
+      // headerLabel="Welcome back"
+      // backButtonLabel="Don't have an account?"
+      headerLabel={t("Welcome")}
+      backButtonLabel={t("BackButtonLabel")}
       backButtonHref="/auth/register"
     >
       <Form {...form}>
@@ -129,12 +135,12 @@ export const LoginForm = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>{t("Password")}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={isPending}
-                          placeholder="Enter your password"
+                          placeholder={t("EnterPassword")}
                           // type="password"
                           endContent={
                             <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
@@ -151,7 +157,7 @@ export const LoginForm = () => {
                         />
                       </FormControl>
                         <Link href="/auth/reset" size="sm" color="primary">
-                          Forgot password?
+                          {t("ForgotPassword")}
                         </Link>
                       <FormMessage />
                     </FormItem>
@@ -165,7 +171,7 @@ export const LoginForm = () => {
             type="submit"
             className="w-full"
           >
-            Login
+            {t("Login")}
           </Button>
         </form>
       </Form>

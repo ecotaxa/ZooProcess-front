@@ -13,6 +13,7 @@ import { useAsyncList } from "react-stately";
 import { DeleteIcon } from "./icons/DeleteIcon";
 import { EyeIcon } from "./icons/EyeIcon";
 import { deleteProject } from "@/app/api/data/projects";
+import { useTranslations } from 'next-intl' ;
 
 
 // interface IColumn {
@@ -27,19 +28,24 @@ import { deleteProject } from "@/app/api/data/projects";
 //     {name: "ID", uid: "id", allowSorting:true}
 // ]
 // columns = columns + [
-    let columns = [
-    {name: "NAME", uid: "name", allowSorting:true},
-    {name: "DRIVE", uid: "drive", allowSorting:true},
-    {name: "SAMPLE", uid: "sample", allowSorting:true},
-    {name: "SCAN", uid: "scan", allowSorting:true},
-    {name: "CREATED AT", uid: "createdAt", allowSorting:true},
-    {name: "UPDATED AT", uid: "updatedAt", allowSorting:true},
-    {name: "QC", uid:"qc", allowSorting:true},
-    {name: "ACTIONS", uid: "actions", allowSorting:false},
+
+
+const getColumns = (t) => [
+    {name: t("NAME"), uid: "name", allowSorting:true},
+    {name: t("DRIVE"), uid: "drive", allowSorting:true},
+    {name: t("SAMPLE"), uid: "sample", allowSorting:true},
+    {name: t("SCAN"), uid: "scan", allowSorting:true},
+    {name: t("CREATEDAT"), uid: "createdAt", allowSorting:true},
+    {name: t("UPDATEDAT"), uid: "updatedAt", allowSorting:true},
+    {name: t("QC"), uid:"qc", allowSorting:true},
+    {name: t("ACTIONS"), uid: "actions", allowSorting:false},
   ];
 
 export function ProjectsTableNextUI(props) {
     const {projects=[]} = props
+    const t = useTranslations("ProjectsPage")
+    const columns = getColumns(t);
+
     // const router = useRouter();
     const stripped = true;
 
@@ -325,14 +331,20 @@ export function ProjectsTableNextUI(props) {
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Confirm Project Deletion
+                                {t("ConfirmtDeletion")}
                             </ModalHeader>
                             <ModalBody>
                                 <p className="text-sm text-gray-600 mb-4">
-                                    This action cannot be undone. This will permanently delete the project.
+                                    {t("Message")}
                                 </p>
                                 <p className="text-sm font-medium mb-2">
-                                    Please type <span className="font-bold text-danger">"{projectToDelete?.name}"</span> to confirm:
+                                    {/* Please type <span className="font-bold text-danger">"{projectToDelete?.name}"</span> to confirm: */}
+                                    {/* {t("Label",{projectName:projectToDelete?.name})} */}
+                                    {t.rich('Label', {
+                                        projectName: projectToDelete?.name,   
+                                        danger: (chunks) => <strong className="font-bold text-danger">{chunks}</strong>
+                                    })
+                                    }
                                 </p>
                                 <Input
                                     placeholder="Enter project name"
@@ -348,14 +360,14 @@ export function ProjectsTableNextUI(props) {
                                     variant="light" 
                                     onPress={handleModalClose}
                                 >
-                                    Cancel
+                                    {t("Cancel")}
                                 </Button>
                                 <Button 
                                     color="danger" 
                                     onPress={handleConfirmDelete}
                                     isDisabled={confirmationName !== projectToDelete?.name}
                                 >
-                                    Delete Project
+                                    {t("Submit")}
                                 </Button>
                             </ModalFooter>
                         </>

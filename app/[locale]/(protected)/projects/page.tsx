@@ -7,6 +7,7 @@ import { Button, Card, CardBody, CardHeader, Link, Spacer } from "@heroui/react"
 import * as api from '@/app/api/network/zooprocess-api'
 // import { Project } from '@/app/api/network/zooprocess-api'
 import { Project, Projects } from '@/app/api/network/interfaces'
+import { getTranslations } from 'next-intl/server' ;
 
 interface ServerSideProps {
   initialProjects: Projects
@@ -31,6 +32,8 @@ async function getProjects(): Promise<Projects> {
 //   const [projects, setProjects] = useState<api.Projects>(initialProjects)
 async function ProjectsPage() {
   const initialProjects = await getProjects();
+
+  const t = await getTranslations("ProjectsPage")
 
   const formatData = (data: Project[]) => {
     return data.map((project: Project) => {
@@ -58,7 +61,7 @@ async function ProjectsPage() {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="text-center justify-center">
-        <h4 data-testid="title">Projects</h4>
+        <h4 data-testid="title">{t("Title")}</h4>
         <Spacer y={5}/>
         <Card className="inline-block" data-testid="projectCard">
           <CardHeader className="flex flex-row-reverse py-3">
@@ -68,7 +71,10 @@ async function ProjectsPage() {
               color="primary"
               variant="solid"
               data-testid="newProjectBtn"
-            >Add new project</Button>
+            >
+              {t("Add")}
+              {/* Add New Projects */}
+            </Button>
           </CardHeader>
           <CardBody>
             {projectList.length > 0 ? (

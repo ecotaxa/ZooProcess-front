@@ -6,7 +6,7 @@ import Custom404 from "@/app/pages/404";
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
 import { useRouter } from "next/navigation";
-import { clientID } from "./api/_auth/[...nextauth]/options";
+// import { clientID } from "./api/_auth/[...nextauth]/options";
 // import { Router } from "next/ro";
 // import Link from "next/link";
 
