@@ -20,6 +20,7 @@ import { getProject } from "@/app/api/data/projects";
 import { Project } from "@/app/api/network/interfaces";
 
 
+import { getTranslations } from 'next-intl/server' ;
 
 
 interface pageProps {
@@ -37,6 +38,7 @@ const ProjectPage: FC<pageProps> = async ({ params }) => {
 
   const projectid = params.projectid;
 
+  const t = await getTranslations("ProjectPage")
 
   const project : Project = await getProject(projectid);
 
@@ -58,7 +60,7 @@ const ProjectPage: FC<pageProps> = async ({ params }) => {
     <div>
       {/* <ProjectName id={projectid} /> */}
       <div>
-            <h1>Project</h1>
+            <h1>{t("Title")}</h1>
             <br/>
             <h1>{project.name}</h1>
       </div>

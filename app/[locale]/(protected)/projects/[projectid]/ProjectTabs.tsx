@@ -11,8 +11,13 @@ import SamplesTab from "./@samples/page";
 import { Debug } from "@/components/Debug";
 import { useHash } from "@/lib/useHash";
 import { Project } from "@/app/api/network/interfaces";
+import { useTranslations } from 'next-intl' ;
 
+
+
+// export function ProjectTabs({ project, params,translate }:{project:Project, params:any, translate:any}) {
 export function ProjectTabs({ project, params }:{project:Project, params:any}) {
+  const t = useTranslations();
 
   const isQcTabDisabled = (p: Project): string[] => {
     if (p.samples && p.samples.length > 0) {
@@ -37,23 +42,23 @@ export function ProjectTabs({ project, params }:{project:Project, params:any}) {
   }
   return (
     <Tabs aria-label="Project tabs" disabledKeys={isQcTabDisabled(project)} defaultSelectedKey={selectedKey}>
-      <Tab key="stats" title="Stats">
-        <Stats project={project} {...params} />
+      <Tab key="stats" title={t("ProjectPageStats.Title")}>
+        <Stats project={project} {...params}  />
       </Tab>
-      <Tab key="metadata" title="Metadata">
+      <Tab key="metadata" title={t("ProjectPage_Metadata.Title")}>
         <Metadata project={project} {...params} />
       </Tab>
-      <Tab key="samples" title="Samples">
+      <Tab key="samples" title={t("ProjectPage_Samples.Title")}>
         <SamplesTab {...params} />
         <Debug params={params} />
       </Tab>
-      <Tab key="background" title="Background Scans">
+      <Tab key="background" title={t("ProjectPage_Backgrounds.Tab")}>
         <BackgroundScans {...params} />
       </Tab>
-      <Tab key="scans" title="Scans">
+      <Tab key="scans" title={t("ProjectPage_Scans.Title")}>
         <Scans {...params} />
       </Tab>
-      <Tab key="qc" title="QC">
+      <Tab key="qc" title={t("ProjectPage_QC.Title")}>
         <QC {...params} />
       </Tab>
     </Tabs>

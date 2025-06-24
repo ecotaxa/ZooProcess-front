@@ -1,15 +1,18 @@
 import { Card, CardBody, CardHeader, Spacer } from "@heroui/react";
 import { FC } from "react";
+import { useTranslations } from 'next-intl' ;
 
 
 interface pageProps {
     // params: {
-        projectid: string
+        projectid: string,
+        translate:any
     // }
 }
 
 
 const QC : FC<pageProps> = (params) => {
+	const t = useTranslations('ProjectPage_QC');
 
     const projectId = params.projectid ;
     console.log("Metadata params: ", params);
@@ -25,7 +28,7 @@ const QC : FC<pageProps> = (params) => {
                 >
                 <CardHeader className="flex flex-row py-3">
                     <div>
-                        <h1>QC</h1>
+                        <h1>{t("Title")}</h1>
                     </div>
                 </CardHeader>
                 <CardBody>

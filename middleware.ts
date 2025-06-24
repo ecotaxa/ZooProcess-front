@@ -2,7 +2,9 @@
 
 import NextAuth from 'next-auth';
 // import { authConfig } from '@/auth.config';
- 
+
+import {locales} from './i18n' 
+
 import {
   DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
@@ -18,9 +20,9 @@ import createMiddleware from 'next-intl/middleware';
 // Create the intl middleware
 const intlMiddleware = createMiddleware({
   // A list of all locales that you want to support.
-  locales: ['en', 'fr'],
+  locales: locales,
   // Used when no locale matches
-  defaultLocale: 'en',
+  defaultLocale: locales[0],
   localePrefix: 'always' // This ensures locale is always in the URL
 });
 

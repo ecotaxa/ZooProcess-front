@@ -10,10 +10,11 @@ import { FC, useEffect, useState } from "react";
 
 import { getProjectBackgrounds } from "@/app/api/data/background";
 import { Background } from "@/app/api/network/interfaces";
+import { useTranslations } from 'next-intl' ;
 
 interface pageProps {
     // params: {
-        projectid: string
+        projectid: string,
     // }
 }
 
@@ -27,6 +28,7 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
 
     // const { backgrounds, isLoading, isError } = useBackgrounds(projectId)
     const [ backgroundList, setBackgroundList ] = useState<any[]>([])
+	const t = useTranslations('ProjectPage_Backgrounds');
 
 
     useEffect(() => {
@@ -78,7 +80,7 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
               time:s.createdAt,
               date:s.createdAt,
             //   qc:"",
-              qc: s.qc || "TODO",  
+              qc: s.qc || t("QC_TODO"), //"TODO",  
               action:s.url
             }
           }
@@ -118,7 +120,7 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
             //   time:s.createdAt,
             //   date:s.createdAt,
             // qc: "missing",
-              qc: s.qc || "TODO",  
+              qc: s.qc || t("QC_TODO"), //"TODO",  
               fraction_id,
               frac_min,
               frac_sup,
@@ -180,8 +182,8 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
                 >
                 <CardHeader className="flex flex-row py-3">
                     <div>
-                        <h1>Available Back Scans</h1>
-                        <h4>Samples read from file: </h4>
+                        <h1>{t("Title")}</h1>
+                        <h4>{t("Subtitle")}</h4>
                     </div>
                     <Button 
                           // href={`/projects/${projectId}/samples/new`} cannot open this page ????
@@ -191,7 +193,7 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
                           // showAnchorIcon
                           variant="solid"
                           data-testid="newBackBtn"
-                          >NEW BACKGROUND using upload
+                          >{t("New_Upload")}
                         </Button>
                         <Button 
                           // href={`/projects/${projectId}/samples/new`} cannot open this page ????
@@ -201,7 +203,7 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
                           // showAnchorIcon
                           variant="solid"
                           data-testid="newBackBtn"
-                          >NEW BACKGROUND
+                          >{t("New")}
                         </Button>
                 </CardHeader>
                 <CardBody>
@@ -210,22 +212,6 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
 
             </Card> 
 
-            {/* <Spacer y={5}/>
-
-            <Card className="inline-block "
-                    data-testid="backgroundCard" 
-                >
-                <CardHeader className="flex flex-row py-3">
-                    <div>
-                        <h1>Available sub sample scans</h1>
-                        <h4>Subsamples read from file: </h4>
-                    </div>
-                </CardHeader>
-                <CardBody>
-                    <ShowScanData/>
-                </CardBody>
-
-            </Card>  */}
         </div>
     </section>
 

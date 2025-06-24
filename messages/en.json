@@ -6,45 +6,189 @@
     "cancel": "Cancel",
     "enterPassword":"Entrez votre mot de passe"
   },
-  "Login": {
-    "Email":"Email",
-    "AlreadyExist": "Email already in use with different provider!",
-    "Welcome":"Welcome back",
-    "BackButtonLabel":"Don't have an account?",
-    "Password":"Password",
-    "EnterPassword":"Enter your password",
-    "ForgotPassword":"Forgot password?",
-    "Login":"Login"
-  },
-  "SettingsPage":{
-    "Title":"Settings Page",
-    "Name":"Name",
-    "Email":"Email",
-    "Role":"Role",
-    "SessionExpirationDate":"Session expiration date",
-    "SessionToken":"Session token",
-    "MyProject":"My Projects",
-    "Logout": "Log Out",
-    "ChangePassword": "Change Password"
-  },
-  "ProjectsPage":{
 
-    "Title":"Projects",
-    "Add":"Add new project",
-    "Detail":"Detail",
-    "Delete":"Delete this project",
-    "DRIVE":"Drive",
-    "SAMPLE":"Sample",
-    "SCAN":"Scan",
-    "CREATEDAT":"Create at",
-    "UPDATEDAT":"Updated at",
-    "NAME":"Name",
-    "QC":"QC",
-    "ACTIONS":"Actions",
+    "Login": {
+        "Email":"Email",
+        "AlreadyExist": "Email already in use with different provider!",
+        "Welcome":"Welcome back",
+        "BackButtonLabel":"Don't have an account?",
+        "Password":"Password",
+        "EnterPassword":"Enter your password",
+        "ForgotPassword":"Forgot password?",
+        "Login":"Login"
+    },
+  
+    "SettingsPage":{
+        "Title":"Settings Page",
+        "Name":"Name",
+        "Email":"Email",
+        "Role":"Role",
+        "SessionExpirationDate":"Session expiration date",
+        "SessionToken":"Session token",
+        "MyProject":"My Projects",
+        "Logout": "Log Out",
+        "ChangePassword": "Change Password"
+    },
+
+    "ProjectsPage":{
+
+        "Title":"Projects",
+        "Add":"Add new project",
+        "Detail":"Detail",
+        "Delete":"Delete this project",
+
         "ModalTitle":"Confirm Project Deletion",
         "Message":"This action cannot be undone. This will permanently delete the project.",
         "Label":"Please type <danger>{projectName}</danger> to confirm:",
         "Cancel":"Cancel",
         "Submit":"Delete Project"
-  }
+    },
+
+    "Table_Projects":{
+        "ID":"ID",
+        "DRIVE":"Drive",
+        "SAMPLE":"Sample",
+        "SCAN":"Scan",
+        "CREATEDAT":"Create at",
+        "UPDATEDAT":"Updated at",
+        "NAME":"Name",
+        "QC":"QC",
+        "ACTIONS":"Actions"
+    },
+
+
+    "ProjectPage": {
+        "Title": "Project"
+    },
+    "ProjectPageStats": {
+        "Title": "Stats",
+        "Box_Sample_Title":"Your project is empty! Please create samples",
+        "Box_Sample_SubTitle":"You can create samples in the data tab of your project.",
+        "Box_Sample_Button":"Create samples",
+        
+        "Box_Scan_Title":"Your project is empty! Please import data.",
+        "Box_Scan_Subtitle":"You can import or scan and import data in the import tab of your project.",
+        "Box_Scan_Button":"Import data",
+
+        "Box_Ecotaxa_Title_Linked": "Your project is linked to an EcoTaxa project:",
+
+        "Box_Ecotaxa_Title_Unlinked": "Your project isn't linked to an EcoTaxa project! Please link it to an existing or new EcoTaxa project.",
+        "Box_Ecotaxa_Subtitle_Unlinked": "You will then be able to import data to EcoTaxa from EcoPart and classify it in EcoTaxa.",
+        "Box_Ecotaxa_Button_Unlinked": "Link Project"
+    
+    },
+    "ProjectPage_Metadata": {
+        "Title": "Metadata",
+        "Metadata_Update": "Update Project",
+        "Metadata_Message": ""
+    },
+    "ProjectPage_Samples": {
+        "Title": "Samples",
+        "SampleCount": "Total samples",
+        "New":"Add new sample"
+    },
+
+        "ProjectPage_Backgrounds": {
+        "Tab": "Background Scans",
+        "Title":"Available Back Scans",
+        "Subtitle":"Samples read from file:",
+        "SampleCount": "Total samples",
+        "QC_TODO":"TODO",
+        "New_Upload":"NEW BACKGROUND using upload",
+        "New":"NEW BACKGROUND"
+
+    },
+
+    "ProjectPage_Scans": {
+        "Title": "Scans",
+        "SampleCount": "Total samples"
+    },
+    
+    "ProjectPage_QC": {
+        "Title": "QC",
+        "SampleCount": "Total samples"
+    },
+
+    "MapComponent":{
+        "Loading":"Loading map..."
+    },
+    "MapComponentClient": {
+        "title": "Map Selection",
+        "instructions": "Click on the map to select coordinates",
+        "startCoordinates": "Start Coordinates",
+        "endCoordinates": "End Coordinates", 
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "North":"North",
+        "South":"South",
+        "East":"East",
+        "West":"West",
+        "Position":"Position",
+        "Hemispher":"Hemispher",
+        "Start_Latitude":"Start Latitude",
+        "Start_Longitude":"Start Longitude",
+        "End_Latitude":"End Latitude",
+        "End_Longitude":"End Longitude",
+        "Start_Lat_Degrees":"Start Lat Degrees",
+        "Start_Lng_Degrees":"Start Lng Degrees",
+        "End_Lat_Degrees":"End Lat Degrees",
+        "End_Lng_Degrees":"End Lng Degrees",
+        "Minutes":"Minutes",
+        "Seconds":"Seconds",
+        "Artic_Map":"Carte de l'Arctique",
+        "Antartic_Map":"Carte de l'Antarctique",
+        "Coordinate_Format":"Coordinate Format",
+        "Decimal_Degrees":"Decimal Degrees",
+        "DMS":"Degrees, Minutes, Seconds",
+        "Clear_End_Point":"Clear End Point"
+    },
+
+    "SamplesPage":{
+        "Add":"Add new sample"
+    },
+
+    "Table_Background":{
+        "ID":"ID",
+        "NAME":"NAME",
+        "CREATOR":"CREATOR",
+        "Time":"Time",
+        "DATE":"DATE",
+        "QC":"QC",
+        "ACTION":"ACTION",
+        "Modal_Close":"Close"
+    },
+
+    "Table_Background_QC":{
+        "Not_Done":"Not Done",
+        "Fully_Scanned":"fully scanned",
+        "Not_Fully_Scanned":"not fully scanned",
+        "Process":"process",
+        "Proportion_Of_Multiple":"proportion of multiple",
+        "Error":"Erreur"
+    },
+
+    "Table_Samples":{
+        
+        "NAME":"NAME",
+        "SCAN":"SCAN",
+        "FRACTION_SUBSAMPLE":"FRACTION/SUBSAMPLE",
+        "CREATED_AT":"CREATED AT",
+        "UPDATED_AT":"UPDATED AT",
+        "STATUS":"STATUS",
+        "ACTIONS":"ACTIONS",
+        "Table_Label":"Sample Table",
+        "Scan_Button":"Scan Sub-Sample"
+    },
+
+    "Table_Scans":{
+        "ID":"ID",
+        "NAME":"NAME",
+        "CREATOR":"CREATOR",
+        "Fraction_ID" :"Fraction ID" ,
+        "Frac_Min":"Frac Min",
+        "Frac_Sup":"Frac Sup",
+        "Observation":"Observation",
+        "QC":"QC"
+    }
+
 }

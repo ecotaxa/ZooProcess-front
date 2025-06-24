@@ -1,50 +1,170 @@
 {
-    "common": {
-        "loading": "Chargement...",
-        "error": "Erreur",
-        "save": "Enregistrer",
-        "cancel": "Annuler",
-        "enterPassword":"Entrez votre mot de passe"
-        },
-    "Login": {
-        "Email":"Email",
-        "AlreadyExist": "Email already in use with different provider!",
-        "Welcome":"Content de vous revoir",
-        "BackButtonLabel":"Je n'ai pas de compte",
-        "Password":"Mot de passe",
-        "EnterPassword":"Entrez votre mot de passe",
-        "ForgotPassword":"Mot de passe oublié",
-        "Login":"Entrer"
-    },
-    "SettingsPage":{
-        "Title":"Settings Page",
-        "Name":"Nom",
-        "Email":"Email",
-        "Role":"Role",
-        "SessionExpirationDate":"Session expiration date",
-        "SessionToken":"Session token",
-        "MyProject":"Mes Projets",
-        "Logout": "Déconnecter",
-        "ChangePassword": "Changer son Password"
-    },
-      "ProjectsPage":{
-
-    "Title":"Projets",
-    "Add":"Nouveau Projet",
-    "Detail":"Details",
-    "Delete":"Supprime le projet",
-    "DRIVE":"Drive",
-    "SAMPLE":"Sample",
-    "SCAN":"Scan",
-    "CREATEDAT":"Créé le",
-    "UPDATEDAT":"Modifié le",
-    "NAME":"Nom",
-    "QC":"QC",
-    "ACTIONS":"Actions",
-        "ModalTitle":"Confirmer le suppression du Projet",
-        "Message":"This action cannot be undone. This will permanently delete the project.",
-        "Label":"Ecrivez le nom du project <danger>{projectName}</danger> pour confirmer:",
-        "Cancel":"Annuler",
-        "Submit":"Supprime le Projet"
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "enterPassword": "Entrez votre mot de passe"
+  },
+  "Login": {
+    "Email": "Email",
+    "AlreadyExist": "Email already in use with different provider!",
+    "Welcome": "Content de vous revoir",
+    "BackButtonLabel": "Je n'ai pas de compte",
+    "Password": "Mot de passe",
+    "EnterPassword": "Entrez votre mot de passe",
+    "ForgotPassword": "Mot de passe oublié",
+    "Login": "Entrer"
+  },
+  "SettingsPage": {
+    "Title": "Settings Page",
+    "Name": "Nom",
+    "Email": "Email",
+    "Role": "Role",
+    "SessionExpirationDate": "Session expiration date",
+    "SessionToken": "Session token",
+    "MyProject": "Mes Projets",
+    "Logout": "Déconnecter",
+    "ChangePassword": "Changer son Password"
+  },
+  "ProjectsPage": {
+    "Title": "Projets",
+    "Add": "Nouveau Projet",
+    "Detail": "Details",
+    "Delete": "Supprime le projet",
+    "ModalTitle": "Confirmer le suppression du Projet",
+    "Message": "This action cannot be undone. This will permanently delete the project.",
+    "Label": "Ecrivez le nom du project <danger>{projectName}</danger> pour confirmer:",
+    "Cancel": "Annuler",
+    "Submit": "Supprime le Projet"
+  },
+  "Table_Projects": {
+    "ID": "[TODO] ID",
+    "DRIVE": "[TODO] Drive",
+    "SAMPLE": "[TODO] Sample",
+    "SCAN": "[TODO] Scan",
+    "CREATEDAT": "[TODO] Create at",
+    "UPDATEDAT": "[TODO] Updated at",
+    "NAME": "[TODO] Name",
+    "QC": "[TODO] QC",
+    "ACTIONS": "[TODO] Actions"
+  },
+  "ProjectPage": {
+    "Title": "Project"
+  },
+  "ProjectPageStats": {
+    "Title": "[TODO] Stats",
+    "Box_Sample_Title": "[TODO] Your project is empty! Please create samples",
+    "Box_Sample_SubTitle": "[TODO] You can create samples in the data tab of your project.",
+    "Box_Sample_Button": "[TODO] Create samples",
+    "Box_Scan_Title": "[TODO] Your project is empty! Please import data.",
+    "Box_Scan_Subtitle": "[TODO] You can import or scan and import data in the import tab of your project.",
+    "Box_Scan_Button": "[TODO] Import data",
+    "Box_Ecotaxa_Title_Linked": "[TODO] Your project is linked to an EcoTaxa project:",
+    "Box_Ecotaxa_Title_Unlinked": "[TODO] Your project isn't linked to an EcoTaxa project! Please link it to an existing or new EcoTaxa project.",
+    "Box_Ecotaxa_Subtitle_Unlinked": "[TODO] You will then be able to import data to EcoTaxa from EcoPart and classify it in EcoTaxa.",
+    "Box_Ecotaxa_Button_Unlinked": "[TODO] Link Project"
+  },
+  "ProjectPage_Metadata": {
+    "Title": "[TODO] Metadata",
+    "Metadata_Update": "[TODO] Update Project",
+    "Metadata_Message": "[TODO] "
+  },
+  "ProjectPage_Samples": {
+    "Title": "[TODO] Samples",
+    "SampleCount": "[TODO] Total samples",
+    "New": "[TODO] Add new sample"
+  },
+  "ProjectPage_Backgrounds": {
+    "Tab": "[TODO] Background Scans",
+    "Title": "[TODO] Available Back Scans",
+    "Subtitle": "[TODO] Samples read from file:",
+    "SampleCount": "[TODO] Total samples",
+    "QC_TODO": "[TODO] TODO",
+    "New_Upload": "[TODO] NEW BACKGROUND using upload",
+    "New": "[TODO] NEW BACKGROUND"
+  },
+  "ProjectPage_Scans": {
+    "Title": "[TODO] Scans",
+    "SampleCount": "[TODO] Total samples"
+  },
+  "ProjectPage_QC": {
+    "Title": "[TODO] QC",
+    "SampleCount": "[TODO] Total samples"
+  },
+  "MapComponent": {
+    "Loading": "[TODO] Loading map..."
+  },
+  "MapComponentClient": {
+    "title": "[TODO] Map Selection",
+    "instructions": "[TODO] Click on the map to select coordinates",
+    "startCoordinates": "[TODO] Start Coordinates",
+    "endCoordinates": "[TODO] End Coordinates",
+    "latitude": "[TODO] Latitude",
+    "longitude": "[TODO] Longitude",
+    "North": "[TODO] North",
+    "South": "[TODO] South",
+    "East": "[TODO] East",
+    "West": "[TODO] West",
+    "Position": "[TODO] Position",
+    "Hemispher": "[TODO] Hemispher",
+    "Start_Latitude": "[TODO] Start Latitude",
+    "Start_Longitude": "[TODO] Start Longitude",
+    "End_Latitude": "[TODO] End Latitude",
+    "End_Longitude": "[TODO] End Longitude",
+    "Start_Lat_Degrees": "[TODO] Start Lat Degrees",
+    "Start_Lng_Degrees": "[TODO] Start Lng Degrees",
+    "End_Lat_Degrees": "[TODO] End Lat Degrees",
+    "End_Lng_Degrees": "[TODO] End Lng Degrees",
+    "Minutes": "[TODO] Minutes",
+    "Seconds": "[TODO] Seconds",
+    "Artic_Map": "[TODO] Carte de l'Arctique",
+    "Antartic_Map": "[TODO] Carte de l'Antarctique",
+    "Coordinate_Format": "[TODO] Coordinate Format",
+    "Decimal_Degrees": "[TODO] Decimal Degrees",
+    "DMS": "[TODO] Degrees, Minutes, Seconds",
+    "Clear_End_Point": "[TODO] Clear End Point"
+  },
+  "SamplesPage": {
+    "Add": "[TODO] Add new sample"
+  },
+  "Table_Background": {
+    "ID": "[TODO] ID",
+    "NAME": "[TODO] NAME",
+    "CREATOR": "[TODO] CREATOR",
+    "Time": "[TODO] Time",
+    "DATE": "[TODO] DATE",
+    "QC": "[TODO] QC",
+    "ACTION": "[TODO] ACTION",
+    "Modal_Close": "[TODO] Close"
+  },
+  "Table_Background_QC": {
+    "Not_Done": "[TODO] Not Done",
+    "Fully_Scanned": "[TODO] fully scanned",
+    "Not_Fully_Scanned": "[TODO] not fully scanned",
+    "Process": "[TODO] process",
+    "Proportion_Of_Multiple": "[TODO] proportion of multiple",
+    "Error": "[TODO] Erreur"
+  },
+  "Table_Samples": {
+    "NAME": "[TODO] NAME",
+    "SCAN": "[TODO] SCAN",
+    "FRACTION_SUBSAMPLE": "[TODO] FRACTION/SUBSAMPLE",
+    "CREATED_AT": "[TODO] CREATED AT",
+    "UPDATED_AT": "[TODO] UPDATED AT",
+    "STATUS": "[TODO] STATUS",
+    "ACTIONS": "[TODO] ACTIONS",
+    "Table_Label": "[TODO] Sample Table",
+    "Scan_Button": "[TODO] Scan Sub-Sample"
+  },
+  "Table_Scans": {
+    "ID": "[TODO] ID",
+    "NAME": "[TODO] NAME",
+    "CREATOR": "[TODO] CREATOR",
+    "Fraction_ID": "[TODO] Fraction ID",
+    "Frac_Min": "[TODO] Frac Min",
+    "Frac_Sup": "[TODO] Frac Sup",
+    "Observation": "[TODO] Observation",
+    "QC": "[TODO] QC"
   }
 }

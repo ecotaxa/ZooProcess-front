@@ -2,34 +2,25 @@
 
 import { getScans } from "@/app/api/data/scan";
 import { SubSample } from "@/app/api/network/interfaces";
-// import { useBackgrounds, useSampleScans } from "@/app/api/background";
 import { ErrorComponent } from "@/components/ErrorComponent";
-// import { BackgroundTable } from "@/components/backgrounds-table";
 import { MySpinner } from "@/components/mySpinner";
 import { ScanTable } from "@/components/scans-table";
 import { Button, Card, CardBody, CardHeader, Link, Spacer} from "@heroui/react";
 import { FC, useEffect, useState } from "react";
+import { useTranslations } from 'next-intl' ;
 
 interface pageProps {
-    // params: {
         projectid: string
-    // }
 }
 
 
-// const Scans : FC<pageProps> = (params) => {
 const Scans : FC<pageProps> = ({projectid}) => {
 
-    // const projectId = params.projectid ;
-    // console.log("Metadata params: ", params);
-    // console.log("Metadata params projectid: ", params.projectid);
+	const t = useTranslations('ProjectPage_Scans');
+	
+
     console.log("Metadata params projectid: ", projectid);
 
-    // const { backgrounds, isLoading, isError } = useBackgrounds(projectId)
-    // const [ backgroundList, setBackgroundList ] = useState(backgrounds)
-
-    // const { scans, isLoading: isScanLoading , isError: isScanError } = useSampleScans(projectId)
-    // const [ scanList, setScanList ] = useState(scans)
     const [ scanList, setScanList ] = useState<any[]>([])
 
     useEffect(() => {
@@ -404,9 +395,7 @@ const Scans : FC<pageProps> = ({projectid}) => {
             console.debug("data[_scan]:",s)
 
             const scanSubsamples = s.scanSubsamples
-            // if ( scanSubsamples.length == 0) throw new Error("No scanSubsamples");
            if ( scanSubsamples.length == 0) return null
-            // if ( scanSubsamples.length > 0) { //throw new Error("No scanSubsamples");
 
             const  scanSubsample = scanSubsamples[0]
             const subsample:SubSample = scanSubsample.subsample
@@ -419,20 +408,13 @@ const Scans : FC<pageProps> = ({projectid}) => {
             const frac_sup = metadata.find(m => m.name == "fraction_max_mesh")
             const observation = metadata.find(m => m.name == "observation")
   
-            // const fraction_id = "fraction_id"
-            // const frac_min = "frac_min"
-            // const frac_sup = "frac_sup"
-            // const observation = "observation"
 
             const qc = s.SubSample?.qc
 
             return {
-              id: s.id, //s.scanSubsamples[0].subsample.id, //s.id,
-              name: s.scanSubsamples[0].subsample.name, // s.url,
+              id: s.id,
+              name: s.scanSubsamples[0].subsample.name, 
               creator: s.user.name,
-            //   time:s.createdAt,
-            //   date:s.createdAt,
-            // qc: "missing",
               qc: s.qc || "TODO",  
               fraction_id : fraction_id?.value || "",
               frac_min: frac_min?.value || "",
@@ -440,52 +422,21 @@ const Scans : FC<pageProps> = ({projectid}) => {
               observation: observation?.value || "",
               action:s.url
             }  
-        //   }
         }
         } 
         catch (e){
             console.error("Error at scan ", _scan, " E=" , e)
-            // throw new Error(`Error at scan {_scan} | E= {e}`)
             return null
         }
         }).filter(Boolean)
 
-        // console.log("formated scans data: ", scans);
+        // console.debug("formated scans data: ", scans);
         return scans
     }
 
-    // useEffect( () => { 
-    //         if ( backgrounds.length > 0 ) {
-    //             console.log("background list has changed", backgrounds);
-    //             const data = formatData(backgrounds)
-    //             // const data = formatData(backgrounds).filter(item => item !== undefined);
-    //             // const data = samples
-    //             setBackgroundList(data);
-    //     }
-    // } , [backgrounds])
-    
-    // useEffect( () => { 
-    //     if ( scans.length > 0 ) 
-    //         {
-    //             console.log("scan list has changed", scans);
-    //             const data = formatScanSampleData(scans)
-    //             // const data = formatData(backgrounds).filter(item => item !== undefined);
-    //             // const data = samples
-    //             setScanList(data);
-    //         }
-    // } , [scans])
-  
-      
-    // const ShowData = () => {
-    //     if (isLoading) return <MySpinner />
-    //     if (isError) return <ErrorComponent error={isError}/>
-    //     console.debug(backgroundList)
-    //     return <BackgroundTable projectId={projectId} backgrounds={backgroundList}/>
-    // }
+
 
     const ShowScanData = () => {
-        // if (isScanLoading) return <MySpinner />
-        // if (isScanError) return <ErrorComponent error={isScanError}/>
         console.debug(scanList)
         return <ScanTable projectId={projectid} scans={scanList}/>
     }
@@ -494,36 +445,7 @@ const Scans : FC<pageProps> = ({projectid}) => {
     return (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="text-center justify-center">
-            {/* <h1 data-testid="title">
-                {projectId} Scans
-            </h1>
-            <Spacer y={5}/> */}
-            {/* <Card className="inline-block "
-                    data-testid="backgroundCard" 
-                >
-                <CardHeader className="flex flex-row py-3">
-                    <div>
-                        <h1>Available Back Scans</h1>
-                        <h4>Samples read from file: </h4>
-                    </div>
-                    <Button 
-                          // href={`/projects/${projectId}/samples/new`} cannot open this page ????
-                          href={`/projects/${projectId}/background/`}
-                          as={Link}
-                          color="primary"
-                          // showAnchorIcon
-                          variant="solid"
-                          data-testid="newBackBtn"
-                          >NEW BACK
-                        </Button>
-                </CardHeader>
-                <CardBody>
-                    <ShowData/>
-                </CardBody>
-
-            </Card> 
-
-            <Spacer y={5}/> */}
+           
 
             <Card className="inline-block "
                     data-testid="backgroundCard" 

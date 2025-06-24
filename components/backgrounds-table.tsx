@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react";
-// import { useRouter } from "next/navigation";
-// import { Button } from "@mui/material";
+
 
 import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key';
@@ -10,6 +9,7 @@ import { Debug } from '@/components/Debug';
 import { useAsyncList } from "react-stately";
 import { EyeIcon } from "./auth/EyeIcon";
 import { MyImage } from "@/components/myImage";
+import { useTranslations } from 'next-intl' ;
 
 
 interface IColumn {
@@ -18,24 +18,24 @@ interface IColumn {
     allowSorting?: boolean
 }
 
-const columns = [
-    {name: "ID", uid: "id", allowSorting:true},
+const getColumns = (t:any) => [
+    // {name: t("Table_Background.ID"), uid: "id", allowSorting:true},
     // {name: "DRIVE", uid: "drive"},
-    {name: "NAME", uid: "name", allowSorting:true},
-    {name: "CREATOR", uid: "creator", allowSorting:true},
+    {name: t("Table_Background.NAME"), uid: "name", allowSorting:true},
+    {name: t("Table_Background.CREATOR"), uid: "creator", allowSorting:true},
     // {name: "SAMPLE", uid: "background"},
     // {name: "SCAN", uid: "scan"},
-    // {name: "FRACTION/SUBSAMPLE", uid:"fraction"},
-    // {name: "UPDATED AT", uid: "updatedAt"},
-    {name: "Time", uid: "time", allowSorting:true},
-    {name: "DATE", uid: "date", allowSorting:true},
-    {name: "QC", uid: "qc", allowSorting:true},
-    {name: "ACTION", uid: "action", allowSorting:false},
+    {name: t("Table_Background.Time"), uid: "time", allowSorting:true},
+    {name: t("Table_Background.DATE"), uid: "date", allowSorting:true},
+    {name: t("Table_Background.QC"), uid: "qc", allowSorting:true},
+    {name: t("Table_Background.ACTION"), uid: "action", allowSorting:false},
   ];
 
 export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
     const {projectId, backgrounds=[]} = props
     const stripped = true;
+    const t = useTranslations()
+    const columns = getColumns(t);
 
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [ imageURL, setImageURL ] = useState<string>("")
@@ -52,18 +52,8 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
 
     let list = useAsyncList({
         async load({signal}) {
-        //   let res = await fetch('https://swapi.py4e.com/api/people/?search', {
-        //     signal,
-        //   });
-        //   let json = await res.json();
-        //   setIsLoading(false);
-    
-        //   return {
-        //     items: json.results,
-        //   };
             return {
                 items: backgrounds,
-                // items: updateddata,
             };
         },
         async sort({items, sortDescriptor}) {
@@ -101,12 +91,12 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
         console.log("Status: ", status);
         switch (status) {
             case "TODO":
-            case undefined: return "Not Done";
-            case "FULLY_SCANNED": return "fully scanned";
-            case "NOT_FULLY_SCANNED": return "not fully scanned";
-            case "PROCESS": return "process";
-            case "PROPORTION_OF_MULTIPLE": return "proportion of multiple";
-            default: return "Error";
+            case undefined: return t("Table_Background_QC.Not_Done");
+            case "FULLY_SCANNED": return t("Table_Background_QC.Fully_Scanned");
+            case "NOT_FULLY_SCANNED": return t("Table_Background_QC.Not_Fully_Scanned");
+            case "PROCESS": return t("Table_Background_QC.Process");
+            case "PROPORTION_OF_MULTIPLE": return t("Table_Background_QC.Proportion_Of_Multiple");
+            default: return t("Table_Background_QC.Error");
         }
     }
 
@@ -237,7 +227,7 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" variant="light" onPress={onClose}>
-                    Close
+                    {t("Table_Background.Modal_Close")}
                     </Button>
                     {/* <Button color="primary" onPress={onClose}>
                     Action

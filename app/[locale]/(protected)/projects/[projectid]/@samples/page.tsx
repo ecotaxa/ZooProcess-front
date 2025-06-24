@@ -19,9 +19,12 @@ import { getSamples } from '@/app/api/data/samples';
 // import { useQuery } from 'react-query';
 // import { useMemo } from 'react';
 
+import { useTranslations } from 'next-intl' ;
+
+
 interface pageProps {
   // params: {
-    projectid: string
+    projectid: string,
   // }
 }
 
@@ -33,6 +36,7 @@ const SamplesTab: FC<pageProps> = ({ projectid }) => {
 
   // const [samples, setSamples] = useState<Samples | null>(null);
   const [sampleList, setSampleList] = useState<any[]>([]);
+	const t = useTranslations('ProjectPage_Samples');
 
   useEffect(() => {
     const fetchSamples = async () => {
@@ -91,7 +95,7 @@ const SamplesTab: FC<pageProps> = ({ projectid }) => {
               variant="solid"
               data-testid="newSampleBtn"
             >
-              Add new sample
+              {t("New")}
             </Button>
           </CardHeader>
           <CardBody>
