@@ -21,11 +21,11 @@
     "Name": "Nom",
     "Email": "Email",
     "Role": "Role",
-    "SessionExpirationDate": "Session expiration date",
+    "SessionExpirationDate": "Date expiration de la session ",
     "SessionToken": "Session token",
     "MyProject": "Mes Projets",
     "Logout": "Déconnecter",
-    "ChangePassword": "Changer son Password"
+    "ChangePassword": "Changer son mot de passe"
   },
   "ProjectsPage": {
     "Title": "Projets",
@@ -50,10 +50,10 @@
     "ACTIONS": "[TODO] Actions"
   },
   "ProjectPage": {
-    "Title": "Project"
+    "Title": "Projet"
   },
   "ProjectPageStats": {
-    "Title": "[TODO] Stats",
+    "Title": "Stats",
     "Box_Sample_Title": "[TODO] Your project is empty! Please create samples",
     "Box_Sample_SubTitle": "[TODO] You can create samples in the data tab of your project.",
     "Box_Sample_Button": "[TODO] Create samples",
@@ -66,7 +66,7 @@
     "Box_Ecotaxa_Button_Unlinked": "[TODO] Link Project"
   },
   "ProjectPage_Metadata": {
-    "Title": "[TODO] Metadata",
+    "Title": "Metadata",
     "Metadata_Update": "[TODO] Update Project",
     "Metadata_Message": "[TODO] "
   },
@@ -100,8 +100,8 @@
     "instructions": "[TODO] Click on the map to select coordinates",
     "startCoordinates": "[TODO] Start Coordinates",
     "endCoordinates": "[TODO] End Coordinates",
-    "latitude": "[TODO] Latitude",
-    "longitude": "[TODO] Longitude",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
     "North": "[TODO] North",
     "South": "[TODO] South",
     "East": "[TODO] East",
@@ -116,10 +116,10 @@
     "Start_Lng_Degrees": "[TODO] Start Lng Degrees",
     "End_Lat_Degrees": "[TODO] End Lat Degrees",
     "End_Lng_Degrees": "[TODO] End Lng Degrees",
-    "Minutes": "[TODO] Minutes",
-    "Seconds": "[TODO] Seconds",
-    "Artic_Map": "[TODO] Carte de l'Arctique",
-    "Antartic_Map": "[TODO] Carte de l'Antarctique",
+    "Minutes": "Minutes",
+    "Seconds": "Secondes",
+    "Artic_Map": "Carte de l'Arctique",
+    "Antartic_Map": "Carte de l'Antarctique",
     "Coordinate_Format": "[TODO] Coordinate Format",
     "Decimal_Degrees": "[TODO] Decimal Degrees",
     "DMS": "[TODO] Degrees, Minutes, Seconds",
@@ -130,13 +130,13 @@
   },
   "Table_Background": {
     "ID": "[TODO] ID",
-    "NAME": "[TODO] NAME",
+    "NAME": "NOM",
     "CREATOR": "[TODO] CREATOR",
     "Time": "[TODO] Time",
-    "DATE": "[TODO] DATE",
-    "QC": "[TODO] QC",
-    "ACTION": "[TODO] ACTION",
-    "Modal_Close": "[TODO] Close"
+    "DATE": "DATE",
+    "QC": "QC",
+    "ACTION": "ACTION",
+    "Modal_Close": "Fermer"
   },
   "Table_Background_QC": {
     "Not_Done": "[TODO] Not Done",
@@ -147,13 +147,13 @@
     "Error": "[TODO] Erreur"
   },
   "Table_Samples": {
-    "NAME": "[TODO] NAME",
-    "SCAN": "[TODO] SCAN",
+    "NAME": "NOM",
+    "SCAN": "SCAN",
     "FRACTION_SUBSAMPLE": "[TODO] FRACTION/SUBSAMPLE",
     "CREATED_AT": "[TODO] CREATED AT",
     "UPDATED_AT": "[TODO] UPDATED AT",
-    "STATUS": "[TODO] STATUS",
-    "ACTIONS": "[TODO] ACTIONS",
+    "STATUS": "STATUS",
+    "ACTIONS": "ACTIONS",
     "Table_Label": "[TODO] Sample Table",
     "Scan_Button": "[TODO] Scan Sub-Sample"
   },
@@ -166,5 +166,15 @@
     "Frac_Sup": "[TODO] Frac Sup",
     "Observation": "[TODO] Observation",
     "QC": "[TODO] QC"
+  },
+
+  "Form":{
+    "acronym": "Acronyme",
+    "acronym_placeholder": "Acronyme de votre projet",
+    "description":"Project description",
+    "description_ph":"Décrivez votre projet ici",
+    "ecotaxa_project_title":"Ecotaxa Project Title",
+    "ecotaxa_project_title_ph":"Titre du Projet dans Ecoxata"
   }
+
 }

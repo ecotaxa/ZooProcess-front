@@ -55,7 +55,7 @@ export const sampleid_formElements=[
         [
             { tag:"TextField", name:"sample_id", type:"text",
                 placeholder:"Sample id", label:'Sample id',
-                variant:"outlined", required:true, 
+                variant:"outlined", required:true, trad:"sample_id_general",
                 xs:12, sm:12, fullWidth:true, size:"regular",
                 minLength:3,
                 // params:"{projectId}",
@@ -66,7 +66,7 @@ export const sampleid_formElements=[
             },
             { tag:"Empty", xs:0, sm:6 },
             { tag:"TextField", name:"barcode", type:"text",
-                placeholder:"Barcode", label:'Barcode',
+                placeholder:"Barcode", label:'Barcode', trad:"barcode_general",
                 variant:"outlined", required:false, 
                 xs:12, sm:6, fullWidth:true, size:"regular",
                 minLength:3
@@ -104,13 +104,13 @@ export const sampleid_formElements=[
         [
             { tag:"TextField", name:"ctd_reference", type:"text",
                 placeholder:"CTD Reference", label:'CTD Reference',
-                variant:"outlined", required:false, 
+                variant:"outlined", required:false, trad:"ctd_reference_sample_quality",
                 xs:12, sm:6, fullWidth:true,
                 minLength:3
             },
             { tag:"TextField", name:"other_reference", type:"text",
                 placeholder:"Other reference", label:'Other reference',
-                variant:"outlined", required:false, 
+                variant:"outlined", required:false, trad:"other_reference_sample_quality",
                 xs:12, sm:6, fullWidth:true,
                 minLength:3
             },        
@@ -346,7 +346,7 @@ export const sampleid_formElements=[
             variant:"outlined", required:true, 
             xs:12, sm:12, size:"regular", fullWidth:true,
         },
-        { tag:"TextField", name:"ctd_reference", 
+        { tag:"TextField", name:"ctd_reference", trad:"ctd_reference_ship",
             placeholder:"CTD reference (filename)", label:'CTD reference',
             variant:"outlined", required:true, 
             xs:12, sm:12, fullWidth:true
@@ -388,10 +388,12 @@ export const sampleid_formElements=[
             xs:12, sm:12,
             minValue:0, helperText:'value greather than zero',
         },
-        { tag:"TextField", name:"barcode", type:"number", placeholder:"Barcode", label:'Barcode',
+        { tag:"TextField", name:"barcode", type:"number", 
+            placeholder:"Barcode", label:'Barcode', trad: "barcode_sample",
             variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
         },
-        { tag:"TextField", name:"other_reference", type:"text", placeholder:"Other reference (NaN if non applicable)", label:'Other reference',
+        { tag:"TextField", name:"other_reference", type:"text", trad:"other_reference_sample",
+            placeholder:"Other reference (NaN if non applicable)", label:'Other reference',
             variant:"outlined", fullWidth:true, required:false, xs:12, sm:6
         },
     
@@ -679,7 +681,7 @@ export const sampleid_formElements=[
             section:
             [
                 { name:"name", placeholder:"Enter name", label:'Name',
-                    tag:"TextField", type:"text",
+                    tag:"TextField", type:"text", trad:'user_name',
                     variant:"outlined", fullWidth:true, required:true, xs:12, sm:6
                 },
                 // { name:"firstname", placeholder:"Enter first name", label:'First Name',
@@ -726,7 +728,7 @@ export const sampleid_formElements=[
             section:
             [
                 { name:"name", placeholder:"Project name", label:'Project Name',
-                tag:"TextField", type:"text",
+                tag:"TextField", type:"text", trad:'project_name',
                 variant:"outlined",  required:true, 
                 prefix:"zooscan_", 
                 // minLength:"zooscan_".length, no need I added prefix in endorment
@@ -813,7 +815,7 @@ export const sampleid_formElements=[
             [
                 { name:"name", placeholder:'Name to represent your drive, like "Zooscan Archive"', label:'Drive Name',
                     tag: "TextField", type:"text", //value:'Zooscan Archive',
-                    required:true, disabled:false,
+                    required:true, disabled:false, trad:'drive_name',
                     variant:"outlined", fullWidth:true, 
                     xs:12, sm:12, size:"small"
                 },
@@ -848,7 +850,7 @@ export const sampleid_formElements=[
                 value:"LARGE"
                 },
                 { name: "density", placeholder: "Density", label: 'Density Type',
-                    tag: "Select",  type: "select", 
+                    tag: "Select",  type: "select", trad:"density_scanning",
                     variant:"outlined",  required: true, 
                     xs:12, sm:6, size: "small",
                     choice:[
@@ -867,19 +869,19 @@ export const sampleid_formElements=[
             section:
             [
                 { name:"instrument", placeholder:"Instrument", label:'Instrument',
-                    tag:"TextField", type:"text", value:"Zooscan",
+                    tag:"TextField", type:"text", value:"Zooscan", trad:"instrument_scanner",
                     required:false, disabled:true,
                     variant:"outlined", fullWidth:true, 
                     xs:12, sm:6, size:"small"
                 },
                 { name:"model", placeholder:"Model", label:'Model',
-                    tag:"TextField", type:"text",
+                    tag:"TextField", type:"text", trad:"model_scanner",
                     required:true, disabled:true,
                     variant:"outlined", fullWidth:true, 
                     xs:12, sm:6, size:"small"
                 },
                 { name:"name", placeholder:"Nickname of the Instrument", label:'Name',
-                    tag:"TextField", type:"text",
+                    tag:"TextField", type:"text", trad:'instrument_name',
                     required:true, disabled:false,
                     variant:"outlined", fullWidth:true, 
                     xs:12, sm:6, size:"small"
@@ -934,7 +936,7 @@ export const sampleid_formElements=[
                 //     // }
                 // },
                 { name: "density", placeholder: "Density", label: 'Density Type',
-                    tag: "Select",  type: "select", 
+                    tag: "Select",  type: "select", trad: "density_scanner",
                     variant:"outlined",  required: true, 
                 xs:12, sm:6, size: "small",
                     choice:[
@@ -954,18 +956,18 @@ export const sampleid_formElements=[
             [
                 { name:"instrument", placeholder:"Instrument", label:'Intrument',
                     tag:"TextField", type:"text", value:"Zooscan",
-                    required:false, disabled:true,
+                    required:false, disabled:true, trad:"instrument_scanner_new",
                     variant:"outlined", fullWidth:true, 
                     xs:12, sm:6, size:"small"
                 },
                 { name:"model", placeholder:"Model", label:'Model',
-                    tag:"TextField", type:"text",
+                    tag:"TextField", type:"text", trad: "model_scanner_new",
                     required:true, disabled:false,
                     variant:"outlined", fullWidth:true, 
                     xs:12, sm:6, size:"small"
                 },
                 { name:"name", placeholder:"Nickname of the Instrument", label:'Name',
-                    tag:"TextField", type:"text",
+                    tag:"TextField", type:"text", trad:'instrument_name_scanner_new',
                     required:true, disabled:false,
                     variant:"outlined", fullWidth:true, 
                     xs:12, sm:6, size:"small"

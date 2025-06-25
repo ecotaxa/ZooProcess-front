@@ -166,5 +166,13 @@
     "Frac_Sup": "XXXXXXXX",
     "Observation": "XXXXXXXXXXX",
     "QC": "XX"
+  },
+
+  "Form":{
+    "acronym": "Acronyme",
+    "acronym_placeholder": "Acronyme de votre projet",
+        "description":"Project description",
+        "description_ph":"Describe your project here"
   }
+
 }
