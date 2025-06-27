@@ -1,13 +1,15 @@
 "use client"
 
 
-import showBackgroundScan from "@/app/(protected)/projects/[projectid]/background/[backgroundId]/page";
+// import showBackgroundScan from "@/app/(protected)/projects/[projectid]/background/[backgroundId]/page";
 import { Sample, SubSample } from "@/app/api/network/interfaces";
 import { MyImage } from "@/components/myImage";
 // import Link from "next/link";
-import { Card, CardBody, CardHeader, Spacer, Link, CardFooter } from "@heroui/react";
+import { Card, CardBody, CardHeader, Spacer, Link, CardFooter, Button } from "@heroui/react";
 
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
+import { Debug } from "@/components/Debug";
+
 
 interface pageProps {
     // params:{
@@ -21,7 +23,12 @@ const ViewPage: FC<pageProps> = ({sample, subsample}) => {
     console.log("sample: ", sample)
     console.log("subsample: ", subsample)
 
+    const [background,setBackground] = useState<any|null>(null)
+    const [mask,setMask] = useState<any|null>(null)
+
     const hasScanData = subsample && subsample.scan && subsample.scan.length > 0;
+
+    const vignettesUrl = `/project/${sample.projectId}/sample/${sample.id}/subsample/${subsample.id}/vignettes`;
 
     const showScanList = () => {
 
@@ -43,15 +50,54 @@ const ViewPage: FC<pageProps> = ({sample, subsample}) => {
 
     }
 
-    const findBackground = () => {
-        if (!hasScanData) {
-            return null;
-        }
+    // useEffect(() => {
+    //     const background = findScan('MEDIUM_BACKGROUND') // findBackground();
+    //     if (background) setBackground(background)
+    //     const mask = findScan('MASK')
+    //     if ( mask ) setMask(mask)
+    // },[])
 
-        const back = subsample.scan.filter(scan => scan.type === 'MEDIUM_BACKGROUND')
-        return back.length > 0 ? back[0] : null;
-    }
-     const background = findBackground();
+    useEffect(()=>{
+        const groupedByType = subsample.scan.reduce((acc, scan) => {
+            if (!acc[scan.type]) {
+                acc[scan.type] = [];
+            }
+            acc[scan.type].push(scan);
+            return acc;
+        }, {} as Record<string, typeof subsample.scan>);
+
+        const mediumBackgrounds = groupedByType['MEDIUM_BACKGROUND'];
+        const scans = groupedByType['SCAN'];
+        const masks = groupedByType['MASK'];
+
+        if (mediumBackgrounds) setBackground(mediumBackgrounds[0])
+        if ( masks ) setMask(masks[0])
+
+    },[])
+
+// const findScan = (type: string) => {
+//         if (!hasScanData) {
+//             console.error("Subsamples has no scan linked to it")
+//             return null;
+//         }
+
+//         const back = subsample.scan.filter(scan => scan.type === type)
+//         console.debug(`nb scan of type ${type} : ${back.length}`)
+//         console.debug( `scan of type ${type} : ${back}`)
+//         return back.length > 0 ? back[0] : null;
+//     }
+
+    // const findBackground = () => {
+    //     if (!hasScanData) {
+    //         return null;
+    //     }
+
+    //     const back = subsample.scan.filter(scan => scan.type === 'MEDIUM_BACKGROUND')
+    //     return back.length > 0 ? back[0] : null;
+    // }
+
+
+     
 
      const backgroundURL = `/background?instrument=${sample.project}&backurl=/projects/{projectid}/samples/${sample.id}?state=subsamples`
 
@@ -88,7 +134,7 @@ const ViewPage: FC<pageProps> = ({sample, subsample}) => {
                         href={backgroundURL}
                         className="bg-primary text-white px-4 py-2 rounded-lg"
                     >
-                        Choose one
+                        Choose background
                     </Link>
                 </div>
             )
@@ -120,14 +166,21 @@ const ViewPage: FC<pageProps> = ({sample, subsample}) => {
                         {showBackgroundScan()}
  
 
-                        <Link href="./vignettes" className="bg-primary text">Go to Vignettes</Link>
 
                     </div>
                 </CardBody>
                 <CardFooter>
-
+                        <Button as={Link} href="./vignettes" className="bg-primary text">Go to Vignettes</Button>
                 </CardFooter>
             </Card>
+        <section>
+            <Debug params={sample} title="sample" pre={true} open={false}/>
+            <Debug params={subsample} title="subsample" pre={true} open={false}/>
+            <Debug params={ subsample.scan } title="scan" pre={true} open={false}/>
+
+            <Debug params={background} title="background" pre={true}/>
+            <Debug params={backgroundURL} title="backgroundURL" pre={false}/>
+        </section>
         </>
     ) 
 

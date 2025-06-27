@@ -59,7 +59,7 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
         async sort({items, sortDescriptor}) {
             console.debug("sort: ",items, sortDescriptor)
           return {
-            items: items.sort((a, b) => {
+            items: items.sort((a:any, b:any) => {
               let first = a[sortDescriptor.column];
               let second = b[sortDescriptor.column];
               let cmp = (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
@@ -111,7 +111,7 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
 
     const renderCell = React.useCallback((background:any, columnKey:any) => {
 
-        console.log("render cell :columnKey ", columnKey); 
+        // console.log("render cell :columnKey ", columnKey); 
 
         const cellValue = background[columnKey];
 
@@ -175,9 +175,7 @@ export function BackgroundTable(props:{projectId:String, backgrounds:any}) {
                     size="sm" 
                     color="primary" 
                     as={Link}
-                    // href={`/projects/${projectId}/background/${background.id}`}
                     onPress={() => setShowImage(background.action)}
-                    // onPress={ (projectid,sampleid=background.id) => onDetail(projectid,sampleid) }                
                 >
                     {/* EYE */}
                     <EyeIcon className="text-2xl text-default-400 pointer-events-none" />

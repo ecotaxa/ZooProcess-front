@@ -3,7 +3,6 @@
 import { Tab, Tabs } from "@heroui/react";
 import Metadata from "./@metadata/page";
 import Stats from "./@stats/page";
-// import * as api from '@/app/api/network/zooprocess-api'
 import QC from "./@qc/page";
 import Scans from "./@scans/page";
 import BackgroundScans from "./@background/page";
@@ -15,7 +14,6 @@ import { useTranslations } from 'next-intl' ;
 
 
 
-// export function ProjectTabs({ project, params,translate }:{project:Project, params:any, translate:any}) {
 export function ProjectTabs({ project, params }:{project:Project, params:any}) {
   const t = useTranslations();
 
@@ -41,6 +39,8 @@ export function ProjectTabs({ project, params }:{project:Project, params:any}) {
       selectedKey = hash
   }
   return (
+    <>
+      <Debug params={params} title="Debug Tab" />
     <Tabs aria-label="Project tabs" disabledKeys={isQcTabDisabled(project)} defaultSelectedKey={selectedKey}>
       <Tab key="stats" title={t("ProjectPageStats.Title")}>
         <Stats project={project} {...params}  />
@@ -50,7 +50,6 @@ export function ProjectTabs({ project, params }:{project:Project, params:any}) {
       </Tab>
       <Tab key="samples" title={t("ProjectPage_Samples.Title")}>
         <SamplesTab {...params} />
-        <Debug params={params} />
       </Tab>
       <Tab key="background" title={t("ProjectPage_Backgrounds.Tab")}>
         <BackgroundScans {...params} />
@@ -62,6 +61,7 @@ export function ProjectTabs({ project, params }:{project:Project, params:any}) {
         <QC {...params} />
       </Tab>
     </Tabs>
+    </>
   );
 
 }

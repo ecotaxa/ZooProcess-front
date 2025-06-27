@@ -113,20 +113,7 @@ const Metadata : FC<pageProps> = (params) => {
   // onSubmit
   const onChange = (value:any) => {
     console.log("Project metadata onChange:", value)
-
-    // POUR AFFICHAGE DEBUG
-    // setData(JSON.stringify(value, null, 2))
-    // console.debug("App onChange:", stringifiedData)
-    // console.debug("App onChange:", JSON.stringify(value, null, 2));
-
     const project = updateProject(value);
-
-    // project contain only field to do the update
-    // we need to keep old value, some will be false (like calibration data), but not use at the moment on this page
-    // const mergedProject = {
-    //   ...projectData,
-    //   ...project,
-    // }
 
     return project
   }
@@ -153,12 +140,13 @@ const Metadata : FC<pageProps> = (params) => {
 
           <div className="text-center justify-center">
             <h1>Metadata</h1>
-            <Debug params={params.project} title='project'/>
-            <Debug params={projectData} title='projectData'/>
+
             <ProjectForm/>
           </div>
         </section>
-        </>
+            <Debug params={params.project} title='project' pre={true}/>
+            <Debug params={projectData} title='projectData' pre={true}/>
+      </>
     );
 
 }

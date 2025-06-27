@@ -99,12 +99,14 @@ const Stats: FC<pageProps> = (params) => {
   const pc: Project = params.project;
 
   return (
+    <>
     <div>
-        <Debug params={pc} title="p cast"/>
-        <h1>Stats</h1>
-        {projectEmpty(pc)}
+      <h1>Stats</h1>
+      {projectEmpty(pc)}
       {ecotaxaLink(pc)}
     </div>
+    <Debug params={pc} title="project" pre={true}/>
+    </>
   );
 };
 

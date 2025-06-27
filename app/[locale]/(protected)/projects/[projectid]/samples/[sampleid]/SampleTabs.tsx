@@ -49,7 +49,9 @@ export function SampleTabs({ sample, params }:{sample:Sample, params:any}) {
   console.debug(" selectedKey:", selectedKey)
 
   return (
-    // <Tabs aria-label="Sample tabs" disabledKeys={isQcTabDisabled(project)} defaultSelectedKey={selectedKey}>
+    <>
+    <section>
+    {/* <Tabs aria-label="Sample tabs" disabledKeys={isQcTabDisabled(project)} defaultSelectedKey={selectedKey}> */}
     <Tabs aria-label="Sample tabs" defaultSelectedKey={selectedKey}>
       <Tab key="stats" title="Stats" >
           <Stats sample={sample}  {...params}/>
@@ -59,9 +61,13 @@ export function SampleTabs({ sample, params }:{sample:Sample, params:any}) {
       </Tab>
       <Tab key="subsamples" title="Sub Samples">
           <SubSamples sample={sample} {...params}/>
-          <Debug params={params}/>
       </Tab>
     </Tabs>
+    </section>
+    <section>
+          <Debug params={params}/>
+    </section>
+    </>
   );
 
 }

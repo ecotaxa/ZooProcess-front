@@ -1,33 +1,23 @@
 "use client";
 
-// import { useBackgrounds, useSampleScans } from "@/app/api/background";
-// import { ErrorComponent } from "@/components/ErrorComponent";
 import { BackgroundTable } from "@/components/backgrounds-table";
-// import { MySpinner } from "@/components/mySpinner";
-// import { ScanTable } from "@/components/scans-table";
 import { Button, Card, CardBody, CardHeader, Link, Spacer} from "@heroui/react";
 import { FC, useEffect, useState } from "react";
 
 import { getProjectBackgrounds } from "@/app/api/data/background";
-import { Background } from "@/app/api/network/interfaces";
 import { useTranslations } from 'next-intl' ;
+import { Debug } from "@/components/Debug";
 
 interface pageProps {
-    // params: {
         projectid: string,
-    // }
 }
 
 
 const BackgroundScans : FC<pageProps> = ({projectid}) => {
 
-    // const projectId = params.projectid ;
-    // console.log("Metadata params: ", params);
-    // console.log("Metadata params projectid: ", params.projectid);
-    console.log("Metadata params projectid: ", projectid);
+  console.log("Metadata params projectid: ", projectid);
 
-    // const { backgrounds, isLoading, isError } = useBackgrounds(projectId)
-    const [ backgroundList, setBackgroundList ] = useState<any[]>([])
+  const [ backgroundList, setBackgroundList ] = useState<any[]>([])
 	const t = useTranslations('ProjectPage_Backgrounds');
 
 
@@ -36,16 +26,14 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
             const fetchedBackgrounds = await getProjectBackgrounds(projectid)
             const formattedData = formatData(fetchedBackgrounds)
             // Newest entries first, fields date & time both contain the full creation date
-            formattedData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            formattedData.sort((a:any, b:any) => new Date(b.date).getTime() - new Date(a.date).getTime())
             setBackgroundList(formattedData)
         }
         fetchBackgrounds()
     }, [projectid])
 
     
-    // const { scans, isLoading: isScanLoading , isError: isScanError } = useSampleScans(projectId)
-    // const [ scanList, setScanList ] = useState(scans)
-    
+    // data format
     // {
     //     "id": "65c3635582772f6fd7ba5bd3",
     //     "url": "Drives/Background/2024_02_07_08_52_10_0001.jpg",
@@ -55,7 +43,6 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
     //     "instrumentId": "65c4e0994653afb2f69b11ce",
     //     "subSampleId": null
     //   },
-
     const formatData = (data:any) => {
 
         console.log("formatData", data);
@@ -79,8 +66,7 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
               creator: s.user.name,
               time:s.createdAt,
               date:s.createdAt,
-            //   qc:"",
-              qc: s.qc || t("QC_TODO"), //"TODO",  
+              qc: s.qc || t("QC_TODO"),
               action:s.url
             }
           }
@@ -117,10 +103,7 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
               id: s.id,
               name: s.url,
               creator: s.user.name,
-            //   time:s.createdAt,
-            //   date:s.createdAt,
-            // qc: "missing",
-              qc: s.qc || t("QC_TODO"), //"TODO",  
+              qc: s.qc || t("QC_TODO"),
               fraction_id,
               frac_min,
               frac_sup,
@@ -133,50 +116,17 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
         console.log("formated scans data: ", scans);
         return scans
     }
-
-    // useEffect( () => { 
-    //         if ( backgrounds.length > 0 ) {
-    //             console.log("background list has changed", backgrounds);
-    //             const data = formatData(backgrounds)
-    //             // const data = formatData(backgrounds).filter(item => item !== undefined);
-    //             // const data = samples
-    //             setBackgroundList(data);
-    //     }
-    // } , [backgrounds])
-    
-    // useEffect( () => { 
-    //     if ( scans.length > 0 ) 
-    //         {
-    //             console.log("scan list has changed", scans);
-    //             const data = formatScanSampleData(scans)
-    //             // const data = formatData(backgrounds).filter(item => item !== undefined);
-    //             // const data = samples
-    //             setScanList(data);
-    //         }
-    // } , [scans])
   
       
     const ShowData = () => {
-        // if (isLoading) return <MySpinner />
-        // if (isError) return <ErrorComponent error={isError}/>
         console.debug(backgroundList)
         return <BackgroundTable projectId={projectid} backgrounds={backgroundList}/>
     }
 
-    // const ShowScanData = () => {
-    //     if (isScanLoading) return <MySpinner />
-    //     if (isScanError) return <ErrorComponent error={isScanError}/>
-    //     console.debug(scanList)
-    //     return <ScanTable projectId={projectId} scans={scanList}/>
-    // }
-
     return (
+      <>
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="text-center justify-center">
-            {/* <h1 data-testid="title">
-                {projectId} Scans
-            </h1>
-            <Spacer y={5}/> */}
             <Card className="inline-block "
                     data-testid="backgroundCard" 
                 >
@@ -186,21 +136,17 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
                         <h4>{t("Subtitle")}</h4>
                     </div>
                     <Button 
-                          // href={`/projects/${projectId}/samples/new`} cannot open this page ????
                           href={`/projects/${projectid}/background/`}
                           as={Link}
                           color="primary"
-                          // showAnchorIcon
                           variant="solid"
                           data-testid="newBackBtn"
                           >{t("New_Upload")}
                         </Button>
                         <Button 
-                          // href={`/projects/${projectId}/samples/new`} cannot open this page ????
                           href={`/projects/${projectid}/upload/`}
                           as={Link}
                           color="primary"
-                          // showAnchorIcon
                           variant="solid"
                           data-testid="newBackBtn"
                           >{t("New")}
@@ -214,7 +160,8 @@ const BackgroundScans : FC<pageProps> = ({projectid}) => {
 
         </div>
     </section>
-
+    <Debug params={backgroundList} title="backgroundList" pre={true} />
+    </>
     );
 };
 

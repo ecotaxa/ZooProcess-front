@@ -177,7 +177,7 @@ export function ScanTable(props:{projectId:String, scans:any}) {
    
   return (
     <>
-    <Debug params={props} />
+    {/* <Debug params={props} /> */}
     <Table
           sortDescriptor={list.sortDescriptor}
           onSortChange={list.sort} 

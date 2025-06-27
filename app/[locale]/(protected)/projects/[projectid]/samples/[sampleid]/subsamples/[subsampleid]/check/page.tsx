@@ -34,6 +34,7 @@ const CheckPage : FC<pageProps> = async ({params}) => {
 
     return (
         <>
+        <section>
             <h1>Scan View</h1>
             {/* <h3>{projectid}</h3>
             <h3>{sampleid}</h3>
@@ -42,6 +43,8 @@ const CheckPage : FC<pageProps> = async ({params}) => {
 
             <Link href={backUrl}>Back to subsample list</Link>
             <ViewPage sample={sample} subsample={subsample} />
+        </section>
+
         </>
     )
 

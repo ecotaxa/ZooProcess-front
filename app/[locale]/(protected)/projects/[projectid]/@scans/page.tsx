@@ -2,12 +2,11 @@
 
 import { getScans } from "@/app/api/data/scan";
 import { SubSample } from "@/app/api/network/interfaces";
-import { ErrorComponent } from "@/components/ErrorComponent";
-import { MySpinner } from "@/components/mySpinner";
 import { ScanTable } from "@/components/scans-table";
-import { Button, Card, CardBody, CardHeader, Link, Spacer} from "@heroui/react";
+import { Card, CardBody, CardHeader, Link, Spacer} from "@heroui/react";
 import { FC, useEffect, useState } from "react";
 import { useTranslations } from 'next-intl' ;
+import { Debug } from "@/components/Debug";
 
 interface pageProps {
         projectid: string
@@ -33,52 +32,9 @@ const Scans : FC<pageProps> = ({projectid}) => {
     }, [projectid])
 
     
-    // {
-    //     "id": "65c3635582772f6fd7ba5bd3",
-    //     "url": "Drives/Background/2024_02_07_08_52_10_0001.jpg",
-    //     "background": true,
-    //     "createdAt": "2023-12-31T21:03:22.650Z",
-    //     "userId": "65bd08e14fbfb25884e127fb",
-    //     "instrumentId": "65c4e0994653afb2f69b11ce",
-    //     "subSampleId": null
-    //   },
+ 
 
-    // const formatData = (data:any) => {
-
-    //     console.log("formatData", data);
-    
-    //     const backgrounds = Object.keys(data).map( (_scan) => {
-    
-    //       console.log("background: ", _scan);
-  
-    //       if ( _scan == "key"){
-    //           console.error("ARRGG indey == key");
-    //           console.log("ARRGG indey == key")
-    //           console.debug(data);
-    //           console.log("pfffff")
-    //       } else {
-    //         const s = data[_scan]
-    //         console.log("s: ", s);
-
-    //         return {
-    //           id: s.id,
-    //           name: s.url,
-    //           creator: s.user.name,
-    //           time:s.createdAt,
-    //           date:s.createdAt,
-    //         //   qc:"",
-    //           qc: s.qc || "TODO",  
-    //           action:s.url
-    //         }
-    //       }
-    //     })
-
-    //     console.log("formated backgrounds data: ", backgrounds);
-    //     return backgrounds
-    // }
-
-
-    /*
+    /* data to format
 	{
 		"id": "67fe58f4ec2fb4b42b442d62",
 		"url": "/Volumes/sgalvagno/plankton/zooscan_zooprocess_test/Zooscan_apero_pp_2023_wp2_sn002/Zooscan_scan/_raw/apero2023_pp_wp2_005_st11_d_d1_1-1744722130000-285157118.tif",
@@ -373,11 +329,7 @@ const Scans : FC<pageProps> = ({projectid}) => {
 		}
 	},
     */
-
-
     const formatData = (data:any) => {
-
-        // console.debug("formatData", data);
     
         const scans = Object.keys(data).map( (_scan) => {
     
@@ -429,8 +381,6 @@ const Scans : FC<pageProps> = ({projectid}) => {
             return null
         }
         }).filter(Boolean)
-
-        // console.debug("formated scans data: ", scans);
         return scans
     }
 
@@ -443,6 +393,7 @@ const Scans : FC<pageProps> = ({projectid}) => {
 
 
     return (
+		<>
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="text-center justify-center">
            
@@ -463,6 +414,11 @@ const Scans : FC<pageProps> = ({projectid}) => {
             </Card> 
         </div>
     </section>
+	<section>
+		<Debug params={projectid} title={"Project ID:" + projectid}  open={false}/> 
+		<Debug params={scanList} title="scanList" pre={true}/>
+	</section>
+	</>
 
     );
 };

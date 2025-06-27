@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link } from "@heroui/react";
-// import { useRouter } from "next/navigation";
-// import { Button } from "@mui/material";
 
 import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key';
@@ -41,15 +39,6 @@ export function SamplesTableNextUI(props) {
 
     let list = useAsyncList({
       async load({signal}) {
-      //   let res = await fetch('https://swapi.py4e.com/api/people/?search', {
-      //     signal,
-      //   });
-      //   let json = await res.json();
-      //   setIsLoading(false);
-  
-      //   return {
-      //     items: json.results,
-      //   };
           return {
               items: samples,
           };
@@ -103,7 +92,7 @@ export function SamplesTableNextUI(props) {
 
     const renderCell = React.useCallback((sample, columnKey) => {
 
-        console.log("render cell :columnKey ", columnKey); 
+        // console.log("render cell :columnKey ", columnKey); 
 
         const cellValue = sample[columnKey];
 
@@ -175,7 +164,6 @@ export function SamplesTableNextUI(props) {
                     color="primary" 
                     as={Link}
                     href={`/projects/${projectId}/samples/${sample.id}`}
-                    // onPress={ (projectid,sampleid=sample.id) => onDetail(projectid,sampleid) }                
                 >
                     {t("Table_Samples.Scan_Button")}
                 </Button>
@@ -191,7 +179,6 @@ export function SamplesTableNextUI(props) {
 
   return (
     <>
-    <Debug params={props} />
     <Table 
         sortDescriptor={list.sortDescriptor}
         onSortChange={list.sort} 
@@ -204,7 +191,6 @@ export function SamplesTableNextUI(props) {
           </TableColumn>
         )}
       </TableHeader>
-      {/* <TableBody items={samples}> */}
       <TableBody items={list.items}>
         {(item) => (
           <TableRow key={key(item.id,"tr")}>
@@ -213,6 +199,7 @@ export function SamplesTableNextUI(props) {
         )}
       </TableBody>
     </Table>
+    <Debug params={props} title="props" pre={true}/>
     </>
   );
 }

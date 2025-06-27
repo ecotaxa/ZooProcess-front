@@ -79,24 +79,24 @@ export function SubSamplesTable(props) {
 
 
     function getScan(data/*:Array<IScan>*/, type/*:String*/="Scan") {
-      console.log("getScan: ", data);
+      console.debug("getScan: ", data);
       const value = data.find( (m/*:IScan*/) => m.type == type)
-      console.log("getScan value: ",  value);
+      // console.debug("getScan value: ",  value);
       return value?.url || null
     }
 
     const renderCell = React.useCallback((sample, columnKey) => {
 
-        console.log("render cell :subsample ", sample);
-        console.log("render cell :columnKey ", columnKey);
+        // console.debug("render cell :subsample ", sample);
+        // console.debug("render cell :columnKey ", columnKey);
 
         let cellValue = sample[columnKey]
         if ( cellValue == undefined ) {
           const subsample = sample.metadata.find((item) => item.name == columnKey);
           if ( subsample != undefined ) {
-            console.log("render cell :subsample ", subsample.value);
+            // console.debug("render cell :subsample ", subsample.value);
             cellValue = subsample.value;
-            console.log("render cell :cellValue ", cellValue);
+            // console.debug("render cell :cellValue ", cellValue);
           } else {
             if (columnKey == "operator") {
               cellValue = sample.user.name
@@ -152,9 +152,10 @@ export function SubSamplesTable(props) {
 
           let cellValue = sample["qc"]
 
-         const scan = getScan(sample.scan, "Scan")
-        //  console.log("render cell: ", cellValue);
-         console.debug("render cell: ", scan);
+         const scan = getScan(sample.scan, "SCAN")
+         const back = getScan(sample.scan, "MEDIUM_BACKGROUND")
+        //  console.debug("render cell: ", cellValue);
+        //  console.debug("render cell scan: ", scan);
 
           // let url = scan?.url
           let urlCheck = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/check`
@@ -162,18 +163,17 @@ export function SubSamplesTable(props) {
           // switch ( cellValue ) {
           //   case "UNPROCESSED":
           let urlProcess = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/process`
-          button = "PROCESS"
-          //     break;
-          //   case "TODO":
-          //   case undefined:
-          //   default:
-          //     url = `/projects/${projectId}/samples/${sampleId}/subsamples/new/${sample.id}?state=preview`
-          //     button = "SCAN"
-          //     break;
-          //   case "DONE":
-          //         url = `/projects/${projectId}/samples/${sampleId}/subsamples/${sample.id}/check`
-          //         button = "VIEW"
-          //     } 
+
+          let disabled = false;
+          if (scan ===  null) 
+            { button = "No scan"; disabled = true }
+            else 
+              {
+                if (back === null) { button = "No background"; disabled = true }
+                else {
+                  button = "PROCESS"
+                }
+              }
 
               return (
               <div className="relative flex items-center gap-2" key={key(sample.id,'action')}>
@@ -198,6 +198,7 @@ export function SubSamplesTable(props) {
                     color="primary"
                     as={Link}
                     href={urlProcess}
+                    disabled={disabled}
                 >
                     {button}
               </Button>) : ""}
@@ -220,7 +221,7 @@ export function SubSamplesTable(props) {
 
   return (
     <>
-    <Debug params={props} />
+    <section>
     <Table 
         sortDescriptor={list.sortDescriptor}
         onSortChange={list.sort} 
@@ -241,6 +242,10 @@ export function SubSamplesTable(props) {
         )}
       </TableBody>
     </Table>
+    </section>
+    <section>
+      <Debug params={props} title="Array" pre={true}/>
+    </section>
     </>
   );
 }
