@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link } from "@heroui/react";
-// import { useRouter } from "next/navigation";
-// import { Button } from "@mui/material";
 
 import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key';
@@ -9,6 +7,7 @@ import {useAsyncList} from "@react-stately/data";
 
 import { Debug } from '@/components/Debug';
 import { EyeIcon } from "./auth/EyeIcon";
+import { useTranslations } from 'next-intl' ;
 
 interface IColumn {
     name: string,
@@ -16,11 +15,11 @@ interface IColumn {
     allowSorting?: boolean
 }
 
-const columns : Array<IColumn> = [
-    {name: "ID", uid: "id", allowSorting:true },
+  const getColumns = (t:any): Array<IColumn> => [
+    // {name: t("Table_Scans.ID"), uid: "id", allowSorting:true },
     // {name: "DRIVE", uid: "drive"},
-    {name: "NAME", uid: "name", allowSorting:true},
-    {name: "CREATOR", uid: "creator", allowSorting:true},
+    {name: t("Table_Scans.NAME"), uid: "name", allowSorting:true},
+    {name: t("Table_Scans.CREATOR"), uid: "creator", allowSorting:true},
     // {name: "SAMPLE", uid: "scan"},
     // {name: "SCAN", uid: "scan"},
     // {name: "FRACTION/SUBSAMPLE", uid:"fraction"},
@@ -28,36 +27,27 @@ const columns : Array<IColumn> = [
     // {name: "Time", uid: "time"},
     // {name: "DATE", uid: "date"},
 
-    {name: "Fraction id", uid: "fraction_id", allowSorting:true},
-    {name: "Frac min", uid: "frac_min", allowSorting:true},
-    {name: "Frac sup", uid: "frac_sup", allowSorting:true},
-    {name: "Observation", uid: "observation", allowSorting:true},
+    {name: t("Table_Scans.Fraction_ID"), uid: "fraction_id", allowSorting:true},
+    {name: t("Table_Scans.Frac_Min"), uid: "frac_min", allowSorting:true},
+    {name: t("Table_Scans.Frac_Sup"), uid: "frac_sup", allowSorting:true},
+    {name: t("Table_Scans.Observation"), uid: "observation", allowSorting:true},
 
-    {name: "QC", uid: "qc", allowSorting:true},
+    {name: t("Table_Scans.QC"), uid: "qc", allowSorting:true},
     // {name: "ACTION", uid: "action", allowSorting: false},
   ];
-
 export function ScanTable(props:{projectId:String, scans:any}) {
     const {projectId, scans=[]} = props
     const stripped = true;
+    const t = useTranslations()
+    const columns = getColumns(t);
 
     console.log("ScanTable projectId= ", projectId);
     console.log("ScanTable scans= ", scans);
 
     let list = useAsyncList({
         async load({signal}) {
-        //   let res = await fetch('https://swapi.py4e.com/api/people/?search', {
-        //     signal,
-        //   });
-        //   let json = await res.json();
-        //   setIsLoading(false);
-    
-        //   return {
-        //     items: json.results,
-        //   };
             return {
-                items: scans,
-                // items: updateddata,
+                items: scans
             };
         },
         async sort({items, sortDescriptor}) {
@@ -105,17 +95,8 @@ export function ScanTable(props:{projectId:String, scans:any}) {
     }
 
 
-    // const onDetail = (projectId,sampleid) => {
-    //     router.push({
-    //         pathname: '/projects/[pid]/scans/[sid]',
-    //             query: { pid: projectId , sid: sampleid },                                         
-    //     })
-    // }
-
 
     const renderCell = React.useCallback((scan:any, columnKey:any) => {
-
-        // console.log("render cell :columnKey ", columnKey); 
 
         const cellValue = scan[columnKey];
 
@@ -196,7 +177,7 @@ export function ScanTable(props:{projectId:String, scans:any}) {
    
   return (
     <>
-    <Debug params={props} />
+    {/* <Debug params={props} /> */}
     <Table
           sortDescriptor={list.sortDescriptor}
           onSortChange={list.sort} 
@@ -209,7 +190,6 @@ export function ScanTable(props:{projectId:String, scans:any}) {
           </TableColumn>
         )}
       </TableHeader>
-      {/* <TableBody items={scans}> */}
       <TableBody items={list.items}>
         {(item:any) => (
           <TableRow key={key(item.id,"tr")}>

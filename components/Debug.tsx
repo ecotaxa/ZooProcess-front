@@ -38,7 +38,9 @@ export const Debug = ({
     return (
       <div className="xm-sm-max-100 w-50">
         {pre ? (
+          <div className="w-1/2 mx-auto text-left bg-gray-100 p-3 rounded shadow overflow-auto" >
           <pre>{JSON.stringify(params, null, 2)}</pre>
+          </div>
         ) : (
           <>{JSON.stringify(params, null, 2)}</>
         )}

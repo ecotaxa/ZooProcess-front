@@ -1,0 +1,178 @@
+{
+  "common": {
+    "loading": "XXXXXXXXXX",
+    "error": "XXXXX",
+    "save": "XXXX",
+    "cancel": "XXXXXX",
+    "enterPassword": "XXXXXXXXXXXXXXXXXXXXXXXXX"
+  },
+  "Login": {
+    "Email": "XXXXX",
+    "AlreadyExist": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Welcome": "XXXXXXXXXXXX",
+    "BackButtonLabel": "XXXXXXXXXXXXXXXXXXXXXX",
+    "Password": "XXXXXXXX",
+    "EnterPassword": "XXXXXXXXXXXXXXXXXXX",
+    "ForgotPassword": "XXXXXXXXXXXXXXXX",
+    "Login": "XXXXX"
+  },
+  "SettingsPage": {
+    "Title": "XXXXXXXXXXXXX",
+    "Name": "XXXX",
+    "Email": "XXXXX",
+    "Role": "XXXX",
+    "SessionExpirationDate": "XXXXXXXXXXXXXXXXXXXXXXX",
+    "SessionToken": "XXXXXXXXXXXXX",
+    "MyProject": "XXXXXXXXXXX",
+    "Logout": "XXXXXXX",
+    "ChangePassword": "XXXXXXXXXXXXXXX"
+  },
+  "ProjectsPage": {
+    "Title": "XXXXXXXX",
+    "Add": "XXXXXXXXXXXXXXX",
+    "Detail": "XXXXXX",
+    "Delete": "XXXXXXXXXXXXXXXXXXX",
+    "ModalTitle": "XXXXXXXXXXXXXXXXXXXXXXXX",
+    "Message": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Label": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Cancel": "XXXXXX",
+    "Submit": "XXXXXXXXXXXXXX"
+  },
+  "Table_Projects": {
+    "ID": "XX",
+    "DRIVE": "XXXXX",
+    "SAMPLE": "XXXXXX",
+    "SCAN": "XXXX",
+    "CREATEDAT": "XXXXXXXXX",
+    "UPDATEDAT": "XXXXXXXXXX",
+    "NAME": "XXXX",
+    "QC": "XX",
+    "ACTIONS": "XXXXXXX"
+  },
+  "ProjectPage": {
+    "Title": "XXXXXXX"
+  },
+  "ProjectPageStats": {
+    "Title": "XXXXX",
+    "Box_Sample_Title": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Box_Sample_SubTitle": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Box_Sample_Button": "XXXXXXXXXXXXXX",
+    "Box_Scan_Title": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Box_Scan_Subtitle": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Box_Scan_Button": "XXXXXXXXXXX",
+    "Box_Ecotaxa_Title_Linked": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Box_Ecotaxa_Title_Unlinked": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Box_Ecotaxa_Subtitle_Unlinked": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Box_Ecotaxa_Button_Unlinked": "XXXXXXXXXXXX"
+  },
+  "ProjectPage_Metadata": {
+    "Title": "XXXXXXXX",
+    "Metadata_Update": "XXXXXXXXXXXXXX",
+    "Metadata_Message": ""
+  },
+  "ProjectPage_Samples": {
+    "Title": "XXXXXXX",
+    "SampleCount": "XXXXXXXXXXXXX",
+    "New": "XXXXXXXXXXXXXX"
+  },
+  "ProjectPage_Backgrounds": {
+    "Tab": "XXXXXXXXXXXXXXXX",
+    "Title": "XXXXXXXXXXXXXXXXXXXX",
+    "Subtitle": "XXXXXXXXXXXXXXXXXXXXXXX",
+    "SampleCount": "XXXXXXXXXXXXX",
+    "QC_TODO": "XXXX",
+    "New_Upload": "XXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "New": "XXXXXXXXXXXXXX"
+  },
+  "ProjectPage_Scans": {
+    "Title": "XXXXX",
+    "SampleCount": "XXXXXXXXXXXXX"
+  },
+  "ProjectPage_QC": {
+    "Title": "XX",
+    "SampleCount": "XXXXXXXXXXXXX"
+  },
+  "MapComponent": {
+    "Loading": "XXXXXXXXXXXXXX"
+  },
+  "MapComponentClient": {
+    "title": "XXXXXXXXXXXXX",
+    "instructions": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "startCoordinates": "XXXXXXXXXXXXXXXXX",
+    "endCoordinates": "XXXXXXXXXXXXXXX",
+    "latitude": "XXXXXXXX",
+    "longitude": "XXXXXXXXX",
+    "North": "XXXXX",
+    "South": "XXXXX",
+    "East": "XXXX",
+    "West": "XXXX",
+    "Position": "XXXXXXXX",
+    "Hemispher": "XXXXXXXXX",
+    "Start_Latitude": "XXXXXXXXXXXXXX",
+    "Start_Longitude": "XXXXXXXXXXXXXXX",
+    "End_Latitude": "XXXXXXXXXXXX",
+    "End_Longitude": "XXXXXXXXXXXXX",
+    "Start_Lat_Degrees": "XXXXXXXXXXXXXXXXX",
+    "Start_Lng_Degrees": "XXXXXXXXXXXXXXXXX",
+    "End_Lat_Degrees": "XXXXXXXXXXXXXXX",
+    "End_Lng_Degrees": "XXXXXXXXXXXXXXX",
+    "Minutes": "XXXXXXX",
+    "Seconds": "XXXXXXX",
+    "Artic_Map": "XXXXXXXXXXXXXXXXXXX",
+    "Antartic_Map": "XXXXXXXXXXXXXXXXXXXXXX",
+    "Coordinate_Format": "XXXXXXXXXXXXXXXXX",
+    "Decimal_Degrees": "XXXXXXXXXXXXXXX",
+    "DMS": "XXXXXXXXXXXXXXXXXXXXXXXXX",
+    "Clear_End_Point": "XXXXXXXXXXXXXXX"
+  },
+  "SamplesPage": {
+    "Add": "XXXXXXXXXXXXXX"
+  },
+  "Table_Background": {
+    "ID": "XX",
+    "NAME": "XXXX",
+    "CREATOR": "XXXXXXX",
+    "Time": "XXXX",
+    "DATE": "XXXX",
+    "QC": "XX",
+    "ACTION": "XXXXXX",
+    "Modal_Close": "XXXXX"
+  },
+  "Table_Background_QC": {
+    "Not_Done": "XXXXXXXX",
+    "Fully_Scanned": "XXXXXXXXXXXXX",
+    "Not_Fully_Scanned": "XXXXXXXXXXXXXXXXX",
+    "Process": "XXXXXXX",
+    "Proportion_Of_Multiple": "XXXXXXXXXXXXXXXXXXXXXX",
+    "Error": "XXXXXX"
+  },
+  "Table_Samples": {
+    "NAME": "XXXX",
+    "SCAN": "XXXX",
+    "FRACTION_SUBSAMPLE": "XXXXXXXXXXXXXXXXXX",
+    "CREATED_AT": "XXXXXXXXXX",
+    "UPDATED_AT": "XXXXXXXXXX",
+    "STATUS": "XXXXXX",
+    "ACTIONS": "XXXXXXX",
+    "Table_Label": "XXXXXXXXXXXX",
+    "Scan_Button": "XXXXXXXXXXXXXXX"
+  },
+  "Table_Scans": {
+    "ID": "XX",
+    "NAME": "XXXX",
+    "CREATOR": "XXXXXXX",
+    "Fraction_ID": "XXXXXXXXXXX",
+    "Frac_Min": "XXXXXXXX",
+    "Frac_Sup": "XXXXXXXX",
+    "Observation": "XXXXXXXXXXX",
+    "QC": "XX"
+  },
+
+  "Form":{
+    "acronym": "Acronyme",
+    "acronym_placeholder": "Acronyme de votre projet",
+        "description":"Project description",
+        "description_ph":"Describe your project here"
+  }
+
+}

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Link } from "@heroui/react";
-// import { useRouter } from "next/navigation";
-// import { Button } from "@mui/material";
 
 import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key';
 
 import { Debug } from '@/components/Debug';
 import { useAsyncList } from "react-stately";
+import { useTranslations } from 'next-intl' ;
 
 // interface IColumn {
 //   name: string,
@@ -15,37 +14,31 @@ import { useAsyncList } from "react-stately";
 //   allowSorting?: boolean
 // }
 
-const columns /*: Array<IColumn>*/ = [
+//const columns /*: Array<IColumn>*/ = [
+const getColumns = (t) => [
     // {name: "ID", uid: "id", allowSorting:true},
     // {name: "DRIVE", uid: "drive"},
-    {name: "NAME", uid: "name", allowSorting:true},
+    {name: t("Table_Samples.NAME"), uid: "name", allowSorting:true},
     // {name: "SAMPLE", uid: "sample"},
-    {name: "SCAN", uid: "scans", allowSorting:true},
-    {name: "FRACTION/SUBSAMPLE", uid:"fraction", allowSorting:true},
-    {name: "CREATED AT", uid: "createdAt", allowSorting:true},
-    {name: "UPDATED AT", uid: "updatedAt", allowSorting:true},
-    {name: "STATUS", uid: "status", allowSorting:true},
-    {name: "ACTIONS", uid: "actions", allowSorting:false},
+    {name: t("Table_Samples.SCAN"), uid: "scans", allowSorting:true},
+    {name: t("Table_Samples.FRACTION_SUBSAMPLE"), uid:"fraction", allowSorting:true},
+    {name: t("Table_Samples.CREATED_AT"), uid: "createdAt", allowSorting:true},
+    {name: t("Table_Samples.UPDATED_AT"), uid: "updatedAt", allowSorting:true},
+    {name: t("Table_Samples.STATUS"), uid: "status", allowSorting:true},
+    {name: t("Table_Samples.ACTIONS"), uid: "actions", allowSorting:false},
   ];
 
 export function SamplesTableNextUI(props) {
     const {projectId, samples=[]} = props
     const stripped = true;
+    const t = useTranslations()
+    const columns = getColumns(t);
 
     console.log("SamplesTable projectId= ", projectId);
     console.log("SamplesTable samples= ", samples);
 
     let list = useAsyncList({
       async load({signal}) {
-      //   let res = await fetch('https://swapi.py4e.com/api/people/?search', {
-      //     signal,
-      //   });
-      //   let json = await res.json();
-      //   setIsLoading(false);
-  
-      //   return {
-      //     items: json.results,
-      //   };
           return {
               items: samples,
           };
@@ -79,12 +72,12 @@ export function SamplesTableNextUI(props) {
         console.log("Status: ", status);
         switch (status) {
             case "TODO":
-            case undefined: return "Not Done";
-            case "FULLY_SCANNED": return "fully scanned";
-            case "NOT_FULLY_SCANNED": return "not fully scanned";
-            case "PROCESS": return "process";
-            case "PROPORTION_OF_MULTIPLE": return "proportion of multiple";
-            default: return "Error";
+            case undefined: return t("Table_Background_QC.Not_Done");
+            case "FULLY_SCANNED": return t("Table_Background_QC.Fully_Scanned");
+            case "NOT_FULLY_SCANNED": return t("Table_Background_QC.Not_Fully_Scanned");
+            case "PROCESS": return t("Table_Background_QC.Process");
+            case "PROPORTION_OF_MULTIPLE": return t("Table_Background_QC.Proportion_Of_Multiple");
+            default: return t("Table_Background_QC.Error");
         }
     }
 
@@ -99,7 +92,7 @@ export function SamplesTableNextUI(props) {
 
     const renderCell = React.useCallback((sample, columnKey) => {
 
-        console.log("render cell :columnKey ", columnKey); 
+        // console.log("render cell :columnKey ", columnKey); 
 
         const cellValue = sample[columnKey];
 
@@ -171,9 +164,8 @@ export function SamplesTableNextUI(props) {
                     color="primary" 
                     as={Link}
                     href={`/projects/${projectId}/samples/${sample.id}`}
-                    // onPress={ (projectid,sampleid=sample.id) => onDetail(projectid,sampleid) }                
                 >
-                    Scan Sub-Sample
+                    {t("Table_Samples.Scan_Button")}
                 </Button>
             </div>
             );
@@ -187,12 +179,11 @@ export function SamplesTableNextUI(props) {
 
   return (
     <>
-    <Debug params={props} />
     <Table 
         sortDescriptor={list.sortDescriptor}
         onSortChange={list.sort} 
         isStriped={stripped} 
-        aria-label="Sample Table">
+        aria-label={"Sample Table"}>
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"} allowsSorting={column.allowSorting}>
@@ -200,7 +191,6 @@ export function SamplesTableNextUI(props) {
           </TableColumn>
         )}
       </TableHeader>
-      {/* <TableBody items={samples}> */}
       <TableBody items={list.items}>
         {(item) => (
           <TableRow key={key(item.id,"tr")}>
@@ -209,6 +199,7 @@ export function SamplesTableNextUI(props) {
         )}
       </TableBody>
     </Table>
+    <Debug params={props} title="props" pre={true}/>
     </>
   );
 }

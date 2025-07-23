@@ -4,12 +4,12 @@ import {Input} from "@heroui/react";
 // import { Debug } from "./Debug";
 import { Debug } from "@/components/Debug";
 import { setConstantValue } from "typescript";
-
-
+import { useTranslations } from 'next-intl'
+import { keyExists } from '@/lib/i18nUtils'
 export function MyTextField(props) {
     
     const [value, setValue] = React.useState(props.value);
-
+    const t= useTranslations('Form')
 
     var handleChange = (value) => {
 
@@ -59,12 +59,23 @@ export function MyTextField(props) {
     }
 
 
+    let label = props.label
+    if ( keyExists(props.name, t)) {
+        console.debug("🔥🔥🔥🔥🔥🔥🔥🔥🔥 key exists for ", props.name ) 
+        label = t(props.name)
+    }
+    else { console.debug("☠️☠️☠️☠️☠️☠️☠️☠️☠️ no key exists for ", props.name )}
+    let placeholder = props.placeholder
+    const placeholderKey = props.name + "_ph"
+    if ( keyExists(placeholderKey, t)) {
+        placeholder = t(placeholderKey)
+    }
 
     let opt = {
         type: props.type,
         defaultValue: props.value,
-        label: props.label,
-        placeholder: props.placeholder,
+        label, //: props.label,
+        placeholder, //: props.placeholder,
         onValueChange: handleChange,
         isDisabled: props.disabled
     }
@@ -74,7 +85,7 @@ export function MyTextField(props) {
     if (props.readonly) { opt['isReadOnly'] = true}
     if (props.disabled) { opt['isReadOnly'] = true}
 
-    if (props.fn2) { 
+    if (props.fn2) {
 
         const params = props.fn2.params.slice(1).slice(0,-1).split(',')
         // console.debug("params: ",params)
@@ -121,9 +132,6 @@ export function MyTextField(props) {
         />       
         </>
     )
-
-   
-
 
   }
 

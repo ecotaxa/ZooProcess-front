@@ -1,7 +1,9 @@
 "use client"
 
 import React, { useState } from "react";
-import { Button, Link, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip} from "@heroui/react";
+// import { Button, Link, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip} from "@heroui/react";
+import { Button, Link, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Input} from "@heroui/react";
+
 // import { Button } from "@mui/material";
 import { formatDate , formatTime }  from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key';
@@ -11,6 +13,7 @@ import { useAsyncList } from "react-stately";
 import { DeleteIcon } from "./icons/DeleteIcon";
 import { EyeIcon } from "./icons/EyeIcon";
 import { deleteProject } from "@/app/api/data/projects";
+import { useTranslations } from 'next-intl' ;
 
 
 // interface IColumn {
@@ -25,21 +28,31 @@ import { deleteProject } from "@/app/api/data/projects";
 //     {name: "ID", uid: "id", allowSorting:true}
 // ]
 // columns = columns + [
-    let columns = [
-    {name: "NAME", uid: "name", allowSorting:true},
-    {name: "DRIVE", uid: "drive", allowSorting:true},
-    {name: "SAMPLE", uid: "sample", allowSorting:true},
-    {name: "SCAN", uid: "scan", allowSorting:true},
-    {name: "CREATED AT", uid: "createdAt", allowSorting:true},
-    {name: "UPDATED AT", uid: "updatedAt", allowSorting:true},
-    {name: "QC", uid:"qc", allowSorting:true},
-    {name: "ACTIONS", uid: "actions", allowSorting:false},
+
+
+const getColumns = (t) => [
+    {name: t("NAME"), uid: "name", allowSorting:true},
+    {name: t("DRIVE"), uid: "drive", allowSorting:true},
+    {name: t("SAMPLE"), uid: "sample", allowSorting:true},
+    {name: t("SCAN"), uid: "scan", allowSorting:true},
+    {name: t("CREATEDAT"), uid: "createdAt", allowSorting:true},
+    {name: t("UPDATEDAT"), uid: "updatedAt", allowSorting:true},
+    {name: t("QC"), uid:"qc", allowSorting:true},
+    {name: t("ACTIONS"), uid: "actions", allowSorting:false},
   ];
 
 export function ProjectsTableNextUI(props) {
     const {projects=[]} = props
+    const t = useTranslations("ProjectsPage")
+    const columns = getColumns(t);
+
     // const router = useRouter();
     const stripped = true;
+
+    // Manage delete
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const [projectToDelete, setProjectToDelete] = useState(null);
+    const [confirmationName, setConfirmationName] = useState("");
 
     // console.log("ProjectsTable( projects= ",projects,")")
 
@@ -96,6 +109,35 @@ export function ProjectsTableNextUI(props) {
     //         router.push( `/projects/${projectId}/` )
     // }
 
+
+      const handleDeleteClick = (project) => {
+        setProjectToDelete(project);
+        setConfirmationName("");
+        onOpen();
+    };
+
+    const handleConfirmDelete = () => {
+        if (projectToDelete && confirmationName === projectToDelete.name) {
+            deleteProject(projectToDelete.id)
+                .then(() => {
+                    console.log("Project deleted successfully");
+                    // Perform any additional actions after successful deletion
+                    onOpenChange(false);
+                    setProjectToDelete(null);
+                    setConfirmationName("");
+                })
+                .catch(error => {
+                    console.error('Error deleting project:', error);
+                    // Handle the error appropriately
+                });
+        }
+    };
+
+    const handleModalClose = () => {
+        setProjectToDelete(null);
+        setConfirmationName("");
+        onOpenChange(false);
+    };
 
     const renderCell = React.useCallback((project, columnKey) => {
 
@@ -162,43 +204,43 @@ export function ProjectsTableNextUI(props) {
         case "actions":
             // console.log("build action: ", project)
 
-            const onPressDeleteProject = (id) => {
-                console.debug("onPressDeleteProject: ", id)
+            // const onPressDeleteProject = (id) => {
+            //     console.debug("onPressDeleteProject: ", id)
 
-                deleteProject(id)
-                .then(()=>{
-                    console.log("Project deleted successfully");
-                    // Perform any additional actions after successful deletion
-                })
-                .catch(error => {
-                    console.error('Error deleting project:', error);
-                    // Handle the error appropriately
-                });
+            //     deleteProject(id)
+            //     .then(()=>{
+            //         console.log("Project deleted successfully");
+            //         // Perform any additional actions after successful deletion
+            //     })
+            //     .catch(error => {
+            //         console.error('Error deleting project:', error);
+            //         // Handle the error appropriately
+            //     });
             
 
-                // console.log("deleteProject: ", id)
-                // const url = `/api/projects/${id}`;
-                // const options = {
-                //     method: 'DELETE',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                // };
-                // fetch(url, options)
-                //     .then(response => {
-                //         if (response.ok) {
-                //             console.log('Project deleted successfully');
-                //             // Perform any additional actions after successful deletion
-                //         } else {
-                //             console.error('Failed to delete project');
-                //             // Handle error cases
-                //         }
-                //     })
-                //     .catch(error => {
-                //         console.error('Error deleting project:', error);
-                //         // Handle error cases
-                //     });
-            }
+            //     // console.log("deleteProject: ", id)
+            //     // const url = `/api/projects/${id}`;
+            //     // const options = {
+            //     //     method: 'DELETE',
+            //     //     headers: {
+            //     //         'Content-Type': 'application/json',
+            //     //     },
+            //     // };
+            //     // fetch(url, options)
+            //     //     .then(response => {
+            //     //         if (response.ok) {
+            //     //             console.log('Project deleted successfully');
+            //     //             // Perform any additional actions after successful deletion
+            //     //         } else {
+            //     //             console.error('Failed to delete project');
+            //     //             // Handle error cases
+            //     //         }
+            //     //     })
+            //     //     .catch(error => {
+            //     //         console.error('Error deleting project:', error);
+            //     //         // Handle error cases
+            //     //     });
+            // }
 
             return (
             <div className="relative flex items-center gap-2" key={key(project.id,'action')}>
@@ -237,7 +279,9 @@ export function ProjectsTableNextUI(props) {
                     color="primary" 
                     // as={Link} 
                     // href={`/projects/${project.id}/delete`}
-                    onPress={() => {onPressDeleteProject(project.id)}}
+                    // onPress={() => {onPressDeleteProject(project.id)}}
+                    onPress={() => handleDeleteClick(project)}
+
                 >
               <span className="text-lg text-danger cursor-pointer active:opacity-50">
               <DeleteIcon/>
@@ -254,6 +298,7 @@ export function ProjectsTableNextUI(props) {
     }, []);
 
     return (
+        <>
         <Table 
                 sortDescriptor={list.sortDescriptor}
                 onSortChange={list.sort} 
@@ -275,5 +320,60 @@ export function ProjectsTableNextUI(props) {
                 )}
             </TableBody>
         </Table>
+
+                  <Modal 
+                isOpen={isOpen} 
+                onOpenChange={onOpenChange}
+                placement="center"
+                backdrop="blur"
+            >
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">
+                                {t("ConfirmtDeletion")}
+                            </ModalHeader>
+                            <ModalBody>
+                                <p className="text-sm text-gray-600 mb-4">
+                                    {t("Message")}
+                                </p>
+                                <p className="text-sm font-medium mb-2">
+                                    {/* Please type <span className="font-bold text-danger">"{projectToDelete?.name}"</span> to confirm: */}
+                                    {/* {t("Label",{projectName:projectToDelete?.name})} */}
+                                    {t.rich('Label', {
+                                        projectName: projectToDelete?.name,   
+                                        danger: (chunks) => <strong className="font-bold text-danger">{chunks}</strong>
+                                    })
+                                    }
+                                </p>
+                                <Input
+                                    placeholder="Enter project name"
+                                    value={confirmationName}
+                                    onChange={(e) => setConfirmationName(e.target.value)}
+                                    variant="bordered"
+                                    color={confirmationName === projectToDelete?.name ? "success" : "default"}
+                                />
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button 
+                                    color="default" 
+                                    variant="light" 
+                                    onPress={handleModalClose}
+                                >
+                                    {t("Cancel")}
+                                </Button>
+                                <Button 
+                                    color="danger" 
+                                    onPress={handleConfirmDelete}
+                                    isDisabled={confirmationName !== projectToDelete?.name}
+                                >
+                                    {t("Submit")}
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+        </>
     );
 }

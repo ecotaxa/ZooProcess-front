@@ -1,3 +1,8 @@
+const createNextIntlPlugin = require('next-intl/plugin');
+
+const withNextIntl = createNextIntlPlugin('./i18n.ts');
+
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     // https://nextjs.org/docs/pages/api-reference/next-config-js/reactStrictMode
@@ -16,9 +21,29 @@ const nextConfig = {
     // cache options
     // cacheHandler: require.resolve('./cache-handler.js'),
     // cacheMaxMemorySize: 0, // disable default in-memory caching
+
+
+    async redirects() {
+      return [
+        {
+          source: '/:locale/projects/:projectid/samples/:sampleid/metadata',
+          destination: '/:locale/projects/:projectid/samples/:sampleid?state=metadata',
+          permanent: false,
+        },
+        {
+          source: '/:locale/projects/:projectid/samples/:sampleid/subsamples',
+          destination: '/:locale/projects/:projectid/samples/:sampleid?state=subsamples',
+          permanent: false,
+        },
+      ]
+    }
+
 }
 
-module.exports = nextConfig
+// module.exports = nextConfig
+module.exports = withNextIntl(nextConfig);
+
+
 
 // module.exports = {
 //     experimental: {
