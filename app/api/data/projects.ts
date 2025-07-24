@@ -1,6 +1,6 @@
-import { Project } from '../network/interfaces';
+import { Project } from '../network/interfaces.ts';
 
-import * as api from '@/app/api/network/zooprocess-api';
+import * as api from '@/app/api/network/zooprocess-api.ts';
 
 export async function getProject(projectid: string): Promise<Project> {
   try {

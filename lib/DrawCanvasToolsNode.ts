@@ -1,7 +1,7 @@
 import pako from 'pako';
 import fs from 'fs/promises';
 
-import { readMatrixFromBinary, readMatrixFromCompressedBinary } from '@/components/DrawCanvasTools';
+import { readMatrixFromBinary, readMatrixFromCompressedBinary } from '@/components/DrawCanvasTools.tsx';
 
 export async function readMatrixFromUniversalFile(filePath: string): Promise<number[][]> {
   try {

@@ -54,9 +54,9 @@
 
 // export default AsyncDriveComponent
 
-import { Suspense, use, useEffect, useState } from 'react';
-import AsyncDriveData from '../app/api/data/AsyncDriveData';
-import { Drive } from '../app/api/network/interfaces';
+import { Suspense, useEffect, useState } from 'react';
+import AsyncDriveData from '../app/api/data/AsyncDriveData.tsx';
+import { Drive } from '@/network/interfaces.ts';
 
 const AsyncDriveContent = () => {
   const drives = AsyncDriveData();

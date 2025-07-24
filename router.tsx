@@ -8,6 +8,7 @@ import LocaleLayout from './app/[locale]/layout.tsx';
 import HomePage from './app/[locale]/page.tsx';
 import LoginPage from './app/[locale]/auth/login/page.tsx';
 import DocsPage from './app/[locale]/docs/page.tsx';
+import Custom404 from './app/pages/404.tsx';
 
 // Protected routes
 import ProjectsPage from './app/[locale]/(protected)/projects/page.tsx';
@@ -28,10 +29,6 @@ const ProtectedRoute = () => {
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/en" replace />,
-  },
-  {
-    path: '/:locale',
     element: (
       // <AuthProvider>
       <LocaleLayout>
@@ -120,7 +117,7 @@ const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <div>Not Found</div>, // Replace with actual 404 component
+    element: <Custom404 />, // Using the Custom404 component for not found routes
   },
 ]);
 

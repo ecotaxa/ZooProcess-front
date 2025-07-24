@@ -10,11 +10,9 @@ import {
   Link,
 } from '@heroui/react';
 
-import { formatDate, formatTime } from '@/app/api/formatDateAndTime.js';
 import { key } from '@/app/api/key.js';
 import { useAsyncList } from '@react-stately/data';
 
-import { Debug } from '@/components/Debug';
 import { EyeIcon } from './auth/EyeIcon.tsx';
 import { useTranslation } from 'react-i18next';
 

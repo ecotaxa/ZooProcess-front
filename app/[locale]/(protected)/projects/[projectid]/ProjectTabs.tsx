@@ -1,13 +1,13 @@
 import { Tab, Tabs } from '@heroui/react';
-import Metadata from './@metadata/page';
-import Stats from './@stats/page';
-import QC from './@qc/page';
-import Scans from './@scans/page';
-import BackgroundScans from './@background/page';
-import SamplesTab from './@samples/page';
-import { Debug } from '@/components/Debug';
-import { useHash } from '@/lib/useHash';
-import { Project } from '@/app/api/network/interfaces';
+import Metadata from './@metadata/page.tsx';
+import Stats from './@stats/page.tsx';
+import QC from './@qc/page.tsx';
+import Scans from './@scans/page.tsx';
+import BackgroundScans from './@background/page.tsx';
+import SamplesTab from './@samples/page.tsx';
+import { Debug } from '@/components/Debug.tsx';
+import { useHash } from '@/lib/useHash.js';
+import { Project } from '@/app/api/network/interfaces.ts';
 import { useTranslation } from 'react-i18next';
 
 export function ProjectTabs({ project, params }: { project: Project; params: any }) {

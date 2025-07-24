@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardBody, Spinner } from '@heroui/react';
-import { readMatrixFromCompressedBinary, mergeImageWithMatrix } from '@/components/DrawCanvasTools';
+import { readMatrixFromCompressedBinary, mergeImageWithMatrix } from '@/components/DrawCanvasTools.tsx';
 
 type VignetteLineProps = {
   data: {

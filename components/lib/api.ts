@@ -2,21 +2,21 @@ import path from 'path';
 import fs from 'fs/promises';
 import fsSync from 'fs'; // pour le check existsSync
 import pLimit from 'p-limit';
-import { API_SERVER } from '@/constants';
+import { API_SERVER } from '@/constants.ts';
 
 import {
   readMatrixFromCompressedBinary,
   // readMatrixFromCompressedFile,
   // createZeroMatrix,
   // writeCompressedMatrix
-} from '@/components/DrawCanvasTools';
+} from '@/components/DrawCanvasTools.tsx';
 // import pako from 'pako';
 import { createCanvas, loadImage } from 'canvas';
 import {
   createZeroMatrix,
   readMatrixFromCompressedFile,
   writeCompressedMatrix,
-} from '@/lib/DrawCanvasToolsNode';
+} from '@/lib/DrawCanvasToolsNode.ts';
 
 export interface VignetteData {
   scan: string;

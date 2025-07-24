@@ -1,6 +1,6 @@
 // import useSWR from 'swr'
 
-import * as api from '@/network/zooprocess-api';
+import * as api from '@/network/zooprocess-api.ts';
 
 // declare maxRetry = 1
 

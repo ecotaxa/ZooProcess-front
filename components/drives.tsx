@@ -1,7 +1,7 @@
 import { Select, SelectItem } from '@heroui/react';
 import { useEffect, useState } from 'react';
-import AsyncDriveData from '@/app/api/data/AsyncDriveData';
-import { Drive } from '@/app/api/network/interfaces';
+import AsyncDriveData from '@/app/api/data/AsyncDriveData.tsx';
+import { Drive } from '@/app/api/network/interfaces.ts';
 
 interface Item {
   id: string;

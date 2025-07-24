@@ -1,18 +1,16 @@
-import { useState, useCallback, useEffect } from 'react';
-import VignetItem from '@/components/VignetItem';
-import { VignetteData } from '@/components/lib/api';
-// import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import VignetItem from '@/components/VignetItem.tsx';
+import { VignetteData } from '@/components/lib/api.ts';
 import { VariableSizeList as List, ListChildComponentProps } from 'react-window';
 
-import { useRef } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@heroui/react';
 
 import {
   readMatrixFromCompressedBinary,
   saveMatrixAsCompressedBinary,
-} from '@/components/DrawCanvasTools';
-import DrawCanvas from '@/components/DrawCanvas';
-import { saveMaskViaApi } from '@/lib/save-mask';
+} from '@/components/DrawCanvasTools.tsx';
+import DrawCanvas from '@/components/DrawCanvas.tsx';
+import { saveMaskViaApi } from '@/lib/save-mask.ts';
 // import { X } from 'framer-motion/dist/types.d-CtuPurYT';
 
 // const VignetItem = dynamic(() => import('./VignetItem'), { ssr: false })

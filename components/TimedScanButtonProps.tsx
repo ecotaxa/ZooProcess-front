@@ -45,7 +45,7 @@ export const TimedScanButton: React.FC<TimedScanButtonProps> = ({
   return (
     <>
       <Button
-        isDisabled={timeLeft === 0 ? false : true}
+        isDisabled={timeLeft !== 0}
         onPress={timeLeft === 0 ? onScan : () => {}}
         color="primary"
       >

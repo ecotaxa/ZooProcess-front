@@ -11,7 +11,7 @@
 //     return addScanAPI(image)
 // }
 
-import { addScan as apiAddScan } from '@/app/api/network/scan';
+import { addScan as apiAddScan } from '@/app/api/network/scan.ts';
 
 export async function addScan(data: any) {
   try {
@@ -35,8 +35,8 @@ export async function addScan(data: any) {
       typeof error === 'string'
         ? error
         : JSON.stringify({
-            message: error.message || 'Failed to add scan',
-            details: error.details || null,
+            message: error.message ?? 'Failed to add scan',
+            details: error.details ?? null,
           })
     );
   }
