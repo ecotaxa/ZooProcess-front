@@ -12,10 +12,7 @@ export const parseForm = async (
 ): Promise<{ fields: formidable.Fields; files: formidable.Files }> => {
   return await new Promise(async (resolve, reject) => {
     const uploadFolder = UPLOAD_FOLDER;
-    const uploadDir = join(
-      ROOT_DIR,
-      `${uploadFolder}/${dateFn.format(Date.now(), 'dd-MM-Y')}`
-    );
+    const uploadDir = join(ROOT_DIR, `${uploadFolder}/${dateFn.format(Date.now(), 'dd-MM-Y')}`);
 
     try {
       await stat(uploadDir);

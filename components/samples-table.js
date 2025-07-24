@@ -15,6 +15,7 @@ import { key } from '@/app/api/key';
 
 import { Debug } from '@/components/Debug';
 import { useAsyncList } from 'react-stately';
+import { useTranslation } from 'react-i18next';
 
 // interface IColumn {
 //   name: string,
@@ -39,7 +40,7 @@ const getColumns = t => [
 export function SamplesTableNextUI(props) {
   const { projectId, samples = [] } = props;
   const stripped = true;
-  const t = useTranslations();
+  const { t } = useTranslation();
   const columns = getColumns(t);
 
   console.log('SamplesTable projectId= ', projectId);

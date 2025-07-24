@@ -4,11 +4,7 @@ import { API_SERVER, REAL_FOLDER, UPLOAD_FOLDER } from '@/constants';
 // import { fileExists } from '@/app/api/file-exists';
 
 // const realFolder =  process.env.VITE_REAL_FOLDER // process.env.REAL_FOLDER || '/Users/sebastiengalvagno/Work/test/nextui/ZooprocessFront/public/' ///uploads'
-const realFolder = REAL_FOLDER
-  ? REAL_FOLDER.endsWith('/')
-    ? REAL_FOLDER
-    : REAL_FOLDER + '/'
-  : '';
+const realFolder = REAL_FOLDER ? (REAL_FOLDER.endsWith('/') ? REAL_FOLDER : REAL_FOLDER + '/') : '';
 
 // function pathToRealStorage(path:string) : string {
 //     console.log( "pathToRealStorage() | path :", path)
@@ -111,10 +107,7 @@ function splitPath(path: string) {
  * @returns
  */
 // async
-function pathToSessionStorage(
-  path: string,
-  sessionFolder = UPLOAD_FOLDER
-): string {
+function pathToSessionStorage(path: string, sessionFolder = UPLOAD_FOLDER): string {
   if (!path) return '';
 
   console.log('pathToSessionStorage() | path :', path);
@@ -139,10 +132,7 @@ function pathToSessionStorage(
   return realFolder + path;
 }
 
-function pathToSessionStorage_test(
-  path: string,
-  sessionFolder = UPLOAD_FOLDER
-): string {
+function pathToSessionStorage_test(path: string, sessionFolder = UPLOAD_FOLDER): string {
   if (!path) return null;
 
   console.log('pathToSessionStorage() | path:', path);

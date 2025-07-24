@@ -11,11 +11,12 @@ import {
 } from '@heroui/react';
 
 import { formatDate, formatTime } from '@/app/api/formatDateAndTime.js';
-import { key } from '@/app/api/key';
+import { key } from '@/app/api/key.js';
 import { useAsyncList } from '@react-stately/data';
 
 import { Debug } from '@/components/Debug';
-import { EyeIcon } from './auth/EyeIcon';
+import { EyeIcon } from './auth/EyeIcon.tsx';
+import { useTranslation } from 'react-i18next';
 
 interface IColumn {
   name: string;
@@ -46,7 +47,7 @@ const getColumns = (t: any): Array<IColumn> => [
 export function ScanTable(props: { projectId: String; scans: any }) {
   const { projectId, scans = [] } = props;
   const stripped = true;
-  const t = useTranslations();
+  const t = useTranslation();
   const columns = getColumns(t);
 
   console.log('ScanTable projectId= ', projectId);

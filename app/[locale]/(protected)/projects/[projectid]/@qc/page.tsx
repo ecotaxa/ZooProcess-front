@@ -1,5 +1,6 @@
 import { Card, CardBody, CardHeader, Spacer } from '@heroui/react';
 import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface pageProps {
   // params: {
@@ -9,7 +10,7 @@ interface pageProps {
 }
 
 const QC: FC<pageProps> = params => {
-  const t = useTranslations('ProjectPage_QC');
+  const { t } = useTranslation('ProjectPage_QC');
 
   const projectId = params.projectid;
   console.log('Metadata params: ', params);

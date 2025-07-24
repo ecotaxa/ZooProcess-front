@@ -6,9 +6,10 @@ import { Debug } from '@/components/Debug';
 import { setConstantValue } from 'typescript';
 
 import { keyExists } from '@/lib/i18nUtils';
+import { useTranslation } from 'react-i18next';
 export function MyTextField(props) {
   const [value, setValue] = React.useState(props.value);
-  const t = useTranslations('Form');
+  const { t } = useTranslation('Form');
 
   var handleChange = value => {
     console.log('handleChange: ', value);

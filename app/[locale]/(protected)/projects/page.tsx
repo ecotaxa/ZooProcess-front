@@ -1,20 +1,9 @@
-// import { useState, useEffect } from 'react'
-import { MySpinner } from '@/components/mySpinner';
-import { ErrorComponent } from '@/components/ErrorComponent';
-import { ProjectsTableNextUI as ProjectsTable } from '@/components/projects-table';
+import { MySpinner } from '@/components/mySpinner.tsx';
+import { ProjectsTableNextUI as ProjectsTable } from '@/components/projects-table.jsx';
 import { Button, Card, CardBody, CardHeader, Link, Spacer } from '@heroui/react';
-import * as api from '@/app/api/network/zooprocess-api';
-// import { Project } from '@/app/api/network/zooprocess-api'
-import { Project, Projects } from '@/app/api/network/interfaces';
-
-interface ServerSideProps {
-  initialProjects: Projects;
-}
-
-// export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
-//   const projects = await api.getProjects()//'/projects/')
-//   return { props: { initialProjects: projects } };
-// }
+import * as api from '@/app/api/network/zooprocess-api.ts';
+import { Project, Projects } from '@/app/api/network/interfaces.ts';
+import { useTranslation } from 'react-i18next';
 
 async function getProjects(): Promise<Projects> {
   try {
@@ -26,12 +15,10 @@ async function getProjects(): Promise<Projects> {
   }
 }
 
-// const ProjectsPage: NextPage<ServerSideProps> = ({ initialProjects }) => {
-//   const [projects, setProjects] = useState<api.Projects>(initialProjects)
 async function ProjectsPage() {
   const initialProjects = await getProjects();
 
-  const t = await getTranslations('ProjectsPage');
+  const { t } = useTranslation('ProjectsPage');
 
   const formatData = (data: Project[]) => {
     return data.map((project: Project) => {

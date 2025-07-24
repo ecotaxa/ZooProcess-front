@@ -6,6 +6,7 @@ import { Samples } from '@/app/api/network/interfaces';
 import { getSamples } from '@/app/api/data/samples';
 
 import { Debug } from '@/components/Debug';
+import { useTranslation } from 'react-i18next';
 
 interface pageProps {
   projectid: string;
@@ -18,7 +19,7 @@ const SamplesTab: FC<pageProps> = ({ projectid }) => {
   const projectId = projectid;
 
   const [sampleList, setSampleList] = useState<any[]>([]);
-  const t = useTranslations('ProjectPage_Samples');
+  const { t } = useTranslation('ProjectPage_Samples');
 
   useEffect(() => {
     const fetchSamples = async () => {

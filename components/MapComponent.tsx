@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface MapComponentProps {
   start?: [number, number];
   end?: [number, number];
@@ -23,7 +25,7 @@ const MapComponentClient = dynamic(() => import('./MapComponentClient'), {
 // };
 // Le wrapper avec traductions (même nom d'export)
 const MapComponent = (props: any) => {
-  const t = useTranslations('MapComponent');
+  const { t } = useTranslation('MapComponent');
 
   const DynamicMap = dynamic(() => import('./MapComponentClient'), {
     ssr: false,

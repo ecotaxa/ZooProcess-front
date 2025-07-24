@@ -35,7 +35,7 @@ import { useTranslation } from 'react-i18next';
 
 function MyComponent() {
   const { t } = useTranslation();
-  
+
   return (
     <div>
       <h1>{t('common.title')}</h1>
@@ -54,11 +54,11 @@ import { useTranslation } from 'react-i18next';
 
 function LanguageSwitcher() {
   const { i18n } = useTranslation();
-  
-  const changeLanguage = (lng) => {
+
+  const changeLanguage = lng => {
     i18n.changeLanguage(lng);
   };
-  
+
   return (
     <div>
       <button onClick={() => changeLanguage('en')}>English</button>
@@ -78,19 +78,11 @@ import { keyExists } from '@/lib/i18nUtils';
 
 function MyComponent() {
   const { t } = useTranslation();
-  
+
   // Check if a key exists before using it
   const hasKey = keyExists('some.key', t);
-  
-  return (
-    <div>
-      {hasKey ? (
-        <p>{t('some.key')}</p>
-      ) : (
-        <p>Key not found</p>
-      )}
-    </div>
-  );
+
+  return <div>{hasKey ? <p>{t('some.key')}</p> : <p>Key not found</p>}</div>;
 }
 ```
 
@@ -106,7 +98,7 @@ function MyPage() {
     <div>
       {/* Basic usage */}
       <TranslationExample />
-      
+
       {/* With a specific namespace */}
       <TranslationExample namespace="Login" />
     </div>
@@ -124,6 +116,7 @@ To add new translations:
 For example, to add a new "welcome" message:
 
 1. Add to `messages/en.json`:
+
    ```json
    {
      "common": {
@@ -133,6 +126,7 @@ For example, to add a new "welcome" message:
    ```
 
 2. Add to `messages/fr.json`:
+
    ```json
    {
      "common": {

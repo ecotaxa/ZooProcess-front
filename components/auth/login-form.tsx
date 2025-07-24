@@ -16,27 +16,27 @@ import {
 } from '@/components/ui/form';
 import { CardWrapper } from '@/components/auth/card-wrapper';
 // import { Button } from "@/components/ui/button";
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
-import { login } from '@/actions/login';
+import { FormError } from '@/components/form-error.tsx';
+import { FormSuccess } from '@/components/form-success.tsx';
+import { login } from '@/actions/login.ts';
 import { Button } from '@heroui/button';
 import { Link } from '@heroui/link';
 
-import { EyeFilledIcon } from './EyeFilledIcon';
-import { EyeSlashFilledIcon } from './EyeSlashFilledIcon';
+import { EyeFilledIcon } from './EyeFilledIcon.jsx';
+import { EyeSlashFilledIcon } from './EyeSlashFilledIcon.jsx';
 
-import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 export const LoginForm = () => {
-  const t = useTranslations('Login');
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl');
-  const urlError =
-    searchParams.get('error') === 'OAuthAccountNotLinked'
-      ? t('AlreadyExist')
-      : // ? "Email already in use with different provider!"
-        '';
-
+  const { t } = useTranslation('Login');
+  // const searchParams = useSearchParams();
+  // const callbackUrl = searchParams.get('callbackUrl');
+  // const urlError =
+  //   searchParams.get('error') === 'OAuthAccountNotLinked'
+  //     ? t('AlreadyExist')
+  //     : // ? "Email already in use with different provider!"
+  //       '';
+  const urlError = '???ERROR???';
   // const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
@@ -155,7 +155,7 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          <FormError message={error || urlError} />
+          <FormError message={error ?? urlError} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
             {t('Login')}

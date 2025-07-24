@@ -8,9 +8,10 @@ import SamplesTab from './@samples/page';
 import { Debug } from '@/components/Debug';
 import { useHash } from '@/lib/useHash';
 import { Project } from '@/app/api/network/interfaces';
+import { useTranslation } from 'react-i18next';
 
 export function ProjectTabs({ project, params }: { project: Project; params: any }) {
-  const t = useTranslations();
+  const { t } = useTranslation();
 
   const isQcTabDisabled = (p: Project): string[] => {
     if (p.samples && p.samples.length > 0) {

@@ -1,9 +1,3 @@
-// "use server";
-
-// import { authConfig } from '@/auth.config';
-
-import { locales } from './i18n';
-
 import { DEFAULT_LOGIN_REDIRECT, apiAuthPrefix, authRoutes, publicRoutes } from '@/routes';
 import { auth } from './auth';
 

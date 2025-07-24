@@ -12,6 +12,7 @@ import {
 } from '@/app/api/network/interfaces';
 import { MyImage } from '@/components/myImage';
 import { Debug } from '@/components/Debug';
+import { useTranslation } from 'react-i18next';
 
 const Process = (params: {
   scan?: string;
@@ -32,7 +33,7 @@ const Process = (params: {
   const [taskFinished, setTaskFinished] = useState<boolean>(false);
   const [hasFailed, setHasFailed] = useState<boolean>(false);
 
-  const t = useTranslations('SubSample_Process');
+  const { t } = useTranslation('SubSample_Process');
 
   const fetchTask = async (taskId: string) => {
     const response = await fetch(`/api/tasks/${taskId}`);

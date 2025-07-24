@@ -21,7 +21,7 @@ export const UPLOAD_FOLDER = env.VITE_UPLOAD_FOLDER || '/uploads';
 export const ROOT_DIR = env.ROOT_DIR;
 
 // Uploads folder
-export const UPLOADS_FOLDER = env.UPLOADS_FOLDER ;
+export const UPLOADS_FOLDER = env.UPLOADS_FOLDER;
 
 // Authentication
 export const GOOGLE_ID = env.GOOGLE_ID || '';

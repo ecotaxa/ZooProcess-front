@@ -17,8 +17,7 @@ export async function POST(req: NextRequest) {
     // 1. Sauve le .gz
     if (folder.startsWith('/api/backend')) {
       // Just send the updated mask and let backend deal with it
-      const mask_post_url =
-        API_TOOLS_SERVER + '/vignette_mask/' + gzFilename;
+      const mask_post_url = API_TOOLS_SERVER + '/vignette_mask/' + gzFilename;
       console.log('uploading mask_post_url', mask_post_url);
       await sendBufferToServer(mask_post_url, 'application/gzip', buffer);
       return NextResponse.json({ ok: true });

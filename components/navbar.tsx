@@ -17,11 +17,7 @@ import { siteConfig } from '@/config/site.ts';
 import clsx from 'clsx';
 
 import { ThemeSwitch } from '@/components/theme-switch.tsx';
-import {
-  TwitterIcon,
-  SearchIcon,
-  Logo,
-} from '@/components/icons.tsx';
+import { TwitterIcon, SearchIcon, Logo } from '@/components/icons.tsx';
 
 export const Navbar = () => {
   const searchInput = (

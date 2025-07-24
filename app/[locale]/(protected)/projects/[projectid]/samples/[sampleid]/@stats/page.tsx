@@ -7,6 +7,7 @@ import { BoxMessage } from '@/components/BoxMessage';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
 import { Debug } from '@/components/Debug';
+import { useTranslation } from 'react-i18next';
 
 interface pageProps {
   projectid: string;
@@ -15,7 +16,7 @@ interface pageProps {
 
 const Stats: FC<pageProps> = params => {
   const { sample } = params;
-  const t = useTranslations('SamplePageStats');
+  const { t } = useTranslation('SamplePageStats');
 
   console.log('Metadata params: ', params);
   console.log('Metadata params sample: ', params.sample);

@@ -7,9 +7,6 @@ import enMessages from '../messages/en.json';
 import frMessages from '../messages/fr.json';
 import xxMessages from '../messages/xx.json';
 
-// Define available locales
-export const locales = ['en', 'fr', 'xx']; // TODO in production remove xx
-
 i18n
   // Detect user language
   .use(LanguageDetector)
@@ -18,30 +15,22 @@ i18n
   // Initialize i18next
   .init({
     resources: {
-      en: {
-        translation: enMessages
-      },
-      fr: {
-        translation: frMessages
-      },
-      xx: {
-        translation: xxMessages
-      }
+      en: enMessages,
+      fr: frMessages,
+      xx: xxMessages,
     },
     fallbackLng: 'en',
     debug: process.env.NODE_ENV === 'development',
-    
+
     interpolation: {
       escapeValue: false, // React already escapes values
     },
-    
+
     // Allow keys to be in format 'namespace:key'
     nsSeparator: ':',
-    
+
     // React settings
     react: {
       useSuspense: true,
     },
   });
-
-export default i18n;

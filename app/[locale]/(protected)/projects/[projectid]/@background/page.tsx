@@ -5,6 +5,7 @@ import { FC, useEffect, useState } from 'react';
 import { getProjectBackgrounds } from '@/app/api/data/background';
 
 import { Debug } from '@/components/Debug';
+import { useTranslation } from 'react-i18next';
 
 interface pageProps {
   projectid: string;
@@ -14,7 +15,7 @@ const BackgroundScans: FC<pageProps> = ({ projectid }) => {
   console.log('Metadata params projectid: ', projectid);
 
   const [backgroundList, setBackgroundList] = useState<any[]>([]);
-  const t = useTranslations('ProjectPage_Backgrounds');
+  const { t } = useTranslation('ProjectPage_Backgrounds');
 
   useEffect(() => {
     const fetchBackgrounds = async () => {

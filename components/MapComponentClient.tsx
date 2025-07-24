@@ -11,6 +11,7 @@ import 'proj4leaflet';
 import AntarcticMap from './AntarcticMap';
 import Planisfer from './Planisfer';
 import ArcticMap from './ArcticMap';
+import { useTranslation } from 'react-i18next';
 
 interface MapComponentProps {
   start?: [number, number];
@@ -22,7 +23,7 @@ const MapComponentClient: React.FC<MapComponentProps> = ({
   end,
   onChange: onCoordsChange,
 }) => {
-  const t = useTranslations('MapComponentClient');
+  const { t } = useTranslation('MapComponentClient');
 
   console.log('MapComponent start: ', start);
   console.log('MapComponent end: ', end);

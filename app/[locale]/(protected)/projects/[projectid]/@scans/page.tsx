@@ -5,13 +5,14 @@ import { Card, CardBody, CardHeader, Link, Spacer } from '@heroui/react';
 import { FC, useEffect, useState } from 'react';
 
 import { Debug } from '@/components/Debug';
+import { useTranslation } from 'react-i18next';
 
 interface pageProps {
   projectid: string;
 }
 
 const Scans: FC<pageProps> = ({ projectid }) => {
-  const t = useTranslations('ProjectPage_Scans');
+  const { t } = useTranslation('ProjectPage_Scans');
 
   console.log('Metadata params projectid: ', projectid);
 

@@ -5,6 +5,7 @@ import React, { FC } from 'react';
 import { BoxMessage } from '@/components/BoxMessage';
 import { Debug } from '@/components/Debug';
 import { Project } from '@/app/api/network/interfaces';
+import { useTranslation } from 'react-i18next';
 
 // interface IBoxMessage {
 //     children : any // React.ReactNode //React.RefAttributes<SVGSVGElement>
@@ -19,7 +20,7 @@ interface pageProps {
 
 const Stats: FC<pageProps> = params => {
   console.log('Metadata params: ', params);
-  const t = useTranslations('ProjectPageStats');
+  const { t } = useTranslation('ProjectPageStats');
 
   const projectEmpty = (p: Project) => {
     if (p.samples && p.samples.length != 0) {

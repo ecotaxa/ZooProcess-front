@@ -23,6 +23,7 @@ import { Debug } from '@/components/Debug';
 import { useAsyncList } from 'react-stately';
 import { EyeIcon } from './auth/EyeIcon';
 import { MyImage } from '@/components/myImage';
+import { useTranslation } from 'react-i18next';
 
 interface IColumn {
   name: string;
@@ -46,7 +47,7 @@ const getColumns = (t: any) => [
 export function BackgroundTable(props: { projectId: String; backgrounds: any }) {
   const { projectId, backgrounds = [] } = props;
   const stripped = true;
-  const t = useTranslations();
+  const { t } = useTranslation();
   const columns = getColumns(t);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();

@@ -34,9 +34,9 @@ const router = createBrowserRouter([
     path: '/:locale',
     element: (
       // <AuthProvider>
-        <LocaleLayout>
-          <Outlet />
-        </LocaleLayout>
+      <LocaleLayout>
+        <Outlet />
+      </LocaleLayout>
       // </AuthProvider>
     ),
     children: [

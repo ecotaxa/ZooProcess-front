@@ -51,7 +51,7 @@ export async function login(email: string, password: string) {
     .then(async token => {
       try {
         console.log('token: ', token);
-        
+
         const decoded = jose.decodeJwt(token);
         console.log('token decoded: ', decoded);
 

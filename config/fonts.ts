@@ -10,4 +10,4 @@
 //   variable: '--font-mono',
 // });
 
-export const fontSans = {variable:'Inter'};
+export const fontSans = { variable: 'Inter' };
