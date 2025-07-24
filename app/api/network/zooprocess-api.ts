@@ -2,7 +2,7 @@
 
 import axiosInstance from './axiosInstance.ts';
 import * as I from './interfaces.ts';
-import { API_SERVER } from '@/constants';
+import { API_SERVER } from '@/constants.ts';
 
 export async function getProjects(): Promise<I.Projects> {
   console.debug('getProjects');
@@ -244,7 +244,7 @@ export async function login(data: Login) {
     })
     .catch(function (error) {
       console.log(`Login by ${data.email} with error: ${error}`);
-      throw new AuthError({ errorOptions: { type: 'CredentialsSignin' } });
+      // throw new AuthError({ errorOptions: { type: 'CredentialsSignin' } });
     });
 }
 

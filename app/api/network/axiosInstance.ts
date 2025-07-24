@@ -3,63 +3,13 @@ import axios, { AxiosHeaderValue, AxiosInstance, CreateAxiosDefaults } from 'axi
 import { setupCache } from 'axios-cache-interceptor';
 import { API_SERVER } from '@/constants.ts';
 
-const axiosInstancev = axios.create({
-  baseURL: API_SERVER,
-  timeout: 5000,
-});
-
-const axiosInstanceSimple = async ({
-  useAuth = true,
-  token = undefined,
-  params = {},
-}: {
-  useAuth?: boolean;
-  token?: string | undefined;
-  params?: any;
-}): Promise<AxiosInstance> => {
-  let _params: CreateAxiosDefaults<any> = {
-    baseURL: API_SERVER,
-    timeout: 5000,
-  };
-
-  return auth()
-    .then(session => {
-      let token = undefined;
-      if (session) {
-        token = session.user.token;
-      }
-
-      if (token) {
-        const header: AxiosHeaderValue = 'bearer ' + token;
-        const paramsUpdated = {
-          ..._params,
-          headers: {
-            Authorization: header,
-          },
-        };
-
-        let instance = axios.create(paramsUpdated);
-
-        const axiosInst = setupCache(instance);
-
-        return axiosInst;
-      } else {
-        throw new Error('No token');
-      }
-    })
-    .catch(error => {
-      console.error('axiosInstance - error: ', error);
-      throw error;
-    });
-};
-
 const axiosInstance = async ({
   useAuth = true,
   token = undefined,
   params = {},
 }: {
   useAuth?: boolean;
-  token?: string | undefined;
+  token?: string;
   params?: any;
 }): Promise<AxiosInstance> => {
   console.log('axiosInstance()');
@@ -100,66 +50,66 @@ const axiosInstance = async ({
     return axiosInst;
   }
 
-  const paramsUpdated = await auth()
-    .then(session => {
-      if (!session?.expires) {
-        throw 'Bad Session';
-      }
+  // const paramsUpdated = await auth()
+  //   .then(session => {
+  //     if (!session?.expires) {
+  //       throw 'Bad Session';
+  //     }
+  //
+  //     const expirationDate = new Date(session.expires);
+  //     const now = new Date();
+  //
+  //     if (expirationDate.getTime() < now.getTime()) {
+  //       throw 'Session Expired';
+  //     }
+  //
+  //     let token = undefined;
+  //     if (session) {
+  //       token = session.user.token;
+  //     } else {
+  //       const headersList = headers();
+  //       token = headersList.get('authorization');
+  //     }
+  //
+  //     if (!token) {
+  //       token = globalThis.token;
+  //     }
+  //
+  //     if (token) {
+  //       console.log('axiosInstance - token: ', token);
+  //
+  //       const header: AxiosHeaderValue = 'bearer ' + token;
+  //       _params = {
+  //         ..._params,
+  //         headers: {
+  //           Authorization: header,
+  //         },
+  //       };
+  //     } else {
+  //       console.log('axiosInstance - No token');
+  //     }
+  //
+  //     return _params;
+  //   })
+  //   .catch((error: any) => {
+  //     console.error('axiosInstance - error: ', error);
+  //
+  //     token = globalThis.token;
+  //
+  //     if (token) {
+  //       const header: AxiosHeaderValue = 'bearer ' + token;
+  //       _params = {
+  //         ..._params,
+  //         headers: {
+  //           Authorization: header,
+  //         },
+  //       };
+  //     } else {
+  //       return _params;
+  //     }
+  //   });
 
-      const expirationDate = new Date(session.expires);
-      const now = new Date();
-
-      if (expirationDate.getTime() < now.getTime()) {
-        throw 'Session Expired';
-      }
-
-      let token = undefined;
-      if (session) {
-        token = session.user.token;
-      } else {
-        const headersList = headers();
-        token = headersList.get('authorization');
-      }
-
-      if (!token) {
-        token = globalThis.token;
-      }
-
-      if (token) {
-        console.log('axiosInstance - token: ', token);
-
-        const header: AxiosHeaderValue = 'bearer ' + token;
-        _params = {
-          ..._params,
-          headers: {
-            Authorization: header,
-          },
-        };
-      } else {
-        console.log('axiosInstance - No token');
-      }
-
-      return _params;
-    })
-    .catch(error => {
-      console.error('axiosInstance - error: ', error);
-
-      token = globalThis.token;
-
-      if (token) {
-        const header: AxiosHeaderValue = 'bearer ' + token;
-        _params = {
-          ..._params,
-          headers: {
-            Authorization: header,
-          },
-        };
-      } else {
-        return _params;
-      }
-    });
-
-  let instance = axios.create(paramsUpdated);
+  let instance = axios.create(_params);
 
   const axiosInst = setupCache(instance);
 

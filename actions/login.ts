@@ -1,39 +1,25 @@
 import * as z from 'zod';
 
-// import { signIn } from '@/auth.ts';
 import { LoginSchema } from '@/schemas/index.ts';
-import { DEFAULT_LOGIN_REDIRECT } from '@/routes.ts';
+import { login as API_login } from '@/app/api/network/zooprocess-api.ts';
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
-  // console.log(values)
 
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return { error: 'Invalid fields!' };
   }
-
-  // return { success: "Confirmation email sent!" };
-
+  
   const { email, password } = validatedFields.data;
 
   try {
-    await signIn('credentials', {
+    await API_login({
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
   } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return { error: 'Invalid credentials!' };
-        default:
-          console.error('Login Error', 'Something went wrong!', error);
-          return { error: 'Something went wrong!' };
-      }
-    }
-
+    console.error('Login Error', 'Something went wrong!', error);
     throw error;
   }
 };

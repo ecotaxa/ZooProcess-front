@@ -4,21 +4,42 @@ import { Button, Card, CardBody, CardHeader, Link, Spacer } from '@heroui/react'
 import * as api from '@/app/api/network/zooprocess-api.ts';
 import { Project, Projects } from '@/app/api/network/interfaces.ts';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
 
 async function getProjects(): Promise<Projects> {
   try {
-    const projects = await api.getProjects();
-    return { data: Array.isArray(projects) ? projects : [] };
+    try {
+      const projects = await api.getProjects();
+      return { data: Array.isArray(projects) ? projects : [] };
+    } catch (error) {
+      console.error('Error - getProjects()', error);
+      return { data: [] };
+    }
   } catch (error) {
     console.error('Error - getProjects()', error);
-    return { data: [] };
+    return Promise.resolve({ data: [] });
   }
 }
 
-async function ProjectsPage() {
-  const initialProjects = await getProjects();
-
+function ProjectsPage() {
+  const [projectList, setProjectList] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation('ProjectsPage');
+
+  useEffect(() => {
+    setIsLoading(true);
+    getProjects()
+      .then(projects => {
+        const formattedData = formatData(projects.data);
+        setProjectList(formattedData);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching projects:', error);
+        setProjectList([]);
+        setIsLoading(false);
+      });
+  }, []);
 
   const formatData = (data: Project[]) => {
     return data.map((project: Project) => {
@@ -43,9 +64,6 @@ async function ProjectsPage() {
     });
   };
 
-  // const [projectList, setProjectList] = useState(() => formatData(initialProjects.data))
-  const projectList = formatData(initialProjects.data);
-
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="text-center justify-center">
@@ -65,7 +83,7 @@ async function ProjectsPage() {
             </Button>
           </CardHeader>
           <CardBody>
-            {projectList.length > 0 ? <ProjectsTable projects={projectList} /> : <MySpinner />}
+            {isLoading ? <MySpinner /> : <ProjectsTable projects={projectList} />}
           </CardBody>
         </Card>
       </div>
