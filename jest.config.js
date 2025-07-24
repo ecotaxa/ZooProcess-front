@@ -5,7 +5,6 @@
 //   },
 // };
 
-
 // module.exports = {
 //   transform: {
 //     '^.+\\.(ts|tsx)$': ['ts-jest', {
@@ -25,14 +24,6 @@ module.exports = {
     // "^.+\\.(ts|tsx)$": "ts-jest"
     '^.+\\.(ts|tsx)$': 'babel-jest',
   },
-  testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-  moduleFileExtensions: [
-    "ts",
-    "tsx",
-    "js",
-    "jsx",
-    "json",
-    "node"
-  ]
-}
-
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+};

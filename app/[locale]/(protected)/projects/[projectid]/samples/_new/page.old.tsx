@@ -1,33 +1,23 @@
-"use client"
-
-import Head from 'next/head';
 // import { Box, Container, Stack, Typography } from '@mui/material';
-import { FC, useEffect } from "react";
+import { FC, useEffect } from 'react';
 
 // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 // import { ProjectsTable } from 'src/sections/projects/projects-table';
 import { MyForm } from '@/components/myForm';
 import { inputFormElements } from '@/config/formElements';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { addSample } from '@/app/api/samples';
 import { Debug } from '@/components/Debug';
 import { debug } from '@/config/settings';
 import { getProject } from '@/app/api/data/projects';
 import { Project } from '@/app/api/network/interfaces';
 
-
-
-
-
-
-
 const forms = [
-    // sampleid_formElements, 
-    inputFormElements, 
-    // inputFormElements_tow_type_vertical, 
-    // fraction_inputFormElments
-]
+  // sampleid_formElements,
+  inputFormElements,
+  // inputFormElements_tow_type_vertical,
+  // fraction_inputFormElments
+];
 
 // interface pageProps {
 //     params: {
@@ -36,182 +26,171 @@ const forms = [
 // }
 
 // const NewSample : FC<pageProps> = (params) => {
-const NewSample = async ({projectid}:{projectid: string}) => {
+const NewSample = async ({ projectid }: { projectid: string }) => {
+  const navigate = useNavigate();
+  // const projectid = {params}
+  // console.log("NewSample params: ", params);
+  // console.log("NewSample params projectid: ", params.params.projectid);
+  console.log('NewSample params projectid: ', projectid);
+  // console.log("NewSample params projectid: ", params.projectid);
 
-    const router = useRouter()
-    // const projectid = {params}
-    // console.log("NewSample params: ", params);
-    // console.log("NewSample params projectid: ", params.params.projectid);
-    console.log("NewSample params projectid: ", projectid);
-    // console.log("NewSample params projectid: ", params.projectid);
+  // const projectid = router.query.projectid //as string
+  // const projectId = params.params.projectid;
+  // const projectId = params.projectid;
 
-    // const projectid = router.query.projectid //as string
-    // const projectId = params.params.projectid;
-    // const projectId = params.projectid;
+  const [projectName, setProjectName] = useState<String>('');
 
-    const [ projectName, setProjectName] = useState<String>("");
+  const project = await getProject(projectid);
 
-    const project = await getProject(projectid)
+  const emptyData = {
+    scientific_program: 'ZooProcess',
+    // "sample_id": project.name,
+    project: projectName,
+  };
 
-    const emptyData = {
-        "scientific_program": "ZooProcess",
-        // "sample_id": project.name,
-        "project": projectName,
+  const initForm: any = [];
+  initForm['forms'] = forms;
+  initForm['value'] = emptyData; //debug ? subsampleTestData : emptyData
+  initForm['title'] = 'Sample metadata';
+  initForm['subtitle'] = 'Fill all the mandatory fields.';
+  // form['project']='SEBASTIAN'
+  const [form, setForm] = useState<any>(initForm);
+
+  // useEffect(() => {
+  //     if (project) {
+  //         setProjectName(project.name)
+  //         setForm({...initForm, value: { ...emptyData, project: project.name }})
+  //     }
+  // }, [project])
+  // useEffect(() => {
+  //     if (project) {
+  //         setProjectName(project.name)
+  //         setForm({
+  //             ...initForm,
+  //             value: {
+  //                 ...emptyData,
+  //                 project: project.name,
+  //                 sample_id: project.name + "_"  // This sets the prefix
+  //             }
+  //         })
+  //     }
+  // }, [project])
+  useEffect(() => {
+    if (project) {
+      setProjectName(project.name);
+      setForm({
+        ...initForm,
+        value: {
+          ...emptyData,
+          project: project.name,
+        },
+      });
     }
+  }, [project]);
 
-    const initForm : any = []
-    initForm['forms']=forms
-    initForm['value']= emptyData //debug ? subsampleTestData : emptyData
-    initForm['title']='Sample metadata'
-    initForm['subtitle']='Fill all the mandatory fields.'
-    // form['project']='SEBASTIAN'
-    const [form, setForm] = useState<any>(initForm)
+  // const form : any = []
+  //     form['forms']=forms
+  //     form['value']= emptyData //debug ? subsampleTestData : emptyData
+  //     form['title']='Sample metadata'
+  //     form['subtitle']='Fill all the mandatory fields.'
+  //     // form['project']='SEBASTIAN'
 
+  // const [stringifiedData,setData] = useState(JSON.stringify(testData, null, 2))
+  const [stringifiedData, setData] = useState('');
+  // var stringifiedData = "" ;
 
+  const prepareData = (data: any) => {
+    let newData = {
+      ...data,
+      projectId: projectid,
+    };
+    console.log('newData: ', newData);
+    return newData;
+  };
 
+  const onChange = (value: any) => {
+    const changeValue = (value: Map<string, string>): Map<string, string> => {
+      if ('sample_id' in value.keys && 'project' in value.keys) {
+        const project = value.get('project') || '';
+        const sample_id = value.get('sample_id') || '';
+        value.set('sample_id', project + sample_id);
+      }
 
-    // useEffect(() => {
-    //     if (project) {
-    //         setProjectName(project.name)
-    //         setForm({...initForm, value: { ...emptyData, project: project.name }})
-    //     }
-    // }, [project])
-    // useEffect(() => {
-    //     if (project) {
-    //         setProjectName(project.name)
-    //         setForm({
-    //             ...initForm, 
-    //             value: { 
-    //                 ...emptyData, 
-    //                 project: project.name,
-    //                 sample_id: project.name + "_"  // This sets the prefix
-    //             }
-    //         })
-    //     }
-    // }, [project])
-    useEffect(() => {
-        if (project) {
-            setProjectName(project.name)
-            setForm({
-                ...initForm,
-                value: {
-                    ...emptyData,
-                    project: project.name
-                }
-            })
-        }
-    }, [project])
-    
-    // const form : any = []
-    //     form['forms']=forms
-    //     form['value']= emptyData //debug ? subsampleTestData : emptyData
-    //     form['title']='Sample metadata'
-    //     form['subtitle']='Fill all the mandatory fields.'
-    //     // form['project']='SEBASTIAN'
+      return value;
+    };
 
+    console.log('App onChange:', value);
+    // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
+    // stringifiedData = JSON.stringify(value, null, 2);
 
+    setData(JSON.stringify(value, null, 2));
+    console.log('App onChange:', stringifiedData);
 
-    // const [stringifiedData,setData] = useState(JSON.stringify(testData, null, 2))
-    const [stringifiedData, setData] = useState("")
-    // var stringifiedData = "" ;
+    // const newData = prepareData(value)
 
-    const prepareData = (data:any) => {
+    const data = {
+      name: `${projectid}_${value.sample_id}`, //"Sample XXXX",
+      metadataModelId: '6565df171af7a84541c48b20',
+      data: value,
+    };
 
-        let newData = {
-            ...data,
-            projectId: projectid
-        }
-        console.log("newData: ", newData);
-        return newData;
-    }
+    console.log('newData: ', data);
+    // try {
 
-    const onChange = (value:any) => {
+    console.log('----- projectId : ', projectid);
+    console.log('----- name : ', data.name);
+    // console.log("----- params.projectid : ",params.projectid);
+    // console.log("----- params : ",params);
+    // console.log("----- params.params : ",params.params);
 
-        const changeValue = (value:Map<string,string>) : Map<string,string> => {
+    // addSample(projectId, data)
+    return addSample({
+      projectId: projectid, // : params.params.projectid,
+      data,
+    });
 
-            if ("sample_id" in value.keys && "project" in value.keys){
-                const project = value.get("project") || ""
-                const sample_id = value.get("sample_id") || ""
-                value.set("sample_id", project + sample_id)
-            }
+    // }
+    // catch (e:any){
+    //     console.log(e);
 
-            return value
+    // }
+  };
 
-        }
+  const onCancel = () => {
+    router.back();
+    // navigate({
+    //     pathname: '/projects/[projectid]',
+    //     query: { projectid: projectid },
+    // })
+  };
 
-        console.log("App onChange:", value)
-        // const stringifiedData = useMemo(() => JSON.stringify(value, null, 2), [value]);
-        // stringifiedData = JSON.stringify(value, null, 2);
-
-        setData(JSON.stringify(value, null, 2))
-        console.log("App onChange:", stringifiedData)
-
-        // const newData = prepareData(value)
-
-        const data = {
-            name: `${projectid}_${value.sample_id}`, //"Sample XXXX",
-            metadataModelId: "6565df171af7a84541c48b20",
-            data:value,
-        }
-
-        console.log("newData: ", data);
-        // try {
-
-            console.log("----- projectId : ", projectid);
-            console.log("----- name : ", data.name);
-            // console.log("----- params.projectid : ",params.projectid);
-            // console.log("----- params : ",params);
-            // console.log("----- params.params : ",params.params);
-
-            // addSample(projectId, data)
-            return addSample({
-                projectId: projectid, // : params.params.projectid, 
-                data
-            })
-
-        // }
-        // catch (e:any){
-        //     console.log(e);
-            
-        // }
-    }
-
-    const onCancel = () => {
-        router.back()
-        // router.push({
-        //     pathname: '/projects/[projectid]',
-        //     query: { projectid: projectid },                                         
-        // })
-    }
-
-    return (
-        <>
-        {/* <Head>
+  return (
+    <>
+      {/* <Head>
             <title>
             New Sample Metadata | ZooProcess
             </title>
         </Head> */}
-        {/* <Debug params={params}/> */}
-        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-
-            <div className="text-center justify-center">
-                {/* <Stack spacing={3}> */}
-                    {/* <Typography variant="h4"> */}
-                    {/* <h4>Sample Metadata to project {params.projectid}</h4> */}
-                    <h4>Sample Metadata to project {projectid}</h4>
-                    {/* </Typography> */}
-                    <MyForm 
-                        {...form} 
-                        // project={projectid}
-                        project={projectName}
-                        onChange={onChange} 
-                        onCancel={onCancel}/>
-                {/* </Stack> */}
-            </div>
-        </section>
-        </>
-    );
-}
-
+      {/* <Debug params={params}/> */}
+      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+        <div className="text-center justify-center">
+          {/* <Stack spacing={3}> */}
+          {/* <Typography variant="h4"> */}
+          {/* <h4>Sample Metadata to project {params.projectid}</h4> */}
+          <h4>Sample Metadata to project {projectid}</h4>
+          {/* </Typography> */}
+          <MyForm
+            {...form}
+            // project={projectid}
+            project={projectName}
+            onChange={onChange}
+            onCancel={onCancel}
+          />
+          {/* </Stack> */}
+        </div>
+      </section>
+    </>
+  );
+};
 
 export default NewSample;

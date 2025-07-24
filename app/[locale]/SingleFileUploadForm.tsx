@@ -1,6 +1,6 @@
 // import Image from "next/image";
-import { Image } from "@heroui/react";
-import { ChangeEvent, MouseEvent, useState } from "react";
+import { Image } from '@heroui/react';
+import { ChangeEvent, MouseEvent, useState } from 'react';
 
 const SingleFileUploadForm = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -10,20 +10,20 @@ const SingleFileUploadForm = () => {
     const fileInput = e.target;
 
     if (!fileInput.files) {
-      alert("No file was chosen");
+      alert('No file was chosen');
       return;
     }
 
     if (!fileInput.files || fileInput.files.length === 0) {
-      alert("Files list is empty");
+      alert('Files list is empty');
       return;
     }
 
     const file = fileInput.files[0];
 
     /** File validation */
-    if (!file.type.startsWith("image")) {
-      alert("Please select a valide image");
+    if (!file.type.startsWith('image')) {
+      alert('Please select a valide image');
       return;
     }
 
@@ -32,10 +32,9 @@ const SingleFileUploadForm = () => {
     setPreviewUrl(URL.createObjectURL(file)); // we will use this to show the preview of the image
 
     /** Reset file input */
-    e.currentTarget.type = "text";
-    e.currentTarget.type = "file";
+    e.currentTarget.type = 'text';
+    e.currentTarget.type = 'file';
   };
-
 
   const onCancelFile = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -46,32 +45,30 @@ const SingleFileUploadForm = () => {
     setPreviewUrl(null);
   };
 
-
   const onUploadFile = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!file) {
-        console.log("no file")
+      console.log('no file');
       return;
     }
 
-    console.log("file: ", file);
+    console.log('file: ', file);
 
     try {
       var formData = new FormData();
-      formData.append("media", file);
+      formData.append('media', file);
 
-        console.log("fetch");
+      console.log('fetch');
 
-        console.log("formData: ", formData.getAll("media"));
+      console.log('formData: ', formData.getAll('media'));
 
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
+      const res = await fetch('/api/upload', {
+        method: 'POST',
         body: formData,
       });
 
-      console.log("res: ", res);
+      console.log('res: ', res);
 
       const {
         data,
@@ -84,26 +81,28 @@ const SingleFileUploadForm = () => {
       } = await res.json();
 
       if (error || !data) {
-        alert(error || "Sorry! something went wrong.");
+        alert(error || 'Sorry! something went wrong.');
         return;
       }
 
-      console.log("File was uploaded successfylly:", data);
+      console.log('File was uploaded successfylly:', data);
     } catch (error) {
       console.error(error);
-      alert("Sorry! something went wrong.");
+      alert('Sorry! something went wrong.');
     }
   };
 
   return (
     <form
       className="w-full p-3 border border-gray-500 border-dashed"
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={e => e.preventDefault()}
     >
       <div className="flex flex-col md:flex-row gap-1.5 md:py-4">
         <div className="flex-grow">
           {previewUrl ? (
-            <div className="mx-auto w-180"> { /* w-screen  */ }
+            <div className="mx-auto w-180">
+              {' '}
+              {/* w-screen  */}
               <Image
                 alt="file uploader preview"
                 // objectFit="cover"

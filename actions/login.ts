@@ -1,45 +1,39 @@
-"use server";
+import * as z from 'zod';
 
-import * as z from "zod"
-import { AuthError } from "next-auth";
-
-import { signIn } from "@/auth";
-import { LoginSchema } from "@/schemas";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+// import { signIn } from '@/auth.ts';
+import { LoginSchema } from '@/schemas/index.ts';
+import { DEFAULT_LOGIN_REDIRECT } from '@/routes.ts';
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
-    // console.log(values)
+  // console.log(values)
 
-    const validatedFields = LoginSchema.safeParse(values);
+  const validatedFields = LoginSchema.safeParse(values);
 
-    if (!validatedFields.success) {
-        return { error: "Invalid fields!" };
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields!' };
+  }
+
+  // return { success: "Confirmation email sent!" };
+
+  const { email, password } = validatedFields.data;
+
+  try {
+    await signIn('credentials', {
+      email,
+      password,
+      redirectTo: DEFAULT_LOGIN_REDIRECT,
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return { error: 'Invalid credentials!' };
+        default:
+          console.error('Login Error', 'Something went wrong!', error);
+          return { error: 'Something went wrong!' };
+      }
     }
 
-    // return { success: "Confirmation email sent!" };
-
-    const { email, password } = validatedFields.data;
-
-    try {
-        await signIn("credentials", { 
-            email, 
-            password,
-            redirectTo: DEFAULT_LOGIN_REDIRECT
-        })
-
-    } 
-    catch (error){
-        if (error instanceof AuthError){
-            switch (error.type){
-                case "CredentialsSignin":
-                    return { error: 'Invalid credentials!'}
-                default:
-                    console.error('Login Error','Something went wrong!',error)
-                    return { error: 'Something went wrong!'}
-            }
-        }
-
-        throw error
-    }
-
-}
+    throw error;
+  }
+};

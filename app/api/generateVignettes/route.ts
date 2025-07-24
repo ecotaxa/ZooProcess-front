@@ -1,8 +1,7 @@
-// import { NextRequest, NextResponse } from 'next/server';
 // import path from 'path';
 // import fs from 'fs/promises';
 // import sharp from 'sharp';
-// console.log(sharp.name); 
+// console.log(sharp.name);
 
 // export async function GET(req: NextRequest) {
 //   const scan = req.nextUrl.searchParams.get('scan');

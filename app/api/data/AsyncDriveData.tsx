@@ -1,6 +1,6 @@
-import { getDrives } from "./drive"
-import { useDrives } from "../drives"
-import { Drive } from "../network/interfaces"
+import { getDrives } from './drive';
+import { useDrives } from '../drives';
+import { Drive } from '../network/interfaces';
 
 // export default async function AsyncDriveData(): Promise<{ drives: Array<Drive>, isLoading: any, isError: boolean }> {
 // //   const { drives, isLoading, isError } = useDrives()
@@ -43,26 +43,25 @@ import { Drive } from "../network/interfaces"
 // }
 
 export default async function AsyncDriveData(): Promise<Array<Drive>> {
-    //   const { drives, isLoading, isError } = useDrives()
-    //   return { drives, isLoading, isError }
-    
-    return  await getDrives()
-    // .then((drives) => {
+  //   const { drives, isLoading, isError } = useDrives()
+  //   return { drives, isLoading, isError }
 
-    //     console.log("AsyncDriveData %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-    //     console.log("AsyncDriveData drives: ", drives)
+  return await getDrives();
+  // .then((drives) => {
 
-    //     return drives;
-    // })
-    // .then((drives) => {
-    
-        // console.log("AsyncDriveData %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        // console.log("AsyncDriveData drives: ", drives)
-    
-        // return { drives, isLoading: false, isError: false }
-    // })
-    // .catch((error) => {
-        // return { drives: [], isLoading: false, isError: true }
-    // })
-    
-    }
+  //     console.log("AsyncDriveData %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+  //     console.log("AsyncDriveData drives: ", drives)
+
+  //     return drives;
+  // })
+  // .then((drives) => {
+
+  // console.log("AsyncDriveData %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+  // console.log("AsyncDriveData drives: ", drives)
+
+  // return { drives, isLoading: false, isError: false }
+  // })
+  // .catch((error) => {
+  // return { drives: [], isLoading: false, isError: true }
+  // })
+}

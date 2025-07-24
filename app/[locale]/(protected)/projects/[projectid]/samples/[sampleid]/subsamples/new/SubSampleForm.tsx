@@ -1,17 +1,12 @@
-"use client"
-
-import { FC } from "react";
-import { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { FC } from 'react';
+import { useState } from 'react';
 
 import { MyForm } from '@/components/myForm';
 import { fraction_inputFormElments } from '@/config/formElements';
 import { Sample, User } from '@/app/api/network/interfaces';
-import { CustomError, removeDigestFromError } from "@/app/api/digest";
-import { addSubSample } from "@/app/api/data/subsamples";
- import { ValidationError } from "@/lib/errors";
-
-
+import { CustomError, removeDigestFromError } from '@/app/api/digest';
+import { addSubSample } from '@/app/api/data/subsamples';
+import { ValidationError } from '@/lib/errors';
 
 // const testData = {
 //     //"sample_name":"dyfamed_wp2_2023_biotom_sn001",
@@ -42,124 +37,107 @@ import { addSubSample } from "@/app/api/data/subsamples";
 // }
 
 const forms = [
-    // sampleid_formElements, 
-    // inputFormElements, 
-    // inputFormElements_tow_type_vertical, 
-    fraction_inputFormElments
-]
+  // sampleid_formElements,
+  // inputFormElements,
+  // inputFormElements_tow_type_vertical,
+  fraction_inputFormElments,
+];
 
 interface pageProps {
-        sample: Sample
+  sample: Sample;
 
-        user: User
+  user: User;
 }
 
-const SubSampleForm :  FC<pageProps> = ({sample, user})  => {
+const SubSampleForm: FC<pageProps> = ({ sample, user }) => {
+  const [formErrors, setFormErrors] = useState(null);
 
+  const navigate = useNavigate();
 
-    const [formErrors, setFormErrors] = useState(null);
+  console.debug('SubSampleForm params: ', { sample, user });
 
-    const router = useRouter()
-    
-    console.debug("SubSampleForm params: ", {sample, user});
+  const project = sample.project;
+  const projectid = project.id;
+  const sampleid = sample.id;
 
-    const project = sample.project;
-    const projectid = project.id;
-    const sampleid = sample.id;
+  console.log('NewSample params projectid: ', projectid);
+  console.log('NewSample params sampleid: ', sampleid);
 
-
-    console.log("NewSample params projectid: ", projectid);
-    console.log("NewSample params sampleid: ", sampleid);
-
-
-
-    async function handleChange(values:any, sampleId: string, projectId: string) {
-        console.debug("SubSampleForm::handleChange()")
+  async function handleChange(values: any, sampleId: string, projectId: string) {
+    console.debug('SubSampleForm::handleChange()');
     try {
- 
-    
-          const res = await addSubSample(projectId, sampleId, values);
+      const res = await addSubSample(projectId, sampleId, values);
 
       // succès : redirect
       const id = res.data.id;
-      router.push(
-        `/projects/${projectId}/samples/${sampleId}/subsamples/new/${id}?state=scanner`,
-      );
-    } catch (err:any) {
-
-        // Add more detailed error logging
-        // console.error("🔥 Full error details:", {
-        //     message: err.message,
-        //     payload: err.payload, // This should show validation details
-        //     stack: err.stack
-        // });
-        console.error("🔥 Full error details:", err);
+      navigate(`/projects/${projectId}/samples/${sampleId}/subsamples/new/${id}?state=scanner`);
+    } catch (err: any) {
+      // Add more detailed error logging
+      // console.error("🔥 Full error details:", {
+      //     message: err.message,
+      //     payload: err.payload, // This should show validation details
+      //     stack: err.stack
+      // });
+      console.error('🔥 Full error details:', err);
 
       if (err instanceof ValidationError) {
         // on garde les erreurs dans l'état pour les afficher
-        console.error("❌ Validation Error payload:", err.payload);
-        setFormErrors(err.payload?.errors || err.payload || { general: "Validation failed" });
- 
+        console.error('❌ Validation Error payload:', err.payload);
+        setFormErrors(err.payload?.errors || err.payload || { general: 'Validation failed' });
+
         return;
       }
-            setFormErrors({ general: err.message || "An unexpected error occurred" });
-            console.error("🟩 onChange:", err);
-    throw err
+      setFormErrors({ general: err.message || 'An unexpected error occurred' });
+      console.error('🟩 onChange:', err);
+      throw err;
     }
-  } 
- 
-    const onCancel = () => {
-        router.back()
-    }
+  }
 
-    const formButtons = {
-        submit:'Scan'
-    }
+  const onCancel = () => {
+    router.back();
+  };
 
-    const formatData = (user:User|any) => {
-        console.log("formatData() ");
+  const formButtons = {
+    submit: 'Scan',
+  };
 
-        const emptyData = {
-            "scanning_operator":user.name,
-            "fraction_id":"",
-            "fraction_id_suffix":""
-        }
-    
-        const updatedForm = forms
-    
-        const form : any = []
-            form['forms']=updatedForm
-            form['value']=emptyData // testData
-            form['title']='Sub Sample metadata'
-            form['subtitle']='Fill all the mandatory fields.'
-    
-        return form;
-    }
+  const formatData = (user: User | any) => {
+    console.log('formatData() ');
 
+    const emptyData = {
+      scanning_operator: user.name,
+      fraction_id: '',
+      fraction_id_suffix: '',
+    };
 
-    const showForm = (use:User|any) => {
-        const form = formatData(user)
+    const updatedForm = forms;
 
-        return (
-            <MyForm 
-                {...form} 
-                project={project.name}
-                sample={sample.name}
+    const form: any = [];
+    form['forms'] = updatedForm;
+    form['value'] = emptyData; // testData
+    form['title'] = 'Sub Sample metadata';
+    form['subtitle'] = 'Fill all the mandatory fields.';
 
-                onChange={(values: any) => handleChange(values, sampleid, projectid)}
-                onCancel={onCancel}
-                button={formButtons}
-                errors={formErrors} // ← Pass the errors to MyForm
+    return form;
+  };
 
-            />
-        )
-    }
+  const showForm = (use: User | any) => {
+    const form = formatData(user);
 
     return (
-        <>
-            {showForm(user)}
-        </>
+      <MyForm
+        {...form}
+        project={project.name}
+        sample={sample.name}
+        onChange={(values: any) => handleChange(values, sampleid, projectid)}
+        onCancel={onCancel}
+        button={formButtons}
+        errors={formErrors} // ← Pass the errors to MyForm
+      />
     );
-}
+  };
+
+  return <>{showForm(user)}</>;
+};
 
 export default SubSampleForm;

@@ -1,38 +1,32 @@
-"use client";
-
-import * as React from "react";
-import { HeroUIProvider } from "@heroui/system";
-import { useRouter } from 'next/navigation'
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { ThemeProviderProps } from "next-themes/dist/types";
-import DebugStore from "@/lib/debug-store";
-import { debug } from "@/config/settings";
+import * as React from 'react';
+import DebugStore from '@/lib/debug-store.ts';
+import {debug} from '@/config/settings.js';
+import {useNavigate} from 'react-router-dom';
+import '@/lib/i18n.config';
 
 export interface ProvidersProps {
-	children: React.ReactNode;
-	themeProps?: ThemeProviderProps;
+    children: React.ReactNode;
 }
 
-export function Providers({ children, themeProps }: ProvidersProps) {
-  const router = useRouter();
+export function Providers({children}: ProvidersProps) {
+    useNavigate();
+    React.useEffect(() => {
+        DebugStore.init(debug);
 
-  	React.useEffect(() => {
-		DebugStore.init(debug);
+        const handleKey = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'd') {
+                e.preventDefault();
+                DebugStore.getInstance().toggle();
+            }
+        };
 
-		const handleKey = (e: KeyboardEvent) => {
-			if ((e.metaKey || e.ctrlKey) && e.key === 'd') {
-				e.preventDefault();
-				DebugStore.getInstance().toggle();
-			}
-		};
+        window.addEventListener('keydown', handleKey);
+        return () => window.removeEventListener('keydown', handleKey);
+    }, []);
 
-		window.addEventListener('keydown', handleKey);
-		return () => window.removeEventListener('keydown', handleKey);
-	}, []);
-
-	return (
-		<HeroUIProvider navigate={router.push}>
-			<NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
-		</HeroUIProvider>
-	);
+    return (
+        <>
+            {children}
+        </>
+    );
 }

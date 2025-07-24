@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from "@heroui/react";
+import { Button } from '@heroui/react';
 
 interface TimedScanButtonProps {
   onScan: () => void;
@@ -12,11 +12,10 @@ export const TimedScanButton: React.FC<TimedScanButtonProps> = ({
   onScan,
   onPreview,
   initialTime,
-  scanCompleted
+  scanCompleted,
 }) => {
   const [timeLeft, setTimeLeft] = useState(initialTime);
   const [isRunning, setIsRunning] = useState(false);
-
 
   useEffect(() => {
     if (scanCompleted) {
@@ -29,7 +28,7 @@ export const TimedScanButton: React.FC<TimedScanButtonProps> = ({
     let timer: NodeJS.Timeout;
     if (isRunning && timeLeft > 0) {
       timer = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
+        setTimeLeft(prevTime => prevTime - 1);
       }, 1000);
     } else if (timeLeft === 0) {
       setIsRunning(false);
@@ -50,12 +49,9 @@ export const TimedScanButton: React.FC<TimedScanButtonProps> = ({
         onPress={timeLeft === 0 ? onScan : () => {}}
         color="primary"
       >
-        {timeLeft > 0 ? `Wait (${timeLeft}s)` : "Scan"}
+        {timeLeft > 0 ? `Wait (${timeLeft}s)` : 'Scan'}
       </Button>
-      <Button
-        onPress={handlePreview}
-        color="secondary"
-      >
+      <Button onPress={handlePreview} color="secondary">
         Preview
       </Button>
     </>

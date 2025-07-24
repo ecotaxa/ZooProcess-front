@@ -1,10 +1,7 @@
-// import { LoginForm } from "@/components/auth/login-form";
-import {LoginForm} from "@/components/auth/login-form";
+import { LoginForm } from '@/components/auth/login-form.tsx';
 
 const LoginPage = () => {
-  return ( 
-    <LoginForm />
-  );
-}
- 
+  return <LoginForm />;
+};
+
 export default LoginPage;

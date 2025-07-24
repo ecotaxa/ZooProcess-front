@@ -1,10 +1,11 @@
 import GoogleProvider from "next-auth/providers/google";
+import { GOOGLE_ID, GOOGLE_SECRET } from '@/constants';
 
 export const options = {
     providers:[
         GoogleProvider({
             profile(profile){
-                console.log("Profile Google: "), profile);
+                console.log("Profile Google: ", profile);
 
                 return {
                     ...profile,
@@ -12,8 +13,8 @@ export const options = {
                     role: updateLanguageServiceSourceFile,
                 };
             },
-            clientID: process.env.GOOGLE_ID,
-            clientSecret: process.env.GOOGLE_Secret,
+            clientID: GOOGLE_ID,
+            clientSecret: GOOGLE_SECRET,
         }),
     ],
     callbacks: {

@@ -21,40 +21,40 @@ import PlanisferLayers from './PlanisferLayers';
 //   }
 // );
 
-
 // Définition des icônes personnalisées
 const blueIcon = new L.Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  iconUrl:
+    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
-  shadowSize: [41, 41]
+  shadowSize: [41, 41],
 });
 
 const yellowIcon = new L.Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+  iconUrl:
+    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
-  shadowSize: [41, 41]
+  shadowSize: [41, 41],
 });
 
 interface CoordsProps {
-    start: [number|undefined, number|undefined];
-    end: [number|undefined, number|undefined];
-  }
+  start: [number | undefined, number | undefined];
+  end: [number | undefined, number | undefined];
+}
 
-
-  interface MapInitializerProps {
-    lat:number;
-    lng:number;
-    zoom:number;
-  }
+interface MapInitializerProps {
+  lat: number;
+  lng: number;
+  zoom: number;
+}
 
 // Composant pour initialiser la vue de la carte
-const MapInitializer: React.FC<MapInitializerProps> = ({lat=0,lng=0,zoom=3})  => {
+const MapInitializer: React.FC<MapInitializerProps> = ({ lat = 0, lng = 0, zoom = 3 }) => {
   const map = useMap();
   useEffect(() => {
     map.setView([lat, lng], zoom);
@@ -62,35 +62,34 @@ const MapInitializer: React.FC<MapInitializerProps> = ({lat=0,lng=0,zoom=3})  =>
   return null;
 };
 
-
 interface CoordsProps {
-    start: [number|undefined,number|undefined];
-    end: [number|undefined,number|undefined];
-  }
-const Planisfer: React.FC<CoordsProps> = ({start,end}) => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 5);
-    // const yesterdayString = '2024-07-24'
-    const yesterdayString = yesterday.toISOString().split('T')[0];
-  
-    const currentMonthString = new Date().toISOString().slice(0, 7) + '-01';
-  
-    const crs = L.CRS.EPSG3857
-    const mapRef = useRef<L.Map | null>(null);
+  start: [number | undefined, number | undefined];
+  end: [number | undefined, number | undefined];
+}
+const Planisfer: React.FC<CoordsProps> = ({ start, end }) => {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 5);
+  // const yesterdayString = '2024-07-24'
+  const yesterdayString = yesterday.toISOString().split('T')[0];
 
-    const showStartPoint = () => {
-      return start[0]!== undefined && start[1]!== undefined
-    }
+  const currentMonthString = new Date().toISOString().slice(0, 7) + '-01';
 
-    const showEndPoint = () => {
-      return showStartPoint() && end[0] !== undefined && end[1] !== undefined 
-    }
+  const crs = L.CRS.EPSG3857;
+  const mapRef = useRef<L.Map | null>(null);
 
-    return (
+  const showStartPoint = () => {
+    return start[0] !== undefined && start[1] !== undefined;
+  };
+
+  const showEndPoint = () => {
+    return showStartPoint() && end[0] !== undefined && end[1] !== undefined;
+  };
+
+  return (
     <>
-    <div>{yesterdayString}</div>
+      <div>{yesterdayString}</div>
       <MapContainer
-        key='standard'
+        key="standard"
         center={[start[0] ?? 0, start[1] ?? 0]} // [startLat, startLng]
         zoom={5}
         style={{ height: '600px', width: '100%' }}
@@ -100,28 +99,37 @@ const Planisfer: React.FC<CoordsProps> = ({start,end}) => {
         maxZoom={8}
         minZoom={0} // undefined
       >
-        <MapInitializer lat={start[0] ?? 0} lng={start[1] ?? 0} zoom={5}/>
+        <MapInitializer lat={start[0] ?? 0} lng={start[1] ?? 0} zoom={5} />
         <PlanisferLayers day={yesterdayString} monthString={currentMonthString} />
         <MapContainer />
         {/* <Marker position={[89, 2.45]} icon={yellowIcon}> */}
-        {start[0]!== undefined && start[1]!== undefined && (
+        {start[0] !== undefined && start[1] !== undefined && (
           <Marker position={[start[0], start[1]]} icon={blueIcon}>
-            <Popup>Start: [{start[0]}, {start[1]}]</Popup>
-        </Marker>
+            <Popup>
+              Start: [{start[0]}, {start[1]}]
+            </Popup>
+          </Marker>
         )}
-        {end[0] !== undefined && end[1] !== undefined  && (
+        {end[0] !== undefined && end[1] !== undefined && (
           <Marker position={[end[0], end[1]]} icon={yellowIcon}>
-            <Popup>End: [{end[0]}, {end[1]}]</Popup>
+            <Popup>
+              End: [{end[0]}, {end[1]}]
+            </Popup>
           </Marker>
         )}
 
-
-{start[0]!== undefined && start[1]!== undefined && end[0] !== undefined && end[1] !== undefined  && (
-  <Polyline positions={ 
-    [[start[0], start[1]], [end[0], end[1]]]} 
-    color="red" 
-  />
-)}
+        {start[0] !== undefined &&
+          start[1] !== undefined &&
+          end[0] !== undefined &&
+          end[1] !== undefined && (
+            <Polyline
+              positions={[
+                [start[0], start[1]],
+                [end[0], end[1]],
+              ]}
+              color="red"
+            />
+          )}
 
         <style>{`
           .red-coastline {
@@ -132,8 +140,8 @@ const Planisfer: React.FC<CoordsProps> = ({start,end}) => {
           }
         `}</style>
       </MapContainer>
-      </>
-    );
-  };
-  
-  export default Planisfer;
+    </>
+  );
+};
+
+export default Planisfer;

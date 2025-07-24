@@ -1,4 +1,3 @@
-import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs/promises';
 // import { readMatrixFromCompressedFile } from '@/components/DrawCanvasTools';
@@ -15,11 +14,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ mask: null }, { status: 400 });
   }
 
-  
-        console.log("---- 🟢 AVANT TRY----");
+  console.log('---- 🟢 AVANT TRY----');
 
   try {
-      console.log("---- 🟢 DEBUT TRAITEMENT MASK ----");
+    console.log('---- 🟢 DEBUT TRAITEMENT MASK ----');
 
     const publicRoot = path.resolve(process.cwd(), 'public');
     const cleanFolder = folder.replace(/^\/+/g, '');

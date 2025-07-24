@@ -24,10 +24,5 @@ export const Logo = () => {
   //   </svg>
   // );
 
-  return (
-    <img
-    src="/assets/Logo-ZooProcess.png"
-    />
-  );
-
+  return <img src="/assets/Logo-ZooProcess.png" />;
 };

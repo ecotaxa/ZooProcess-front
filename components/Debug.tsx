@@ -1,12 +1,10 @@
-'use client';
-
-import { Code, Switch, Tooltip } from "@heroui/react";
-import { useEffect, useState } from "react";
-import DebugStore from "@/lib/debug-store"; 
+import { Code, Switch, Tooltip } from '@heroui/react';
+import { useEffect, useState } from 'react';
+import DebugStore from '@/lib/debug-store';
 
 export const Debug = ({
   params,
-  title = "debug",
+  title = 'debug',
   open = false,
   pre = false,
 }: {
@@ -27,7 +25,7 @@ export const Debug = ({
         unsubscribe();
       };
     } catch (err) {
-      console.warn("DebugStore not initialized");
+      console.warn('DebugStore not initialized');
     }
   }, []);
   if (!enabled) return null;
@@ -38,8 +36,8 @@ export const Debug = ({
     return (
       <div className="xm-sm-max-100 w-50">
         {pre ? (
-          <div className="w-1/2 mx-auto text-left bg-gray-100 p-3 rounded shadow overflow-auto" >
-          <pre>{JSON.stringify(params, null, 2)}</pre>
+          <div className="w-1/2 mx-auto text-left bg-gray-100 p-3 rounded shadow overflow-auto">
+            <pre>{JSON.stringify(params, null, 2)}</pre>
           </div>
         ) : (
           <>{JSON.stringify(params, null, 2)}</>
@@ -53,17 +51,10 @@ export const Debug = ({
       <Tooltip
         delay={1000}
         color="primary"
-        content={
-          <div className="xm-sm-max-100">{JSON.stringify(params)}</div>
-        }
+        content={<div className="xm-sm-max-100">{JSON.stringify(params)}</div>}
       >
         <div className="flex flex-col gap-2">
-          <Switch
-            isSelected={isSelected}
-            onValueChange={setIsSelected}
-            size="sm"
-            color="secondary"
-          >
+          <Switch isSelected={isSelected} onValueChange={setIsSelected} size="sm" color="secondary">
             {title}
           </Switch>
         </div>

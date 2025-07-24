@@ -1,6 +1,4 @@
 // import { UserRole } from "@prisma/client";
-import NextAuth, { type DefaultSession } from "next-auth";
-
 
 // d'apres la doc de auth.js mais ne fonctionne pas
 // declare module "@auth/core" {
@@ -10,17 +8,17 @@ import NextAuth, { type DefaultSession } from "next-auth";
 //       } & DefaultSession["user"]
 //     }
 //   }
-  
-export type UserRole = "USER" | "ADMIN"
 
-export type ExtendedUser = DefaultSession["user"] & {
+export type UserRole = 'USER' | 'ADMIN';
+
+export type ExtendedUser = DefaultSession['user'] & {
   role: UserRole;
-  token: string
-//   isTwoFactorEnabled: boolean;
-//   isOAuth: boolean;
+  token: string;
+  //   isTwoFactorEnabled: boolean;
+  //   isOAuth: boolean;
 };
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
     user: ExtendedUser;
   }

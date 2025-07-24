@@ -1,5 +1,5 @@
-import { cleanDigitSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
-import React, { useRef, useEffect, useState } from "react";
+import { cleanDigitSectionValue } from '@mui/x-date-pickers/internals/hooks/useField/useField.utils';
+import React, { useRef, useEffect, useState } from 'react';
 
 interface DrawCanvasProps {
   imagePath: string;
@@ -8,22 +8,27 @@ interface DrawCanvasProps {
   initialMatrix?: number[][];
 }
 
-type Tool = "brush" | "eraser";
+type Tool = 'brush' | 'eraser';
 
 const CANVAS_POINT_SIZE = 3;
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 20;
 const ZOOM_FACTOR = 1.02;
 
-const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor = "red", initialMatrix }) => {
+const DrawCanvas: React.FC<DrawCanvasProps> = ({
+  imagePath,
+  onApply,
+  strokeColor = 'red',
+  initialMatrix,
+}) => {
   const persistentMatrixRef = useRef<number[][] | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const lastMouse = useRef({ x: 0, y: 0 });
-  const lastDrawPos = useRef<{ x: number, y: number } | null>(null);
+  const lastDrawPos = useRef<{ x: number; y: number } | null>(null);
 
-  const [tool, setTool] = useState<Tool>("brush");
+  const [tool, setTool] = useState<Tool>('brush');
   const [isDrawing, setIsDrawing] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -39,9 +44,10 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
     img.onload = () => {
       const width = img.width;
       const height = img.height;
-      const matrix = initialMatrix?.length === height && initialMatrix[0]?.length === width
-        ? initialMatrix.map(row => [...row])
-        : Array.from({ length: height }, () => Array(width).fill(0));
+      const matrix =
+        initialMatrix?.length === height && initialMatrix[0]?.length === width
+          ? initialMatrix.map(row => [...row])
+          : Array.from({ length: height }, () => Array(width).fill(0));
       persistentMatrixRef.current = matrix;
       setCanvasSize({ width, height });
       setImage(img);
@@ -50,7 +56,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
   }, [imagePath, initialMatrix]);
 
   useEffect(() => {
-    const ctx = canvasRef.current?.getContext("2d");
+    const ctx = canvasRef.current?.getContext('2d');
     if (ctx && image) {
       const sx = scroll.x;
       const sy = scroll.y;
@@ -63,7 +69,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
   }, [image, scroll, zoom, canvasSize]);
 
   useEffect(() => {
-    const ctx = overlayRef.current?.getContext("2d");
+    const ctx = overlayRef.current?.getContext('2d');
     if (!ctx || !persistentMatrixRef.current) return;
 
     ctx.save();
@@ -95,11 +101,11 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
       if (!rect) return;
       lastMouse.current = {
         x: e.clientX - rect.left,
-        y: e.clientY - rect.top
+        y: e.clientY - rect.top,
       };
     };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   useEffect(() => {
@@ -110,28 +116,28 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
       const imageY = offsetY / zoom + scroll.y;
 
       const zoomAroundPoint = (targetZoom: number) => {
-        const newScrollX = imageX - (offsetX / targetZoom);
-        const newScrollY = imageY - (offsetY / targetZoom);
+        const newScrollX = imageX - offsetX / targetZoom;
+        const newScrollY = imageY - offsetY / targetZoom;
         setScroll({
           x: Math.min(Math.max(newScrollX, 0), canvasSize.width - canvasSize.width / targetZoom),
-          y: Math.min(Math.max(newScrollY, 0), canvasSize.height - canvasSize.height / targetZoom)
+          y: Math.min(Math.max(newScrollY, 0), canvasSize.height - canvasSize.height / targetZoom),
         });
         setZoom(targetZoom);
       };
 
-      if (e.key === "b") setTool("brush");
-      if (e.key === "e") setTool("eraser");
-      if (e.key === "c") cleanMatrix();
-      if (e.key === "+") zoomAroundPoint(Math.min(zoom * ZOOM_FACTOR, MAX_ZOOM));
-      if (e.key === "-") zoomAroundPoint(Math.max(zoom / ZOOM_FACTOR, MIN_ZOOM));
-      if (e.key === "0") {
+      if (e.key === 'b') setTool('brush');
+      if (e.key === 'e') setTool('eraser');
+      if (e.key === 'c') cleanMatrix();
+      if (e.key === '+') zoomAroundPoint(Math.min(zoom * ZOOM_FACTOR, MAX_ZOOM));
+      if (e.key === '-') zoomAroundPoint(Math.max(zoom / ZOOM_FACTOR, MIN_ZOOM));
+      if (e.key === '0') {
         setZoom(1);
         setScroll({ x: 0, y: 0 });
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [canvasSize, scroll, zoom]);
 
   useEffect(() => {
@@ -154,15 +160,15 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
         const newScrollY = mouseImageY - offsetY / newZoom;
         setScroll({
           x: Math.min(Math.max(newScrollX, 0), canvasSize.width - canvasSize.width / newZoom),
-          y: Math.min(Math.max(newScrollY, 0), canvasSize.height - canvasSize.height / newZoom)
+          y: Math.min(Math.max(newScrollY, 0), canvasSize.height - canvasSize.height / newZoom),
         });
         return newZoom;
       });
     };
 
     const container = containerRef.current;
-    container?.addEventListener("wheel", handleWheel, { passive: false });
-    return () => container?.removeEventListener("wheel", handleWheel);
+    container?.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container?.removeEventListener('wheel', handleWheel);
   }, [canvasSize, scroll, zoom]);
 
   const drawPoint = (x: number, y: number) => {
@@ -175,7 +181,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
         const fy = py + dy - Math.floor(CANVAS_POINT_SIZE / 2);
         if (fx < 0 || fy < 0 || fx >= canvasSize.width || fy >= canvasSize.height) continue;
         if (persistentMatrixRef.current[fy]) {
-          persistentMatrixRef.current[fy][fx] = tool === "brush" ? 1 : 0;
+          persistentMatrixRef.current[fy][fx] = tool === 'brush' ? 1 : 0;
         }
       }
     }
@@ -186,7 +192,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
     if (!persistentMatrixRef.current) return;
     persistentMatrixRef.current = persistentMatrixRef.current.map(row => row.fill(0));
     forceUpdate();
-  }
+  };
 
   const handlePointerDown = (e: React.MouseEvent) => {
     setIsDrawing(true);
@@ -234,19 +240,19 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
     if (onApply) onApply(matrix);
   };
 
-  const getCursor = () => (tool === "brush" ? "crosshair" : "not-allowed");
+  const getCursor = () => (tool === 'brush' ? 'crosshair' : 'not-allowed');
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex" }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex' }}>
         <div
           ref={containerRef}
           style={{
             width: canvasSize.width,
             height: canvasSize.height,
-            border: "1px solid #ccc",
-            overflow: "hidden",
-            position: "relative"
+            border: '1px solid #ccc',
+            overflow: 'hidden',
+            position: 'relative',
           }}
         >
           <canvas
@@ -256,10 +262,10 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
             style={{
               width: canvasSize.width,
               height: canvasSize.height,
-              position: "absolute",
+              position: 'absolute',
               top: 0,
               left: 0,
-              zIndex: 1
+              zIndex: 1,
             }}
           />
           <canvas
@@ -273,21 +279,32 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({ imagePath, onApply, strokeColor
             style={{
               width: canvasSize.width,
               height: canvasSize.height,
-              position: "absolute",
+              position: 'absolute',
               top: 0,
               left: 0,
               zIndex: 2,
-              cursor: getCursor()
+              cursor: getCursor(),
             }}
           />
         </div>
-        <div style={{ marginLeft: 16, display: "flex", flexDirection: "column", gap: 8 }}>
-          <button onClick={() => setTool("brush")}>Pencil (b)</button>
-          <button onClick={() => setTool("eraser")}>Rubber (e)</button>
+        <div style={{ marginLeft: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <button onClick={() => setTool('brush')}>Pencil (b)</button>
+          <button onClick={() => setTool('eraser')}>Rubber (e)</button>
           <button onClick={() => cleanMatrix()}>Clear (c)</button>
-          <button onClick={() => setZoom(z => Math.min(z * ZOOM_FACTOR, MAX_ZOOM))}>Zoom (+)</button>
-          <button onClick={() => { setZoom(1); setScroll({ x: 0, y: 0 }); }}>Taille originale (0)</button>
-          <button onClick={() => setZoom(z => Math.max(z / ZOOM_FACTOR, MIN_ZOOM))}>Zoom (-)</button>
+          <button onClick={() => setZoom(z => Math.min(z * ZOOM_FACTOR, MAX_ZOOM))}>
+            Zoom (+)
+          </button>
+          <button
+            onClick={() => {
+              setZoom(1);
+              setScroll({ x: 0, y: 0 });
+            }}
+          >
+            Taille originale (0)
+          </button>
+          <button onClick={() => setZoom(z => Math.max(z / ZOOM_FACTOR, MIN_ZOOM))}>
+            Zoom (-)
+          </button>
           <button onClick={applyMatrix}>Apply</button>
           <div style={{ marginTop: 8, fontSize: 12 }}>Zoom: x{zoom.toFixed(2)}</div>
         </div>

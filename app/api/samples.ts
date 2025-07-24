@@ -1,9 +1,6 @@
-"use server";
-
 // import useSWR from 'swr'
 
-import * as api from '@/network/zooprocess-api' 
-// import Error from 'next/error';
+import * as api from '@/network/zooprocess-api';
 
 // declare maxRetry = 1
 
@@ -14,7 +11,7 @@ import * as api from '@/network/zooprocess-api'
 //   }
 
 //   const { data=[], error=false, isLoading=true } = useSWR(
-//     `/projects/${projectId}/samples`, 
+//     `/projects/${projectId}/samples`,
 //     api.getSamples ,
 //     {
 //       revalidateIfStale: false,
@@ -85,43 +82,44 @@ import * as api from '@/network/zooprocess-api'
 //   }
 // }
 
-export async function addSample({projectId, data}){
-// export function addSample({params, data}){
+export async function addSample({ projectId, data }) {
+  // export function addSample({params, data}){
 
-  console.log("adding Sample...projectId: ", projectId);
+  console.log('adding Sample...projectId: ', projectId);
   // console.log("adding Sample...projectId: ", params.projectId);
   // console.log("params: ", params);
-  console.log("adding Sample...data: ", data);
+  console.log('adding Sample...data: ', data);
 
   // TODO added info box
 
-  return api.addSample(projectId, data)
-  .then((response) => {
-    console.log("Sample added OK", response);
-    return Promise.resolve( { data:response, message:"Sample have been added"})
-  })
-  .catch ((error) =>  {
-    console.error("Sample added NOK: ", error);
-    console.error("projectid: ", projectId);
-    console.error("data:", data);
-    // throw ({
-    //   message:"Cannot add sample",
-    //   error,
-    //   data,
-    //   projectId,
-    // })
-    // throw (error.message)
-    // throw error
-    // throw(error)
-    // throw new Error(error.message || error);
-    // throw (error.message || error)
-    // console.error("error.message: ", error.message)
-    // return Promise.reject(error.message) 
-    // return Promise.reject({
-    //   status: 'error',
-    //   message: error.message || 'Failed to add sample'
+  return api
+    .addSample(projectId, data)
+    .then(response => {
+      console.log('Sample added OK', response);
+      return Promise.resolve({ data: response, message: 'Sample have been added' });
+    })
+    .catch(error => {
+      console.error('Sample added NOK: ', error);
+      console.error('projectid: ', projectId);
+      console.error('data:', data);
+      // throw ({
+      //   message:"Cannot add sample",
+      //   error,
+      //   data,
+      //   projectId,
+      // })
+      // throw (error.message)
+      // throw error
+      // throw(error)
+      // throw new Error(error.message || error);
+      // throw (error.message || error)
+      // console.error("error.message: ", error.message)
+      // return Promise.reject(error.message)
+      // return Promise.reject({
+      //   status: 'error',
+      //   message: error.message || 'Failed to add sample'
 
-        // Create error object that will persist through serialization
+      // Create error object that will persist through serialization
       //   const errorObj = {
       //     status: 'error',
       //     message: error.response?.data?.message || error.message || 'Failed to add sample'
@@ -130,42 +128,33 @@ export async function addSample({projectId, data}){
 
       return Promise.reject(error);
       // throw (error)
-  });
-  
-
+    });
 }
 
+export async function updateSample({ projectId, sampleId, data }) {
+  console.log('update Sample...projectId: ', projectId, ' - ', sampleId);
 
-export async function updateSample({projectId, sampleId, data}){
-
-  console.log("update Sample...projectId: ", projectId, " - ", sampleId);
-
-  return api.updateSample(projectId,sampleId,data)
-  .then( (response) => {
-    console.log("Sample added OK");
-    return Promise.resolve( { data:response, message:"Sample updated"} )
+  return api
+    .updateSample(projectId, sampleId, data)
+    .then(response => {
+      console.log('Sample added OK');
+      return Promise.resolve({ data: response, message: 'Sample updated' });
       //   // Create a serializable error object
       //   const errorObj = {
       //     status: 'error',
       //     message: typeof error === 'string' ? error : error.message || 'Failed to add sample'
       // };
       // return Promise.reject(errorObj);
-  })
-  .catch( (error) => {
-    throw ({
-      message:"Cannot update sample",
-      error,
-      data,
-      projectId,
-      sampleId
     })
-  })
-
+    .catch(error => {
+      throw {
+        message: 'Cannot update sample',
+        error,
+        data,
+        projectId,
+        sampleId,
+      };
+    });
 }
 
 // module.exports = 'useProjects'
-
-
-
-
-  

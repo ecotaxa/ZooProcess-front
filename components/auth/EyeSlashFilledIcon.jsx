@@ -1,5 +1,5 @@
-import React from "react";
-export const EyeSlashFilledIcon = (props) => (
+import React from 'react';
+export const EyeSlashFilledIcon = props => (
   <svg
     aria-hidden="true"
     fill="none"

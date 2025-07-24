@@ -1,29 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import { readMatrixFromCompressedBinary } from '@/components/DrawCanvasTools'; // doit être un module Node, pas client !
 import { createCanvas, loadImage } from 'canvas';
-
-const REAL_FOLDER = process.env.NEXT_PUBLIC_REAL_FOLDER || path.join(process.cwd(), 'public');
+import { REAL_FOLDER, API_TOOLS_SERVER } from '@/constants';
 
 export async function POST(req: NextRequest) {
   const gzFilename = req.headers.get('x-filename');
-  const folder = req.headers.get('x-folder') || "";
+  const folder = req.headers.get('x-folder') || '';
   if (!gzFilename) {
-    return NextResponse.json({ error: "Missing filename" }, { status: 400 });
+    return NextResponse.json({ error: 'Missing filename' }, { status: 400 });
   }
   const savePath = path.join(REAL_FOLDER, folder, gzFilename);
   const buffer = Buffer.from(await req.arrayBuffer());
 
   try {
     // 1. Sauve le .gz
-    if (folder.startsWith("/api/backend")) {
+    if (folder.startsWith('/api/backend')) {
       // Just send the updated mask and let backend deal with it
-      const mask_post_url = process.env.NEXT_PUBLIC_API_TOOLS_SERVER+"/vignette_mask/"+gzFilename;
-      console.log("uploading mask_post_url", mask_post_url);
-      await sendBufferToServer(mask_post_url, "application/gzip", buffer);
+      const mask_post_url =
+        API_TOOLS_SERVER + '/vignette_mask/' + gzFilename;
+      console.log('uploading mask_post_url', mask_post_url);
+      await sendBufferToServer(mask_post_url, 'application/gzip', buffer);
       return NextResponse.json({ ok: true });
-    } else  {
+    } else {
       await fs.writeFile(savePath, buffer);
     }
 
@@ -53,7 +52,7 @@ export async function POST(req: NextRequest) {
       for (let x = 0; x < width; x++) {
         if (matrix[y][x] === 1) {
           const index = (y * width + x) * 4;
-          data[index]     = color[0];
+          data[index] = color[0];
           data[index + 1] = color[1];
           data[index + 2] = color[2];
           data[index + 3] = color[3];
@@ -81,8 +80,8 @@ async function sendBufferToServer(url: string, mimeType: string, buffer: Buffer)
 
     // Create a file from the buffer
     // The File constructor takes (parts, filename, options)
-    const file = new File([buffer], path.basename(url), { 
-      type: mimeType 
+    const file = new File([buffer], path.basename(url), {
+      type: mimeType,
     });
 
     // Append the file to the FormData

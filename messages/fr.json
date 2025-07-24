@@ -129,11 +129,10 @@
     "Add": "[TODO] Add new sample"
   },
 
-    "SamplePageStats": {
-        "Stats_Info_Project":"Projet : {name}",
-        "Stats_Info_Sample":"Echantillon : {name}"
-    },
-
+  "SamplePageStats": {
+    "Stats_Info_Project": "Projet : {name}",
+    "Stats_Info_Sample": "Echantillon : {name}"
+  },
 
   "Table_Background": {
     "ID": "[TODO] ID",
@@ -175,13 +174,12 @@
     "QC": "[TODO] QC"
   },
 
-  "Form":{
+  "Form": {
     "acronym": "Acronyme",
     "acronym_placeholder": "Acronyme de votre projet",
-    "description":"Project description",
-    "description_ph":"Décrivez votre projet ici",
-    "ecotaxa_project_title":"Ecotaxa Project Title",
-    "ecotaxa_project_title_ph":"Titre du Projet dans Ecoxata"
+    "description": "Project description",
+    "description_ph": "Décrivez votre projet ici",
+    "ecotaxa_project_title": "Ecotaxa Project Title",
+    "ecotaxa_project_title_ph": "Titre du Projet dans Ecoxata"
   }
-
 }

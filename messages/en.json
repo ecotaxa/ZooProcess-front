@@ -171,11 +171,11 @@
     "Observation": "Observation",
     "QC": "QC"
   },
-  "SubSample_Process":{
-    "Continue_button":"Continue",
-    "Failed_button":"Failed",
-    "Cancel_Fraction_Button":"Cancel - Change Fraction",
-    "Cancel_Scan_Button":"Cancel - Re Scan"
+  "SubSample_Process": {
+    "Continue_button": "Continue",
+    "Failed_button": "Failed",
+    "Cancel_Fraction_Button": "Cancel - Change Fraction",
+    "Cancel_Scan_Button": "Cancel - Re Scan"
   },
   "Form": {
     "project": "Project",

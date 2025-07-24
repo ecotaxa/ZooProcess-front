@@ -14,7 +14,7 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (time / totalTime) * circumference;
   const containerSize = radius * 2 + 280;
-  const center = containerSize/2
+  const center = containerSize / 2;
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   const formatTime = (time: number) => {
@@ -26,7 +26,7 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setElapsedSeconds((prevSeconds) => prevSeconds + 1);
+      setElapsedSeconds(prevSeconds => prevSeconds + 1);
     }, 1000);
 
     return () => clearInterval(interval);
@@ -41,9 +41,11 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div
+      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+    >
       <div style={{ width: containerSize, height: containerSize }}>
-        <svg height={containerSize } width={containerSize } style={{ display: 'block' }}>
+        <svg height={containerSize} width={containerSize} style={{ display: 'block' }}>
           <circle
             cx={radius}
             cy={radius}
@@ -66,8 +68,8 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ time, totalTime }) => {
           {Array.from({ length: nbPoint }, (_, index) => (
             <circle
               key={index}
-              cx={center + radius * Math.cos(((index * 6  + angle ) * Math.PI) / 90)}
-              cy={center + radius * Math.sin(((index * 6  + angle ) * Math.PI) / 90)}
+              cx={center + radius * Math.cos(((index * 6 + angle) * Math.PI) / 90)}
+              cy={center + radius * Math.sin(((index * 6 + angle) * Math.PI) / 90)}
               r={pointRadius}
               fill={getPointColor(index)}
             />

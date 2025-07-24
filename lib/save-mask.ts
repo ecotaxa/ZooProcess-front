@@ -1,6 +1,4 @@
-import pako from "pako";
-
-
+import pako from 'pako';
 
 export async function saveMaskViaApi(matrix: number[][], gzFilename: string, folder: string) {
   const height = matrix.length;
@@ -29,10 +27,10 @@ export async function saveMaskViaApi(matrix: number[][], gzFilename: string, fol
     method: 'POST',
     headers: {
       'Content-Type': 'application/octet-stream',
-      'X-Filename': gzFilename,   // on transmet le nom du fichier
-      'X-Folder': folder          // on transmet le dossier racine (ex: "test/1")
+      'X-Filename': gzFilename, // on transmet le nom du fichier
+      'X-Folder': folder, // on transmet le dossier racine (ex: "test/1")
     },
-    body: compressed
+    body: compressed,
   });
 
   if (!res.ok) {

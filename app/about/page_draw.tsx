@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -9,31 +7,31 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from "@heroui/react";
+} from '@heroui/react';
 
-import DrawCanvas from "@/components/DrawCanvas";
+import DrawCanvas from '@/components/DrawCanvas';
 
 import {
   mergeImageWithMatrix,
   saveMatrixAsCompressedBinary,
   readMatrixFromCompressedBinary,
   readMatrixFromBinary,
-  saveMatrixAsBinary
-} from "@/components/DrawCanvasTools";
+  saveMatrixAsBinary,
+} from '@/components/DrawCanvasTools';
 
 export default function TestCanvasPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [latestMatrix, setLatestMatrix] = useState<number[][] | null>(null);
 
-  const imagePath = "/test/apero2023_pp_wp2_001_st01_d_d1_1_567.jpg";
+  const imagePath = '/test/apero2023_pp_wp2_001_st01_d_d1_1_567.jpg';
 
   const handleApply = (matrix: number[][]) => {
     const img = new Image();
     img.src = imagePath;
     img.onload = () => {
       const resultCanvas = mergeImageWithMatrix(img, matrix);
-      const dataUrl = resultCanvas.toDataURL("image/png");
+      const dataUrl = resultCanvas.toDataURL('image/png');
       setImageUrl(dataUrl);
       setLatestMatrix(matrix);
       onClose();
@@ -42,22 +40,21 @@ export default function TestCanvasPage() {
 
   const handleSaveMatrix = () => {
     if (latestMatrix) {
-      saveMatrixAsBinary(latestMatrix, "masque.bin");
+      saveMatrixAsBinary(latestMatrix, 'masque.bin');
     }
   };
 
-  
   const handleSaveMatrixCompressed = () => {
     if (latestMatrix) {
-      saveMatrixAsCompressedBinary(latestMatrix, "masque_compressé.gz");
+      saveMatrixAsCompressedBinary(latestMatrix, 'masque_compressé.gz');
     }
   };
 
   const handleSaveImage = () => {
     if (imageUrl) {
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = imageUrl;
-      link.download = "fusion-result.png";
+      link.download = 'fusion-result.png';
       link.click();
     }
   };
@@ -69,7 +66,6 @@ export default function TestCanvasPage() {
     const matrix = readMatrixFromBinary(buffer);
     setLatestMatrix(matrix);
   };
-
 
   const handleImportCompressedBinaryMatrix = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -104,7 +100,6 @@ export default function TestCanvasPage() {
           <span className="mr-2">Importer un masque (.bin) :</span>
           <input type="file" accept=".bin" onChange={handleImportBinaryMatrix} />
         </label>
-        
       </div>
 
       <Modal isOpen={isOpen} onClose={onClose} size="full" backdrop="blur">
@@ -113,10 +108,10 @@ export default function TestCanvasPage() {
           <ModalBody>
             <div
               style={{
-                margin: "0 auto",
-                maxWidth: "75vw",
-                maxHeight: "75vh",
-                overflow: "auto",
+                margin: '0 auto',
+                maxWidth: '75vw',
+                maxHeight: '75vh',
+                overflow: 'auto',
               }}
             >
               <DrawCanvas
@@ -141,7 +136,7 @@ export default function TestCanvasPage() {
               src={imageUrl}
               alt="Fusion"
               className="block"
-              style={{ maxWidth: "100%", height: "auto" }}
+              style={{ maxWidth: '100%', height: 'auto' }}
             />
           </div>
           <div className="mt-4 flex justify-center gap-4">

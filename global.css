@@ -6,7 +6,7 @@ put css in @/style/globals.css
 
 
 
-*/ 
+*/
 
 /* .portrait-container {
     display: inline-flex;
@@ -26,31 +26,26 @@ put css in @/style/globals.css
     height: fit-content;
   } */
 
-  .image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 90vw;
-    max-height: 70vh;
-    overflow: hidden;
-  }
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 90vw;
+  max-height: 70vh;
+  overflow: hidden;
+}
 
-   
-  .landscape-mode img {
-    max-width: 90vw;
-    max-height: 70vh;
-  }
-  
-  .portrait-mode {
-    transform: rotate(90deg);
-  }
+.landscape-mode img {
+  max-width: 90vw;
+  max-height: 70vh;
+}
 
-  .portrait-mode img {
-    /* Swapped dimensions for portrait mode */
-    max-width: 70vh;
-    max-height: 90vw; 
-  }
- 
+.portrait-mode {
+  transform: rotate(90deg);
+}
 
-
-
+.portrait-mode img {
+  /* Swapped dimensions for portrait mode */
+  max-width: 70vh;
+  max-height: 90vw;
+}

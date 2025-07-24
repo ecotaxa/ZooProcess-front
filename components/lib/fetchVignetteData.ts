@@ -1,6 +1,7 @@
 import { readMatrixFromCompressedBinary } from '@/components/DrawCanvasTools';
 import path from 'path';
 import fs from 'fs/promises';
+import { API_SERVER } from '@/constants';
 
 export interface VignetteData {
   scan: string;
@@ -15,7 +16,7 @@ export interface VignetteResponse {
 }
 
 export async function fetchVignetteData(): Promise<VignetteResponse> {
-  const baseURL = process.env.NEXT_PUBLIC_API_SERVER!;
+  const baseURL = API_SERVER;
   const fullUrl = `${baseURL}/vignettes`;
 
   console.log('🔍 fetchVignetteData:', { fullUrl });
@@ -33,9 +34,7 @@ export async function fetchVignetteData(): Promise<VignetteResponse> {
         try {
           const matrixPath = path.join(folderPath, item.matrix);
           const buffer = await fs.readFile(matrixPath);
-          const matrix = readMatrixFromCompressedBinary(
-            new Uint8Array(buffer).buffer
-          );
+          const matrix = readMatrixFromCompressedBinary(new Uint8Array(buffer).buffer);
           const scanPath = path.join(folderPath, item.scan);
           const maskPath = await generateMask(scanPath, matrix, folderPath);
           return {
@@ -47,12 +46,17 @@ export async function fetchVignetteData(): Promise<VignetteResponse> {
         }
       }
       return item;
-    })  );
+    })
+  );
 
   return { data: dataUpdated, folder };
 }
 
-export async function generateMask(imagePath: string, matrix: number[][], outputDir: string): Promise<string> {
+export async function generateMask(
+  imagePath: string,
+  matrix: number[][],
+  outputDir: string
+): Promise<string> {
   const { createCanvas, loadImage } = await import('canvas');
   const image = await loadImage(imagePath);
   const canvas = createCanvas(image.width, image.height);

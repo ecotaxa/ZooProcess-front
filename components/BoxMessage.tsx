@@ -1,45 +1,52 @@
-import { Button, Card, CardBody, Link } from "@heroui/react";
-import React, { FC } from "react";
+import { Button, Card, CardBody, Link } from '@heroui/react';
+import React, { FC } from 'react';
 
 export interface IBoxMessage {
-    children: any; // React.ReactNode //React.RefAttributes<SVGSVGElement>
-    title: String;
-    subtitle: String;
-    button: {
-      href: String ;
-      text: String;
-      } | undefined
-  }
-  
+  children: any; // React.ReactNode //React.RefAttributes<SVGSVGElement>
+  title: string;
+  subtitle: string;
+  button:
+    | {
+        href: string;
+        text: string;
+      }
+    | undefined;
+}
 
-export const BoxMessage: FC<IBoxMessage> = (props) => {
-
-
+export const BoxMessage: FC<IBoxMessage> = props => {
   const { children, title, subtitle, button } = props;
 
   const IconElement = React.cloneElement(children, {
-    className: "h-16 w-16 text-blue-500",
+    className: 'h-16 w-16 text-blue-500',
   });
 
-  const ShowButton = (button :{
-    href: String ;
-    text: String;
-    } | undefined| undefined) => {
-    if ( button == undefined ) {return <></>}
-    console.log("button: ", button);
-    const testid = button.text.toString()+"Btn"
+  const ShowButton = (
+    button:
+      | {
+          href: string;
+          text: string;
+        }
+      | undefined
+  ) => {
+    if (button == undefined) {
+      return <></>;
+    }
+    console.log('button: ', button);
+    const testid = button.text.toString() + 'Btn';
     return (
       <div className="flex text-right">
-        <Button 
-            href={button?.href.toString()}        
-            as={Link}
-            color="primary"
-            // showAnchorIcon
-            variant="solid"
-            data-testid={testid}
-        >{button?.text}</Button>
+        <Button
+          href={button?.href.toString()}
+          as={Link}
+          color="primary"
+          // showAnchorIcon
+          variant="solid"
+          data-testid={testid}
+        >
+          {button?.text}
+        </Button>
       </div>
-    )
+    );
   };
 
   return (
@@ -47,13 +54,13 @@ export const BoxMessage: FC<IBoxMessage> = (props) => {
       <CardBody>
         <div className="flex">
           <span>
-          <div className="flex-none p-6">{IconElement}</div>
+            <div className="flex-none p-6">{IconElement}</div>
           </span>
-          <span >
-          <div className="">
-            <h2>{title}</h2>
-            <h3>{subtitle}</h3>
-          </div>
+          <span>
+            <div className="">
+              <h2>{title}</h2>
+              <h3>{subtitle}</h3>
+            </div>
           </span>
           {ShowButton(button)}
         </div>
@@ -61,4 +68,3 @@ export const BoxMessage: FC<IBoxMessage> = (props) => {
     </Card>
   );
 };
-

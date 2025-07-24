@@ -5,20 +5,19 @@ axios.interceptors.response.use(
   r => r,
   (err: AxiosError) => {
     // Normalise toujours la charge utile (elle peut déjà être un objet)
-    const payload =
-      isPlainObject(err.response?.data)
-        ? err.response!.data
-        : safeParse(err.response?.data);
+    const payload = isPlainObject(err.response?.data)
+      ? err.response!.data
+      : safeParse(err.response?.data);
 
     // On range tout dans une sous-classe pour la reconnaître partout
     return Promise.reject(new ApiValidationError(payload, err));
-  },
+  }
 );
 
 class ApiValidationError extends Error {
   constructor(
     public payload: unknown,
-    axiosError: AxiosError,
+    axiosError: AxiosError
   ) {
     super('API validation failed');
     this.name = 'ApiValidationError';

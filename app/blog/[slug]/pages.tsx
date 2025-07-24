@@ -1,10 +1,6 @@
-
-"use client"
-
 export default function Page({ params }: { params: { slug: string } }) {
-    return (<div>My Post: {params.slug}</div>)
-  }
-
+  return <div>My Post: {params.slug}</div>;
+}
 
 // export default function Page() {
 //   return (

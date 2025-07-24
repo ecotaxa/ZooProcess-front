@@ -1,33 +1,20 @@
-"use client"
-
-import { Check} from "../../new/[subsampleid]/Check";
-import { eState } from "../../new/[subsampleid]/state"
-
+import { Check } from '../../new/[subsampleid]/Check';
+import { eState } from '../../new/[subsampleid]/state';
 
 const CheckPage = () => {
+  const params = {
+    current: eState.check,
+    nextState: eState.end,
+    setCurrentFn: () => {},
+    onCancel: () => {},
+  };
 
-const params = {
-    current : eState.check,
-    nextState : eState.end,
-    setCurrentFn : () => {} ,
-    onCancel : () => {}
-
-}
-
-
-
-return (
-
+  return (
     <>
-    Vignettes
-    <Check {...params} />
+      Vignettes
+      <Check {...params} />
     </>
-
-)
-
-
-
-}
-
+  );
+};
 
 export default CheckPage;

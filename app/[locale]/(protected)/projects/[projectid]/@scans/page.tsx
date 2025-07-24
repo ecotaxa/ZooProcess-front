@@ -1,40 +1,32 @@
-"use client";
+import { getScans } from '@/app/api/data/scan';
+import { SubSample } from '@/app/api/network/interfaces';
+import { ScanTable } from '@/components/scans-table';
+import { Card, CardBody, CardHeader, Link, Spacer } from '@heroui/react';
+import { FC, useEffect, useState } from 'react';
 
-import { getScans } from "@/app/api/data/scan";
-import { SubSample } from "@/app/api/network/interfaces";
-import { ScanTable } from "@/components/scans-table";
-import { Card, CardBody, CardHeader, Link, Spacer} from "@heroui/react";
-import { FC, useEffect, useState } from "react";
-import { useTranslations } from 'next-intl' ;
-import { Debug } from "@/components/Debug";
+import { Debug } from '@/components/Debug';
 
 interface pageProps {
-        projectid: string
+  projectid: string;
 }
 
+const Scans: FC<pageProps> = ({ projectid }) => {
+  const t = useTranslations('ProjectPage_Scans');
 
-const Scans : FC<pageProps> = ({projectid}) => {
+  console.log('Metadata params projectid: ', projectid);
 
-	const t = useTranslations('ProjectPage_Scans');
-	
+  const [scanList, setScanList] = useState<any[]>([]);
 
-    console.log("Metadata params projectid: ", projectid);
+  useEffect(() => {
+    const fetchBackgrounds = async () => {
+      const fetchedScans = await getScans(projectid);
+      const formattedData = formatData(fetchedScans);
+      setScanList(formattedData);
+    };
+    fetchBackgrounds();
+  }, [projectid]);
 
-    const [ scanList, setScanList ] = useState<any[]>([])
-
-    useEffect(() => {
-        const fetchBackgrounds = async () => {
-            const fetchedScans = await getScans(projectid)
-            const formattedData = formatData(fetchedScans)
-            setScanList(formattedData)
-        }
-        fetchBackgrounds()
-    }, [projectid])
-
-    
- 
-
-    /* data to format
+  /* data to format
 	{
 		"id": "67fe58f4ec2fb4b42b442d62",
 		"url": "/Volumes/sgalvagno/plankton/zooscan_zooprocess_test/Zooscan_apero_pp_2023_wp2_sn002/Zooscan_scan/_raw/apero2023_pp_wp2_005_st11_d_d1_1-1744722130000-285157118.tif",
@@ -329,99 +321,87 @@ const Scans : FC<pageProps> = ({projectid}) => {
 		}
 	},
     */
-    const formatData = (data:any) => {
-    
-        const scans = Object.keys(data).map( (_scan) => {
-    
-            try {
-          console.log("scans: ", _scan);
-  
-          if ( _scan == "key"){
-              console.error("ARRGG indey == key");
-              console.log("ARRGG indey == key")
-              console.debug(data);
-              console.log("pfffff")
-              return null
+  const formatData = (data: any) => {
+    const scans = Object.keys(data)
+      .map(_scan => {
+        try {
+          console.log('scans: ', _scan);
+
+          if (_scan == 'key') {
+            console.error('ARRGG indey == key');
+            console.log('ARRGG indey == key');
+            console.debug(data);
+            console.log('pfffff');
+            return null;
           } else {
-            const s = data[_scan]
-            console.debug("data[_scan]:",s)
+            const s = data[_scan];
+            console.debug('data[_scan]:', s);
 
-            const scanSubsamples = s.scanSubsamples
-           if ( scanSubsamples.length == 0) return null
+            const scanSubsamples = s.scanSubsamples;
+            if (scanSubsamples.length == 0) return null;
 
-            const  scanSubsample = scanSubsamples[0]
-            const subsample:SubSample = scanSubsample.subsample
+            const scanSubsample = scanSubsamples[0];
+            const subsample: SubSample = scanSubsample.subsample;
 
-            console.log("subsample:",subsample.name)
+            console.log('subsample:', subsample.name);
 
-            const metadata = subsample.metadata
-            const fraction_id = metadata.find(m => m.name == "fraction_id")
-            const frac_min = metadata.find(m => m.name == "fraction_min_mesh")
-            const frac_sup = metadata.find(m => m.name == "fraction_max_mesh")
-            const observation = metadata.find(m => m.name == "observation")
-  
+            const metadata = subsample.metadata;
+            const fraction_id = metadata.find(m => m.name == 'fraction_id');
+            const frac_min = metadata.find(m => m.name == 'fraction_min_mesh');
+            const frac_sup = metadata.find(m => m.name == 'fraction_max_mesh');
+            const observation = metadata.find(m => m.name == 'observation');
 
-            const qc = s.SubSample?.qc
+            const qc = s.SubSample?.qc;
 
             return {
               id: s.id,
-              name: s.scanSubsamples[0].subsample.name, 
+              name: s.scanSubsamples[0].subsample.name,
               creator: s.user.name,
-              qc: s.qc || "TODO",  
-              fraction_id : fraction_id?.value || "",
-              frac_min: frac_min?.value || "",
-              frac_sup: frac_sup?.value || "",
-              observation: observation?.value || "",
-              action:s.url
-            }  
+              qc: s.qc || 'TODO',
+              fraction_id: fraction_id?.value || '',
+              frac_min: frac_min?.value || '',
+              frac_sup: frac_sup?.value || '',
+              observation: observation?.value || '',
+              action: s.url,
+            };
+          }
+        } catch (e) {
+          console.error('Error at scan ', _scan, ' E=', e);
+          return null;
         }
-        } 
-        catch (e){
-            console.error("Error at scan ", _scan, " E=" , e)
-            return null
-        }
-        }).filter(Boolean)
-        return scans
-    }
+      })
+      .filter(Boolean);
+    return scans;
+  };
 
+  const ShowScanData = () => {
+    console.debug(scanList);
+    return <ScanTable projectId={projectid} scans={scanList} />;
+  };
 
-
-    const ShowScanData = () => {
-        console.debug(scanList)
-        return <ScanTable projectId={projectid} scans={scanList}/>
-    }
-
-
-    return (
-		<>
-        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+  return (
+    <>
+      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="text-center justify-center">
-           
-
-            <Card className="inline-block "
-                    data-testid="backgroundCard" 
-                >
-                <CardHeader className="flex flex-row py-3">
-                    {/* <div>
+          <Card className="inline-block " data-testid="backgroundCard">
+            <CardHeader className="flex flex-row py-3">
+              {/* <div>
                         <h1>Available sub sample scans</h1>
                         <h4>Subsamples read from file: </h4>
                     </div> */}
-                </CardHeader>
-                <CardBody>
-                    <ShowScanData/>
-                </CardBody>
-
-            </Card> 
+            </CardHeader>
+            <CardBody>
+              <ShowScanData />
+            </CardBody>
+          </Card>
         </div>
-    </section>
-	<section>
-		<Debug params={projectid} title={"Project ID:" + projectid}  open={false}/> 
-		<Debug params={scanList} title="scanList" pre={true}/>
-	</section>
-	</>
-
-    );
+      </section>
+      <section>
+        <Debug params={projectid} title={'Project ID:' + projectid} open={false} />
+        <Debug params={scanList} title="scanList" pre={true} />
+      </section>
+    </>
+  );
 };
 
 export default Scans;
-

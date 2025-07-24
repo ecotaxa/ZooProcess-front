@@ -1,9 +1,9 @@
-import type { NextApiRequest } from "next";
-import mime from "mime";
-import { join } from "path";
-import * as dateFn from "date-fns";
-import formidable from "formidable";
-import { mkdir, stat } from "fs/promises";
+import mime from 'mime';
+import { join } from 'path';
+import * as dateFn from 'date-fns';
+import formidable from 'formidable';
+import { UPLOAD_FOLDER, ROOT_DIR } from '@/constants';
+import { mkdir, stat } from 'fs/promises';
 
 export const FormidableError = formidable.errors.FormidableError;
 
@@ -11,17 +11,16 @@ export const parseForm = async (
   req: NextApiRequest
 ): Promise<{ fields: formidable.Fields; files: formidable.Files }> => {
   return await new Promise(async (resolve, reject) => {
-
-    const uploadFolder = process.env.NEXT_PUBLIC_UPLOAD_FOLDER || "/uploads";
+    const uploadFolder = UPLOAD_FOLDER;
     const uploadDir = join(
-      process.env.ROOT_DIR || process.cwd(),
-      `${uploadFolder}/${dateFn.format(Date.now(), "dd-MM-Y")}`
+      ROOT_DIR,
+      `${uploadFolder}/${dateFn.format(Date.now(), 'dd-MM-Y')}`
     );
 
     try {
       await stat(uploadDir);
     } catch (e: any) {
-      if (e.code === "ENOENT") {
+      if (e.code === 'ENOENT') {
         await mkdir(uploadDir, { recursive: true });
       } else {
         console.error(e);
@@ -36,15 +35,13 @@ export const parseForm = async (
       uploadDir,
       filename: (_name, _ext, part) => {
         const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-        const filename = `${part.name || "unknown"}-${uniqueSuffix}.${
-          mime.getExtension(part.mimetype || "") || "unknown"
+        const filename = `${part.name || 'unknown'}-${uniqueSuffix}.${
+          mime.getExtension(part.mimetype || '') || 'unknown'
         }`;
         return filename;
       },
-      filter: (part) => {
-        return (
-          part.name === "media" && (part.mimetype?.includes("image") || false)
-        );
+      filter: part => {
+        return part.name === 'media' && (part.mimetype?.includes('image') || false);
       },
     });
 

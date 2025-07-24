@@ -1,21 +1,20 @@
-import { Input } from "@heroui/input";
-import { Button, Table, TableBody, TableCell, TableHeader, TableRow } from "@heroui/react";
+import { Input } from '@heroui/input';
+import { Button, Table, TableBody, TableCell, TableHeader, TableRow } from '@heroui/react';
 
-interface IFraction  {
-    min: number
-    max: number
-    name: string
+interface IFraction {
+  min: number;
+  max: number;
+  name: string;
 }
 
 interface FractionProps {
-    fractions: Array<IFraction>;
+  fractions: Array<IFraction>;
 }
 
-
-export function Fraction(fractions: Array<IFraction> ) {
-    return (
-        <div>
-            {/* {fractions.map( fraction, index) => (
+export function Fraction(fractions: Array<IFraction>) {
+  return (
+    <div>
+      {/* {fractions.map( fraction, index) => (
                 <div key={index}>
                     <Table>
                         <TableHeader>
@@ -39,9 +38,9 @@ export function Fraction(fractions: Array<IFraction> ) {
                     </div>
                 </div>
             ))} */}
-        </div>
-    );
-};
+    </div>
+  );
+}
 // return (
 //     <div>
 //         <h1>Fraction</h1>

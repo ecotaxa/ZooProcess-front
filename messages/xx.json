@@ -168,11 +168,10 @@
     "QC": "XX"
   },
 
-  "Form":{
+  "Form": {
     "acronym": "Acronyme",
     "acronym_placeholder": "Acronyme de votre projet",
-        "description":"Project description",
-        "description_ph":"Describe your project here"
+    "description": "Project description",
+    "description_ph": "Describe your project here"
   }
-
 }

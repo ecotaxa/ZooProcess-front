@@ -1,21 +1,11 @@
 // "use server";
 
-import NextAuth from 'next-auth';
 // import { authConfig } from '@/auth.config';
 
-import {locales} from './i18n' 
+import { locales } from './i18n';
 
-import {
-  DEFAULT_LOGIN_REDIRECT,
-  apiAuthPrefix,
-  authRoutes,
-  publicRoutes
-} from "@/routes"
+import { DEFAULT_LOGIN_REDIRECT, apiAuthPrefix, authRoutes, publicRoutes } from '@/routes';
 import { auth } from './auth';
-import { NextResponse } from 'next/server';
-// import { getToken } from 'next-auth/jwt'
-
-import createMiddleware from 'next-intl/middleware';
 
 // Create the intl middleware
 const intlMiddleware = createMiddleware({
@@ -23,16 +13,13 @@ const intlMiddleware = createMiddleware({
   locales: locales,
   // Used when no locale matches
   defaultLocale: locales[0],
-  localePrefix: 'always' // This ensures locale is always in the URL
+  localePrefix: 'always', // This ensures locale is always in the URL
 });
 
-
 // export default NextAuth(authConfig).auth;
- 
+
 // import { auth } from '@/auth'
 // const { auth } = NextAuth(authConfig)
-
-
 
 // export default auth((req) => {
 //   // req.auth
@@ -40,7 +27,6 @@ const intlMiddleware = createMiddleware({
 //   const isLoggedIn = !!req.auth
 //   // console.log("ROUTE: ", req.nextUrl.pathname)
 //   // console.log("IS LOGGEDIN: ", isLoggedIn)
-
 
 //  // Extract locale from pathname
 //   const pathname = req.nextUrl.pathname;
@@ -56,7 +42,7 @@ const intlMiddleware = createMiddleware({
 //   ) {
 //     return NextResponse.next();
 //   }
-  
+
 //   // Handle internationalization first
 //   if (pathnameIsMissingLocale) {
 //     const locale = 'en'; // or detect from headers/cookies
@@ -67,7 +53,6 @@ const intlMiddleware = createMiddleware({
 
 //   // Get the pathname without locale for route checking
 //   const pathnameWithoutLocale = pathname.replace(/^\/[a-z]{2}/, '') || '/';
-
 
 //   // console.log("req.auth: ", req.auth)
 
@@ -87,7 +72,7 @@ const intlMiddleware = createMiddleware({
 //   if (token) {
 //     // Add the token to the request headers
 //     req.headers.set('Authorization', `Bearer ${token}`)
-    
+
 //     if (! globalThis.token) {
 //       // console.log("globalThis.token is NULL and fix it")
 //       globalThis.token = token
@@ -156,14 +141,11 @@ const intlMiddleware = createMiddleware({
 //   return intlMiddleware(req);
 // })
 
-
-
-
 // // path that match will call the middleware function "auth" above
 // export const config = {
 //   // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
 //   // matcher: ['/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico).*)'], // here not call on this path  warning the bang !
-//   // better to define which route we want to better secure 
+//   // better to define which route we want to better secure
 //   // matcher:(["/auth/login","auth/register"])
 //   // matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 //     matcher: [
@@ -176,7 +158,7 @@ const intlMiddleware = createMiddleware({
 //   ],
 // };
 
-export default auth((req) => {
+export default auth(req => {
   const { nextUrl } = req;
   const pathname = req.nextUrl.pathname;
 
@@ -210,11 +192,9 @@ export default auth((req) => {
   const segments = pathname.split('/');
   const locale = segments[1];
   const isValidLocale = ['en', 'fr'].includes(locale);
-  
+
   // Get path without locale for route checking
-  const pathWithoutLocale = isValidLocale 
-    ? '/' + segments.slice(2).join('/') 
-    : pathname;
+  const pathWithoutLocale = isValidLocale ? '/' + segments.slice(2).join('/') : pathname;
 
   const isApiAuthRoute = pathWithoutLocale.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(pathWithoutLocale) || pathWithoutLocale === '/';
@@ -239,11 +219,8 @@ export default auth((req) => {
 export const config = {
   matcher: [
     // '/((?!api|_next|_vercel|.*\\..*).*)'
-        '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
-            // '/((?!api|_next|.*\\..*).*)', // Exclut les routes API, les fichiers statiques, etc.
-          // '/', '/(en|fr)/:path*'
-
-
-
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
+    // '/((?!api|_next|.*\\..*).*)', // Exclut les routes API, les fichiers statiques, etc.
+    // '/', '/(en|fr)/:path*'
   ],
 };

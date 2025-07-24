@@ -1,9 +1,7 @@
 // import VignetList from './VignetList';
 import { fetchVignetteData } from '@/components/lib/api';
 
-
-import dynamic from 'next/dynamic'
-const VignetList = dynamic(() => import('@/components/VignetList'), { ssr: false })
+const VignetList = dynamic(() => import('@/components/VignetList'), { ssr: false });
 
 interface PageProps {
   params: {

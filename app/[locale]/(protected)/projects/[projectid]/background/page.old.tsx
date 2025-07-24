@@ -43,7 +43,7 @@ type pageProps = {
 
 const BackgroundScanPage : FC<pageProps> = async ({params}) => {
 
-    const router = useRouter();
+    const navigate = useNavigate();
     const {projectid, sampleid, subsampleid} = params;
     // const {project, isError, isLoading} = useProject/*<{Project,boolean,boolean>*/(projectid);
     const project = await getProject(projectid)
@@ -80,7 +80,7 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
             // const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${subsampleid}/process/?image=${image}`
             const path = `/projects/${projectid}`
             console.log("path: " , path)
-            router.push(path)
+            navigate(path)
             // router.back()
 
         }
@@ -165,7 +165,7 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
                             // setImage(response.id)
                             setImage(true)
                             console.log("Go To the next page" )
-                            // router.push(`${response.id}`)
+                            // navigate(`${response.id}`)
                 
                             // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
                         })
@@ -200,7 +200,7 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
                 //             console.log("response: ", response)
                 //             setImage(response.id)
                 //             console.log("Go To the next page" )
-                //             // router.push(`${response.id}`)
+                //             // navigate(`${response.id}`)
                 
                 //             // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
                 //         })
@@ -309,7 +309,7 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
                 // setImage(response.id)
                 setImage(true)
                 console.log("Go To the next page" )
-                // router.push(`${response.id}`)
+                // navigate(`${response.id}`)
     
                 // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
             })
@@ -334,7 +334,7 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
         //     console.log("response: ", response)
         //     setImage(response.id)
         //     console.log("Go To the next page" )
-        //     // router.push(`${response.id}`)
+        //     // navigate(`${response.id}`)
 
         //     // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
         // })
@@ -447,7 +447,7 @@ const BackgroundScanPage : FC<pageProps> = async ({params}) => {
                         color="secondary"
                         variant="solid"
                         data-testid="backgroundCancelBtn"
-                        onPress={() =>{ console.debug("cancel scanning"); router.push('/projects'); }}
+                        onPress={() =>{ console.debug("cancel scanning"); navigate('/projects'); }}
                     >Cancel</Button>
                 </CardFooter>
             </Card>               

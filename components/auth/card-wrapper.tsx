@@ -1,15 +1,13 @@
-"use client";
-
-import { Header } from "@/components/auth/header";
-import { BackButton } from "@/components/auth/back-button";
-import { Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
+import { Header } from '@/components/auth/header';
+import { BackButton } from '@/components/auth/back-button';
+import { Card, CardBody, CardFooter, CardHeader } from '@heroui/react';
 
 interface CardWrapperProps {
   children: React.ReactNode;
   headerLabel: string;
   backButtonLabel: string;
   backButtonHref: string;
-};
+}
 
 export const CardWrapper = ({
   children,
@@ -22,14 +20,9 @@ export const CardWrapper = ({
       <CardHeader>
         <Header label={headerLabel} />
       </CardHeader>
-      <CardBody>
-        {children}
-      </CardBody>
+      <CardBody>{children}</CardBody>
       <CardFooter>
-        <BackButton
-          label={backButtonLabel}
-          href={backButtonHref}
-        />
+        <BackButton label={backButtonLabel} href={backButtonHref} />
       </CardFooter>
     </Card>
   );
