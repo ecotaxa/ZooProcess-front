@@ -1,4 +1,3 @@
-import '@/styles/globals.css';
 import { siteConfig } from '@/config/site.ts';
 import { fontSans } from '@/config/fonts.ts';
 import { Providers } from './providers.tsx';
