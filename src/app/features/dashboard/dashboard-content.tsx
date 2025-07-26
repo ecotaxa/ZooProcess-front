@@ -1,4 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from 'app/stores/auth-context';
 
 // Sample data for the dashboard
 const dashboardData = [
@@ -10,10 +13,29 @@ const dashboardData = [
 ];
 
 export const DashboardContent = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { setAuthState } = useAuth();
+
+  const handleLogout = () => {
+    // Clear the auth state
+    setAuthState({ accessToken: null });
+    // Redirect to login page
+    navigate('/login');
+  };
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
+        >
+          {t('SettingsPage:Logout')}
+        </button>
+      </div>
+
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -34,27 +56,27 @@ export const DashboardContent = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {dashboardData.map((item) => (
+              {dashboardData.map(item => (
                 <tr key={item.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {item.id}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {item.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span 
+                    <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${item.status === 'Active' ? 'bg-green-100 text-green-800' : 
-                          item.status === 'Inactive' ? 'bg-red-100 text-red-800' : 
-                          'bg-yellow-100 text-yellow-800'}`}
+                        ${
+                          item.status === 'Active'
+                            ? 'bg-green-100 text-green-800'
+                            : item.status === 'Inactive'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                        }`}
                     >
                       {item.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {item.date}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.date}</td>
                 </tr>
               ))}
             </tbody>

@@ -6,8 +6,8 @@ import RootLayout from './layout.tsx';
 import { LoginPage } from './features/login/page.tsx';
 import { DashboardPage } from './features/dashboard/page.tsx';
 import { AuthProvider, useAuth } from 'app/stores/auth-context.tsx';
-// import Custom404 from '../../app/pages/404.tsx';
 
+// import Custom404 from '../../app/pages/404.tsx';
 // Protected routes
 // import ProjectsPage from '../../app/[locale]/(protected)/projects/page.tsx';
 
@@ -127,7 +127,7 @@ const router = createBrowserRouter([
   // },
 ]);
 
-// Router component to be used in main.tsx
+// Router component to be used in app.tsx
 export function Router() {
   return <RouterProvider router={router} />;
 }

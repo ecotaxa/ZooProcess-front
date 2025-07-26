@@ -25,11 +25,14 @@ import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router';
+import { useAuth } from 'app/stores/auth-context.tsx';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginForm = () => {
   const { t } = useTranslation('Login');
   const [searchParams] = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl');
+  // TODO, in case there are several protected pages
+  // const callbackUrl = searchParams.get('callbackUrl');
   const urlError =
     searchParams.get('error') === 'OAuthAccountNotLinked'
       ? t('AlreadyExist')
@@ -38,6 +41,8 @@ export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
+  const authContext = useAuth();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -53,8 +58,10 @@ export const LoginForm = () => {
 
     startTransition(() => {
       login(values)
-        .then(data => {
-          setSuccess(data);
+        .then(token => {
+          authContext.setAuthState({ accessToken: token });
+          setSuccess('Logged!');
+          navigate('/dashboard');
         })
         .catch(error => {
           setError(error.message);

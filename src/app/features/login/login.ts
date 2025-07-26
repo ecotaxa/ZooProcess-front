@@ -22,7 +22,7 @@ export const login: (values: output<typeof LoginSchema>) => Promise<string> = as
     password,
   })
     .then(token => {
-      return Promise.resolve('Login successful');
+      return Promise.resolve(token);
     })
     .catch(function (error: Error) {
       return Promise.reject(error);

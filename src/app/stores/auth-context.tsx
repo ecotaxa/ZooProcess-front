@@ -1,5 +1,11 @@
-import React, { createContext, useState, useEffect, type ReactNode, useContext } from 'react';
-import axios, { type AxiosInstance } from 'axios';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  type ReactNode,
+  useContext,
+  useMemo,
+} from 'react';
 
 // Define the shape of the auth state
 interface AuthState {
@@ -29,11 +35,34 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [authState, setAuthState] = useState<AuthState>({
-    accessToken: null,
-    // refreshToken: null,
+  // Initialize state from localStorage if available
+  const [authState, setAuthState] = useState<AuthState>(() => {
+    // Check if we're in a browser environment (to avoid SSR issues)
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem('accessToken');
+      return {
+        accessToken: storedToken,
+        // refreshToken: null,
+      };
+    }
+    return {
+      accessToken: null,
+      // refreshToken: null,
+    };
   });
 
+  // Save auth state to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (authState.accessToken) {
+        localStorage.setItem('accessToken', authState.accessToken);
+      } else {
+        localStorage.removeItem('accessToken');
+      }
+    }
+  }, [authState.accessToken]);
+
+  // Commented out code for future reference
   // useEffect(() => {
   // Initialize axios interceptors here
   // const api = axios.create({
@@ -82,9 +111,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // }, [authState.accessToken ,authState.refreshToken
   // ]);
 
-  return (
-    <AuthContext.Provider value={{ authState, setAuthState }}>{children}</AuthContext.Provider>
-  );
+  const memo = useMemo(() => ({ authState, setAuthState }), []);
+  return <AuthContext.Provider value={memo}>{children}</AuthContext.Provider>;
 };
 
 // Custom hook to use the auth context

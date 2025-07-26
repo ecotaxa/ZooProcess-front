@@ -5,7 +5,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 // Import translation files
 import enMessages from 'app/messages/en.json';
 import frMessages from 'app/messages/fr.json';
-import xxMessages from 'app/messages/xx.json';
 
 i18n
   // Detect user language
@@ -17,7 +16,6 @@ i18n
     resources: {
       en: enMessages,
       fr: frMessages,
-      xx: xxMessages,
     },
     fallbackLng: 'en',
     debug: process.env.NODE_ENV === 'development',

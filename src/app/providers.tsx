@@ -1,7 +1,6 @@
 import * as React from 'react';
 // import DebugStore from '@/lib/debug-store.ts';
 // import { debug } from '@/config/settings.js';
-import { useNavigate } from 'react-router-dom';
 import 'app/lib/i18n.config';
 
 export interface ProvidersProps {
@@ -9,7 +8,6 @@ export interface ProvidersProps {
 }
 
 export function Providers({ children }: Readonly<ProvidersProps>) {
-  useNavigate();
   React.useEffect(() => {
     // DebugStore.init(debug);
 
