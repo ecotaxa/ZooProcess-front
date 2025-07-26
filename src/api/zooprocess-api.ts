@@ -23,28 +23,10 @@ export async function login(data: Login): Promise<string> {
     });
 }
 
-export async function getProjects(): Promise<I.Projects> {
-  console.debug('getProjects');
-
-  const api = await axiosInstance({});
-  const response = await api.get<I.Projects>(`/projects`);
-
-  console.debug('getProjects response: ', response.status);
-
+export async function getProjects(token: string): Promise<Array<I.Project>> {
+  const api = await axiosInstance({ token: token });
+  const response = await api.get<Array<I.Project>>(`/projects`);
   return response.data;
-}
-
-export async function getProject_old(url: string): Promise<I.Project> {
-  const params = {};
-  const api = await axiosInstance(params);
-
-  const response = await api.get<I.Project>(url);
-
-  if (response.status === 200) {
-    return response.data;
-  } else {
-    throw new Error(`Failed to fetch project: ${response.statusText}`);
-  }
 }
 
 export async function getProject(projectId: string) {

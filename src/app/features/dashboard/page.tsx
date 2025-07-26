@@ -1,5 +1,5 @@
-import { DashboardContent } from './dashboard-content.tsx';
+import { Dashboard } from './dashboard.tsx';
 
 export const DashboardPage = () => {
-  return <DashboardContent />;
+  return <Dashboard />;
 };
