@@ -3,15 +3,15 @@ import * as LabelPrimitive from '@radix-ui/react-label';
 import { Slot } from '@radix-ui/react-slot';
 import {
   Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
+  type ControllerProps,
+  type FieldPath,
+  type FieldValues,
   FormProvider,
   useFormContext,
 } from 'react-hook-form';
 
-import { cn } from '@/lib/utils';
-import { Label } from '@/components/ui/label';
+import { twMergeClsx } from './utils.ts';
+import { Label } from './label.tsx';
 
 const Form = FormProvider;
 
@@ -76,7 +76,7 @@ const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 
     return (
       <FormItemContext.Provider value={{ id }}>
-        <div ref={ref} className={cn('space-y-2', className)} {...props} />
+        <div ref={ref} className={twMergeClsx('space-y-2', className)} {...props} />
       </FormItemContext.Provider>
     );
   }
@@ -92,7 +92,7 @@ const FormLabel = React.forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn(error && 'text-destructive', className)}
+      className={twMergeClsx(error && 'text-destructive', className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -128,7 +128,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn('text-[0.8rem] text-muted-foreground', className)}
+      className={twMergeClsx('text-[0.8rem] text-muted-foreground', className)}
       {...props}
     />
   );
@@ -150,7 +150,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn('text-[0.8rem] font-medium text-destructive', className)}
+      className={twMergeClsx('text-[0.8rem] font-medium text-destructive', className)}
       {...props}
     >
       {body}

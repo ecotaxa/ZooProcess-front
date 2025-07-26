@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Router } from './router.jsx';
-import './styles/global.css';
+import { Router } from './router.js';
+import 'app/styles/global.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

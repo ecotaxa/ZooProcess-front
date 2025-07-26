@@ -1,5 +1,7 @@
 import React from 'react';
-export const EyeFilledIcon = props => (
+export const EyeFilledIcon = (
+  /** @type {import("react/jsx-runtime").JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>} */ props
+) => (
   <svg
     aria-hidden="true"
     fill="none"

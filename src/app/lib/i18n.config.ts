@@ -3,9 +3,9 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 // Import translation files
-import enMessages from '../messages/en.json';
-import frMessages from '../messages/fr.json';
-import xxMessages from '../messages/xx.json';
+import enMessages from 'app/messages/en.json';
+import frMessages from 'app/messages/fr.json';
+import xxMessages from 'app/messages/xx.json';
 
 i18n
   // Detect user language

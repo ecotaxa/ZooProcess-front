@@ -1,22 +1,22 @@
 import * as React from 'react';
-import DebugStore from '@/lib/debug-store.ts';
-import { debug } from '@/config/settings.js';
+// import DebugStore from '@/lib/debug-store.ts';
+// import { debug } from '@/config/settings.js';
 import { useNavigate } from 'react-router-dom';
-import '@/lib/i18n.config';
+import 'app/lib/i18n.config';
 
 export interface ProvidersProps {
   children: React.ReactNode;
 }
 
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ children }: Readonly<ProvidersProps>) {
   useNavigate();
   React.useEffect(() => {
-    DebugStore.init(debug);
+    // DebugStore.init(debug);
 
     const handleKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'd') {
         e.preventDefault();
-        DebugStore.getInstance().toggle();
+        // DebugStore.getInstance().toggle();
       }
     };
 

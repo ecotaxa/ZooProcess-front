@@ -1,5 +1,5 @@
-import { Header } from '@/components/auth/header';
-import { BackButton } from '@/components/auth/back-button';
+import { Header } from './header.tsx';
+import { BackButton } from './back-button.tsx';
 import { Card, CardBody, CardFooter, CardHeader } from '@heroui/react';
 
 interface CardWrapperProps {
