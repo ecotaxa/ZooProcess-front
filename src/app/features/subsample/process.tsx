@@ -1,47 +1,49 @@
 // "use server";
 
-import { Project } from '@/app/api/network/interfaces';
-import { addBackgroundTask } from '@/app/api/tasks';
-import { MyImage } from '@/components/myImage';
-import { Button, Card, CardBody, CardFooter, Image, Spinner } from '@heroui/react';
+// import { addBackgroundTask } from '@/app/api/tasks';
+import { Button, Card, CardBody, CardFooter } from '@heroui/react';
 import { useEffect, useState } from 'react';
+import type { Project } from 'api/interfaces.ts';
+import { MyImage } from 'app/components/myImage.tsx';
 // import { add } from "date-fns";
 
-export function Process(params: {
-  background1: string;
-  background2: string;
-  project: Project;
+export function ProcessPage(
+  params: Readonly<{
+    background1: string;
+    background2: string;
+    // project: Project;
 
-  onCancel: () => void;
-  onValid: () => void;
-}) {
+    onCancel: () => void;
+    onValid: () => void;
+  }>
+) {
   const { onCancel, onValid } = params;
 
   const [taskId, setTaskId] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
   async function addTask(project: Project, background: Array<string>) {
-    const data = {
-      params: {
-        project: project.id,
-        // sample: sample.id,
-        // subsample: subsample.id,
-        background,
-      },
-    };
-
-    const taskId = await addBackgroundTask(data);
-    if (!taskId) {
-      throw new Error('No task ID returned');
-    }
-    setTaskId(taskId);
-    return taskId;
+    // const data = {
+    //   params: {
+    //     project: project.id,
+    //     sample: sample.id,
+    //     subsample: subsample.id,
+    // background,
+    // },
+    // };
+    //
+    // const taskId = await addBackgroundTask(data);
+    // if (!taskId) {
+    //   throw new Error('No task ID returned');
+    // }
+    // setTaskId(taskId);
+    // return taskId;
   }
 
   useEffect(() => {
-    addTask(params.project, [params.background1, params.background2])
-      .then(result => setTaskId(result))
-      .catch(error => console.error('Task error:', error));
+    // addTask(params.project, [params.background1, params.background2])
+    //   .then(result => setTaskId(result))
+    //   .catch(error => console.error('Task error:', error));
   }, []); // Empty dependency array means this runs once on mount
 
   return (
@@ -59,8 +61,8 @@ export function Process(params: {
               </ul>
             </div>
             <div>
-              <MyImage src={params.background1} />
-              <MyImage src={params.background2} />
+              <MyImage src={params.background1} alt="Background 1" legend="Background 1" />
+              <MyImage src={params.background2} alt="Background 2" legend="Background 2" />
             </div>
             {/* <div>
                         {isLoading ? (

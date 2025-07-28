@@ -1,7 +1,7 @@
 import axiosInstance from './axiosInstance.ts';
 import * as I from './interfaces.ts';
-import { API_SERVER } from '../constants';
 import type { AxiosError } from 'axios';
+import type { SubSample } from './interfaces.ts';
 
 export interface Login {
   email: string;
@@ -23,38 +23,65 @@ export async function login(data: Login): Promise<string> {
     });
 }
 
+function convertSubSampleDates(subsample: SubSample) {
+  // Convert subsample dates
+  subsample.createdAt = new Date(subsample.createdAt);
+  subsample.updatedAt = new Date(subsample.updatedAt);
+  return subsample;
+}
+
+function convertProjectDates(project: I.Project) {
+  // Convert project dates
+  project.createdAt = new Date(project.createdAt);
+  project.updatedAt = new Date(project.updatedAt);
+
+  // Process samples and their subsamples
+  if (project.samples && Array.isArray(project.samples)) {
+    project.samples = project.samples.map(sample => {
+      // Process subsamples
+      if (sample.subsample && Array.isArray(sample.subsample)) {
+        sample.subsample = sample.subsample.map(subsample => {
+          return convertSubSampleDates(subsample);
+        });
+      }
+      return sample;
+    });
+  }
+
+  return project;
+}
+
 export async function getProjects(token: string): Promise<Array<I.Project>> {
   const api = await axiosInstance({ token: token });
   const response = await api.get<Array<I.Project>>(`/projects`);
-  return response.data;
+
+  // Convert string dates to Date objects
+  const convertDates = (projects: Array<I.Project>): Array<I.Project> => {
+    return projects.map(project => {
+      return convertProjectDates(project);
+    });
+  };
+
+  return convertDates(response.data);
 }
 
-export async function getProject(projectId: string) {
-  console.log('Requesting project:', projectId);
-  console.log('Full URL:', `/projects/${projectId}`);
-  try {
-    const params = {};
-    const axios = await axiosInstance(params);
-    const baseURL = API_SERVER;
+export async function getProject(token: string, projectId: string): Promise<I.Project> {
+  const api = await axiosInstance({ token: token });
+  const response = await api.get<I.Project>(`/projects/${projectId}`);
+  return convertProjectDates(response.data);
+}
 
-    const fullUrl = `${baseURL}/projects/${projectId}`;
-
-    console.log('Making request to:', fullUrl);
-    const response = await axios.get(fullUrl);
-    console.log('Response received:', response.status);
-
-    return response.data;
-  } catch (error: any) {
-    const myError = {
-      projectId,
-      error: error.response?.data || error.message,
-      status: error.response?.status,
-      code: error.response?.data.code,
-      axios: error,
-    };
-    console.error('Project fetch error:', myError);
-    throw myError;
-  }
+export async function getSubSample(
+  token: string,
+  projectId: string,
+  sampleId: string,
+  subsampleId: string
+): Promise<I.SubSample> {
+  const api = await axiosInstance({ token: token });
+  const response = await api.get<I.SubSample>(
+    `/projects/${projectId}/samples/${sampleId}/subsamples/${subsampleId}`
+  );
+  return convertSubSampleDates(response.data);
 }
 
 export async function deleteProject(url: string): Promise<void> {
@@ -639,23 +666,6 @@ export async function getSubSamples(url: string) {
   const response = await api.get<I.SubSamples>(url);
 
   console.log('getSubSamples response: ', response.status);
-
-  return response.data;
-}
-
-export async function getSubSample(url: string) {
-  // console.log("getSamples(",projectId,")")
-  console.log('getSubSample(', url, ')');
-
-  // throw (projectId)
-
-  // const pageSize = 12;
-  // const response = await api.get<Projects>(`/projects?limit=${pageSize}&offset=${pageSize * (page - 1)}`);
-  // const response = await api.get<Samples>(`/projects/${projectId}/samples`);
-  const api = await axiosInstance({});
-  const response = await api.get<I.SubSample>(url);
-
-  console.log('getSubSample response: ', response.status);
 
   return response.data;
 }

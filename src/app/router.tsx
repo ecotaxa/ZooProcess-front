@@ -5,6 +5,7 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-rou
 import RootLayout from './layout.tsx';
 import { LoginPage } from './features/login/page.tsx';
 import { DashboardPage } from './features/dashboard/page.tsx';
+import { SubsamplePage } from './features/subsample/page.tsx';
 import { AuthProvider, useAuth } from 'app/stores/auth-context.tsx';
 
 // import Custom404 from '../../app/pages/404.tsx';
@@ -51,6 +52,16 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <DashboardPage />,
+          },
+        ],
+      },
+      {
+        path: 'project/:projectId/sample/:sampleId/subsample/:subsampleId/:action',
+        element: <ProtectedRoute />,
+        children: [
+          {
+            index: true,
+            element: <SubsamplePage />,
           },
         ],
       },

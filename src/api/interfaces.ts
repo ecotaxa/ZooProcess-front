@@ -4,10 +4,6 @@ export interface Drive {
   url: string;
 }
 
-export interface Ecotaxa {
-  id: string;
-}
-
 interface MinProject {
   id: string;
   name: string;
@@ -19,14 +15,63 @@ interface MinProject {
   instrumentId?: string;
   instrument?: Instrument;
   scanningOptions?: string;
-  samples?: Array<Sample>;
+  samples: Array<Sample>;
   qc?: string;
 }
 
 export interface Project extends MinProject {
   drive: Drive;
-  updatedAt: Date;
   createdAt: Date;
+  updatedAt: Date;
+}
+
+export type Projects = Array<Project>;
+
+export interface Sample {
+  id: string;
+  name: string;
+  metadata: Array<IMetadata>;
+  subsample: Array<SubSample>;
+  projectId: string;
+  project: Project;
+}
+
+export type Samples = Array<Samples>;
+
+export interface SubSample {
+  id: string;
+  name: string;
+  metadata: Array<IMetadata>;
+  createdAt: Date;
+  updatedAt: Date;
+  scan: Array<Scan>;
+}
+
+export type SubSamples = Array<SubSample>;
+
+export enum ScanTypeEnum {
+  RAW_BACKGROUND = 'RAW_BACKGROUND', // From scanner, up to 2 of them with names "back_large_raw_1.tif" and "back_large_raw_2.tif"
+  BACKGROUND = 'BACKGROUND', // 8-bit version of the raw backgrounds, same name without "_raw"
+  MEDIUM_BACKGROUND = 'MEDIUM_BACKGROUND', // Addition of the 2
+  SCAN = 'SCAN',
+  MASK = 'MASK',
+  VIS = 'VIS',
+  CHECK_BACKGROUND = 'CHECK_BACKGROUND',
+  OUT = 'OUT',
+  SEP = 'SEP', // Separator GIF
+}
+
+export interface Scan {
+  id: string;
+  url: string;
+  type: ScanTypeEnum;
+  archived: boolean;
+  deleted: boolean;
+  metadata: Array<IMetadata>;
+}
+
+export interface Ecotaxa {
+  id: string;
 }
 
 export interface ProjectUpdate extends MinProject {
@@ -54,23 +99,6 @@ export interface IMetadata {
   name: string;
   value: string;
   type: string;
-}
-
-export interface SubSample {
-  id: string;
-  name: string;
-  metadata: Array<IMetadata>;
-  // scan: Array<Scan>
-  scan: Array<Scan>;
-}
-
-export interface Scan {
-  id: string;
-  url: string;
-  type: string;
-  archived: boolean;
-  deleted: boolean;
-  metadata: Array<IMetadata>;
 }
 
 export interface Background {
@@ -105,15 +133,6 @@ export interface Instrument {
   ZooscanCalibration?: Array<ICalibration>;
 }
 
-export interface Sample {
-  id: string;
-  name: string;
-  metadata: Array<IMetadata>;
-  subsample: Array<SubSample>;
-  projectId: string;
-  project: Project;
-}
-
 export interface Vignette {
   id: string;
   url: string;
@@ -137,45 +156,10 @@ export interface ITask {
   updatedAt: string;
 }
 
-// [
-//     {
-//       "id": "655d3062983b92b6e29b3369",
-//       "name": "monproject",
-//       "acronym": null,
-//       "description": null,
-//       "ecotaxaId": null,
-//       "updatedAt": null,
-//       "createdAt": "2023-11-21T22:34:10.972Z",
-//       "driveId": "655c5b54457834999b769d06",
-//       "drive": {
-//         "id": "655c5b54457834999b769d06",
-//         "name": "Zooscan",
-//         "url": "file://drives/zooscan"
-//       },
-//       "ecotaxa": null
-//     }
-//   ]
-
-export interface Projects {
-  data: Array<Project>;
-}
-
-export interface Samples {
-  data: Array<Sample>;
-}
-
-export interface SubSamples {
-  data: Array<SubSample>;
-}
-
 export interface IProcess {
   status: string;
   vignettes: Array<Vignette>;
 }
-
-// interface IPath {
-//   path:string
-// }
 
 export interface IProcessMultiple extends IProcess {
   mask?: string;
@@ -183,15 +167,6 @@ export interface IProcessMultiple extends IProcess {
   vis?: string;
   log?: string;
 }
-
-// export async function getProject(id:string){
-
-//     const response = await api.get<Project>(`/projects/${id}`);
-
-//     console.log("getProject response: ", response);
-
-//     return response.data;
-// }
 
 export interface IScan {
   url: string;
