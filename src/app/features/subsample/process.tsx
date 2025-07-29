@@ -47,24 +47,23 @@ export function ProcessPage(
   }, []); // Empty dependency array means this runs once on mount
 
   return (
-    <>
-      <Card className="inline-block size-full" data-testid="ScanCard">
-        <CardBody className="p-6">
-          <div className="bg-100 p-6">
-            <h1 className="text-center">Your backgrounds.</h1>
-            <br />
-            <br />
-            <div>
-              <ul className={'list-disc list-outside leading-loose'}>
-                <li>{params.background1}</li>
-                <li>{params.background1}</li>
-              </ul>
-            </div>
-            <div>
-              <MyImage src={params.background1} alt="Background 1" legend="Background 1" />
-              <MyImage src={params.background2} alt="Background 2" legend="Background 2" />
-            </div>
-            {/* <div>
+    <Card className="inline-block size-full" data-testid="ScanCard">
+      <CardBody className="p-6">
+        <div className="bg-100 p-6">
+          <h1 className="text-center">Your backgrounds.</h1>
+          <br />
+          <br />
+          <div>
+            <ul className={'list-disc list-outside leading-loose'}>
+              <li>{params.background1}</li>
+              <li>{params.background1}</li>
+            </ul>
+          </div>
+          <div>
+            <MyImage src={params.background1} alt="Background 1" legend="Background 1" />
+            <MyImage src={params.background2} alt="Background 2" legend="Background 2" />
+          </div>
+          {/* <div>
                         {isLoading ? (
                             <Spinner />
                         ) : (
@@ -72,22 +71,21 @@ export function ProcessPage(
                             <div>Task ID : {taskId}</div>
                         )}
                     </div> */}
-          </div>
-        </CardBody>
+        </div>
+      </CardBody>
 
-        <CardFooter className="flex flex-row-reverse py-3">
-          <Button
-            color="primary"
-            variant="solid"
-            data-testid="newProjectBtn"
-            onPress={() => {
-              onValid();
-            }}
-          >
-            Check Task {taskId}
-          </Button>
-        </CardFooter>
-      </Card>
-    </>
+      <CardFooter className="flex flex-row-reverse py-3">
+        <Button
+          color="primary"
+          variant="solid"
+          data-testid="newProjectBtn"
+          onPress={() => {
+            onValid();
+          }}
+        >
+          Check Task {taskId}
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

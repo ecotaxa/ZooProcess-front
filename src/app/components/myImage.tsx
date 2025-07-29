@@ -5,11 +5,12 @@
 // import { REAL_FOLDER } from '@/constants';
 
 import { type RefObject, useRef, useState } from 'react';
+import { Spinner } from '@heroui/react';
 
 export function MyImage(props: Readonly<{ src: string; alt: string; legend: string }>) {
   const [isPortrait, setIsPortrait] = useState(false);
   // const [processedImage, setProcessedImage] = useState(null);
-  // const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   // const [error, setError] = useState(null);
   // const [windowSize, setWindowSize] = useState({
   //   width: typeof window !== 'undefined' ? window.innerWidth : 0,
@@ -121,6 +122,7 @@ export function MyImage(props: Readonly<{ src: string; alt: string; legend: stri
         container.style.height = `${containerHeight}px`;
       }
     }
+    setIsLoading(false);
   };
 
   // let newProps = { ...props };
@@ -134,7 +136,7 @@ export function MyImage(props: Readonly<{ src: string; alt: string; legend: stri
       {/* Conteneur principal centré horizontalement */}
       <div
         className="flex justify-center items-center w-full"
-        style={{ height: isPortrait ? 'auto' : '70vh' }}
+        styleXXX={{ height: isPortrait ? 'auto' : '70vh' }}
       >
         {/* Conteneur de l'image avec rotation */}
         <div
@@ -151,19 +153,20 @@ export function MyImage(props: Readonly<{ src: string; alt: string; legend: stri
             overflow: 'hidden',
           }}
         >
-          {/*{isLoading && (*/}
-          {/*  <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">*/}
-          {/*    <Spinner color="primary" size="lg" />*/}
-          {/*  </div>*/}
-          {/*)}*/}
-
+          {isLoading && (
+            <div
+              id="spin"
+              className="absolute inset-0 flex items-center justify-center bg-white/80 z-10"
+            >
+              <Spinner color="primary" size="lg" />
+            </div>
+          )}
           <img
             src={props.src}
             alt={props.alt ?? 'Image'}
             onLoad={handleLoad}
             className="max-w-full max-h-full object-contain"
           />
-
           {/*{error && (*/}
           {/*  <div className="absolute bottom-0 left-0 right-0 bg-red-500 text-white p-2 text-sm text-center">*/}
           {/*    {error}*/}
