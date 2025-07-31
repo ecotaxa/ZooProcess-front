@@ -136,7 +136,7 @@ export function MyImage(props: Readonly<{ src: string; alt: string; legend: stri
       {/* Conteneur principal centré horizontalement */}
       <div
         className="flex justify-center items-center w-full"
-        styleXXX={{ height: isPortrait ? 'auto' : '70vh' }}
+        // style={{ height: isPortrait ? 'auto' : '70vh' }}
       >
         {/* Conteneur de l'image avec rotation */}
         <div

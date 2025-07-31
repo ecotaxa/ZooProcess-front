@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ProcessPage } from 'app/features/subsample/process.tsx';
+import { BackgroundsPage } from 'app/features/subsample/view/backgrounds.tsx';
 import { getSubSample } from 'api/zooprocess-api.ts';
 import type { SubSample } from 'api/interfaces.ts';
 import { ScanTypeEnum } from 'api/interfaces.ts';
-import { useAuth } from 'app/stores/auth-context';
+import { useAuth } from 'app/stores/auth-context.tsx';
 
-export const SubsamplePage = () => {
+export const SubsampleViewPage = () => {
   // Get the parameters from the URL
   const { projectId, sampleId, subsampleId, action } = useParams();
   const { authState } = useAuth();
@@ -16,23 +16,16 @@ export const SubsamplePage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSubsample = async () => {
-      try {
-        const subsampleData = await getSubSample(
-          authState.accessToken!,
-          projectId!,
-          sampleId!,
-          subsampleId!
-        );
+    getSubSample(authState.accessToken!, projectId!, sampleId!, subsampleId!)
+      .then(subsampleData => {
         setSubsample(subsampleData);
-      } catch (error) {
-        setError('Failed to fetch subsample data');
-      } finally {
+      })
+      .catch(error => {
+        setError('Failed to fetch subsample data ' + error);
+      })
+      .finally(() => {
         setLoading(false);
-      }
-    };
-
-    fetchSubsample();
+      });
   }, [projectId]);
 
   return (
@@ -60,7 +53,7 @@ export const SubsamplePage = () => {
           {loading && <p>Loading project data...</p>}
           {error && <p className="text-red-500">{error}</p>}
           {subsample ? (
-            <ProcessPage
+            <BackgroundsPage
               background1={
                 subsample.scan?.find(s => s.type === ScanTypeEnum.SCAN && !s.deleted)?.url ?? ''
               }
@@ -79,5 +72,3 @@ export const SubsamplePage = () => {
     </div>
   );
 };
-
-export default SubsamplePage;

@@ -5,8 +5,10 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-rou
 import RootLayout from './layout.tsx';
 import { LoginPage } from './features/login/page.tsx';
 import { DashboardPage } from './features/dashboard/page.tsx';
-import { SubsamplePage } from './features/subsample/page.tsx';
+import { SubsampleViewPage } from './features/subsample/view/page.tsx';
 import { AuthProvider, useAuth } from 'app/stores/auth-context.tsx';
+import { SubsampleProcessPage } from 'app/features/subsample/process/page.tsx';
+import { SubsampleProcessTimeline } from 'app/features/subsample/process/timeline.tsx';
 
 // import Custom404 from '../../app/pages/404.tsx';
 // Protected routes
@@ -56,12 +58,17 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'project/:projectId/sample/:sampleId/subsample/:subsampleId/:action',
+        path: 'project/:projectId/sample/:sampleId/subsample/:subsampleId/',
         element: <ProtectedRoute />,
         children: [
           {
-            index: true,
-            element: <SubsamplePage />,
+            path: 'View',
+            element: <SubsampleViewPage />,
+          },
+          {
+            path: 'Process',
+            // TODO: Redirect to one of process pages depending on scan state
+            element: <SubsampleProcessTimeline current={0} list={undefined} />,
           },
         ],
       },

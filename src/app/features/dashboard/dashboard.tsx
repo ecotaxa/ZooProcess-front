@@ -13,7 +13,7 @@ interface ProjectItem {
   subsample: SubSample;
   sample: Sample;
   project: Project;
-  action: string;
+  actions: Array<string>;
 }
 
 function itemsFromProjects(response: Array<Project>) {
@@ -38,7 +38,7 @@ function itemsFromProjects(response: Array<Project>) {
           subsample,
           sample,
           project,
-          action: 'View',
+          actions: ['View', 'Process'],
         });
       }
     }
@@ -56,7 +56,6 @@ export const Dashboard = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading(true);
     getProjects(authState.accessToken!)
       .then(response => {
         const items = itemsFromProjects(response);
@@ -127,16 +126,21 @@ export const Dashboard = () => {
                     key={`${item.project.id}-${item.sample.id}-${item.subsample.id}-${index}`}
                   >
                     <TableCell>
-                      <Link
-                        to={`/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}/${item.action}`}
-                      >
-                        <Button
-                          size="sm"
-                          className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-3 rounded-md transition-colors"
-                        >
-                          {item.action}
-                        </Button>
-                      </Link>
+                      <div className="flex space-x-2">
+                        {item.actions.map((action, actionIndex) => (
+                          <Link
+                            key={actionIndex}
+                            to={`/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}/${action}`}
+                          >
+                            <Button
+                              size="sm"
+                              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-3 rounded-md transition-colors"
+                            >
+                              {action}
+                            </Button>
+                          </Link>
+                        ))}
+                      </div>
                     </TableCell>
                     <TableCell>{item.scanCount}</TableCell>
                     <TableCell>{item.subsample.name}</TableCell>

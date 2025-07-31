@@ -7,7 +7,7 @@ import type { Project } from 'api/interfaces.ts';
 import { MyImage } from 'app/components/myImage.tsx';
 // import { add } from "date-fns";
 
-export function ProcessPage(
+export function BackgroundsPage(
   params: Readonly<{
     background1: string;
     background2: string;
