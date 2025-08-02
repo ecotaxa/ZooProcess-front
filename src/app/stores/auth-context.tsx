@@ -15,7 +15,7 @@ interface AuthState {
 }
 
 // Define the shape of the context value
-interface AuthContextType {
+export interface AuthContextType {
   authState: AuthState;
   setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
 }
@@ -34,23 +34,19 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+export function getStoredToken(): string {
+  return localStorage.getItem('accessToken')!;
+}
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Initialize state from localStorage if available
   const [authState, setAuthState] = useState<AuthState>(() => {
-    // Check if we're in a browser environment (to avoid SSR issues)
-    if (typeof window !== 'undefined') {
-      const storedToken = localStorage.getItem('accessToken');
-      return {
-        accessToken: storedToken,
-        // refreshToken: null,
-      };
-    }
+    const storedToken = getStoredToken();
     return {
-      accessToken: null,
+      accessToken: storedToken,
       // refreshToken: null,
     };
   });
-
   // Save auth state to localStorage whenever it changes
   useEffect(() => {
     if (typeof window !== 'undefined') {

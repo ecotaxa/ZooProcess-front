@@ -1,0 +1,23 @@
+module.exports = ({ env }) => ({
+  plugins: {
+    // Tailwind CSS - A utility-first CSS framework
+    // https://tailwindcss.com/docs/installation
+    // tailwindcss: {},
+    // Autoprefixer - Parse CSS and add vendor prefixes to CSS rules
+    // https://github.com/postcss/autoprefixer
+    autoprefixer: {
+      // Flexbox and Grid prefixes are enabled by default
+      // You can customize browser support here if needed
+      // browsers: ['> 1%', 'last 2 versions', 'Firefox ESR', 'not dead'],
+    },
+    // You can add more plugins here as needed:
+    //
+    // Examples of additional plugins (would need to be installed first):
+    //
+    // postcss-import: For handling @import statements
+    // postcss-nesting: For CSS nesting features
+    // cssnano: For minifying CSS in production
+    //
+    // cssnano: env === 'production' ? {} : false,
+  },
+});

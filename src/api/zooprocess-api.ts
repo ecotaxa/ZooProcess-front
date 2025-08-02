@@ -51,18 +51,12 @@ function convertProjectDates(project: I.Project) {
   return project;
 }
 
-export async function getProjects(token: string): Promise<Array<I.Project>> {
+export async function getProjects(token: string): Promise<I.Projects> {
   const api = await axiosInstance({ token: token });
-  const response = await api.get<Array<I.Project>>(`/projects`);
-
-  // Convert string dates to Date objects
-  const convertDates = (projects: Array<I.Project>): Array<I.Project> => {
-    return projects.map(project => {
-      return convertProjectDates(project);
-    });
-  };
-
-  return convertDates(response.data);
+  const response = await api.get<I.Projects>(`/projects`);
+  return response.data.map(project => {
+    return convertProjectDates(project);
+  });
 }
 
 export async function getProject(token: string, projectId: string): Promise<I.Project> {

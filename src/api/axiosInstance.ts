@@ -11,7 +11,7 @@ const axiosInstance = async ({
   token?: string;
   params?: any;
 }): Promise<AxiosInstance> => {
-  console.log('axiosInstance()');
+  // console.log('axiosInstance()');
 
   let _params: CreateAxiosDefaults<any> = {
     baseURL: API_SERVER,
@@ -19,7 +19,7 @@ const axiosInstance = async ({
   };
 
   if (token && useAuth) {
-    console.log('axiosInstance - token: ', token);
+    // console.log('axiosInstance - token: ', token);
 
     const header: AxiosHeaderValue = 'bearer ' + token;
     const paramsUpdated = {
@@ -28,10 +28,10 @@ const axiosInstance = async ({
         Authorization: header,
       },
     };
-    console.log('axiosInstance - paramsUpdated: ', paramsUpdated);
+    // console.log('axiosInstance - paramsUpdated: ', paramsUpdated);
     let instance = axios.create(paramsUpdated);
     const axiosInst = setupCache(instance);
-    console.log('axiosInstance - return: ', axiosInst);
+    // console.log('axiosInstance - return: ', axiosInst);
     return axiosInst;
   }
 

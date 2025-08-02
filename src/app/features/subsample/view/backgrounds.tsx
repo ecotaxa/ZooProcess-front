@@ -1,11 +1,7 @@
-// "use server";
-
-// import { addBackgroundTask } from '@/app/api/tasks';
 import { Button, Card, CardBody, CardFooter } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import type { Project } from 'api/interfaces.ts';
 import { MyImage } from 'app/components/myImage.tsx';
-// import { add } from "date-fns";
 
 export function BackgroundsPage(
   params: Readonly<{

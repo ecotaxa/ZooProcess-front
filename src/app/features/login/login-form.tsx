@@ -61,7 +61,7 @@ export const LoginForm = () => {
         .then(token => {
           authContext.setAuthState({ accessToken: token });
           setSuccess('Logged!');
-          navigate('/dashboard');
+          setTimeout(() => navigate('/dashboard'), 200);
         })
         .catch(error => {
           setError(error.message);

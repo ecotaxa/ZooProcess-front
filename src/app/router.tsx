@@ -8,17 +8,21 @@ import { DashboardPage } from './features/dashboard/page.tsx';
 import { SubsampleViewPage } from './features/subsample/view/page.tsx';
 import { AuthProvider, useAuth } from 'app/stores/auth-context.tsx';
 import { SubsampleProcessPage } from 'app/features/subsample/process/page.tsx';
-import { SubsampleProcessTimeline } from 'app/features/subsample/process/timeline.tsx';
 
 // import Custom404 from '../../app/pages/404.tsx';
 // Protected routes
 // import ProjectsPage from '../../app/[locale]/(protected)/projects/page.tsx';
 
 // Protected route wrapper
-const ProtectedRoute = () => {
+interface ProtectedRouteProps {
+  user?: any;
+}
+
+const ProtectedRoute = ({ user }: ProtectedRouteProps) => {
   // Use the auth context to check if user is authenticated
   const { authState } = useAuth();
   const isAuthenticated = !!authState.accessToken;
+  // console.log('isAuthenticated: ' + isAuthenticated);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -39,10 +43,10 @@ const router = createBrowserRouter([
       </AuthProvider>
     ),
     children: [
-      // {
-      //   index: true,
-      //   element: <HomePage />,
-      // },
+      {
+        index: true,
+        element: <LoginPage />,
+      },
       {
         path: 'login',
         element: <LoginPage />,
@@ -68,7 +72,7 @@ const router = createBrowserRouter([
           {
             path: 'Process',
             // TODO: Redirect to one of process pages depending on scan state
-            element: <SubsampleProcessTimeline current={0} list={undefined} />,
+            element: <SubsampleProcessPage />,
           },
         ],
       },
