@@ -11,7 +11,7 @@ export function MyImage(props: Readonly<{ src: string; alt: string; legend: stri
   const [isPortrait, setIsPortrait] = useState(false);
   // const [processedImage, setProcessedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  // const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   // const [windowSize, setWindowSize] = useState({
   //   width: typeof window !== 'undefined' ? window.innerWidth : 0,
   //   height: typeof window !== 'undefined' ? window.innerHeight : 0,
@@ -123,6 +123,12 @@ export function MyImage(props: Readonly<{ src: string; alt: string; legend: stri
       }
     }
     setIsLoading(false);
+    setError(null); // Clear any previous errors
+  };
+
+  const handleError = () => {
+    setIsLoading(false);
+    setError('Failed to load image');
   };
 
   // let newProps = { ...props };
@@ -161,17 +167,16 @@ export function MyImage(props: Readonly<{ src: string; alt: string; legend: stri
               <Spinner color="primary" size="lg" />
             </div>
           )}
-          <img
-            src={props.src}
-            alt={props.alt ?? 'Image'}
-            onLoad={handleLoad}
-            className="max-w-full max-h-full object-contain"
-          />
-          {/*{error && (*/}
-          {/*  <div className="absolute bottom-0 left-0 right-0 bg-red-500 text-white p-2 text-sm text-center">*/}
-          {/*    {error}*/}
-          {/*  </div>*/}
-          {/*)}*/}
+          {!error && (
+            <img
+              src={props.src}
+              alt={props.alt ?? 'Image'}
+              onLoad={handleLoad}
+              onError={handleError}
+              className="max-w-full max-h-full object-contain"
+            />
+          )}
+          {error && <div className="bg-red-500 text-white text-sm text-center">{error}</div>}
         </div>
       </div>
       {props.legend && (

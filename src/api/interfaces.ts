@@ -59,6 +59,7 @@ export enum ScanTypeEnum {
   CHECK_BACKGROUND = 'CHECK_BACKGROUND',
   OUT = 'OUT',
   SEP = 'SEP', // Separator GIF
+  V10_MASK = 'V10MASK',
 }
 
 export interface Scan {
@@ -146,7 +147,7 @@ export interface Separator {
 }
 
 export interface ITask {
-  id: String;
+  id: string;
   exec: string;
   params: Object;
   log?: string; // url to log file
@@ -154,6 +155,10 @@ export interface ITask {
   status: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface IProcessRsp {
+  task: ITask | null;
 }
 
 export interface IProcess {

@@ -1,7 +1,7 @@
 import axiosInstance from './axiosInstance.ts';
 import * as I from './interfaces.ts';
 import type { AxiosError } from 'axios';
-import type { SubSample } from './interfaces.ts';
+import type { IProcessRsp, SubSample } from './interfaces.ts';
 
 export interface Login {
   email: string;
@@ -76,6 +76,25 @@ export async function getSubSample(
     `/projects/${projectId}/samples/${sampleId}/subsamples/${subsampleId}`
   );
   return convertSubSampleDates(response.data);
+}
+
+export async function processSubSample(
+  token: string,
+  projectId: string,
+  sampleId: string,
+  subsampleId: string
+): Promise<I.IProcessRsp> {
+  const api = await axiosInstance({ token: token });
+  const response = await api.post<I.IProcessRsp>(
+    `/projects/${projectId}/samples/${sampleId}/subsamples/${subsampleId}/process`
+  );
+  return response.data;
+}
+
+export async function getTask(token: string, taskId: string) {
+  const api = await axiosInstance({ token: token });
+  const response = await api.get<I.ITask>(`/task/${taskId}`);
+  return response.data;
 }
 
 export async function deleteProject(url: string): Promise<void> {
@@ -853,16 +872,6 @@ export async function runTask(taskId: string) {
     // If we can't extract a specific error message, use the default one
     throw new Error(error.message ?? 'Failed to start task');
   }
-}
-
-export async function getTask(url: string) {
-  console.log('getTask(', url, ')');
-  const api = await axiosInstance({});
-  const response = await api.get<I.ITask>(url);
-
-  console.debug('getTask response: ', response.status);
-
-  return response.data;
 }
 
 async function makeApiCall<T>(
