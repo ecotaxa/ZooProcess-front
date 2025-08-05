@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { getProject, getSubSample, getTask, processSubSample } from 'api/zooprocess-api.ts';
-import type { IProcessRsp, ITask, Scan, SubSample } from 'api/interfaces.ts';
+import {
+  getProject,
+  getSubSample,
+  getTask,
+  markSubSample,
+  processSubSample,
+} from 'api/zooprocess-api.ts';
+import type { IMarkSubsampleReq, IProcessRsp, ITask, Scan, SubSample } from 'api/interfaces.ts';
 import { ScanTypeEnum } from 'api/interfaces.ts';
 import { useAuth } from 'app/stores/auth-context.tsx';
 import { ProjectBreadcrumbs, type BreadcrumbItem } from 'app/components/breadcrumbs.tsx';
@@ -25,27 +31,22 @@ export const SubsampleProcessPage = () => {
   const [maskScan, setMaskScan] = useState<Scan | null | undefined>(null);
   const [task, setTask] = useState<ITask | null | undefined>(null);
 
-  function refreshTask() {}
-
   useEffect(() => {
     // Fetch the full project and navigate manually
     getProject(authState.accessToken!, projectId)
       .then(projectData => {
         const newBreadcrumbsList: (string | BreadcrumbItem)[] = [projectData.name];
 
-        // Navigate through the project structure to find the specific sample
+        // Navigate through the project structure to find the specific subsample
         const sample = projectData.samples.find(sample => sample.id === sampleId);
         if (!sample) {
           throw new Error(`Sample with ID ${sampleId} not found in project`);
         }
         newBreadcrumbsList.push(sample.name);
-
-        // Navigate through sample to find the specific subsample
         const subsampleData = sample.subsample.find(subsample => subsample.id === subsampleId);
         if (!subsampleData) {
           throw new Error(`Subsample with ID ${subsampleId} not found in sample`);
         }
-
         newBreadcrumbsList.push(subsampleData.name);
         setBreadcrumbsList(newBreadcrumbsList);
         setSubsample(subsampleData);
@@ -59,7 +60,10 @@ export const SubsampleProcessPage = () => {
   }, [projectId, sampleId, subsampleId, authState.accessToken]);
 
   function refreshTaskAndScan(result: IProcessRsp) {
-    getTask(authState.accessToken!, result.task!.id)
+    if (result.task === null) {
+      return;
+    }
+    getTask(authState.accessToken!, result.task.id)
       .then(task => {
         setTask(task);
         return getSubSample(authState.accessToken!, projectId, sampleId, subsampleId);
@@ -94,7 +98,14 @@ export const SubsampleProcessPage = () => {
     };
   }, [subsample]);
 
-  function onValid() {}
+  function onValid() {
+    const req: IMarkSubsampleReq = { status: 'approved' };
+    markSubSample(authState.accessToken!, projectId, sampleId, subsampleId, req)
+      .then(result => {})
+      .catch(error => {
+        setError('Failed to mark scan' + error.message);
+      });
+  }
 
   function onCancel() {}
 
@@ -109,7 +120,11 @@ export const SubsampleProcessPage = () => {
         <div className="mt-4">
           {loading && <p>Loading scan data...</p>}
           {error && <p className="text-red-500">{error}</p>}
-          {task && <>Task ID : {task.log}</>}
+          {task && (
+            <>
+              Task # {task.id} : {task.log}
+            </>
+          )}
           {maskScan && (
             <>
               <ScanCheckPage mask_url={maskScan.url} />

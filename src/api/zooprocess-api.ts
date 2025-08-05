@@ -1,7 +1,7 @@
 import axiosInstance from './axiosInstance.ts';
 import * as I from './interfaces.ts';
 import type { AxiosError } from 'axios';
-import type { IProcessRsp, SubSample } from './interfaces.ts';
+import type { SubSample } from './interfaces.ts';
 
 export interface Login {
   email: string;
@@ -91,11 +91,30 @@ export async function processSubSample(
   return response.data;
 }
 
+export async function markSubSample(
+  token: string,
+  projectId: string,
+  sampleId: string,
+  subsampleId: string,
+  req: I.IMarkSubsampleReq
+): Promise<I.SubSample> {
+  const api = await axiosInstance({ token: token });
+  const response = await api.post<I.SubSample>(
+    `/projects/${projectId}/samples/${sampleId}/subsamples/${subsampleId}/mark`,
+    req
+  );
+  return response.data;
+}
+
 export async function getTask(token: string, taskId: string) {
   const api = await axiosInstance({ token: token });
   const response = await api.get<I.ITask>(`/task/${taskId}`);
   return response.data;
 }
+
+/////////////////////////////////
+// UNUSED BELOW
+/////////////////////////////////
 
 export async function deleteProject(url: string): Promise<void> {
   const params = {};

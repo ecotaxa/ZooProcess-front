@@ -71,6 +71,12 @@ export interface Scan {
   metadata: Array<IMetadata>;
 }
 
+export interface IMarkSubsampleReq {
+  status: string; // Literal["approved", "rejected"] = "approved"
+  comments?: string;
+  date?: string;
+}
+
 export interface Ecotaxa {
   id: string;
 }
