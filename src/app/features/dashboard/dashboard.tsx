@@ -75,9 +75,8 @@ export const Dashboard = () => {
                 <TableColumn>Scans</TableColumn>
                 <TableColumn>Subsample</TableColumn>
                 <TableColumn>Sample</TableColumn>
-                <TableColumn>Project</TableColumn>
-                <TableColumn>Drive</TableColumn>
                 <TableColumn>Updated At</TableColumn>
+                <TableColumn>Project</TableColumn>
               </TableHeader>
               <TableBody emptyContent={!loading && 'No projects found'}>
                 {projectItems.map((item, index) => (
@@ -104,9 +103,8 @@ export const Dashboard = () => {
                     <TableCell>{item.scanCount}</TableCell>
                     <TableCell>{item.subsample.name}</TableCell>
                     <TableCell>{item.sample.name}</TableCell>
-                    <TableCell>{item.project.name}</TableCell>
-                    <TableCell>{item.project.drive?.name || '-'}</TableCell>
                     <TableCell>{item.subsample.updatedAt.toLocaleDateString()}</TableCell>
+                    <TableCell>{item.project.name}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
