@@ -9,28 +9,11 @@ export interface BreadcrumbItem {
 }
 
 export interface BreadcrumbsProps {
-  list: Array<string | BreadcrumbItem>;
-  // name?:string
+  items: Array<BreadcrumbItem>;
   separator?: string;
 }
 
-export const ProjectBreadcrumbs: FC<BreadcrumbsProps> = ({ list /*,name*/, separator = '>' }) => {
-  //{(FC<BreadcrumbsProps>) {
-
-  // const splitted = String(name).split('_')
-
-  // console.log("splitted: ", splitted)
-
-  // const makeUrl (url:string, item:string) => string  {
-  //     url += (url == "") ? "/projects/" : "_"
-  //     url += item
-  //     return url
-  // }
-
-  const makeBreadItem = (url: string, data: string) => {
-    return <BreadcrumbItem>{data}</BreadcrumbItem>;
-  };
-
+export const ProjectBreadcrumbs: FC<BreadcrumbsProps> = ({ items /*,name*/, separator = '>' }) => {
   const makeBreadcrumbItem = (item: string | BreadcrumbItem) => {
     if (typeof item === 'string') {
       return <BreadcrumbItem key={item}>{item}</BreadcrumbItem>;
@@ -40,15 +23,13 @@ export const ProjectBreadcrumbs: FC<BreadcrumbsProps> = ({ list /*,name*/, separ
   };
 
   return (
-    <>
-      <Breadcrumbs
-        separator={separator}
-        itemClasses={{
-          separator: 'px-2',
-        }}
-      >
-        {list.map(item => makeBreadcrumbItem(item))}
-      </Breadcrumbs>
-    </>
+    <Breadcrumbs
+      separator={separator}
+      itemClasses={{
+        separator: 'px-2',
+      }}
+    >
+      {items.map(item => makeBreadcrumbItem(item))}
+    </Breadcrumbs>
   );
 };
