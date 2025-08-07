@@ -1,4 +1,10 @@
-import { type Project, type Sample, ScanTypeEnum, type SubSample } from 'api/interfaces';
+import {
+  type Project,
+  type Sample,
+  ScanTypeEnum,
+  type SubSample,
+  SubSampleStateEnum,
+} from 'api/interfaces';
 
 // Interface for flattened project structure
 export interface ProjectItem {
@@ -26,12 +32,16 @@ export function itemsFromProjects(response: Array<Project>) {
       for (const subsample of sample.subsample) {
         const nb_scans = subsample.scan.filter(scan => scan.type == ScanTypeEnum.SCAN).length;
         // Add an entry with count of "scans"
+        const actions = [];
+        if (subsample.state !== SubSampleStateEnum.EMPTY) {
+          actions.push('View', 'Process');
+        }
         items.push({
           scanCount: nb_scans,
           subsample,
           sample,
           project,
-          actions: ['View', 'Process'],
+          actions: actions,
         });
       }
     }

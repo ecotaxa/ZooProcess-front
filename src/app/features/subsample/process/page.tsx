@@ -12,13 +12,14 @@ import {
   type Scan,
   ScanTypeEnum,
   type SubSample,
+  SubSampleStateEnum,
   TaskStatusEnum,
 } from 'api/interfaces.ts';
 import { useAuth } from 'app/stores/auth-context.tsx';
 import { type BreadcrumbItem, ProjectBreadcrumbs } from 'app/components/breadcrumbs.tsx';
 import { useRequiredParams } from 'app/lib/router-utils.ts';
 import { SubsampleProcessTimeline } from 'app/features/subsample/process/timeline.tsx';
-import { Button, Card, CardFooter, CardHeader } from '@heroui/react';
+import { Card, CardBody, CardHeader } from '@heroui/react';
 import { ScanCheckPage } from 'app/features/subsample/process/process.tsx';
 
 export const SubsampleProcessPage = () => {
@@ -32,12 +33,13 @@ export const SubsampleProcessPage = () => {
 
   const noBc: BreadcrumbItem = { id: '', name: '' };
 
-  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const [breadcrumbsList, setBreadcrumbsList] = useState<BreadcrumbItem[]>([noBc, noBc, noBc]);
   const [subsample, setSubsample] = useState<SubSample | null>(null);
-  const [maskScan, setMaskScan] = useState<Scan | null>(null);
+  const [step, setStep] = useState<number | null>(null);
+  const [maskScan, setMaskScan] = useState<Scan | null>(null); // Target of step 0
+  const [vignettes, setVignettes] = useState<Scan | null>(null); // Target of step 1
   const [task, setTask] = useState<ITask | null>(null);
 
   useEffect(() => {
@@ -64,9 +66,6 @@ export const SubsampleProcessPage = () => {
       })
       .catch(error => {
         setError('Failed to fetch project data: ' + error.message);
-      })
-      .finally(() => {
-        setLoading(false);
       });
   }, [projectId, sampleId, subsampleId, authState.accessToken]);
 
@@ -74,8 +73,13 @@ export const SubsampleProcessPage = () => {
     if (subsample === null) {
       return;
     }
-    const maskScan = subsample.scan.find(s => s.type === ScanTypeEnum.V10_MASK && !s.deleted);
-    setMaskScan(maskScan ?? null);
+    if (subsample.state === SubSampleStateEnum.ACQUIRED) {
+      setStep(0);
+      const maskScan = subsample.scan.find(s => s.type === ScanTypeEnum.V10_MASK && !s.deleted);
+      setMaskScan(maskScan ?? null);
+    } else {
+      setStep(1);
+    }
   }, [subsample]);
 
   useEffect(() => {
@@ -125,66 +129,48 @@ export const SubsampleProcessPage = () => {
     };
   }, [task]);
 
-  function onValid() {
+  function onMaskValid() {
     const req: IMarkSubsampleReq = { status: 'approved' };
     markSubSample(authState.accessToken!, projectId, sampleId, subsampleId, req)
-      .then(result => {})
+      .then(subsample => {
+        setSubsample(subsample);
+      })
       .catch(error => {
-        setError('Failed to mark scan' + error.message);
+        setError('Failed to mark scan: ' + error.message);
       });
   }
 
-  function onCancel() {}
+  function onMaskInvalid() {}
+
+  function scanCheckPage() {
+    return (
+      <>
+        {!maskScan && <p className="text-gray-500">Mask not available.</p>}
+        {maskScan && (
+          <ScanCheckPage mask_url={maskScan.url} onScanOK={onMaskValid} onScanKO={onMaskInvalid} />
+        )}
+      </>
+    );
+  }
 
   return (
-    <Card className="container mx-auto p-4">
-      <CardHeader className="flex justify-between items-center mb-4">Scan processing</CardHeader>
-      {breadcrumbsList.length > 0 && (
-        <ProjectBreadcrumbs items={breadcrumbsList}></ProjectBreadcrumbs>
-      )}
-      <SubsampleProcessTimeline current={0} list={[]}></SubsampleProcessTimeline>
-      <div className="bg-white shadow-md rounded-lg p-4">
-        <div className="mt-4">
-          {loading && <p>Loading scan data...</p>}
-          {error && <p className="text-red-500">{error}</p>}
-          {task && (
-            <>
-              Task #{task.id}: {task.log}
-            </>
-          )}
-          {maskScan && (
-            <>
-              <ScanCheckPage mask_url={maskScan.url} />
-              meta:{maskScan.url}
-            </>
-          )}
-          {!maskScan && !loading && <p className="text-gray-500">Mask not yet available.</p>}
-        </div>
-      </div>
-      {maskScan && (
-        <CardFooter className="flex justify-between py-3">
-          <Button
-            color="primary"
-            variant="solid"
-            data-testid="scanIsValidBtn"
-            onPress={() => {
-              onValid();
-            }}
-          >
-            This scan is OK
-          </Button>
-          <Button
-            color="warning"
-            variant="solid"
-            data-testid="scanIsValidBtn"
-            onPress={() => {
-              onCancel();
-            }}
-          >
-            This scan is bad
-          </Button>
-        </CardFooter>
-      )}
+    <Card className="container mx-auto p-1">
+      <CardHeader className="flex justify-between items-center mb-1">
+        {/*Scan processing*/}
+        {breadcrumbsList.length > 0 && (
+          <ProjectBreadcrumbs items={breadcrumbsList}></ProjectBreadcrumbs>
+        )}
+        <SubsampleProcessTimeline current={step ?? -1}></SubsampleProcessTimeline>
+      </CardHeader>
+      <CardBody>
+        {error && <p className="text-red-500">{error}</p>}
+        {task && (
+          <p className="text-amber-500">
+            Task #{task.id}: {task.log}
+          </p>
+        )}
+        {step == 0 && scanCheckPage()}
+      </CardBody>
     </Card>
   );
 };

@@ -7,7 +7,14 @@
 import { type RefObject, useRef, useState } from 'react';
 import { Spinner } from '@heroui/react';
 
-export function MyImage(props: Readonly<{ src: string; alt: string; legend: string }>) {
+export function MyImage(
+  props: Readonly<{
+    src: string;
+    alt: string;
+    legend: string;
+    onLoad?: () => void;
+  }>
+) {
   const [isPortrait, setIsPortrait] = useState(false);
   // const [processedImage, setProcessedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -124,6 +131,11 @@ export function MyImage(props: Readonly<{ src: string; alt: string; legend: stri
     }
     setIsLoading(false);
     setError(null); // Clear any previous errors
+
+    // Call the onLoad callback if provided
+    if (props.onLoad) {
+      props.onLoad();
+    }
   };
 
   const handleError = () => {

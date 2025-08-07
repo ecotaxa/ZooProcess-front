@@ -52,6 +52,7 @@ export interface SubSample {
 export type SubSamples = Array<SubSample>;
 
 export enum SubSampleStateEnum {
+  EMPTY = 'EMPTY', // No scan
   ACQUIRED = 'ACQUIRED', // There is a scanned image
   MSK_APPROVED = 'MSK_APPROVED', // Visual MSK check and object count was made and OK
   IN_SEPARATION_VALIDATION = 'IN_SEPARATION_VALIDATION', // Auto separation was done, it's being validated
