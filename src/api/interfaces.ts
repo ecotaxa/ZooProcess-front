@@ -42,12 +42,29 @@ export interface SubSample {
   id: string;
   name: string;
   metadata: Array<IMetadata>;
+  scan: Array<Scan>;
   createdAt: Date;
   updatedAt: Date;
-  scan: Array<Scan>;
+  state: SubSampleStateEnum;
+  user: User;
 }
 
 export type SubSamples = Array<SubSample>;
+
+export enum SubSampleStateEnum {
+  ACQUIRED = 'ACQUIRED', // There is a scanned image
+  MSK_APPROVED = 'MSK_APPROVED', // Visual MSK check and object count was made and OK
+  IN_SEPARATION_VALIDATION = 'IN_SEPARATION_VALIDATION', // Auto separation was done, it's being validated
+  SEPARATION_VALIDATION_DONE = 'SEPARATION_VALIDATION_DONE', // Auto separation was done, it's being validated
+  UPLOADED = 'UPLOADED', // Final state, all went into EcoTaxa
+}
+
+export enum TaskStatusEnum {
+  PENDING = 'Pending',
+  RUNNING = 'Running',
+  FINISHED = 'Finished',
+  FAILED = 'Failed',
+}
 
 export enum ScanTypeEnum {
   RAW_BACKGROUND = 'RAW_BACKGROUND', // From scanner, up to 2 of them with names "back_large_raw_1.tif" and "back_large_raw_2.tif"
@@ -158,7 +175,7 @@ export interface ITask {
   params: Object;
   log?: string; // url to log file
   percent: number;
-  status: string;
+  status: TaskStatusEnum;
   createdAt: string;
   updatedAt: string;
 }

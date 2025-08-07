@@ -6,10 +6,16 @@ import {
   markSubSample,
   processSubSample,
 } from 'api/zooprocess-api.ts';
-import type { IMarkSubsampleReq, IProcessRsp, ITask, Scan, SubSample } from 'api/interfaces.ts';
-import { ScanTypeEnum } from 'api/interfaces.ts';
+import {
+  type IMarkSubsampleReq,
+  type ITask,
+  type Scan,
+  ScanTypeEnum,
+  type SubSample,
+  TaskStatusEnum,
+} from 'api/interfaces.ts';
 import { useAuth } from 'app/stores/auth-context.tsx';
-import { ProjectBreadcrumbs, type BreadcrumbItem } from 'app/components/breadcrumbs.tsx';
+import { type BreadcrumbItem, ProjectBreadcrumbs } from 'app/components/breadcrumbs.tsx';
 import { useRequiredParams } from 'app/lib/router-utils.ts';
 import { SubsampleProcessTimeline } from 'app/features/subsample/process/timeline.tsx';
 import { Button, Card, CardFooter, CardHeader } from '@heroui/react';
@@ -24,30 +30,35 @@ export const SubsampleProcessPage = () => {
   ]);
   const { authState } = useAuth();
 
+  const noBc: BreadcrumbItem = { id: '', name: '' };
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [breadcrumbsList, setBreadcrumbsList] = useState<(string | BreadcrumbItem)[]>(['', '', '']);
+
+  const [breadcrumbsList, setBreadcrumbsList] = useState<BreadcrumbItem[]>([noBc, noBc, noBc]);
   const [subsample, setSubsample] = useState<SubSample | null>(null);
-  const [maskScan, setMaskScan] = useState<Scan | null | undefined>(null);
-  const [task, setTask] = useState<ITask | null | undefined>(null);
+  const [maskScan, setMaskScan] = useState<Scan | null>(null);
+  const [task, setTask] = useState<ITask | null>(null);
 
   useEffect(() => {
     // Fetch the full project and navigate manually
     getProject(authState.accessToken!, projectId)
       .then(projectData => {
-        const newBreadcrumbsList: (string | BreadcrumbItem)[] = [projectData.name];
+        const newBreadcrumbsList: BreadcrumbItem[] = [
+          { id: projectData.id, name: projectData.name },
+        ];
 
         // Navigate through the project structure to find the specific subsample
         const sample = projectData.samples.find(sample => sample.id === sampleId);
         if (!sample) {
           throw new Error(`Sample with ID ${sampleId} not found in project`);
         }
-        newBreadcrumbsList.push(sample.name);
+        newBreadcrumbsList.push({ id: sample.id, name: sample.name });
         const subsampleData = sample.subsample.find(subsample => subsample.id === subsampleId);
         if (!subsampleData) {
           throw new Error(`Subsample with ID ${subsampleId} not found in sample`);
         }
-        newBreadcrumbsList.push(subsampleData.name);
+        newBreadcrumbsList.push({ id: subsampleData.id, name: subsampleData.name });
         setBreadcrumbsList(newBreadcrumbsList);
         setSubsample(subsampleData);
       })
@@ -59,44 +70,60 @@ export const SubsampleProcessPage = () => {
       });
   }, [projectId, sampleId, subsampleId, authState.accessToken]);
 
-  function refreshTaskAndScan(result: IProcessRsp) {
-    if (result.task === null) {
+  useEffect(() => {
+    if (subsample === null) {
       return;
     }
-    getTask(authState.accessToken!, result.task.id)
-      .then(task => {
-        setTask(task);
-        return getSubSample(authState.accessToken!, projectId, sampleId, subsampleId);
-      })
-      .then(subsampleData => {
-        setSubsample(subsampleData);
-      })
-      .catch(error => {
-        setError('Failed to fetch task or subsample data: ' + error.message);
-      });
-  }
+    const maskScan = subsample.scan.find(s => s.type === ScanTypeEnum.V10_MASK && !s.deleted);
+    setMaskScan(maskScan ?? null);
+  }, [subsample]);
 
   useEffect(() => {
-    if (subsample === null) return;
-    const maskScan = subsample.scan.find(s => s.type === ScanTypeEnum.V10_MASK && !s.deleted);
-    let interval: any;
-    if (maskScan === undefined) {
+    if (maskScan !== null) {
+      return;
+    }
+    if (task === null) {
       processSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
         .then(result => {
           setTask(result.task);
-          interval = setTimeout(() => {
-            refreshTaskAndScan(result);
-          }, 1000);
         })
         .catch(error => {
           setError('Failed to launch processing' + error.message);
         });
     }
-    setMaskScan(maskScan);
+  }, [maskScan]);
+
+  useEffect(() => {
+    if (task === null) {
+      return;
+    }
+    if (task.status === TaskStatusEnum.FAILED) {
+      setError('Task failed: ' + task.log);
+      return;
+    }
+    if (task.status === TaskStatusEnum.FINISHED) {
+      getSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
+        .then(subsampleData => {
+          setSubsample(subsampleData);
+        })
+        .catch(error => {
+          setError('Failed to fetch subsample data: ' + error.message);
+        });
+      return;
+    }
+    const timeout = setTimeout(() => {
+      getTask(authState.accessToken!, task.id)
+        .then(task => {
+          setTask(task);
+        })
+        .catch(error => {
+          setError('Failed to fetch task data: ' + error.message);
+        });
+    }, 1000);
     return () => {
-      if (interval) clearInterval(interval);
+      clearTimeout(timeout);
     };
-  }, [subsample]);
+  }, [task]);
 
   function onValid() {
     const req: IMarkSubsampleReq = { status: 'approved' };
@@ -113,7 +140,7 @@ export const SubsampleProcessPage = () => {
     <Card className="container mx-auto p-4">
       <CardHeader className="flex justify-between items-center mb-4">Scan processing</CardHeader>
       {breadcrumbsList.length > 0 && (
-        <ProjectBreadcrumbs list={breadcrumbsList}></ProjectBreadcrumbs>
+        <ProjectBreadcrumbs items={breadcrumbsList}></ProjectBreadcrumbs>
       )}
       <SubsampleProcessTimeline current={0} list={[]}></SubsampleProcessTimeline>
       <div className="bg-white shadow-md rounded-lg p-4">
@@ -122,7 +149,7 @@ export const SubsampleProcessPage = () => {
           {error && <p className="text-red-500">{error}</p>}
           {task && (
             <>
-              Task # {task.id} : {task.log}
+              Task #{task.id}: {task.log}
             </>
           )}
           {maskScan && (
@@ -131,7 +158,7 @@ export const SubsampleProcessPage = () => {
               meta:{maskScan.url}
             </>
           )}
-          {!maskScan && !loading && <p className="text-gray-500">Scan data not available.</p>}
+          {!maskScan && !loading && <p className="text-gray-500">Mask not yet available.</p>}
         </div>
       </div>
       {maskScan && (
