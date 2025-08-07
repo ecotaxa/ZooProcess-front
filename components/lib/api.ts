@@ -18,17 +18,6 @@ import {
   writeCompressedMatrix,
 } from '@/lib/DrawCanvasToolsNode.ts';
 
-export interface VignetteData {
-  scan: string;
-  matrix: string;
-  mask?: string;
-  vignettes?: string[];
-}
-
-export interface VignetteResponse {
-  data: VignetteData[];
-  folder: string;
-}
 
 export async function writeFakeMatrix(filePath: string, width = 64, height = 64) {
   // HEADER

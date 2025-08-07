@@ -112,6 +112,19 @@ export async function getTask(token: string, taskId: string) {
   return response.data;
 }
 
+export async function getVignettes(
+  token: string,
+  projectId: string,
+  sampleId: string,
+  subsampleId: string
+) {
+  const api = await axiosInstance({ token: token });
+  const url = '/vignettes/' + projectId + '/' + sampleId + '/' + subsampleId;
+  const response = await api.get<I.VignetteResponse>(url);
+
+  return response.data; //.data;
+}
+
 /////////////////////////////////
 // UNUSED BELOW
 /////////////////////////////////
@@ -763,29 +776,6 @@ export async function updateSample(projectId: string, sampleId: string, data: I.
       console.error(error.config);
       throw error;
     });
-}
-
-export async function getVignettes(url: string) {
-  console.log('getVignettes(', url, ')');
-  const api = await axiosInstance({});
-  // const response = await api.get<Separator>(url);
-  // console.log("getVignettes response: ", response);
-  // return response.data;
-
-  // return await api.get<Separator>(url)
-  // .then(function (response) {
-  //   console.log("getVignettes response: ", response);
-  //   return response.data;
-  // })
-  // .catch(function (error) {
-  //   console.log("getVignettes error:", error.toJSON());
-  //   return error
-  //   // throw(error);
-  // })
-
-  const response = await api.get<I.Separator>(url);
-  console.log('getVignettes return ', response.status);
-  return response; //.data;
 }
 
 export enum TaskType {

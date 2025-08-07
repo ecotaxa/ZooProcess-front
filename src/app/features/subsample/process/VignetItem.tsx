@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { VignetteData } from '@/components/lib/api';
 import ResizeObserver from 'resize-observer-polyfill';
-import { SmartImage } from '@/components/SmartImage';
+import { SmartImage } from 'app/components/SmartImage';
+import type { VignetteData } from 'api/interfaces.ts';
+import { API_SERVER } from '../../../../constants.ts';
 
 const MAX_IMAGE_WIDTH = 200; // px
 const MASK_OFFSET = 16; // px de séparation entre scan et mask
@@ -28,7 +29,7 @@ export default function VignetItem({
   onEditMask,
   onImageLoaded,
   maskRefreshKey,
-}: Props) {
+}: Readonly<Props>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isTallScan, setIsTallScan] = useState(false);
@@ -98,8 +99,8 @@ export default function VignetItem({
   }, [isVisible, vignette.scan, vignette.mask, folder, vignette.matrix, onUpdate]);
 
   let scanSrc, maskSrc;
-  if (folder.startsWith('/api/backend')) {
-    scanSrc = `${folder}/${vignette.scan}`;
+  if (folder.startsWith('/vignette')) {
+    scanSrc = `${API_SERVER}${folder}/${vignette.scan}`;
     maskSrc = vignette.mask
       ? `${folder}/${vignette.mask}` + (maskRefreshKey ? `?t=${maskRefreshKey}` : '')
       : '';

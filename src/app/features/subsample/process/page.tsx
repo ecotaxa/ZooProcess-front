@@ -3,6 +3,7 @@ import {
   getProject,
   getSubSample,
   getTask,
+  getVignettes,
   markSubSample,
   processSubSample,
 } from 'api/zooprocess-api.ts';
@@ -14,6 +15,7 @@ import {
   type SubSample,
   SubSampleStateEnum,
   TaskStatusEnum,
+  type VignetteData,
 } from 'api/interfaces.ts';
 import { useAuth } from 'app/stores/auth-context.tsx';
 import { type BreadcrumbItem, ProjectBreadcrumbs } from 'app/components/breadcrumbs.tsx';
@@ -21,6 +23,7 @@ import { useRequiredParams } from 'app/lib/router-utils.ts';
 import { SubsampleProcessTimeline } from 'app/features/subsample/process/timeline.tsx';
 import { Card, CardBody, CardHeader } from '@heroui/react';
 import { ScanCheckPage } from 'app/features/subsample/process/process.tsx';
+import VignetteList from 'app/features/subsample/process/VignetteList.tsx';
 
 export const SubsampleProcessPage = () => {
   // Get the parameters from the URL
@@ -39,7 +42,7 @@ export const SubsampleProcessPage = () => {
   const [subsample, setSubsample] = useState<SubSample | null>(null);
   const [step, setStep] = useState<number | null>(null);
   const [maskScan, setMaskScan] = useState<Scan | null>(null); // Target of step 0
-  const [vignettes, setVignettes] = useState<Scan | null>(null); // Target of step 1
+  const [vignettes, setVignettes] = useState<VignetteData[]>([]); // Target of step 1
   const [task, setTask] = useState<ITask | null>(null);
 
   useEffect(() => {
@@ -79,6 +82,14 @@ export const SubsampleProcessPage = () => {
       setMaskScan(maskScan ?? null);
     } else {
       setStep(1);
+      getVignettes(authState.accessToken!, projectId, sampleId, subsampleId)
+        .then(rrsp => {
+          setVignettes(rrsp.data);
+          console.log(rrsp.data);
+        })
+        .catch(error => {
+          setError('Failed to fetch vignettes data: ' + error.message);
+        });
     }
   }, [subsample]);
 
@@ -153,6 +164,11 @@ export const SubsampleProcessPage = () => {
     );
   }
 
+  function separatePage() {
+    const folder = `/vignette/${projectId}/${sampleId}/${subsampleId}`;
+    return <VignetteList initialVignettes={vignettes} folder={folder} />;
+  }
+
   return (
     <Card className="container mx-auto p-1">
       <CardHeader className="flex justify-between items-center mb-1">
@@ -170,6 +186,7 @@ export const SubsampleProcessPage = () => {
           </p>
         )}
         {step == 0 && scanCheckPage()}
+        {step == 1 && separatePage()}
       </CardBody>
     </Card>
   );

@@ -95,6 +95,18 @@ export interface IMarkSubsampleReq {
   date?: string;
 }
 
+export interface VignetteData {
+  scan: string;
+  matrix: string;
+  mask?: string;
+  vignettes?: string[];
+}
+
+export interface VignetteResponse {
+  data: VignetteData[];
+  folder: string;
+}
+
 export interface Ecotaxa {
   id: string;
 }

@@ -1,4 +1,3 @@
-import { cleanDigitSectionValue } from '@mui/x-date-pickers/internals/hooks/useField/useField.utils';
 import React, { useRef, useEffect, useState } from 'react';
 
 interface DrawCanvasProps {
@@ -74,7 +73,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, overlayRef.current.width, overlayRef.current.height);
+    ctx.clearRect(0, 0, overlayRef.current!.width, overlayRef.current!.height);
 
     ctx.setTransform(zoom, 0, 0, zoom, -scroll.x * zoom, -scroll.y * zoom);
     ctx.fillStyle = strokeColor;

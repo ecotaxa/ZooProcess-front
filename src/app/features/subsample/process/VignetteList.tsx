@@ -1,16 +1,16 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import VignetItem from '@/components/VignetItem.tsx';
-import { VignetteData } from '@/components/lib/api.ts';
-import { VariableSizeList as List, ListChildComponentProps } from 'react-window';
+import { VariableSizeList as List, type ListChildComponentProps } from 'react-window';
 
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@heroui/react';
 
+import VignetItem from './VignetItem.tsx';
+import type { VignetteData } from 'api/interfaces.ts';
 import {
   readMatrixFromCompressedBinary,
   saveMatrixAsCompressedBinary,
-} from '@/components/DrawCanvasTools.tsx';
-import DrawCanvas from '@/components/DrawCanvas.tsx';
-import { saveMaskViaApi } from '@/lib/save-mask.ts';
+} from 'app/lib/DrawCanvasTools.ts';
+import DrawCanvas from 'app/components/DrawCanvas.tsx';
+import { saveMaskViaApi } from 'api/save-mask.ts';
 // import { X } from 'framer-motion/dist/types.d-CtuPurYT';
 
 // const VignetItem = dynamic(() => import('./VignetItem'), { ssr: false })
@@ -32,16 +32,16 @@ interface Props {
   // height?: number;     // Hauteur du viewport de la liste
 }
 
-export default function VignetList({
+export default function VignetteList({
   initialVignettes,
   folder,
   // itemHeight = 110, // à ajuster selon le rendu visuel de VignetItem
   // height = 700      // hauteur scrollable visible (px)
-}: Props) {
+}: Readonly<Props>) {
   // const itemHeight = 110
   const calculatedHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
-
-  const [vignettes, setVignettes] = useState<VignetteData[]>(initialVignettes);
+  // const [vignettes, setVignettes] = useState<VignetteData[]>(initialVignettes);
+  const vignettes = initialVignettes;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [editIndex, setEditIndex] = useState<number | null>(null); // pour la modale édition
   const [editMatrix, setEditMatrix] = useState<number[][] | undefined>(undefined);
@@ -50,17 +50,17 @@ export default function VignetList({
   const [maskRefreshMap, setMaskRefreshMap] = useState<{ [mask: string]: number }>({});
   const [rowHeights, setRowHeights] = useState<{ [index: number]: number }>({});
 
-  const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
+  const [, setImageSize] = useState<{ width: number; height: number } | null>(null);
 
-  // to the automaitc scroll
+  // to the automatic scroll
   const listRef = useRef<any>(null);
 
   const updateVignette = useCallback((index: number, newData: Partial<VignetteData>) => {
-    setVignettes(prev => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], ...newData };
-      return updated;
-    });
+    // setVignettes(prev => {
+    //   const updated = [...prev];
+    //   updated[index] = { ...updated[index], ...newData };
+    //   return updated;
+    // });
   }, []);
 
   useEffect(() => {
@@ -106,7 +106,6 @@ export default function VignetList({
   const Row = ({ index, style }: ListChildComponentProps) => {
     const maskName = vignettes[index].mask || '';
     const maskRefreshKey = maskRefreshMap[maskName] || 0;
-
     return (
       <div style={style}>
         <VignetItem
@@ -256,7 +255,6 @@ export default function VignetList({
         {Row}
       </List>
       {/* </div> */}
-
       {zoomMaskSrc && (
         <div
           className="fixed left-0 top-0 h-full flex items-center z-50 pointer-events-none"
