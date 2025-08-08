@@ -7,7 +7,7 @@ interface SmartImageProps {
   onLoad?: (e: React.SyntheticEvent<HTMLImageElement>) => void; // facultatif
 }
 
-export function SmartImage({ src, alt, onClick, onLoad }: SmartImageProps) {
+export function SmartImage({ src, alt, onClick, onLoad }: Readonly<SmartImageProps>) {
   const [loaded, setLoaded] = useState(false);
 
   return (

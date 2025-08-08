@@ -42,7 +42,7 @@ export const SubsampleProcessPage = () => {
   const [subsample, setSubsample] = useState<SubSample | null>(null);
   const [step, setStep] = useState<number | null>(null);
   const [maskScan, setMaskScan] = useState<Scan | null>(null); // Target of step 0
-  const [vignettes, setVignettes] = useState<VignetteData[]>([]); // Target of step 1
+  const [vignettes, setVignettes] = useState<VignetteData[] | null>(null); // Target of step 1
   const [task, setTask] = useState<ITask | null>(null);
 
   useEffect(() => {
@@ -80,16 +80,16 @@ export const SubsampleProcessPage = () => {
       setStep(0);
       const maskScan = subsample.scan.find(s => s.type === ScanTypeEnum.V10_MASK && !s.deleted);
       setMaskScan(maskScan ?? null);
-    } else {
+    } else if (subsample.state === SubSampleStateEnum.SEGMENTED) {
       setStep(1);
-      getVignettes(authState.accessToken!, projectId, sampleId, subsampleId)
-        .then(rrsp => {
-          setVignettes(rrsp.data);
-          console.log(rrsp.data);
-        })
-        .catch(error => {
-          setError('Failed to fetch vignettes data: ' + error.message);
-        });
+    } else if (subsample.state === SubSampleStateEnum.MSK_APPROVED) {
+      setStep(1);
+    } else if (subsample.state === SubSampleStateEnum.MULTIPLES_GENERATED) {
+      setStep(1);
+      getVignettes(authState.accessToken!, projectId, sampleId, subsampleId).then(rrsp => {
+        setVignettes(rrsp.data);
+        console.log(rrsp.data);
+      });
     }
   }, [subsample]);
 
@@ -109,6 +109,21 @@ export const SubsampleProcessPage = () => {
   }, [maskScan]);
 
   useEffect(() => {
+    if (vignettes !== null) {
+      return;
+    }
+    if (task === null) {
+      processSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
+        .then(result => {
+          setTask(result.task);
+        })
+        .catch(error => {
+          setError('Failed to launch processing' + error.message);
+        });
+    }
+  }, [vignettes]);
+
+  useEffect(() => {
     if (task === null) {
       return;
     }
@@ -117,13 +132,23 @@ export const SubsampleProcessPage = () => {
       return;
     }
     if (task.status === TaskStatusEnum.FINISHED) {
-      getSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
-        .then(subsampleData => {
-          setSubsample(subsampleData);
-        })
-        .catch(error => {
-          setError('Failed to fetch subsample data: ' + error.message);
-        });
+      if (step === 0) {
+        getSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
+          .then(subsampleData => {
+            setSubsample(subsampleData);
+          })
+          .catch(error => {
+            setError('Failed to fetch subsample data: ' + error.message);
+          });
+      } else if (step === 1) {
+        getVignettes(authState.accessToken!, projectId, sampleId, subsampleId)
+          .then(rrsp => {
+            setVignettes(rrsp.data);
+          })
+          .catch(error => {
+            setError('Failed to fetch vignettes data: ' + error.message);
+          });
+      }
       return;
     }
     const timeout = setTimeout(() => {
@@ -190,6 +215,7 @@ export const SubsampleProcessPage = () => {
             Task #{task.id}: {task.log}
           </p>
         )}
+        {subsample && subsample.state}
         {step == 0 && scanCheckPage()}
         {step == 1 && separatePage()}
       </CardBody>

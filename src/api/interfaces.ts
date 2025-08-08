@@ -54,9 +54,11 @@ export type SubSamples = Array<SubSample>;
 export enum SubSampleStateEnum {
   EMPTY = 'EMPTY', // No scan
   ACQUIRED = 'ACQUIRED', // There is a scanned image
+  SEGMENTED = 'SEGMENTED', // # Segmentation and MSK generation took place
   MSK_APPROVED = 'MSK_APPROVED', // Visual MSK check and object count was made and OK
-  IN_SEPARATION_VALIDATION = 'IN_SEPARATION_VALIDATION', // Auto separation was done, it's being validated
-  SEPARATION_VALIDATION_DONE = 'SEPARATION_VALIDATION_DONE', // Auto separation was done, it's being validated
+  MULTIPLES_GENERATED = 'MULTIPLES_GENERATED', // # ML determined multiples
+  SEPARATION_VALIDATION_DONE = 'SEPARATION_VALIDATION_DONE', // Validation of multiples done
+  UPLOADING = 'UPLOADING', // Transferring to EcoTaxa
   UPLOADED = 'UPLOADED', // Final state, all went into EcoTaxa
 }
 
