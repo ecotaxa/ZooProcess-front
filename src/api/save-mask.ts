@@ -1,6 +1,13 @@
 import pako from 'pako';
 
 export async function saveMaskViaApi(matrix: number[][], gzFilename: string, folder: string) {
+  const blob = new Blob([getCompressedArrayFromMatrix(matrix)]);
+
+  const mask_post_url = folder.replace('vignette', 'vignette_mask') + '/' + gzFilename;
+  await sendBlobToServer(mask_post_url, 'application/gzip', blob);
+}
+
+function getCompressedArrayFromMatrix(matrix: number[][]) {
   const height = matrix.length;
   const width = matrix[0]?.length || 0;
   const rowBytes = Math.ceil(width / 8);
@@ -21,19 +28,36 @@ export async function saveMaskViaApi(matrix: number[][], gzFilename: string, fol
   }
 
   const compressed = pako.deflate(raw);
+  return compressed;
+}
 
-  // Envoie via fetch POST vers l'API
-  const res = await fetch('/api/save-mask', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/octet-stream',
-      'X-Filename': gzFilename, // on transmet le nom du fichier
-      'X-Folder': folder, // on transmet le dossier racine (ex: "test/1")
-    },
-    body: compressed,
-  });
+async function sendBlobToServer(url: string, mimeType: string, buffer: Blob) {
+  try {
+    // Create a new FormData object
+    const formData = new FormData();
 
-  if (!res.ok) {
-    throw new Error(`Erreur API save-mask: ${await res.text()}`);
+    // Create a file from the buffer
+    // The File constructor takes (parts, filename, options)
+    const file = new File([buffer], 'mask', {
+      type: mimeType,
+    });
+
+    // Append the file to the FormData
+    formData.append('file', file);
+
+    // Send the FormData as the request body
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      // Note: Don't set Content-Type header when sending FormData
+      // It will be set automatically with the correct boundary
+    });
+
+    const result = await response.json();
+    console.log('Upload successful:', result);
+    return result;
+  } catch (error) {
+    console.error('Error uploading buffer:', error);
+    throw error;
   }
 }
