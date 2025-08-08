@@ -1,6 +1,5 @@
 import axios, { type AxiosHeaderValue, type AxiosInstance, type CreateAxiosDefaults } from 'axios';
 import { setupCache } from 'axios-cache-interceptor';
-import { API_SERVER } from '../constants';
 
 const axiosInstance = async ({
   useAuth = true,
@@ -14,7 +13,7 @@ const axiosInstance = async ({
   // console.log('axiosInstance()');
 
   let _params: CreateAxiosDefaults<any> = {
-    baseURL: API_SERVER,
+    baseURL: '/api',
     timeout: 30000,
   };
 

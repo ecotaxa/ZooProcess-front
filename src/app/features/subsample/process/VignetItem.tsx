@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
 import { SmartImage } from 'app/components/SmartImage';
 import type { VignetteData } from 'api/interfaces.ts';
-import { API_SERVER } from '../../../../constants.ts';
 
 const MAX_IMAGE_WIDTH = 200; // px
 const MASK_OFFSET = 16; // px de séparation entre scan et mask
@@ -100,7 +99,8 @@ export default function VignetItem({
 
   let scanSrc, maskSrc;
   if (folder.startsWith('/vignette')) {
-    scanSrc = `${API_SERVER}${folder}/${vignette.scan}`;
+    // TODO:remove
+    scanSrc = `${folder}/${vignette.scan}`;
     maskSrc = vignette.mask
       ? `${folder}/${vignette.mask}` + (maskRefreshKey ? `?t=${maskRefreshKey}` : '')
       : '';
@@ -153,7 +153,7 @@ export default function VignetItem({
             <SmartImage
               key={i}
               src={
-                folder.startsWith('/api/backend')
+                folder.startsWith('/vignette')
                   ? `${folder}/${img}`
                   : `/${folder}/${img}`.replace(/\\/g, '/').replace(/\/\/+/, '/')
               }

@@ -165,8 +165,13 @@ export const SubsampleProcessPage = () => {
   }
 
   function separatePage() {
-    const folder = `/vignette/${projectId}/${sampleId}/${subsampleId}`;
-    return <VignetteList initialVignettes={vignettes} folder={folder} />;
+    const folder = `/api/vignette/${projectId}/${sampleId}/${subsampleId}`;
+    return (
+      <>
+        {!vignettes && <p className="text-gray-500">No vignette to verify.</p>}
+        {vignettes && <VignetteList initialVignettes={vignettes} folder={folder} />}
+      </>
+    );
   }
 
   return (
