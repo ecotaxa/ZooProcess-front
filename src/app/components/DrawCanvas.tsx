@@ -299,7 +299,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
               setScroll({ x: 0, y: 0 });
             }}
           >
-            Taille originale (0)
+            No zoom (0)
           </button>
           <button onClick={() => setZoom(z => Math.max(z / ZOOM_FACTOR, MIN_ZOOM))}>
             Zoom (-)

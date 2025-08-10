@@ -66,7 +66,7 @@ export default function VignetteList({
   useEffect(() => {
     const selectedVignette = vignettes[selectedIndex];
     if (selectedVignette?.mask) {
-      if (folder.startsWith('/api/backend')) {
+      if (folder.startsWith('/vignette')) {
         setZoomMaskSrc(`${folder}/${selectedVignette.mask}`);
       } else {
         setZoomMaskSrc(
@@ -122,7 +122,6 @@ export default function VignetteList({
           }} // open the editor
           onImageLoaded={(height: number) => {
             console.log('👀 imageLoaded', index, height);
-
             setRowHeights(prev => {
               const current = prev[index];
               if (Math.abs(current - height) < 2) return prev;
@@ -160,7 +159,7 @@ export default function VignetteList({
   const getItemSize = (index: number) => {
     const h = rowHeights[index];
     if (!h || h < 96) {
-      console.warn('⚠️ Missing or too small height', h, ' for index', index, '→ fallback 120');
+      // console.warn('⚠️ Missing or too small height', h, ' for index', index, '→ fallback 120');
       return 120;
     }
     return h;
@@ -243,6 +242,7 @@ export default function VignetteList({
   return (
     <div className="relative h-screen w-full overflow-hidden bg-white">
       {/* <div className="absolute inset-0 pl-[320px]"> */}
+      {vignettes.length} to validate
       <List
         ref={listRef}
         height={calculatedHeight}
