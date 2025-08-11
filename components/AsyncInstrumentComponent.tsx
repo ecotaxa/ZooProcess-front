@@ -4,8 +4,6 @@
 // import AsyncDriveData from './AsyncDriveData'
 // import { Drive } from '../api/network/interfaces';
 
-
-
 // const AsyncDriveContent = () => {
 //    const drives = AsyncDriveData();
 
@@ -56,34 +54,34 @@
 
 // export default AsyncDriveComponent
 
-
-"use client";
-
-import { Suspense, use, useEffect, useState } from 'react'
+import { Suspense, use, useEffect, useState } from 'react';
 // import AsyncDriveData from '../app/api/data/AsyncDriveData'
 import { Drive, Instrument } from '../app/api/network/interfaces';
 import { getInstruments } from '@/app/api/data/instrument';
 
 const AsyncInstrumentContent = () => {
-   const instruments = getInstruments();
+  const instruments = getInstruments();
 
-   const [ instrumentlist , setInstrument ] = useState<Instrument[]>([]);
+  const [instrumentlist, setInstrument] = useState<Instrument[]>([]);
 
-    useEffect(() => {
-        const fetchInstruments = async () => {
-            const instrumentsData = await instruments
-            console.log("AsyncInstrumentContent useEffect: ", instrumentsData)
-            setInstrument(instrumentsData)
-        }
-        fetchInstruments()
+  useEffect(() => {
+    const fetchInstruments = async () => {
+      const instrumentsData = await instruments;
+      console.log('AsyncInstrumentContent useEffect: ', instrumentsData);
+      setInstrument(instrumentsData);
+    };
+    fetchInstruments();
     // }, [drives])
-    }, [])
+  }, []);
 
   return (
     <>
       <h1>test</h1>
       <p>AsyncAuthComponent</p>
-      {instrumentlist && instrumentlist.map((instrument: Instrument) => <p key={instrument.id}>{instrument.name}</p>)}
+      {instrumentlist &&
+        instrumentlist.map((instrument: Instrument) => (
+          <p key={instrument.id}>{instrument.name}</p>
+        ))}
       drive list
     </>
   );
@@ -94,7 +92,7 @@ const AsyncInstrumentComponent = () => {
     <Suspense fallback={<div>Loading...</div>}>
       <AsyncInstrumentContent />
     </Suspense>
-  )
-}
+  );
+};
 
-export default AsyncInstrumentComponent
+export default AsyncInstrumentComponent;

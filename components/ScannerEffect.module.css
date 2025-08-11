@@ -1,45 +1,41 @@
 .scannerContainer {
-    position: relative;
-    width: 80%;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-  
-  .scannerImage {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-  
-  .curtain {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background-color: black;
-    transition: width 0.1s linear;
-  }
-  
-  .scannerLine {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background-color: #00ff00;
-    box-shadow: 0 0 10px 2px #00ff00;
-    transition: left 0.1s linear;
-  }
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+  overflow: hidden;
+}
 
-  .blackLayer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: black;
-    z-index: 1;
-  }
-  
-  
-  
-  
+.scannerImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.curtain {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  transition: width 0.1s linear;
+}
+
+.scannerLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #00ff00;
+  box-shadow: 0 0 10px 2px #00ff00;
+  transition: left 0.1s linear;
+}
+
+.blackLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  z-index: 1;
+}

@@ -1,11 +1,6 @@
-'use client';
-
 import React, { useEffect, useRef, useState } from 'react';
-import { Card, CardBody, Spinner } from "@heroui/react";
-import {
-  readMatrixFromCompressedBinary,
-  mergeImageWithMatrix,
-} from '@/components/DrawCanvasTools';
+import { Card, CardBody, Spinner } from '@heroui/react';
+import { readMatrixFromCompressedBinary, mergeImageWithMatrix } from '@/components/DrawCanvasTools.tsx';
 
 type VignetteLineProps = {
   data: {
@@ -94,7 +89,7 @@ const VignetteLine: React.FC<VignetteLineProps> = ({ data, folder, apiUrl }) => 
               className="debug-border relative flex-shrink-0"
               onMouseEnter={() => setZoomVisible(true)}
               onMouseLeave={() => setZoomVisible(false)}
-              onMouseMove={(e) => {
+              onMouseMove={e => {
                 setZoomPosition({
                   x: e.clientX + 20,
                   y: e.clientY + 20,

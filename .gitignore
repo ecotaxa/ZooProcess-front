@@ -33,7 +33,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
 
 
 # test
@@ -52,3 +51,6 @@ public/test/*/*_mask.png
 public/test/*
 public/test/*/*_mask.gz
 public/test/1/apero2023_pp_wp2_001_st01_d_d1_1_567_mask.gz
+
+# SPA
+/dist/

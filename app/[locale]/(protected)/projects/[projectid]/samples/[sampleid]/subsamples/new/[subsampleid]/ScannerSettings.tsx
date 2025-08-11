@@ -14,7 +14,7 @@ export function ScannerSettings(param: {
 }) {
     const { project,instrument, onCancel, onValid } = param;
 
-    const router = useRouter();
+    const navigate = useNavigate();
 
     return (
         <>

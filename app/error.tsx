@@ -1,20 +1,12 @@
-'use client' 
- 
-import { ErrorComponent } from '@/components/ErrorComponent'
-import { useEffect } from 'react'
- 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error
-  reset: () => void
-}) {
+import { ErrorComponent } from '@/components/ErrorComponent';
+import { useEffect } from 'react';
+
+export default function Error({ error, reset }: { error: Error; reset: () => void }) {
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error(error)
-  }, [error])
- 
+    console.error(error);
+  }, [error]);
+
   return (
     <div>
       <h2>Something went wrong!</h2>
@@ -30,6 +22,5 @@ export default function Error({
       Error: {error.message}
       <ErrorComponent error={error} />
     </div>
-
-  )
+  );
 }

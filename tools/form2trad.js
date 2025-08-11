@@ -1,4 +1,4 @@
-// run : node tools/form2trad.js 
+// run : node tools/form2trad.js
 
 const fs = require('fs');
 const vm = require('vm');

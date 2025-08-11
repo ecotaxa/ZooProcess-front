@@ -2,16 +2,10 @@
 
 // // import useSWR from 'swr'
 
-// import * as api from '@/app/api/network/zooprocess-api' 
-
-
-
-
+// import * as api from '@/app/api/network/zooprocess-api'
 
 // export const isPlainObject = (val) =>
 //   Object.prototype.toString.call(val) === '[object Object]';
-
-
 
 // // export async function addSubSample({ projectId, sampleId, data }) {
 // //   console.log("adding SubSample...projectId: ", projectId, ", sampleId: ", sampleId);
@@ -31,9 +25,9 @@
 
 // //     // AxiosError: extractions
 
-// //     if ( isPlainObject(error) ) { 
+// //     if ( isPlainObject(error) ) {
 // //       console.debug("🛟 isPlainObject")
-// //       return Promise.reject(error) 
+// //       return Promise.reject(error)
 // //     }
 
 // //     const msg =
@@ -93,14 +87,11 @@
 //   }
 // }
 
-
 //   export async function updateSubSample({projectId, sampleId, subSampleId, data}){
-  
+
 //     console.log("update SubSample...projectId: ", projectId, ", sampleId: ", sampleId);
- 
+
 //     console.log("update SubSample...data: ", data);
-  
-  
 
 //     return api.updateSubSample(projectId, sampleId, subSampleId, data)
 //     .then((response) => {
@@ -112,10 +103,9 @@
 //       console.log("projectid: ", projectId);
 //       console.log("sampleid: ", sampleId);
 //       console.log("data:", data);
- 
+
 //         console.error("❌ error.message", error.message);
 //       throw (error.message)
 //     })
-  
-//   }
 
+//   }

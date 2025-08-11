@@ -1,4 +1,4 @@
-import Timer from "@/components/timer"
+import Timer from '@/components/timer';
 
 // const ThirtySeconds = (nextState: state) => {
 //     if ( current != state.thirtys1 && current != state.thirtys1bis ) {
@@ -14,21 +14,13 @@ import Timer from "@/components/timer"
 //     )
 // }
 
-export function ThirtySeconds(param:{
-    onCancel: () => void;
-    onValid: () => void;
-    time: number;
-}){
+export function ThirtySeconds(param: { onCancel: () => void; onValid: () => void; time: number }) {
+  const { onCancel, onValid, time } = param;
 
-    const { onCancel, onValid, time } = param;
-
-
-    return (
-        <>
-                <Timer initialTime={time} onComplete={onValid} />
-                {/* <Timer duration={time} onComplete={onValid} /> */}
-        </>
-    )
-
+  return (
+    <>
+      <Timer initialTime={time} onComplete={onValid} />
+      {/* <Timer duration={time} onComplete={onValid} /> */}
+    </>
+  );
 }
-

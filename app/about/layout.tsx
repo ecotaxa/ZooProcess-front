@@ -1,31 +1,19 @@
-import "@/styles/globals.css";
-import { Providers } from "../providers";
-import { Navbar } from "@/components/navbar";
-import { Link } from "@heroui/link";
-import { fontSans } from "@/config/fonts";
-import clsx from "clsx";
+import { Providers } from '../providers';
+import { Navbar } from '@/components/navbar';
+import { Link } from '@heroui/link';
+import { fontSans } from '@/config/fonts';
+import clsx from 'clsx';
 
-export default function VignettesLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function VignettesLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body
-        className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+      <body className={clsx('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
+        <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
           <div className="relative flex flex-col h-screen">
             <Navbar />
 
             {/* 💥 Ici on utilise toute la largeur */}
-            <main className="w-full px-4 pt-16 flex-grow overflow-x-auto">
-              {children}
-            </main>
+            <main className="w-full px-4 pt-16 flex-grow overflow-x-auto">{children}</main>
 
             <footer className="w-full flex items-center justify-center py-3">
               <Link

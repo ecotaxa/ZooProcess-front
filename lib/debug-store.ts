@@ -6,7 +6,7 @@ class DebugStore {
   private listeners = new Set<Listener>();
 
   private constructor(initial: boolean) {
-    const saved = sessionStorage.getItem("debug-mode");
+    const saved = sessionStorage.getItem('debug-mode');
     this.value = saved ? JSON.parse(saved) : initial;
   }
 
@@ -19,7 +19,7 @@ class DebugStore {
 
   static getInstance(): DebugStore {
     if (!DebugStore.instance) {
-      throw new Error("DebugStore not initialized");
+      throw new Error('DebugStore not initialized');
     }
     return DebugStore.instance;
   }
@@ -30,7 +30,7 @@ class DebugStore {
 
   toggle() {
     this.value = !this.value;
-    sessionStorage.setItem("debug-mode", JSON.stringify(this.value));
+    sessionStorage.setItem('debug-mode', JSON.stringify(this.value));
     this.listeners.forEach(cb => cb(this.value));
   }
 

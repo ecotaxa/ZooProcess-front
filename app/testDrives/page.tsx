@@ -1,39 +1,31 @@
-"use client";
-
-import { Suspense } from "react";
+import { Suspense } from 'react';
 // import AsyncDrriveComponents from "./AsyncDriveComponents";
-import AsyncAuthComponent from '../../components/AsyncDriveComponents'
-import Drives from "@/components/drives";
+import AsyncAuthComponent from '../../components/AsyncDriveComponents';
+import Drives from '@/components/drives';
 
-
-
-const onChange = (value:any) => {
-    console.log("change value:", value)
-}
-
-
+const onChange = (value: any) => {
+  console.log('change value:', value);
+};
 
 const testDrives = () => {
- 
   const items = {
-    id: "select",
-    name: "name",
-    value: "",
-    placeholder: "placeholder",
-    label: "label",
+    id: 'select',
+    name: 'name',
+    value: '',
+    placeholder: 'placeholder',
+    label: 'label',
     required: true,
     choice: [],
-    onChange: (name:string,value:string)=>{return ""}
-  }
+    onChange: (name: string, value: string) => {
+      return '';
+    },
+  };
 
-    return (
-        <>
-            <Drives {...items}/>
-        </>
-    )
-
-
-}
+  return (
+    <>
+      <Drives {...items} />
+    </>
+  );
+};
 
 export default testDrives;
-

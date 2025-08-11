@@ -1,6 +1,5 @@
 // "use client"
 
-// import Head from 'next/head';
 // import { FC } from "react";
 
 // // import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
@@ -8,7 +7,6 @@
 // import { MyForm } from '@/components/myForm';
 // import { fraction_inputFormElments } from '@/config/formElements';
 // import { useState } from 'react';
-// import { useRouter } from 'next/navigation';
 // // import { addSample } from '@/app/api/samples';
 // import { Debug } from '@/components/Debug';
 // import { addSubSample } from '@/app/api/subsamples';
@@ -18,11 +16,6 @@
 // import { ErrorComponent } from '@/components/ErrorComponent';
 
 // import { User } from '@/app/api/network/interfaces';
-
- 
-
-
-
 
 // // const testData = {
 // //     //"sample_name":"dyfamed_wp2_2023_biotom_sn001",
@@ -53,9 +46,9 @@
 // // }
 
 // const forms = [
-//     // sampleid_formElements, 
-//     // inputFormElements, 
-//     // inputFormElements_tow_type_vertical, 
+//     // sampleid_formElements,
+//     // inputFormElements,
+//     // inputFormElements_tow_type_vertical,
 //     fraction_inputFormElments
 // ]
 
@@ -68,8 +61,8 @@
 
 // const NewSubSample : FC<pageProps> = (params ) => {
 
-//     const router = useRouter()
-    
+//     const navigate = useNavigate()
+
 //     // const { projectid, sampleid } = params
 //     const { user, isLoading, isError } = useUserMe()
 //     // const { project, isLoading:l , isError:err } = useProject()
@@ -99,7 +92,7 @@
 //     console.log("NewSample params sampleid: ", sampleid);
 
 //     // const emptyData = {
-//     //     "scanning_operator":user.name, // "Seb"  // 
+//     //     "scanning_operator":user.name, // "Seb"  //
 //     // }
 
 //     // const updatedForm = forms
@@ -109,8 +102,6 @@
 //     //     form['value']=emptyData//testData//
 //     //     form['title']='Sub Sample metadata'
 //     //     form['subtitle']='Fill all the mandatory fields.'
-
-
 
 //     // const [stringifiedData,setData] = useState(JSON.stringify(testData, null, 2))
 //     const [stringifiedData, setData] = useState("")
@@ -154,15 +145,15 @@
 //             // addSample(projectId, data)
 //             return addSubSample({
 //                 projectId: projectid, // : params.params.projectid,
-//                 sampleId: sampleid, 
+//                 sampleId: sampleid,
 //                 data
 //             })
 //             .then((response) => {
 //                 console.log("Go To the infos page" )
-//                 // router.push(`${response.data.id}`)
+//                 // navigate(`${response.data.id}`)
 //                 // const path = `/projects/${projectId}/samples/${sampleId}/subsamples/new/scan/${response.data.id}/preview`
 //                 const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${response.data.id}`
-//                 router.push(path)
+//                 navigate(path)
 //             })
 //             .catch((error) => {
 //                 return Promise.reject(error)
@@ -171,15 +162,15 @@
 //         // }
 //         // catch (e:any){
 //         //     console.log(e);
-            
+
 //         // }
 //     }
 
 //     const onCancel = () => {
 //         router.back()
-//         // router.push({
+//         // navigate({
 //         //     pathname: '/projects/[projectid]',
-//         //     query: { projectid: projectid },                                         
+//         //     query: { projectid: projectid },
 //         // })
 //     }
 
@@ -191,20 +182,19 @@
 //         console.log("formatData() ");
 
 //         const emptyData = {
-//             "scanning_operator":user.name, // "Seb"  // 
+//             "scanning_operator":user.name, // "Seb"  //
 //         }
-    
+
 //         const updatedForm = forms
-    
+
 //         const form : any = []
 //             form['forms']=updatedForm
 //             form['value']=emptyData//testData//
 //             form['title']='Sub Sample metadata'
 //             form['subtitle']='Fill all the mandatory fields.'
-    
+
 //         return form;
 //     }
-
 
 //     const showForm = (use:User|any) => {
 
@@ -217,8 +207,8 @@
 //         const form = formatData(user)
 
 //         return (
-//             <MyForm 
-//                 {...form} 
+//             <MyForm
+//                 {...form}
 //                 project={projectid}
 //                 sample={sampleid}
 //                 onChange={onChange}
@@ -228,7 +218,6 @@
 //         )
 //         // }
 //     }
-
 
 //     return (
 //         <>
@@ -249,11 +238,11 @@
 //                     </h4>
 //                     {/* </Typography> */}
 //                     <Timeline_scan current={0} />
-//                     {/* <MyForm 
-//                         {...form} 
+//                     {/* <MyForm
+//                         {...form}
 //                         project={projectid}
 //                         sample={sampleid}
-//                         onChange={onChange} 
+//                         onChange={onChange}
 //                         onCancel={onCancel}
 //                         button={formButtons}/> */}
 
@@ -264,6 +253,5 @@
 //         </>
 //     );
 // }
-
 
 // export default NewSubSample;

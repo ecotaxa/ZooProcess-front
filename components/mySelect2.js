@@ -1,27 +1,27 @@
-import React, {forwardRef} from "react";
-import {useInput} from "@heroui/react";
-import {SearchIcon} from "./SearchIcon";
-import {CloseFilledIcon} from "./CloseFilledIcon";
+import React, { forwardRef } from 'react';
+import { useInput } from '@heroui/react';
+import { SearchIcon } from './SearchIcon';
+import { CloseFilledIcon } from './CloseFilledIcon';
 
 const styles = {
-  label: "text-black/50 dark:text-white/90",
+  label: 'text-black/50 dark:text-white/90',
   input: [
-    "bg-transparent",
-    "text-black/90 dark:text-white/90",
-    "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+    'bg-transparent',
+    'text-black/90 dark:text-white/90',
+    'placeholder:text-default-700/50 dark:placeholder:text-white/60',
   ],
-  innerWrapper: "bg-transparent",
+  innerWrapper: 'bg-transparent',
   inputWrapper: [
-    "shadow-xl",
-    "bg-default-200/50",
-    "dark:bg-default/60",
-    "backdrop-blur-xl",
-    "backdrop-saturate-200",
-    "hover:bg-default-200/70",
-    "focus-within:!bg-default-200/50",
-    "dark:hover:bg-default/70",
-    "dark:focus-within:!bg-default/60",
-    "!cursor-text",
+    'shadow-xl',
+    'bg-default-200/50',
+    'dark:bg-default/60',
+    'backdrop-blur-xl',
+    'backdrop-saturate-200',
+    'hover:bg-default-200/70',
+    'focus-within:!bg-default-200/50',
+    'dark:hover:bg-default/70',
+    'dark:focus-within:!bg-default/60',
+    '!cursor-text',
   ],
 };
 
@@ -55,7 +55,7 @@ const MyInput = forwardRef((props, ref) => {
     startContent: (
       <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
     ),
-    endContent: "mm",
+    endContent: 'mm',
     // custom styles
     classNames: {
       ...styles,
@@ -107,6 +107,6 @@ const MyInput = forwardRef((props, ref) => {
   );
 });
 
-MyInput.displayName = "MyInput";
+MyInput.displayName = 'MyInput';
 
 export default MyInput;

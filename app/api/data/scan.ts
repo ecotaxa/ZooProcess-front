@@ -1,29 +1,25 @@
-"use server";
-
-
 import { Background } from '../network/interfaces';
 import { getBackgrounds } from '../network/background';
 import { apiAuthPrefix } from '@/routes';
 
-// import * as zooapi from '@/app/api/network/zooprocess-api' 
+// import * as zooapi from '@/app/api/network/zooprocess-api'
 
 // A scan is a background ;) with organisms in it
-export async function getScans(projectid:string): Promise<Array<Background>> {
-    try {
-      // const project = await api.getProject(projectid);
-      const backgrounds = await getBackgrounds(`/projects/${projectid}/scans`)
-      return backgrounds;
-    } catch (error) {
-      console.error("Error - getScans()", error);
-      throw error;
-    }
+export async function getScans(projectid: string): Promise<Array<Background>> {
+  try {
+    // const project = await api.getProject(projectid);
+    const backgrounds = await getBackgrounds(`/projects/${projectid}/scans`);
+    return backgrounds;
+  } catch (error) {
+    console.error('Error - getScans()', error);
+    throw error;
   }
+}
 
+import axiosInstance from '@/network/axiosInstance';
 
-import axiosInstanse from '@/network/axiosInstanse';
-  
 // export async function linkScanToSubsample(scanId: string, subsampleId: string): Promise<void> {
-//   const api = await axiosInstanse({});
+//   const api = await axiosInstance({});
 //   const url = '/link'
 //   const body = {
 //     scanId: scanId,
@@ -57,49 +53,55 @@ import axiosInstanse from '@/network/axiosInstanse';
 
 //   }
 
-export async function linkScanToSubsample(projectId: string, sampleId: string, subsampleId: string, scanId: string): Promise<void> {
-  const api = await axiosInstanse({});
+export async function linkScanToSubsample(
+  projectId: string,
+  sampleId: string,
+  subsampleId: string,
+  scanId: string
+): Promise<void> {
+  const api = await axiosInstance({});
   const url = `/projects/${projectId}/samples/${sampleId}/subsamples/${subsampleId}/link`;
   const body = {
     scanId: scanId,
   };
-  
-  console.debug("linkScanToSubsample::url: ", url);
-  console.debug("linkScanToSubsample::body: ", body);
-  
+
+  console.debug('linkScanToSubsample::url: ', url);
+  console.debug('linkScanToSubsample::body: ', body);
+
   try {
     const response = await api.post(url, body);
-    console.log("linkScanToSubsample response: ", response);
+    console.log('linkScanToSubsample response: ', response);
     return response.data;
   } catch (error: any) {
-    console.error("linkScanToSubsample Error: ", error);
-    
+    console.error('linkScanToSubsample Error: ', error);
+
     // Si l'erreur vient de l'API avec un message structuré
     if (error.response && error.response.data) {
       const errorData = error.response.data;
-      
+
       // Remonter l'erreur avec les détails
       throw {
-        message: errorData.message || "Server error",
+        message: errorData.message || 'Server error',
         details: errorData.details || null,
         code: errorData.code || error.response.status,
-        path: errorData.path || null
+        path: errorData.path || null,
       };
     }
-    
+
     // Erreur de timeout ou de réseau
     if (error.code === 'ECONNABORTED') {
       throw {
-        message: "Request timed out",
-        details: "The server took too long to respond. This might be due to a large file size or server load.",
-        code: "TIMEOUT"
+        message: 'Request timed out',
+        details:
+          'The server took too long to respond. This might be due to a large file size or server load.',
+        code: 'TIMEOUT',
       };
     }
-    
+
     // Autres erreurs
     throw {
-      message: error.message || "An unknown error occurred",
-      code: error.code || "UNKNOWN"
+      message: error.message || 'An unknown error occurred',
+      code: error.code || 'UNKNOWN',
     };
   }
 }

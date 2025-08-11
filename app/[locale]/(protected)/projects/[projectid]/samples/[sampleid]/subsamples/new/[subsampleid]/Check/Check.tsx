@@ -5,7 +5,6 @@
 // import { Modal, Button, ModalBody, ModalContent } from "@heroui/react";
 // import { EyeIcon } from '@heroicons/react/24/outline';
 
-
 // export function Check(param:{current:eState, nextState:eState, setCurrent: (etate:eState) => void, onCancel: () => void}) {
 //     const {current, nextState, setCurrent} = param;
 //     const [images, setImages] = useState<Array<{ img: string; multiple: string }>>([]);
@@ -24,7 +23,6 @@
 //             .then(data => setImages(data));
 //     }, []);
 
-
 //     const imageRef = useRef<HTMLImageElement>(null);
 
 //     useEffect(() => {
@@ -32,7 +30,7 @@
 //             const img = imageRef.current;
 //             const scaledHeight = img.naturalHeight * 3;
 //             const scaledWidth = img.naturalWidth * 3;
-            
+
 //             // Update modal size
 //             const modal = img.closest('.heroui-modal-content') as HTMLElement;
 //             if (modal) {
@@ -41,7 +39,6 @@
 //             }
 //         }
 //     }, [selectedImage]);
-
 
 //     if (current != eState.check) {
 //         return <></>
@@ -121,8 +118,8 @@
 //     //                     }`}>
 //     //                         {image.multiple}%
 //     //                     </span>
-//     //                     <Button 
-//     //                         className="absolute top-0 right-0 p-1" 
+//     //                     <Button
+//     //                         className="absolute top-0 right-0 p-1"
 //     //                         onClick={() => setSelectedImage(image)}
 //     //                     >
 //     //                         <EyeIcon className="h-5 w-5" />
@@ -140,10 +137,10 @@
 //             //     <ModalBody>
 //             //     {selectedImage && (
 //             //         <div className="p-4">
-//             //             <img 
-//             //                 src={selectedImage.img} 
-//             //                 alt={selectedImage.img.split('/').pop()} 
-//             //                 className="w-auto h-auto" 
+//             //             <img
+//             //                 src={selectedImage.img}
+//             //                 alt={selectedImage.img.split('/').pop()}
+//             //                 className="w-auto h-auto"
 //             //                 style={{ transform: 'scale(3)' }}
 //             //             />
 //             //         </div>
@@ -154,7 +151,6 @@
 //     //     </div>
 //     // );
 
-
 //     return (
 //         <div className="container mx-auto p-4">
 //             <h1 className="text-2xl font-bold mb-4">Images</h1>
@@ -162,8 +158,8 @@
 //                 {images.map((image, index) => (
 //                     <div key={index} className="relative border rounded-lg overflow-hidden shadow-lg p-2 h-64 flex flex-col justify-between">
 //                         <div className="absolute top-2 right-2">
-//                             <EyeIcon 
-//                                 className="h-5 w-5 cursor-pointer" 
+//                             <EyeIcon
+//                                 className="h-5 w-5 cursor-pointer"
 //                                 onClick={() => setSelectedImage(image)}
 //                             />
 //                         </div>
@@ -180,16 +176,16 @@
 //                 ))}
 //             </div>
 //             {/* <Modal backdrop={backdrop}
-//     isOpen={selectedImage !== null} 
+//     isOpen={selectedImage !== null}
 //     onClose={() => setSelectedImage(null)}
 // >
 //              <ModalBody>
 //                  {selectedImage && (
 //                      <div className="p-4">
-//                          <img 
-//                              src={selectedImage.img} 
-//                              alt={selectedImage.img.split('/').pop()} 
-//                              className="w-auto h-auto" 
+//                          <img
+//                              src={selectedImage.img}
+//                              alt={selectedImage.img.split('/').pop()}
+//                              className="w-auto h-auto"
 //                              style={{ transform: 'scale(3)' }}
 //                          />
 //                      </div>
@@ -206,10 +202,10 @@
 //                 {selectedImage && (
 //                 <div className="overflow-auto">
 //                 <div className="inline-block border border-gray-300">
-//                     <img 
+//                     <img
 //                         ref={imageRef}
-//                         src={selectedImage.img} 
-//                         alt={selectedImage.img.split('/').pop()} 
+//                         src={selectedImage.img}
+//                         alt={selectedImage.img.split('/').pop()}
 //                         className="w-auto h-auto transform scale-[3] origin-top-left"
 //                     />
 //                 </div>
@@ -223,7 +219,6 @@
 //     );
 
 // }
-
 
 // "use client";
 
@@ -346,11 +341,6 @@
 //     </div>
 //   );
 // }
-
-
-
-
-
 
 // "use client";
 
@@ -481,7 +471,6 @@
 //   );
 // }
 
-
 // "use client";
 
 // import { useEffect, useRef, useState } from "react";
@@ -609,9 +598,6 @@
 //     </div>
 //   );
 // }
-
-
-
 
 // "use client";
 
@@ -741,9 +727,6 @@
 //   );
 // }
 
-
-
-
 // "use client";
 
 // import { useEffect, useRef, useState } from "react";
@@ -870,8 +853,6 @@
 //     </div>
 //   );
 // }
-
-
 
 // GOOOOD
 // "use client";
@@ -1000,9 +981,6 @@
 //     </div>
 //   );
 // }
-
-
-
 
 // "use client";
 
@@ -1133,7 +1111,6 @@
 //   );
 // }
 
-
 // "use client";
 
 // import { useEffect, useRef, useState } from "react";
@@ -1261,7 +1238,6 @@
 //   );
 // }
 
-
 // "use client";
 
 // import { useEffect, useRef, useState } from "react";
@@ -1382,7 +1358,7 @@
 //                     width: '100%', // S'assurer que l'image utilise toute la largeur de la modal
 //                     height: 'auto', // Ajuste la hauteur automatiquement
 //                     maxHeight: "none", // Permettre à l'image de s'étendre sans limite de hauteur
-//                   }} 
+//                   }}
 //                 />
 //               </div>
 //             )}
@@ -1392,8 +1368,6 @@
 //     </div>
 //   );
 // }
-
-
 
 // "use client";
 
@@ -1514,7 +1488,7 @@
 //                   style={{
 //                     width: `${selectedImage.img.naturalWidth}px`, // Afficher à la largeur originale
 //                     height: `${selectedImage.img.naturalHeight}px`, // Afficher à la hauteur originale
-//                   }} 
+//                   }}
 //                 />
 //               </div>
 //             )}
@@ -1524,9 +1498,6 @@
 //     </div>
 //   );
 // }
-
-
-
 
 // "use client";
 
@@ -1647,7 +1618,7 @@
 //                   style={{
 //                     width: `${selectedImage.img.naturalWidth}px`, // Afficher à la largeur originale
 //                     height: `${selectedImage.img.naturalHeight}px`, // Afficher à la hauteur originale
-//                   }} 
+//                   }}
 //                 />
 //               </div>
 //             )}
@@ -1657,9 +1628,6 @@
 //     </div>
 //   );
 // }
-
-
-
 
 // "use client";
 
@@ -1798,9 +1766,6 @@
 //     </div>
 //   );
 // }
-
-
-
 
 // "use client";
 
@@ -1949,14 +1914,12 @@
 //   );
 // }
 
+// OK, meme si les imags beaucoup plus haute que large on un agrandissement bizarre dans la modale
 
-// OK, meme si les imags beaucoup plus haute que large on un agrandissement bizarre dans la modale 
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { eState } from "../state"
-import { Modal, ModalBody, ModalContent } from "@heroui/react";
-import { EyeIcon } from "@heroicons/react/24/outline";
+import { useEffect, useRef, useState } from 'react';
+import { eState } from '../state';
+import { Modal, ModalBody, ModalContent } from '@heroui/react';
+import { EyeIcon } from '@heroicons/react/24/outline';
 
 export function Check(param: {
   current: eState;
@@ -1965,32 +1928,28 @@ export function Check(param: {
   onCancel: () => void;
 }) {
   const { current, nextState, setCurrent } = param;
-  const [images, setImages] = useState<
-    Array<{ img: string; multiple: string }>
-  >([]);
+  const [images, setImages] = useState<Array<{ img: string; multiple: string }>>([]);
   const [selectedImage, setSelectedImage] = useState<{
     img: string;
     multiple: string;
   } | null>(null);
-  const [backdrop, setBackdrop] = useState<
-    "opaque" | "blur" | "transparent" | undefined
-  >("opaque");
+  const [backdrop, setBackdrop] = useState<'opaque' | 'blur' | 'transparent' | undefined>('opaque');
 
   if (current != eState.check) {
     return <></>;
   }
 
   const jsonfiles =
-    "/demo/Zooscan_iado_wp2_2023_sn002/Zooscan_scan/_work/t_17_2_tot_1/vignettes.json";
+    '/demo/Zooscan_iado_wp2_2023_sn002/Zooscan_scan/_work/t_17_2_tot_1/vignettes.json';
 
   useEffect(() => {
     fetch(jsonfiles)
-      .then((response) => response.json())
-      .then((data) => setImages(data));
+      .then(response => response.json())
+      .then(data => setImages(data));
   }, []);
 
   const imageRef = useRef<HTMLImageElement>(null);
-  const [modalSize, setModalSize] = useState({ width: "auto", height: "auto" });
+  const [modalSize, setModalSize] = useState({ width: 'auto', height: 'auto' });
 
   useEffect(() => {
     if (selectedImage && imageRef.current) {
@@ -2003,8 +1962,8 @@ export function Check(param: {
 
       // Si l'image est en mode paysage (width > height), augmenter la largeur de 1,6 fois
       if (img.naturalWidth > img.naturalHeight) {
-        newWidth = originalWidth * 1.6 ; // Agrandir la largeur
-        newHeight = img.naturalHeight * 2 ; // Ajuster la hauteur proportionnellement
+        newWidth = originalWidth * 1.6; // Agrandir la largeur
+        newHeight = img.naturalHeight * 2; // Ajuster la hauteur proportionnellement
       }
 
       // Mettre à jour la taille de la modal
@@ -2029,16 +1988,13 @@ export function Check(param: {
             className="relative border rounded-lg overflow-hidden shadow-lg p-2 h-64 flex flex-col justify-between bg-black-100"
           >
             <div className="absolute top-2 left-2">
-              <EyeIcon
-                className="h-5 w-5 cursor-pointer"
-                onClick={() => setSelectedImage(image)}
-              />
+              <EyeIcon className="h-5 w-5 cursor-pointer" onClick={() => setSelectedImage(image)} />
             </div>
             <span
               className={`absolute top-2 right-2 px-2 py-1 text-xs font-bold ${
                 parseFloat(image.multiple) < 30
-                  ? "bg-red-500 text-white"
-                  : "bg-green-500 text-white"
+                  ? 'bg-red-500 text-white'
+                  : 'bg-green-500 text-white'
               }`}
             >
               {image.multiple}%
@@ -2046,11 +2002,11 @@ export function Check(param: {
             <div className="flex-grow flex items-end justify-center">
               <img
                 src={image.img}
-                alt={image.img.split("/").pop()}
+                alt={image.img.split('/').pop()}
                 className="max-w-full max-h-full object-contain"
               />
             </div>
-            <p className="text-xs truncate mt-2">{image.img.split("/").pop()}</p>
+            <p className="text-xs truncate mt-2">{image.img.split('/').pop()}</p>
           </div>
         ))}
       </div>
@@ -2065,28 +2021,28 @@ export function Check(param: {
           style={{
             width: modalSize.width,
             height: modalSize.height,
-            padding: "0", // Supprimer le padding autour de l'image
-            overflow: "hidden", // Empêcher le défilement
+            padding: '0', // Supprimer le padding autour de l'image
+            overflow: 'hidden', // Empêcher le défilement
           }}
         >
           <ModalBody className="relative p-0 m-0">
             {selectedImage && (
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "100%",
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
                 }}
               >
                 <img
                   ref={imageRef}
                   src={selectedImage.img}
-                  alt={selectedImage.img.split("/").pop()}
+                  alt={selectedImage.img.split('/').pop()}
                   style={{
-                    width: "auto", // Garder la largeur auto pour respecter les proportions
-                    height: "100%", // Garde les proportions de l'image
-                    objectFit: "contain", // Assure que l'image garde ses proportions
+                    width: 'auto', // Garder la largeur auto pour respecter les proportions
+                    height: '100%', // Garde les proportions de l'image
+                    objectFit: 'contain', // Assure que l'image garde ses proportions
                   }}
                 />
               </div>
@@ -2097,8 +2053,6 @@ export function Check(param: {
     </div>
   );
 }
-
-
 
 // test avec marge ne fonctionne pas
 // "use client";

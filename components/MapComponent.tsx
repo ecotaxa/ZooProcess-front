@@ -1,7 +1,4 @@
-"use client"
-
-import dynamic from 'next/dynamic';
-import { useTranslations } from 'next-intl';
+import { useTranslation } from 'react-i18next';
 
 interface MapComponentProps {
   start?: [number, number];
@@ -19,7 +16,7 @@ interface MapComponentProps {
 //   )
 // });
 const MapComponentClient = dynamic(() => import('./MapComponentClient'), {
-  ssr: false
+  ssr: false,
 });
 
 // Le wrapper
@@ -28,15 +25,15 @@ const MapComponentClient = dynamic(() => import('./MapComponentClient'), {
 // };
 // Le wrapper avec traductions (même nom d'export)
 const MapComponent = (props: any) => {
-  const t = useTranslations('MapComponent');
-  
+  const { t } = useTranslation('MapComponent');
+
   const DynamicMap = dynamic(() => import('./MapComponentClient'), {
     ssr: false,
     loading: () => (
       <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
         <p>{t('Loading')}</p>
       </div>
-    )
+    ),
   });
 
   return <DynamicMap {...props} />;

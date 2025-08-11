@@ -1,9 +1,8 @@
-
-
 # DOC Fraction
+
 Jean-Olivier IRISSON
 Réponse d’amanda sur « fraction »
-sur zooprocess  FracID = d1 ou d2 Franc min = tamis min et Fracmax = tamis max
+sur zooprocess FracID = d1 ou d2 Franc min = tamis min et Fracmax = tamis max
 motoda = acq_sub_part
 dans notre jargon de tous le jours on parle aussi pas mal de split pour d1/d2 et de fractionnement pour la motoda
 d1/d2 est une création de 2 sous échantillons comptabilisant la totalité du prélèvement

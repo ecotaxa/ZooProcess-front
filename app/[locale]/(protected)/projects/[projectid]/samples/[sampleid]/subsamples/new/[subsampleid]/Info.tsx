@@ -1,8 +1,6 @@
 // obsolette ? old version
 // import { Button, Card, CardBody, CardFooter } from "@heroui/react";
 
-
-
 // const Info = ( current: state, nextState: state, setCurrent: /*(s:state)=>{}*/ any) => {
 //     if ( current != state.info ) {
 //         return <></>
@@ -11,7 +9,7 @@
 //     return (
 //         <>
 //         <Card className="inline-block size-full"
-//             data-testid="ScanCard" 
+//             data-testid="ScanCard"
 //             >
 //             <CardBody className="p-6">
 //                 <div  className="bg-100 p-6">
@@ -35,7 +33,7 @@
 
 //             <CardFooter className="flex flex-row-reverse py-3">
 
-//                 <Button 
+//                 <Button
 //                     disabled={ isError || isLoading || !image }
 //                     color="primary"
 //                     // showAnchorIcon

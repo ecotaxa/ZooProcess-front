@@ -4,8 +4,6 @@
 // import AsyncDriveData from './AsyncDriveData'
 // import { Drive } from '../api/network/interfaces';
 
-
-
 // const AsyncDriveContent = () => {
 //    const drives = AsyncDriveData();
 
@@ -56,27 +54,24 @@
 
 // export default AsyncDriveComponent
 
-
-"use client";
-
-import { Suspense, use, useEffect, useState } from 'react'
-import AsyncDriveData from '../app/api/data/AsyncDriveData'
-import { Drive } from '../app/api/network/interfaces';
+import { Suspense, useEffect, useState } from 'react';
+import AsyncDriveData from '../app/api/data/AsyncDriveData.tsx';
+import { Drive } from '@/network/interfaces.ts';
 
 const AsyncDriveContent = () => {
-   const drives = AsyncDriveData();
+  const drives = AsyncDriveData();
 
-   const [ drivelist , setDrives ] = useState<Drive[]>([]);
+  const [drivelist, setDrives] = useState<Drive[]>([]);
 
-    useEffect(() => {
-        const fetchDrives = async () => {
-            const drivesData = await drives
-            console.log("AsyncDriveContent useEffect: ", drivesData)
-            setDrives(drivesData)
-        }
-        fetchDrives()
+  useEffect(() => {
+    const fetchDrives = async () => {
+      const drivesData = await drives;
+      console.log('AsyncDriveContent useEffect: ', drivesData);
+      setDrives(drivesData);
+    };
+    fetchDrives();
     // }, [drives])
-    }, [])
+  }, []);
 
   return (
     <>
@@ -93,7 +88,7 @@ const AsyncDriveComponent = () => {
     <Suspense fallback={<div>Loading...</div>}>
       <AsyncDriveContent />
     </Suspense>
-  )
-}
+  );
+};
 
-export default AsyncDriveComponent
+export default AsyncDriveComponent;

@@ -1,4 +1,4 @@
-import { getTask } from "@/app/api/data/task"
+import { getTask } from '@/app/api/data/task';
 
 // export async function GET(
 //     request: Request,
@@ -11,20 +11,16 @@ import { getTask } from "@/app/api/data/task"
 //     return Response.json(task)
 // }
 
-export async function GET(
-    request: Request,
-    { params }: { params: { taskId: string } }
-) {
+export async function GET(request: Request, { params }: { params: { taskId: string } }) {
+  console.log('API tasks GET taskId: ', params.taskId);
 
-    console.log("API tasks GET taskId: ", params.taskId)
+  if (params.taskId === undefined) {
+    return Response.json({ status: 'error', message: 'taskId not defined' });
+  }
 
-    if (params.taskId === undefined) {
-        return Response.json({ status: 'error', message: 'taskId not defined' })
-    }
-
-    const task = await getTask(params.taskId)
-    if (!task) {
-        return Response.json({ status: 'error', message: 'Task not found' })
-    }
-    return Response.json({ status: 'success', data: task })
+  const task = await getTask(params.taskId);
+  if (!task) {
+    return Response.json({ status: 'error', message: 'Task not found' });
+  }
+  return Response.json({ status: 'success', data: task });
 }

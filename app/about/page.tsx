@@ -1,7 +1,7 @@
 import VignetteLine from '@/components/VignetteLine';
 
 const mockData = {
-  scan: "apero2023_pp_wp2_001_st01_d_d1_1_567.jpg",
+  scan: 'apero2023_pp_wp2_001_st01_d_d1_1_567.jpg',
   matrix: 'masque_compressé.gz',
   mask: undefined,
   vignettes: undefined,
@@ -14,16 +14,12 @@ const mockData = {
 // };
 
 export default function DemoPage() {
-
-  // const folder = process.env.NEXT_PUBLIC_REAL_FOLDER + "/1"
-  const folder = "/test/1"
+  // const folder = process.env.VITE_REAL_FOLDER + "/1"
+  const folder = '/test/1';
 
   return (
     <div className="p-4">
-     <VignetteLine
-        data={mockData}
-        folder={folder}
-        apiUrl="/api/vignettes?scanId=scan1"
-      />    </div>
+      <VignetteLine data={mockData} folder={folder} apiUrl="/api/vignettes?scanId=scan1" />{' '}
+    </div>
   );
 }

@@ -1,6 +1,5 @@
-
-import { useEffect, useState } from "react";
-import CircularTimer from "./CircularTimer";
+import { useEffect, useState } from 'react';
+import CircularTimer from './CircularTimer';
 
 interface TimerProps {
   initialTime?: number;
@@ -19,8 +18,7 @@ const Timer: React.FC<TimerProps> = ({ initialTime = 30, onComplete }) => {
 
     if (isRunning) {
       interval = setInterval(() => {
-        setTime((prevTime) => {
-
+        setTime(prevTime => {
           if (prevTime <= 1) {
             setIsRunning(false);
             console.log('Timer completed');
@@ -38,16 +36,14 @@ const Timer: React.FC<TimerProps> = ({ initialTime = 30, onComplete }) => {
     return () => {
       if (interval) clearInterval(interval);
     };
-  // }, [isRunning, onComplete]);
+    // }, [isRunning, onComplete]);
   }, [isRunning]);
 
-return (
-  <div>
-    <CircularTimer time={time} totalTime={initialTime} />
-  </div>
-);
+  return (
+    <div>
+      <CircularTimer time={time} totalTime={initialTime} />
+    </div>
+  );
 };
-
-
 
 export default Timer;

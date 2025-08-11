@@ -1,5 +1,3 @@
-
-import { NextResponse } from 'next/server';
 import { updateCalibration } from '@/app/api/data/instrument';
 
 export async function PUT(
@@ -8,7 +6,7 @@ export async function PUT(
 ) {
   const { instrumentId, calibrationId } = params;
   const data = await request.json();
-  
+
   const calibration = await updateCalibration(data);
   return NextResponse.json(calibration);
 }

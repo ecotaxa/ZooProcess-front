@@ -1,35 +1,31 @@
-import pako from "pako";
-import fs from "fs/promises";
+import pako from 'pako';
+import fs from 'fs/promises';
 
-
-import { readMatrixFromBinary, readMatrixFromCompressedBinary } from "@/components/DrawCanvasTools";
-
+import { readMatrixFromBinary, readMatrixFromCompressedBinary } from '@/components/DrawCanvasTools.tsx';
 
 export async function readMatrixFromUniversalFile(filePath: string): Promise<number[][]> {
   try {
     const buffer = await fs.readFile(filePath);
     // console.log("Header buffer (hex):", Buffer.from(buffer).toString('hex').slice(0, 16));
 
-const headerHex = buffer.slice(0, 2).toString('hex');
-if (headerHex === '789c' || headerHex === '78da') {
-  // deflate
-  const decompressed = pako.inflate(buffer);
-  return readMatrixFromCompressedBinary(decompressed.buffer);
-} else if (headerHex === '1f8b') {
-  // gzip
-  const decompressed = pako.ungzip(buffer);
-  return readMatrixFromCompressedBinary(decompressed.buffer);
-} else {
-  // RAW
-  return readMatrixFromCompressedBinary(buffer.buffer);
-}
-} catch (err) {
+    const headerHex = buffer.slice(0, 2).toString('hex');
+    if (headerHex === '789c' || headerHex === '78da') {
+      // deflate
+      const decompressed = pako.inflate(buffer);
+      return readMatrixFromCompressedBinary(decompressed.buffer);
+    } else if (headerHex === '1f8b') {
+      // gzip
+      const decompressed = pako.ungzip(buffer);
+      return readMatrixFromCompressedBinary(decompressed.buffer);
+    } else {
+      // RAW
+      return readMatrixFromCompressedBinary(buffer.buffer);
+    }
+  } catch (err) {
     console.error('❌ Failed to read compressed matrix file:', err);
     throw err;
   }
 }
-
-
 
 export async function writeCompressedMatrix(filePath: string, width = 64, height = 64) {
   // Génère le buffer raw
@@ -45,7 +41,6 @@ export async function writeCompressedMatrix(filePath: string, width = 64, height
   await fs.writeFile(filePath, Buffer.from(gzipped));
   console.log(`🟩 Fichier matrix GZIP généré à : ${filePath}`);
 }
-
 
 export function createZeroMatrix(width: number, height: number): number[][] {
   return Array.from({ length: height }, () => Array(width).fill(0));
@@ -78,5 +73,3 @@ export async function readMatrixFromCompressedFile(filePath: string): Promise<nu
     throw err;
   }
 }
-
-

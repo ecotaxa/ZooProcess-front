@@ -17,33 +17,30 @@
 
 // import {pathToRealStorage, pathToSessionStorage}  from "@/lib/gateway"
 
-
 // type pageProps = {
 //     params:{
 //         projectid: string,
 //         sampleid: string,
-//         subsampleid: string,    
+//         subsampleid: string,
 //     }
 // }
 
-
-
 // const ScanPage : FC<pageProps> = ({params}) => {
 
-//     const router = useRouter();
+//     const navigate = useNavigate();
 //     const {projectid, sampleid, subsampleid} = params;
 //     const {project, isError, isLoading} = useProject(projectid);
 //     const [image , setImage] = useState(false);
 //     const imagePlaceholder = "/images/placeholder-image.jpg";
 //     const [background, setBackground] = useState(imagePlaceholder)
 //     // const [imageRGB , setImageRGB] = useState("");
-    
+
 //     const onClick = () => {
 //         console.log("validate scan")
 //         if ( image ) {
 //             const path = `/projects/${projectid}/samples/${sampleid}/subsamples/new/${subsampleid}/process/?image=${image}`
 //             console.log("path: " , path)
-//             router.push(path)
+//             navigate(path)
 //         }
 //     };
 
@@ -119,13 +116,12 @@
 //         // setData(JSON.stringify(value, null, 2))
 //         // console.log("App onChange:", stringifiedData);
 
-
 //         return await addBackground(fileUrl)
 //         .then((response) => {
 //             console.log("response: ", response)
 //             setImage(response.id)
 //             console.log("Go To the next page" )
-//             // router.push(`${response.id}`)
+//             // navigate(`${response.id}`)
 
 //             // setImageRGB("/Users/sebastiengalvagno/Drives/Zooscan/Zooscan_dyfamed_wp2_2023_biotom_sn001/Zooscan_scan/_raw/dyfamed_20230111_100m_d1_raw_1.jpg")
 //         })
@@ -133,7 +129,6 @@
 //             return Promise.reject(error)
 //         })
 //     }
-
 
 //     const Loader = () => {
 //         if ( isLoading ) { return <MySpinner /> }
@@ -166,7 +161,7 @@
 //             <Timeline_scan current={2} />
 
 //             <Card className="inline-block size-full"
-//                 data-testid="projectCard" 
+//                 data-testid="projectCard"
 //                 >
 //                 <CardBody>
 //                     <div><b>project Id: </b> {projectid}</div>
@@ -197,7 +192,7 @@
 //           {/* )} */}
 //         </div>
 
-//                     <Button 
+//                     <Button
 //                         disabled={ isError || isLoading || !image }
 //                         color="primary"
 //                         // showAnchorIcon
@@ -209,7 +204,6 @@
 //                 </CardFooter>
 
 //             </Card>
-
 
 //             {/* <hr/>
 //             <h3>absolute</h3>
@@ -226,4 +220,3 @@
 // }
 
 // export default ScanPage;
-

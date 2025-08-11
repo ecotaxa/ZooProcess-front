@@ -1,5 +1,4 @@
 // "use client"
-"use server";
 
 // import { Card, CardBody, CardHeader, Spacer } from "@heroui/react";
 // import { Tab, Tabs } from "@heroui/tabs";
@@ -11,58 +10,48 @@
 
 // import Samples from "./@samples/page";
 
-import { FC } from "react";
+import { FC } from 'react';
 
 // import { useHash } from '@/lib/useHash'
 // import * as api from "@/app/api/network/zooprocess-api";
-import { ProjectTabs } from "./ProjectTabs";
-import { getProject } from "@/app/api/data/projects";
-import { Project } from "@/app/api/network/interfaces";
-
-
-import { getTranslations } from 'next-intl/server' ;
-
+import { ProjectTabs } from './ProjectTabs';
+import { getProject } from '@/app/api/data/projects';
+import { Project } from '@/app/api/network/interfaces';
 
 interface pageProps {
-    params: {
-        projectid: string
-    }
+  params: {
+    projectid: string;
+  };
 }
 
-
 const ProjectPage: FC<pageProps> = async ({ params }) => {
-
-  console.log("params:", params)
+  console.log('params:', params);
 
   // const useHash = () => { (typeof window != 'undefined' ? decodeURIComponent(window.location.hash.replace('#','')) : undefined)}
 
   const projectid = params.projectid;
 
-  const t = await getTranslations("ProjectPage")
+  const t = await getTranslations('ProjectPage');
 
-  const project : Project = await getProject(projectid);
-
-  
-
+  const project: Project = await getProject(projectid);
 
   const p: Project = project as Project;
 
-  
   const isQcTabDisabled = () => {
     if (p.samples && p.samples.length > 0) {
-      return ;
+      return;
     }
 
-    return "qc";
+    return 'qc';
   };
 
   return (
     <div>
       {/* <ProjectName id={projectid} /> */}
       <div>
-            <h1>{t("Title")}</h1>
-            <br/>
-            <h1>{project.name}</h1>
+        <h1>{t('Title')}</h1>
+        <br />
+        <h1>{project.name}</h1>
       </div>
 
       {/* <Card>
@@ -74,7 +63,7 @@ const ProjectPage: FC<pageProps> = async ({ params }) => {
         </CardBody>
       </Card>
       <Spacer y={20} /> */}
-     {/* <Debug params={params} /> */}
+      {/* <Debug params={params} /> */}
       <ProjectTabs project={project} params={params} />
 
       {/* <Tabs aria-label="Options" disabledKeys={isQcTabDisabled()} defaultSelectedKey={selectedKey}>

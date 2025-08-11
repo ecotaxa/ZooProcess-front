@@ -1,13 +1,8 @@
 import { signIn } from '@/auth';
-import { AuthError } from 'next-auth';
- 
-// ...
- 
-export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData,
-) {
 
+// ...
+
+export async function authenticate(prevState: string | undefined, formData: FormData) {
   // try {
   //   await signIn('credentials', formData);
   // } catch (error) {
@@ -22,5 +17,5 @@ export async function authenticate(
   //   throw error;
   // }
 
-  console.log(formData)
+  console.log(formData);
 }
