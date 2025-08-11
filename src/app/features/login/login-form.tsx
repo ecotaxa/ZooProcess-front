@@ -41,7 +41,7 @@ export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
-  const authContext = useAuth();
+  const { login: authLogin } = useAuth();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -59,9 +59,9 @@ export const LoginForm = () => {
     startTransition(() => {
       login(values)
         .then(token => {
-          authContext.setAuthState({ accessToken: token });
+          authLogin(token);
           setSuccess('Logged!');
-          setTimeout(() => navigate('/dashboard'), 200);
+          setTimeout(() => navigate('/dashboard'), 1000);
         })
         .catch(error => {
           setError(error.message);

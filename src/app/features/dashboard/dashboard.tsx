@@ -11,7 +11,7 @@ import { itemsFromProjects, type ProjectItem } from 'app/features/dashboard/item
 export const Dashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { authState, setAuthState } = useAuth();
+  const { authState, logout } = useAuth();
   const [projectItems, setProjectItems] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +39,7 @@ export const Dashboard = () => {
 
   const handleLogout = () => {
     // Clear the auth state
-    setAuthState({ accessToken: null });
+    logout();
     // Redirect to login page
     navigate('/login');
   };

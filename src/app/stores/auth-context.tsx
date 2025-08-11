@@ -1,52 +1,76 @@
 import React, {
   createContext,
-  useState,
+  useReducer,
   useEffect,
   type ReactNode,
   useContext,
   useMemo,
+  type Dispatch,
 } from 'react';
 
 // Define the shape of the auth state
 interface AuthState {
   accessToken: string | null;
-  // refreshToken: string | null;
-  // api?: AxiosInstance;
 }
+
+// Define auth actions
+type AuthAction = { type: 'LOGIN'; payload: string } | { type: 'LOGOUT' };
 
 // Define the shape of the context value
 export interface AuthContextType {
   authState: AuthState;
-  setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
+  dispatch: Dispatch<AuthAction>;
+  login: (token: string) => void;
+  logout: () => void;
 }
 
-// Create the context with a default value that matches the expected shape
-export const AuthContext = createContext<AuthContextType>({
+// Auth reducer function
+const authReducer = (state: AuthState, action: AuthAction): AuthState => {
+  switch (action.type) {
+    case 'LOGIN':
+      return {
+        ...state,
+        accessToken: action.payload,
+      };
+    case 'LOGOUT':
+      return {
+        ...state,
+        accessToken: null,
+      };
+    default:
+      return state;
+  }
+};
+
+// Create the context with a default value
+const defaultContextValue: AuthContextType = {
   authState: {
     accessToken: null,
-    // refreshToken: null,
   },
-  setAuthState: () => {},
-});
+  dispatch: () => {},
+  login: () => {},
+  logout: () => {},
+};
+
+export const AuthContext = createContext<AuthContextType>(defaultContextValue);
 
 // Define props for AuthProvider
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export function getStoredToken(): string {
-  return localStorage.getItem('accessToken')!;
+// Safely get token from localStorage
+export function getStoredToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('accessToken');
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Initialize state from localStorage if available
-  const [authState, setAuthState] = useState<AuthState>(() => {
-    const storedToken = getStoredToken();
-    return {
-      accessToken: storedToken,
-      // refreshToken: null,
-    };
+  const [authState, dispatch] = useReducer(authReducer, {
+    accessToken: getStoredToken(),
   });
+
   // Save auth state to localStorage whenever it changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -58,57 +82,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [authState.accessToken]);
 
-  // Commented out code for future reference
-  // useEffect(() => {
-  // Initialize axios interceptors here
-  // const api = axios.create({
-  //   baseURL: 'http://localhost:4000',
-  // });
-  //
-  // api.interceptors.request.use(
-  //   config => {
-  //     if (authState.accessToken) {
-  //       config.headers['Authorization'] = `Bearer ${authState.accessToken}`;
-  //     }
-  //     return config;
-  //   },
-  //   error => {
-  //     return Promise.reject(error);
-  //   }
-  // );
-  //
-  // api.interceptors.response.use(
-  //   response => {
-  //     return response;
-  //   },
-  //   async error => {
-  //     const originalRequest = error.config;
-  //     if (error.response.status === 401 && !originalRequest._retry) {
-  //       originalRequest._retry = true;
-  //       const response = await axios.post('http://localhost:4000/token', {
-  //         token: authState.refreshToken,
-  //       });
-  //       setAuthState({
-  //         ...authState,
-  //         accessToken: response.data.accessToken,
-  //       });
-  //       originalRequest.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
-  //       return api(originalRequest);
-  //     }
-  //     return Promise.reject(error);
-  //   }
-  // );
+  // Action creators
+  const login = (token: string) => {
+    dispatch({ type: 'LOGIN', payload: token });
+  };
 
-  // Save the axios instance to the context state
-  // setAuthState(prevState => ({
-  //   ...prevState,
-  //   api,
-  // }));
-  // }, [authState.accessToken ,authState.refreshToken
-  // ]);
+  const logout = () => {
+    dispatch({ type: 'LOGOUT' });
+  };
 
-  const memo = useMemo(() => ({ authState, setAuthState }), []);
-  return <AuthContext.Provider value={memo}>{children}</AuthContext.Provider>;
+  // Create a memoized context value with all dependencies
+  const contextValue = useMemo(
+    () => ({
+      authState,
+      dispatch,
+      login,
+      logout,
+    }),
+    [authState]
+  );
+
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
 
 // Custom hook to use the auth context
