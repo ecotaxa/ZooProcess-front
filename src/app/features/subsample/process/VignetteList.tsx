@@ -21,10 +21,6 @@ async function loadMatrixFromGz(url: string): Promise<number[][]> {
   return readMatrixFromCompressedBinary(buffer);
 }
 
-// Fonction utilitaire pour sauvegarder le matrix .gz côté front
-function saveMaskGzClient(matrix: number[][], filename: string) {
-  saveMatrixAsCompressedBinary(matrix, filename);
-}
 interface Props {
   initialVignettes: VignetteData[];
   folder: string;
@@ -66,7 +62,7 @@ export default function VignetteList({
   useEffect(() => {
     const selectedVignette = vignettes[selectedIndex];
     if (selectedVignette?.mask) {
-      if (folder.startsWith('/vignette')) {
+      if (folder.startsWith('/api/vignette')) {
         setZoomMaskSrc(`${folder}/${selectedVignette.mask}`);
       } else {
         setZoomMaskSrc(
@@ -171,7 +167,7 @@ export default function VignetteList({
     setEditMatrix(undefined); // Reset pour forcer rechargement
     const gzFile = vignettes[index].matrix;
     let matrixUrl;
-    if (folder.startsWith('/api/backend')) {
+    if (folder.startsWith('/api/vignette')) {
       matrixUrl = `${folder}/${gzFile}`;
     } else {
       matrixUrl = `/${folder}/${gzFile}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
@@ -182,7 +178,7 @@ export default function VignetteList({
     } catch (e) {
       // fallback matrice zéro si erreur
       let imgPath;
-      if (folder.startsWith('/api/backend')) {
+      if (folder.startsWith('/api/vignette')) {
         imgPath = `${folder}/${vignettes[index].scan}`;
       } else {
         imgPath = `/${folder}/${vignettes[index].scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
@@ -218,7 +214,7 @@ export default function VignetteList({
 
   const editVignette = editIndex !== null ? vignettes[editIndex] : null;
   let imagePath;
-  if (folder.startsWith('/api/backend')) {
+  if (folder.startsWith('/api/vignette')) {
     imagePath = editVignette ? `${folder}/${editVignette.scan}` : '';
   } else {
     imagePath = editVignette
@@ -240,7 +236,7 @@ export default function VignetteList({
   }, [imagePath]);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-white">
+    <div className="relative h-screenXX w-full overflow-hidden bg-white">
       {/* <div className="absolute inset-0 pl-[320px]"> */}
       {vignettes.length} to validate
       <List

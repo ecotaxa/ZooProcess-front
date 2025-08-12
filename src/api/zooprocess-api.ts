@@ -125,6 +125,22 @@ export async function getVignettes(
   return response.data; //.data;
 }
 
+export async function loginToEcoTaxa(token: string, email: string, password: string) {
+  const api = await axiosInstance({ token: token });
+  const url = '/ecotaxa/login';
+  const req = { username: email, password: password };
+  const response = await api.post<I.EcoTaxaLoginResponse>(url, req);
+
+  return response.data.token;
+}
+
+export async function listEcoTaxaProjects(token: string, ecotaxaToken: string) {
+  const api = await axiosInstance({ token: token });
+  const url = '/ecotaxa/projects?token=' + ecotaxaToken;
+  const response = await api.get<I.EcotaxaProjects>(url);
+
+  return response.data;
+}
 /////////////////////////////////
 // UNUSED BELOW
 /////////////////////////////////

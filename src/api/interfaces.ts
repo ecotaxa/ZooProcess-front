@@ -109,9 +109,20 @@ export interface VignetteResponse {
   folder: string;
 }
 
+export interface EcoTaxaLoginResponse {
+  token: string;
+}
+
 export interface Ecotaxa {
   id: string;
 }
+
+export interface EcotaxaProject {
+  projid: number;
+  title: string;
+}
+
+export type EcotaxaProjects = Array<EcotaxaProject>;
 
 export interface ProjectUpdate extends MinProject {
   updatedAt: string;

@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { type Key, useEffect, useState } from 'react';
 import {
   getProject,
   getSubSample,
   getTask,
   getVignettes,
+  listEcoTaxaProjects,
+  loginToEcoTaxa,
   markSubSample,
   processSubSample,
 } from 'api/zooprocess-api.ts';
 import {
+  type EcotaxaProjects,
   type IMarkSubsampleReq,
   type ITask,
   type Scan,
@@ -24,6 +27,9 @@ import { SubsampleProcessTimeline } from 'app/features/subsample/process/timelin
 import { Card, CardBody, CardHeader } from '@heroui/react';
 import { ScanCheckPage } from 'app/features/subsample/process/process.tsx';
 import VignetteList from 'app/features/subsample/process/VignetteList.tsx';
+import { Button } from '@heroui/button';
+import { EcoTaxaLoginForm } from 'app/features/ecotaxa/ecotaxa-login-form';
+import { Autocomplete, AutocompleteItem } from '@heroui/autocomplete';
 
 export const SubsampleProcessPage = () => {
   // Get the parameters from the URL
@@ -43,7 +49,32 @@ export const SubsampleProcessPage = () => {
   const [step, setStep] = useState<number | null>(null);
   const [maskScan, setMaskScan] = useState<Scan | null>(null); // Target of step 0
   const [vignettes, setVignettes] = useState<VignetteData[] | null>(null); // Target of step 1
+  const [ecotaxaToken, setEcotaxaToken] = useState<string | null>(null); // Intermediate of step 2
+  const [ecotaxaProjects, setEcotaxaProjects] = useState<EcotaxaProjects | null>(null); // Intermediate of step 2
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+  // Common task
   const [task, setTask] = useState<ITask | null>(null);
+
+  function launchProcess() {
+    processSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
+      .then(result => {
+        setTask(result.task);
+      })
+      .catch(error => {
+        setError('Failed to launch processing' + error.message);
+      });
+  }
+
+  function subsampleMark(status: string) {
+    const req: IMarkSubsampleReq = { status: status };
+    markSubSample(authState.accessToken!, projectId, sampleId, subsampleId, req)
+      .then(subsample => {
+        setSubsample(subsample);
+      })
+      .catch(error => {
+        setError('Failed to mark scan: ' + error.message);
+      });
+  }
 
   useEffect(() => {
     // Fetch the full project and navigate the tree manually
@@ -72,16 +103,6 @@ export const SubsampleProcessPage = () => {
       });
   }, [projectId, sampleId, subsampleId, authState.accessToken]);
 
-  function launchProcess() {
-    processSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
-      .then(result => {
-        setTask(result.task);
-      })
-      .catch(error => {
-        setError('Failed to launch processing' + error.message);
-      });
-  }
-
   useEffect(() => {
     if (subsample === null) {
       return;
@@ -100,8 +121,9 @@ export const SubsampleProcessPage = () => {
       setStep(1);
       getVignettes(authState.accessToken!, projectId, sampleId, subsampleId).then(rrsp => {
         setVignettes(rrsp.data);
-        console.log(rrsp.data);
       });
+    } else if (subsample.state === SubSampleStateEnum.SEPARATION_VALIDATION_DONE) {
+      setStep(2);
     }
   }, [subsample]);
 
@@ -138,14 +160,11 @@ export const SubsampleProcessPage = () => {
   }, [task]);
 
   function onMaskValid() {
-    const req: IMarkSubsampleReq = { status: 'approved' };
-    markSubSample(authState.accessToken!, projectId, sampleId, subsampleId, req)
-      .then(subsample => {
-        setSubsample(subsample);
-      })
-      .catch(error => {
-        setError('Failed to mark scan: ' + error.message);
-      });
+    subsampleMark('approved');
+  }
+
+  function onSeparateOK() {
+    subsampleMark('separated');
   }
 
   function onMaskInvalid() {}
@@ -166,19 +185,115 @@ export const SubsampleProcessPage = () => {
     return (
       <>
         {!vignettes && <p className="text-gray-500">No vignette to verify.</p>}
+        {vignettes && (
+          <Button
+            className="bg-blue-400 hover:bg-blue-600 text-white font-small w-1/6 mb-1 py-1 px-2 rounded-md transition-colors"
+            onPress={() => {
+              onSeparateOK();
+            }}
+          >
+            Done separating
+          </Button>
+        )}
         {vignettes && <VignetteList initialVignettes={vignettes} folder={folder} />}
       </>
     );
   }
 
+  function uploadPage() {
+    const handleEcoTaxaLogin = (credentials: { username: string; password: string }) => {
+      loginToEcoTaxa(authState.accessToken!, credentials.username, credentials.password)
+        .then(token => {
+          if (token === null) {
+            setError('Failed to login to EcoTaxa');
+          } else {
+            setError(null);
+            setEcotaxaToken(token);
+            listEcoTaxaProjects(authState.accessToken!, token)
+              .then(ecotaxaProjects => {
+                setEcotaxaProjects(ecotaxaProjects);
+              })
+              .catch(error => {
+                setError('Failed to list EcoTaxa projects: ' + error.message);
+              });
+          }
+        })
+        .catch(error => {
+          setError('Failed to login to EcoTaxa: ' + error.message);
+        });
+    };
+
+    const onProjectSelect = (key: Key | null) => {
+      setSelectedProjectId(key as number);
+    };
+
+    const handleProjectSubmit = () => {
+      if (selectedProjectId) {
+        // TODO
+      }
+    };
+
+    return (
+      <div className="w-full">
+        {ecotaxaToken && (
+          <div
+            className="bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded relative mb-4"
+            role="alert"
+          >
+            <span className="block sm:inline">Logged in EcoTaxa.</span>
+          </div>
+        )}
+        {!ecotaxaToken && <EcoTaxaLoginForm onSubmit={handleEcoTaxaLogin} />}
+        {ecotaxaProjects && (
+          <div className="mt-4">
+            <div className="flex flex-col space-y-4">
+              <Autocomplete
+                className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={selectedProjectId !== null}
+                label="Project to export to:"
+                placeholder="Search for a project"
+                isRequired={true}
+                onSelectionChange={onProjectSelect}
+                selectedKey={selectedProjectId}
+                labelPlacement={'outside'}
+              >
+                {ecotaxaProjects.map(project => (
+                  <AutocompleteItem key={project.projid}>{project.title}</AutocompleteItem>
+                ))}
+              </Autocomplete>
+            </div>
+            {selectedProjectId && (
+              <div
+                className="bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded relative mb-4"
+                role="alert"
+              >
+                <span className="block sm:inline">
+                  Project selected:{selectedProjectId}
+                  {ecotaxaProjects.find(p => p.projid === selectedProjectId)?.title}
+                </span>
+              </div>
+            )}
+            {selectedProjectId && (
+              <Button
+                className="bg-blue-400 hover:bg-blue-600 text-white font-small w-1/4 py-2 px-4 rounded-md transition-colors"
+                onPress={handleProjectSubmit}
+                isDisabled={!selectedProjectId}
+              >
+                Export To Project #{selectedProjectId}
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
   return (
     <Card className="container mx-auto p-1">
       <CardHeader className="flex justify-between items-center mb-1">
         {/*Scan processing*/}
-        {breadcrumbsList.length > 0 && (
-          <ProjectBreadcrumbs items={breadcrumbsList}></ProjectBreadcrumbs>
-        )}
+        <ProjectBreadcrumbs items={breadcrumbsList}></ProjectBreadcrumbs>
         <SubsampleProcessTimeline current={step ?? -1}></SubsampleProcessTimeline>
+        {subsample && subsample.state}
       </CardHeader>
       <CardBody>
         {error && <p className="text-red-500">{error}</p>}
@@ -187,9 +302,9 @@ export const SubsampleProcessPage = () => {
             Task #{task.id}: {task.log}
           </p>
         )}
-        {subsample && subsample.state}
         {step == 0 && scanCheckPage()}
         {step == 1 && separatePage()}
+        {step == 2 && uploadPage()}
       </CardBody>
     </Card>
   );

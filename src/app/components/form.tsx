@@ -150,7 +150,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={twMergeClsx('text-[0.8rem] font-medium text-destructive', className)}
+      className={twMergeClsx('text-[0.8rem] font-medium text-destructive bg-red-500/15 p-2 rounded-md', className)}
       {...props}
     >
       {body}
