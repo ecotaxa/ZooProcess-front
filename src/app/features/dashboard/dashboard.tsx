@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'app/stores/auth-context';
 import { getProjects } from 'api/zooprocess-api';
-import { type Project, type Sample, ScanTypeEnum, type SubSample } from 'api/interfaces';
 import { Button } from '@heroui/button';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react';
 import { itemsFromProjects, type ProjectItem } from 'app/features/dashboard/items.ts';
@@ -72,7 +71,7 @@ export const Dashboard = () => {
             <Table aria-label="Projects Table" isStriped={true}>
               <TableHeader>
                 <TableColumn>Action</TableColumn>
-                <TableColumn>Scans</TableColumn>
+                <TableColumn>State</TableColumn>
                 <TableColumn>Subsample</TableColumn>
                 <TableColumn>Sample</TableColumn>
                 <TableColumn>Updated At</TableColumn>
@@ -100,7 +99,7 @@ export const Dashboard = () => {
                         ))}
                       </div>
                     </TableCell>
-                    <TableCell>{item.scanCount}</TableCell>
+                    <TableCell>{item.state}</TableCell>
                     <TableCell>{item.subsample.name}</TableCell>
                     <TableCell>{item.sample.name}</TableCell>
                     <TableCell>{item.subsample.updatedAt.toLocaleDateString()}</TableCell>
