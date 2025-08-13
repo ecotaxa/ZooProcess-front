@@ -8,11 +8,34 @@ import {
 
 // Interface for flattened project structure
 export interface ProjectItem {
-  scanCount: number;
+  state: string;
   subsample: SubSample;
   sample: Sample;
   project: Project;
   actions: Array<string>;
+}
+
+function stateToLabel(state: SubSampleStateEnum) {
+  switch (state) {
+    case SubSampleStateEnum.EMPTY:
+      return 'No scan';
+    case SubSampleStateEnum.ACQUIRED:
+      return 'Scanned';
+    case SubSampleStateEnum.SEGMENTED:
+      return 'Mask available';
+    case SubSampleStateEnum.MSK_APPROVED:
+      return 'Mask approved';
+    case SubSampleStateEnum.MULTIPLES_GENERATED:
+      return 'Multiples available';
+    case SubSampleStateEnum.SEPARATION_VALIDATION_DONE:
+      return 'Multiples approved';
+    case SubSampleStateEnum.UPLOADING:
+      return 'Uploading to EcoTaxa';
+    case SubSampleStateEnum.UPLOADED:
+      return 'Uploaded to EcoTaxa';
+    default:
+      return state;
+  }
 }
 
 export function itemsFromProjects(response: Array<Project>) {
@@ -37,7 +60,7 @@ export function itemsFromProjects(response: Array<Project>) {
           actions.push('View', 'Process');
         }
         items.push({
-          scanCount: nb_scans,
+          state: stateToLabel(subsample.state),
           subsample,
           sample,
           project,
