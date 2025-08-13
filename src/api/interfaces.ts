@@ -97,6 +97,11 @@ export interface IMarkSubsampleReq {
   date?: string;
 }
 
+export interface IExportSubsampleReq {
+  task: ITask;
+  subsample: SubSample;
+}
+
 export interface VignetteData {
   scan: string;
   matrix: string;

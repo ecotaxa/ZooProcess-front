@@ -1,7 +1,7 @@
 import axiosInstance from './axiosInstance.ts';
 import * as I from './interfaces.ts';
 import type { AxiosError } from 'axios';
-import type { SubSample } from './interfaces.ts';
+import type { IExportSubsampleReq, SubSample } from './interfaces.ts';
 
 export interface Login {
   email: string;
@@ -139,6 +139,21 @@ export async function listEcoTaxaProjects(token: string, ecotaxaToken: string) {
   const url = '/ecotaxa/projects?token=' + ecotaxaToken;
   const response = await api.get<I.EcotaxaProjects>(url);
 
+  return response.data;
+}
+
+export async function exportToEcoTaxa(
+  token: string,
+  projectId: string,
+  sampleId: string,
+  subsampleId: string,
+  ecotaxaToken: string,
+  ecoTaxaProjectId: number
+) {
+  const api = await axiosInstance({ token: token });
+  const url = `/projects/${projectId}/samples/${sampleId}/subsamples/${subsampleId}/export`;
+  const req = { token: ecotaxaToken, projid: ecoTaxaProjectId };
+  const response = await api.post<I.IExportSubsampleReq>(url, req);
   return response.data;
 }
 /////////////////////////////////

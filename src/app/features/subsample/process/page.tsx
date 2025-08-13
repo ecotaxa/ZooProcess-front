@@ -1,5 +1,6 @@
 import React, { type Key, useEffect, useState } from 'react';
 import {
+  exportToEcoTaxa,
   getProject,
   getSubSample,
   getTask,
@@ -229,7 +230,21 @@ export const SubsampleProcessPage = () => {
 
     const handleProjectSubmit = () => {
       if (selectedProjectId) {
-        // TODO
+        exportToEcoTaxa(
+          authState.accessToken!,
+          projectId,
+          sampleId,
+          subsampleId,
+          ecotaxaToken!,
+          selectedProjectId
+        )
+          .then(result => {
+            setSubsample(result.subsample);
+            setTask(result.task);
+          })
+          .catch(error => {
+            setError('Failed to export to EcoTaxa: ' + error.message);
+          });
       }
     };
 
@@ -268,7 +283,7 @@ export const SubsampleProcessPage = () => {
                 role="alert"
               >
                 <span className="block sm:inline">
-                  Project selected:{selectedProjectId}
+                  Selected project:{selectedProjectId}
                   {ecotaxaProjects.find(p => p.projid === selectedProjectId)?.title}
                 </span>
               </div>
