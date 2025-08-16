@@ -17,7 +17,6 @@ import { Button } from '@heroui/button';
 import { EyeFilledIcon } from '../login/components/EyeFilledIcon.jsx';
 import { EyeSlashFilledIcon } from '../login/components/EyeSlashFilledIcon.jsx';
 
-import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 

@@ -67,48 +67,54 @@ export const Dashboard = () => {
       ) : null}
       {!error && (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <Table aria-label="Projects Table" isStriped={true}>
-              <TableHeader>
-                <TableColumn>Action</TableColumn>
-                <TableColumn>State</TableColumn>
-                <TableColumn>Subsample</TableColumn>
-                <TableColumn>Sample</TableColumn>
-                <TableColumn>Updated At</TableColumn>
-                <TableColumn>Project</TableColumn>
-              </TableHeader>
-              <TableBody emptyContent={!loading && 'No projects found'}>
-                {projectItems.map((item, index) => (
-                  <TableRow
-                    key={`${item.project.id}-${item.sample.id}-${item.subsample.id}-${index}`}
-                  >
-                    <TableCell>
-                      <div className="flex space-x-2">
-                        {item.actions.map((action: string) => (
-                          <Link
-                            key={action}
-                            to={`/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}/${action}`}
+          <Table
+            aria-label="Projects Table"
+            isStriped={true}
+            isHeaderSticky={true}
+            classNames={{
+              base: 'max-h-[90vh] overflow-y-auto',
+              wrapper: 'p-0', // Default p-4 shows an ugly gap _above_ thead
+            }}
+          >
+            <TableHeader>
+              <TableColumn>Action</TableColumn>
+              <TableColumn>State</TableColumn>
+              <TableColumn>Subsample</TableColumn>
+              <TableColumn>Sample</TableColumn>
+              <TableColumn>Updated At</TableColumn>
+              <TableColumn>Project</TableColumn>
+            </TableHeader>
+            <TableBody emptyContent={!loading && 'No projects found'}>
+              {projectItems.map((item, index) => (
+                <TableRow
+                  key={`${item.project.id}-${item.sample.id}-${item.subsample.id}-${index}`}
+                >
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      {item.actions.map((action: string) => (
+                        <Link
+                          key={action}
+                          to={`/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}/${action}`}
+                        >
+                          <Button
+                            size="sm"
+                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-3 rounded-md transition-colors"
                           >
-                            <Button
-                              size="sm"
-                              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-3 rounded-md transition-colors"
-                            >
-                              {action}
-                            </Button>
-                          </Link>
-                        ))}
-                      </div>
-                    </TableCell>
-                    <TableCell>{item.state}</TableCell>
-                    <TableCell>{item.subsample.name}</TableCell>
-                    <TableCell>{item.sample.name}</TableCell>
-                    <TableCell>{item.subsample.updatedAt.toLocaleDateString()}</TableCell>
-                    <TableCell>{item.project.name}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                            {action}
+                          </Button>
+                        </Link>
+                      ))}
+                    </div>
+                  </TableCell>
+                  <TableCell>{item.state}</TableCell>
+                  <TableCell>{item.subsample.name}</TableCell>
+                  <TableCell>{item.sample.name}</TableCell>
+                  <TableCell>{item.subsample.updatedAt.toLocaleDateString()}</TableCell>
+                  <TableCell>{item.project.name}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       )}
     </div>
