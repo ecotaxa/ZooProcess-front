@@ -15,7 +15,7 @@ i18n
   .init({
     resources: {
       en: enMessages,
-      fr: frMessages,
+      // fr: frMessages,
     },
     fallbackLng: 'en',
     // debug: process.env.NODE_ENV === 'development',
