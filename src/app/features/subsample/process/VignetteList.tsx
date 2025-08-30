@@ -41,6 +41,54 @@ export default function VignetteList({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [editIndex, setEditIndex] = useState<number | null>(null); // pour la modale édition
   const [editMatrix, setEditMatrix] = useState<number[][] | undefined>(undefined);
+
+  // Materialize dependency: whenever editIndex changes, (re)load the corresponding matrix
+  useEffect(() => {
+    if (editIndex === null) return;
+    // Guard against out-of-range
+    if (editIndex < 0 || editIndex >= vignettes.length) return;
+
+    const requestId = ++loadRequestIdRef.current;
+    const gzFile = vignettes[editIndex].matrix;
+
+    let matrixUrl: string;
+    if (folder.startsWith('/api/vignette')) {
+      matrixUrl = `${folder}/${gzFile}`;
+    } else {
+      matrixUrl = `/${folder}/${gzFile}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+    }
+
+    const load = async () => {
+      try {
+        const matrix = await loadMatrixFromGz(matrixUrl);
+        if (loadRequestIdRef.current === requestId) {
+          setEditMatrix(matrix);
+        }
+      } catch (e) {
+        // Fallback to zero matrix sized to image if we cannot load the gz
+        let imgPath: string;
+        if (folder.startsWith('/api/vignette')) {
+          imgPath = `${folder}/${vignettes[editIndex].scan}`;
+        } else {
+          imgPath = `/${folder}/${vignettes[editIndex].scan}`
+            .replace(/\\/g, '/')
+            .replace(/\/\/+/, '/');
+        }
+        const img = new window.Image();
+        img.src = imgPath;
+        img.onload = () => {
+          if (loadRequestIdRef.current === requestId) {
+            setEditMatrix(Array.from({ length: img.height }, () => Array(img.width).fill(0)));
+          }
+        };
+      }
+    };
+
+    // Clear previous matrix while loading (optional)
+    setEditMatrix(undefined);
+    void load();
+  }, [editIndex, vignettes, folder]);
+
   const [zoomMaskSrc, setZoomMaskSrc] = useState<string | null>(null);
   // const selectedVignette = vignettes[selectedIndex];
   const [maskRefreshMap, setMaskRefreshMap] = useState<{ [mask: string]: number }>({});
@@ -50,6 +98,7 @@ export default function VignetteList({
 
   // to the automatic scroll
   const listRef = useRef<any>(null);
+  const loadRequestIdRef = useRef(0);
 
   const updateVignette = useCallback((index: number, newData: Partial<VignetteData>) => {
     // setVignettes(prev => {
@@ -76,17 +125,54 @@ export default function VignetteList({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowDown') {
+      // Avoid interfering when typing in inputs/textareas or when contentEditable
+      const target = e.target as HTMLElement | null;
+      const isTypingContext =
+        !!target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          (target as HTMLElement).isContentEditable);
+      if (isTypingContext) return;
+
+      const modalOpen = editIndex !== null;
+
+      if (e.key === 'ArrowLeft') {
+        if (modalOpen && editIndex !== null) {
+          const newIndex = Math.max(editIndex - 1, 0);
+          if (newIndex !== editIndex) {
+            setSelectedIndex(newIndex);
+            handleEditMask(newIndex);
+          }
+        } else {
+          setSelectedIndex(i => Math.max(i - 1, 0));
+        }
+        e.preventDefault();
+      } else if (e.key === 'ArrowRight') {
+        if (modalOpen && editIndex !== null) {
+          const newIndex = Math.min(editIndex + 1, vignettes.length - 1);
+          if (newIndex !== editIndex) {
+            setSelectedIndex(newIndex);
+            handleEditMask(newIndex);
+          }
+        } else {
+          setSelectedIndex(i => Math.min(i + 1, vignettes.length - 1));
+        }
+        e.preventDefault();
+      } else if (!modalOpen && e.key === 'ArrowDown') {
         setSelectedIndex(i => Math.min(i + 1, vignettes.length - 1));
         e.preventDefault();
-      } else if (e.key === 'ArrowUp') {
+      } else if (!modalOpen && e.key === 'ArrowUp') {
         setSelectedIndex(i => Math.max(i - 1, 0));
+        e.preventDefault();
+      } else if (!modalOpen && e.key === 'Enter') {
+        // Open the edit modal for the currently selected vignette
+        handleEditMask(selectedIndex);
         e.preventDefault();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [vignettes.length]);
+    window.addEventListener('keydown', handleKeyDown, { capture: true });
+    return () => window.removeEventListener('keydown', handleKeyDown, { capture: true });
+  }, [vignettes.length, editIndex, selectedIndex]);
 
   useEffect(() => {
     if (listRef.current) {
@@ -158,38 +244,13 @@ export default function VignetteList({
   };
 
   // Modale
-  const handleEditMask = async (index: number) => {
+  const handleEditMask = (index: number) => {
     setEditIndex(index);
-    setEditMatrix(undefined); // Reset pour forcer rechargement
-    const gzFile = vignettes[index].matrix;
-    let matrixUrl;
-    if (folder.startsWith('/api/vignette')) {
-      matrixUrl = `${folder}/${gzFile}`;
-    } else {
-      matrixUrl = `/${folder}/${gzFile}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
-    }
-    try {
-      const matrix = await loadMatrixFromGz(matrixUrl); // Utilise ta fonction de chargement .gz
-      setEditMatrix(matrix);
-    } catch (e) {
-      // fallback matrice zéro si erreur
-      let imgPath;
-      if (folder.startsWith('/api/vignette')) {
-        imgPath = `${folder}/${vignettes[index].scan}`;
-      } else {
-        imgPath = `/${folder}/${vignettes[index].scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
-      }
-      const img = new window.Image();
-      img.src = imgPath;
-      img.onload = () => {
-        setEditMatrix(Array.from({ length: img.height }, () => Array(img.width).fill(0)));
-      };
-    }
   };
 
   const handleCloseEdit = () => {
+    loadRequestIdRef.current++;
     setEditIndex(null);
-    setEditMatrix(undefined);
   };
 
   const handleApply = async (matrix: number[][]) => {
@@ -259,19 +320,19 @@ export default function VignetteList({
           />
         </div>
       )}
-      {editIndex !== null && editMatrix && (
+      {editIndex !== null && (
         <Modal
-          isOpen={editIndex !== null && !!editMatrix}
+          isOpen={true}
           onClose={handleCloseEdit}
           backdrop="blur"
           placement="center"
           className="!max-w-none !w-auto !h-auto"
         >
           <ModalContent className="h-full">
-            <ModalHeader>Mask edit</ModalHeader>
+            <ModalHeader>Separate {editIndex}</ModalHeader>
             <ModalBody className="flex-1 overflow-auto flex justify-center items-center p-2">
               <div
-                style={{
+                styleXXX={{
                   display: 'inline-block',
                   maxWidth: 'calc(100vw - 64px)',
                   maxHeight: 'calc(100vh - 64px)',
