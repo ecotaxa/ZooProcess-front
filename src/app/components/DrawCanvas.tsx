@@ -26,6 +26,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasWrapperRef = useRef<HTMLDivElement>(null);
   const lastMouse = useRef({ x: 0, y: 0 });
   const lastDrawPos = useRef<{ x: number; y: number } | null>(null);
 
@@ -35,8 +36,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [scroll, setScroll] = useState({ x: 0, y: 0 });
-  const [updateKey, setUpdateKey] = useState(0);
 
+  const [updateKey, setUpdateKey] = useState(0);
   const forceUpdate = () => setUpdateKey(k => k + 1);
 
   useEffect(() => {
@@ -98,7 +99,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = containerRef.current?.getBoundingClientRect();
+      const rect = canvasWrapperRef.current?.getBoundingClientRect();
       if (!rect) return;
       lastMouse.current = {
         x: e.clientX - rect.left,
@@ -143,9 +144,9 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (!containerRef.current) return;
+      if (!canvasWrapperRef.current) return;
       e.preventDefault();
-      const rect = containerRef.current.getBoundingClientRect();
+      const rect = canvasWrapperRef.current.getBoundingClientRect();
       const offsetX = e.clientX - rect.left;
       const offsetY = e.clientY - rect.top;
       const zoomIn = e.deltaY < 0;
@@ -167,9 +168,9 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       });
     };
 
-    const container = containerRef.current;
-    container?.addEventListener('wheel', handleWheel, { passive: false });
-    return () => container?.removeEventListener('wheel', handleWheel);
+    const target = canvasWrapperRef.current;
+    target?.addEventListener('wheel', handleWheel, { passive: false });
+    return () => target?.removeEventListener('wheel', handleWheel);
   }, [canvasSize, scroll, zoom]);
 
   const drawPoint = (x: number, y: number) => {
@@ -207,8 +208,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   };
 
   const handlePointerMove = (e: React.MouseEvent) => {
-    if (!containerRef.current || !isDrawing) return;
-    const rect = containerRef.current.getBoundingClientRect();
+    if (!canvasWrapperRef.current || !isDrawing) return;
+    const rect = canvasWrapperRef.current.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
     const imageX = offsetX / zoom + scroll.x;
@@ -244,7 +245,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const getCursor = () => (tool === 'brush' ? 'crosshair' : 'not-allowed');
 
   return (
-    <div style={{ display: 'flex', flexGrow: '1', gap: 12 }}>
+    <div style={{ display: 'flex', flexGrow: '1', gap: 12, minHeight: 0 }}>
       <div
         id="two_canvases"
         ref={containerRef}
@@ -254,41 +255,56 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           flexGrow: '1',
           alignSelf: 'stretch',
           position: 'relative',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minWidth: 0,
+          maxWidth: '100%',
+          maxHeight: '100vh',
+          overflow: 'auto',
         }}
       >
-        <canvas
-          ref={canvasRef}
-          width={canvasSize.width}
-          height={canvasSize.height}
+        <div
+          ref={canvasWrapperRef}
           style={{
+            position: 'relative',
             width: canvasSize.width,
             height: canvasSize.height,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            zIndex: 1,
-            border: '1px solid #ccc',
           }}
-        />
-        <canvas
-          ref={overlayRef}
-          width={canvasSize.width}
-          height={canvasSize.height}
-          onMouseDown={handlePointerDown}
-          onMouseUp={handlePointerUp}
-          onMouseMove={handlePointerMove}
-          onMouseLeave={handlePointerUp}
-          style={{
-            width: canvasSize.width,
-            height: canvasSize.height,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            zIndex: 2,
-            cursor: getCursor(),
-            border: '1px solid #ccc',
-          }}
-        />
+        >
+          <canvas
+            ref={canvasRef}
+            width={canvasSize.width}
+            height={canvasSize.height}
+            style={{
+              width: canvasSize.width,
+              height: canvasSize.height,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              zIndex: 1,
+              border: '1px solid #ccc',
+            }}
+          />
+          <canvas
+            ref={overlayRef}
+            width={canvasSize.width}
+            height={canvasSize.height}
+            onMouseDown={handlePointerDown}
+            onMouseUp={handlePointerUp}
+            onMouseMove={handlePointerMove}
+            onMouseLeave={handlePointerUp}
+            style={{
+              width: canvasSize.width,
+              height: canvasSize.height,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              zIndex: 2,
+              cursor: getCursor(),
+              border: '1px solid #ccc',
+            }}
+          />
+        </div>
       </div>
       <div
         style={{
@@ -298,6 +314,12 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           flexDirection: 'column',
           gap: 8,
           border: '1px solid #ccc',
+          position: 'sticky',
+          top: 0,
+          maxHeight: '100vh',
+          overflowY: 'auto',
+          flexShrink: 0,
+          alignSelf: 'flex-start',
         }}
       >
         <RadioGroup>
