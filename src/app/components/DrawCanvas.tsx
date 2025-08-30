@@ -15,6 +15,9 @@ const CANVAS_POINT_SIZE = 3;
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 20;
 const ZOOM_FACTOR = 1.02;
+const WHEEL_ZOOM_SPEED = 0.002;
+const STEP_ZOOM_FACTOR = 1.2;
+const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
 const DrawCanvas: React.FC<DrawCanvasProps> = ({
   imagePath,
@@ -29,6 +32,10 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
   const lastMouse = useRef({ x: 0, y: 0 });
   const lastDrawPos = useRef<{ x: number; y: number } | null>(null);
+  const spaceHeldRef = useRef(false);
+  const isPanningRef = useRef(false);
+  const lastPanPos = useRef<{ x: number; y: number } | null>(null);
+  const prevImagePathRef = useRef<string | null>(null);
 
   const [tool, setTool] = useState<Tool>('brush');
   const [isDrawing, setIsDrawing] = useState(false);
@@ -42,6 +49,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
   useEffect(() => {
     const img = new Image();
+    const shouldReset = prevImagePathRef.current !== imagePath;
     img.src = imagePath;
     img.onload = () => {
       const width = img.width;
@@ -53,6 +61,11 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       persistentMatrixRef.current = matrix;
       setCanvasSize({ width, height });
       setImage(img);
+      if (shouldReset) {
+        setZoom(1);
+        setScroll({ x: 0, y: 0 });
+      }
+      prevImagePathRef.current = imagePath;
       forceUpdate();
     };
   }, [imagePath, initialMatrix]);
@@ -112,60 +125,79 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        spaceHeldRef.current = true;
+        e.preventDefault();
+      }
       const offsetX = lastMouse.current.x;
       const offsetY = lastMouse.current.y;
       const imageX = offsetX / zoom + scroll.x;
       const imageY = offsetY / zoom + scroll.y;
 
       const zoomAroundPoint = (targetZoom: number) => {
-        const newScrollX = imageX - offsetX / targetZoom;
-        const newScrollY = imageY - offsetY / targetZoom;
+        const newZoom = clamp(targetZoom, MIN_ZOOM, MAX_ZOOM);
+        const newScrollX = imageX - offsetX / newZoom;
+        const newScrollY = imageY - offsetY / newZoom;
         setScroll({
-          x: Math.min(Math.max(newScrollX, 0), canvasSize.width - canvasSize.width / targetZoom),
-          y: Math.min(Math.max(newScrollY, 0), canvasSize.height - canvasSize.height / targetZoom),
+          x: clamp(newScrollX, 0, canvasSize.width - canvasSize.width / newZoom),
+          y: clamp(newScrollY, 0, canvasSize.height - canvasSize.height / newZoom),
         });
-        setZoom(targetZoom);
+        setZoom(newZoom);
       };
 
       if (e.key === 'b') setTool('brush');
       if (e.key === 'e') setTool('eraser');
       if (e.key === 'c') cleanMatrix();
-      if (e.key === '+') zoomAroundPoint(Math.min(zoom * ZOOM_FACTOR, MAX_ZOOM));
-      if (e.key === '-') zoomAroundPoint(Math.max(zoom / ZOOM_FACTOR, MIN_ZOOM));
+      if (e.key === '+') zoomAroundPoint(zoom * STEP_ZOOM_FACTOR);
+      if (e.key === '-') zoomAroundPoint(zoom / STEP_ZOOM_FACTOR);
       if (e.key === '0') {
         setZoom(1);
         setScroll({ x: 0, y: 0 });
       }
     };
 
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        spaceHeldRef.current = false;
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
   }, [canvasSize, scroll, zoom]);
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       if (!canvasWrapperRef.current) return;
-      e.preventDefault();
-      const rect = canvasWrapperRef.current.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
-      const zoomIn = e.deltaY < 0;
-      const mouseImageX = offsetX / zoom + scroll.x;
-      const mouseImageY = offsetY / zoom + scroll.y;
 
-      setZoom(prevZoom => {
-        const newZoom = zoomIn
-          ? Math.min(prevZoom * ZOOM_FACTOR, MAX_ZOOM)
-          : Math.max(prevZoom / ZOOM_FACTOR, MIN_ZOOM);
-        if (newZoom === prevZoom) return prevZoom;
-        const newScrollX = mouseImageX - offsetX / newZoom;
-        const newScrollY = mouseImageY - offsetY / newZoom;
+      const zooming = e.ctrlKey; // Only zoom when user intends to (e.g., pinch on trackpad)
+
+      if (zooming) {
+        e.preventDefault();
+        const rect = canvasWrapperRef.current.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+
+        const factor = Math.exp(-e.deltaY * WHEEL_ZOOM_SPEED);
+        const targetZoom = clamp(zoom * factor, MIN_ZOOM, MAX_ZOOM);
+
+        const imageX = offsetX / zoom + scroll.x;
+        const imageY = offsetY / zoom + scroll.y;
+
+        const newScrollX = imageX - offsetX / targetZoom;
+        const newScrollY = imageY - offsetY / targetZoom;
         setScroll({
-          x: Math.min(Math.max(newScrollX, 0), canvasSize.width - canvasSize.width / newZoom),
-          y: Math.min(Math.max(newScrollY, 0), canvasSize.height - canvasSize.height / newZoom),
+          x: clamp(newScrollX, 0, canvasSize.width - canvasSize.width / targetZoom),
+          y: clamp(newScrollY, 0, canvasSize.height - canvasSize.height / targetZoom),
         });
-        return newZoom;
-      });
+        setZoom(targetZoom);
+      } else {
+        // Allow default scrolling of the container/page
+      }
     };
 
     const target = canvasWrapperRef.current;
@@ -197,6 +229,17 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   };
 
   const handlePointerDown = (e: React.MouseEvent) => {
+    // Start panning with middle mouse or Space+Left
+    const isMiddle = e.button === 1;
+    const isSpaceLeft = e.button === 0 && spaceHeldRef.current;
+    if (isMiddle || isSpaceLeft) {
+      isPanningRef.current = true;
+      lastPanPos.current = { x: e.clientX, y: e.clientY };
+      e.preventDefault();
+      return;
+    }
+
+    // Otherwise start drawing
     setIsDrawing(true);
     lastDrawPos.current = null;
     handlePointerMove(e);
@@ -205,10 +248,50 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const handlePointerUp = () => {
     setIsDrawing(false);
     lastDrawPos.current = null;
+    isPanningRef.current = false;
+    lastPanPos.current = null;
   };
 
   const handlePointerMove = (e: React.MouseEvent) => {
-    if (!canvasWrapperRef.current || !isDrawing) return;
+    if (!canvasWrapperRef.current) return;
+
+    // Panning mode (Space+Left or Middle mouse)
+    if (isPanningRef.current && lastPanPos.current) {
+      const dx = e.clientX - lastPanPos.current.x;
+      const dy = e.clientY - lastPanPos.current.y;
+      lastPanPos.current = { x: e.clientX, y: e.clientY };
+
+      const maxX = canvasSize.width - canvasSize.width / zoom;
+      const maxY = canvasSize.height - canvasSize.height / zoom;
+
+      let newScrollX = scroll.x;
+      let newScrollY = scroll.y;
+      let updateInternal = false;
+
+      if (maxX > 0) {
+        newScrollX = clamp(scroll.x - dx / zoom, 0, maxX);
+        updateInternal = true;
+      } else if (containerRef.current) {
+        // No internal horizontal pan range; pan the outer container
+        containerRef.current.scrollBy({ left: -dx, top: 0, behavior: 'auto' });
+      }
+
+      if (maxY > 0) {
+        newScrollY = clamp(scroll.y - dy / zoom, 0, maxY);
+        updateInternal = true;
+      } else if (containerRef.current) {
+        // No internal vertical pan range; pan the outer container
+        containerRef.current.scrollBy({ left: 0, top: -dy, behavior: 'auto' });
+      }
+
+      if (updateInternal) {
+        setScroll({ x: newScrollX, y: newScrollY });
+      }
+      return;
+    }
+
+    if (!isDrawing) return;
+
     const rect = canvasWrapperRef.current.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
@@ -242,6 +325,29 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     if (onApply) onApply(matrix);
   };
 
+  // Helpers for UI-centered zooming
+  const zoomAtPoint = (target: number, offsetX: number, offsetY: number) => {
+    const newZoom = clamp(target, MIN_ZOOM, MAX_ZOOM);
+    const imageX = offsetX / zoom + scroll.x;
+    const imageY = offsetY / zoom + scroll.y;
+    const newScrollX = imageX - offsetX / newZoom;
+    const newScrollY = imageY - offsetY / newZoom;
+    setScroll({
+      x: clamp(newScrollX, 0, canvasSize.width - canvasSize.width / newZoom),
+      y: clamp(newScrollY, 0, canvasSize.height - canvasSize.height / newZoom),
+    });
+    setZoom(newZoom);
+  };
+
+  const zoomStep = (dir: 1 | -1) => {
+    const rect = canvasWrapperRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const target = dir === 1 ? zoom * STEP_ZOOM_FACTOR : zoom / STEP_ZOOM_FACTOR;
+    zoomAtPoint(target, cx, cy);
+  };
+
   const getCursor = () => (tool === 'brush' ? 'crosshair' : 'not-allowed');
 
   return (
@@ -255,7 +361,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           flexGrow: '1',
           alignSelf: 'stretch',
           position: 'relative',
-          alignItems: 'center',
+          alignItems: 'flex-start', // TODO: Hack to prevent the canvas from being cut off at the top.
           justifyContent: 'center',
           minWidth: 0,
           maxWidth: '100%',
@@ -265,6 +371,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       >
         <div
           ref={canvasWrapperRef}
+          tabIndex={0}
           style={{
             position: 'relative',
             width: canvasSize.width,
@@ -334,7 +441,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           </Button>
         </RadioGroup>
         <Button onPress={() => cleanMatrix()}>Clear (c)</Button>
-        <Button onPress={() => setZoom(z => Math.min(z * ZOOM_FACTOR, MAX_ZOOM))}>Zoom (+)</Button>
+        <Button onPress={() => zoomStep(1)}>Zoom (+)</Button>
         <Button
           onPress={() => {
             setZoom(1);
@@ -343,7 +450,32 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         >
           No zoom (0)
         </Button>
-        <Button onPress={() => setZoom(z => Math.max(z / ZOOM_FACTOR, MIN_ZOOM))}>Zoom (-)</Button>
+        <Button onPress={() => zoomStep(-1)}>Zoom (-)</Button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 12 }}>Zoom</span>
+          <input
+            type="range"
+            min={Math.log(MIN_ZOOM)}
+            max={Math.log(MAX_ZOOM)}
+            step={0.01}
+            value={Math.log(zoom)}
+            onFocus={() => {
+              // Immediately redirect focus back to the canvas wrapper when the slider receives it
+              // This avoids the slider capturing keyboard focus while keeping mouse drag functional
+              // setTimeout(() => canvasWrapperRef.current?.focus(), 0);
+            }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const rect = canvasWrapperRef.current?.getBoundingClientRect();
+              if (!rect) return;
+              const target = Math.exp(Number(e.target.value));
+              zoomAtPoint(target, rect.width / 2, rect.height / 2);
+              // setTimeout(() => canvasWrapperRef.current!.focus(), 100);
+              // setTimeout(() => canvasWrapperRef.current?.focus(), 0);
+            }}
+            tabIndex={-1}
+            onMouseLeave={() => setTimeout(() => canvasWrapperRef.current?.focus(), 0)}
+          />
+        </div>
         <Button onPress={applyMatrix}>Apply</Button>
         <div style={{ marginTop: 8, fontSize: 12 }}>Zoom: x{zoom.toFixed(2)}</div>
       </div>
