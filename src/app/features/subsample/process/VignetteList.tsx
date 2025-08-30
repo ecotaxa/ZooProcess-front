@@ -286,7 +286,7 @@ export default function VignetteList({
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button onPress={handleCloseEdit}>Fermer</Button>
+              <Button onPress={handleCloseEdit}>Close</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>

@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { Button } from '@heroui/button';
+import { RadioGroup } from '@mui/material';
 
 interface DrawCanvasProps {
   imagePath: string;
@@ -287,24 +289,36 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           />
         </div>
         <div style={{ marginLeft: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <button onClick={() => setTool('brush')}>Pencil (b)</button>
-          <button onClick={() => setTool('eraser')}>Rubber (e)</button>
-          <button onClick={() => cleanMatrix()}>Clear (c)</button>
-          <button onClick={() => setZoom(z => Math.min(z * ZOOM_FACTOR, MAX_ZOOM))}>
+          <RadioGroup>
+            <Button
+              variant={tool === 'brush' ? 'faded' : undefined}
+              onPress={() => setTool('brush')}
+            >
+              Pencil (b)
+            </Button>
+            <Button
+              variant={tool === 'eraser' ? 'faded' : undefined}
+              onPress={() => setTool('eraser')}
+            >
+              Eraser (e)
+            </Button>
+          </RadioGroup>
+          <Button onPress={() => cleanMatrix()}>Clear (c)</Button>
+          <Button onPress={() => setZoom(z => Math.min(z * ZOOM_FACTOR, MAX_ZOOM))}>
             Zoom (+)
-          </button>
-          <button
-            onClick={() => {
+          </Button>
+          <Button
+            onPress={() => {
               setZoom(1);
               setScroll({ x: 0, y: 0 });
             }}
           >
             No zoom (0)
-          </button>
-          <button onClick={() => setZoom(z => Math.max(z / ZOOM_FACTOR, MIN_ZOOM))}>
+          </Button>
+          <Button onPress={() => setZoom(z => Math.max(z / ZOOM_FACTOR, MIN_ZOOM))}>
             Zoom (-)
-          </button>
-          <button onClick={applyMatrix}>Apply</button>
+          </Button>
+          <Button onPress={applyMatrix}>Apply</Button>
           <div style={{ marginTop: 8, fontSize: 12 }}>Zoom: x{zoom.toFixed(2)}</div>
         </div>
       </div>
