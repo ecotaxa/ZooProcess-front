@@ -115,10 +115,9 @@ export default function VignetItem({
   return (
     <div
       ref={containerRef}
-      style={{ padding: '8px 0' }}
       onClick={onClick}
       tabIndex={0}
-      className={`flex items-start gap-4 border-b p-2 rounded cursor-pointer transition-colors ${
+      className={`flex items-start gap-4 border-b p-1 rounded cursor-pointer transition-colors ${
         selected
           ? 'bg-blue-400 text-white ring-4 ring-blue-800 z-10'
           : index % 2 === 0

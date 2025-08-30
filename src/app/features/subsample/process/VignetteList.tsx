@@ -35,7 +35,7 @@ export default function VignetteList({
   // height = 700      // hauteur scrollable visible (px)
 }: Readonly<Props>) {
   // const itemHeight = 110
-  const calculatedHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+  const calculatedHeight = typeof window !== 'undefined' ? window.innerHeight * 0.78 : 800;
   // const [vignettes, setVignettes] = useState<VignetteData[]>(initialVignettes);
   const vignettes = initialVignettes;
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -145,20 +145,16 @@ export default function VignetteList({
     );
   };
 
-  // const getItemSize = (index: number) => rowHeights[index] || 120; // 120px par défaut
-  // const getItemSize = (index: number) => Math.max(rowHeights[index] || 0, 96);
-  // const getItemSize = (index: number) => Math.max(rowHeights[index] || 120, 96);
-  // const getItemSize = (index: number) => {
-  //   const h = rowHeights[index];
-  //   return h && h > 0 ? h : 120; // minimum safe fallback
-  // };
   const getItemSize = (index: number) => {
     const h = rowHeights[index];
+    let ret: number;
     if (!h || h < 96) {
       // console.warn('⚠️ Missing or too small height', h, ' for index', index, '→ fallback 120');
-      return 120;
+      ret = 120;
+    } else {
+      ret = h;
     }
-    return h;
+    return ret + 8; // add some padding
   };
 
   // Modale
@@ -236,15 +232,14 @@ export default function VignetteList({
   }, [imagePath]);
 
   return (
-    <div className="relative h-screenXX w-full overflow-hidden bg-white">
-      {/* <div className="absolute inset-0 pl-[320px]"> */}
+    <div className="relative w-full overflow-hidden bg-white">
       {vignettes.length} to validate
       <List
         ref={listRef}
         height={calculatedHeight}
+        width="100%"
         itemCount={vignettes.length}
         itemSize={getItemSize}
-        width="100%"
         className="border rounded bg-white"
         itemKey={index => vignettes[index].scan}
       >
@@ -260,10 +255,6 @@ export default function VignetteList({
             src={zoomMaskSrc}
             alt="Mask zoom"
             className="max-h-[80vh] max-w-[300px] m-6 rounded shadow-2xl bg-white"
-            style={{
-              border: '4px solid white',
-              boxShadow: '0 0 20px #0006',
-            }}
             draggable={false}
           />
         </div>

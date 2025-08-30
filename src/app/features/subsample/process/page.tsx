@@ -186,6 +186,7 @@ export const SubsampleProcessPage = () => {
     return (
       <>
         {!vignettes && <p className="text-gray-500">No vignette to verify.</p>}
+        {vignettes && <VignetteList initialVignettes={vignettes} folder={folder} />}
         {vignettes && (
           <Button
             className="bg-blue-400 hover:bg-blue-600 text-white font-small w-1/6 mb-1 py-1 px-2 rounded-md transition-colors"
@@ -196,7 +197,6 @@ export const SubsampleProcessPage = () => {
             Done separating
           </Button>
         )}
-        {vignettes && <VignetteList initialVignettes={vignettes} folder={folder} />}
       </>
     );
   }
