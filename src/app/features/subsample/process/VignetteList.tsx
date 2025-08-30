@@ -326,25 +326,18 @@ export default function VignetteList({
           onClose={handleCloseEdit}
           backdrop="blur"
           placement="center"
-          className="!max-w-none !w-auto !h-auto"
+          scrollBehavior={'inside'}
+          size={'5xl'}
         >
           <ModalContent className="h-full">
             <ModalHeader>Separate {editIndex}</ModalHeader>
-            <ModalBody className="flex-1 overflow-auto flex justify-center items-center p-2">
-              <div
-                styleXXX={{
-                  display: 'inline-block',
-                  maxWidth: 'calc(100vw - 64px)',
-                  maxHeight: 'calc(100vh - 64px)',
-                }}
-              >
-                <DrawCanvas
-                  imagePath={imagePath}
-                  initialMatrix={editMatrix}
-                  strokeColor="red"
-                  onApply={handleApply}
-                />
-              </div>
+            <ModalBody>
+              <DrawCanvas
+                imagePath={imagePath}
+                initialMatrix={editMatrix}
+                strokeColor="red"
+                onApply={handleApply}
+              />
             </ModalBody>
             <ModalFooter>
               <Button onPress={handleCloseEdit}>Close</Button>

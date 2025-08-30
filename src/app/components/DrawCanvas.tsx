@@ -244,83 +244,86 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const getCursor = () => (tool === 'brush' ? 'crosshair' : 'not-allowed');
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex' }}>
-        <div
-          ref={containerRef}
+    <div style={{ display: 'flex', flexGrow: '1', gap: 12 }}>
+      <div
+        id="two_canvases"
+        ref={containerRef}
+        style={{
+          border: '1px solid #ccc',
+          display: 'flex',
+          flexGrow: '1',
+          alignSelf: 'stretch',
+          position: 'relative',
+        }}
+      >
+        <canvas
+          ref={canvasRef}
+          width={canvasSize.width}
+          height={canvasSize.height}
           style={{
             width: canvasSize.width,
             height: canvasSize.height,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 1,
             border: '1px solid #ccc',
-            overflow: 'hidden',
-            position: 'relative',
           }}
-        >
-          <canvas
-            ref={canvasRef}
-            width={canvasSize.width}
-            height={canvasSize.height}
-            style={{
-              width: canvasSize.width,
-              height: canvasSize.height,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              zIndex: 1,
-            }}
-          />
-          <canvas
-            ref={overlayRef}
-            width={canvasSize.width}
-            height={canvasSize.height}
-            onMouseDown={handlePointerDown}
-            onMouseUp={handlePointerUp}
-            onMouseMove={handlePointerMove}
-            onMouseLeave={handlePointerUp}
-            style={{
-              width: canvasSize.width,
-              height: canvasSize.height,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              zIndex: 2,
-              cursor: getCursor(),
-            }}
-          />
-        </div>
-        <div style={{ marginLeft: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <RadioGroup>
-            <Button
-              variant={tool === 'brush' ? 'faded' : undefined}
-              onPress={() => setTool('brush')}
-            >
-              Pencil (b)
-            </Button>
-            <Button
-              variant={tool === 'eraser' ? 'faded' : undefined}
-              onPress={() => setTool('eraser')}
-            >
-              Eraser (e)
-            </Button>
-          </RadioGroup>
-          <Button onPress={() => cleanMatrix()}>Clear (c)</Button>
-          <Button onPress={() => setZoom(z => Math.min(z * ZOOM_FACTOR, MAX_ZOOM))}>
-            Zoom (+)
+        />
+        <canvas
+          ref={overlayRef}
+          width={canvasSize.width}
+          height={canvasSize.height}
+          onMouseDown={handlePointerDown}
+          onMouseUp={handlePointerUp}
+          onMouseMove={handlePointerMove}
+          onMouseLeave={handlePointerUp}
+          style={{
+            width: canvasSize.width,
+            height: canvasSize.height,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 2,
+            cursor: getCursor(),
+            border: '1px solid #ccc',
+          }}
+        />
+      </div>
+      <div
+        style={{
+          marginLeft: 'auto',
+          marginRight: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8,
+          border: '1px solid #ccc',
+        }}
+      >
+        <RadioGroup>
+          <Button variant={tool === 'brush' ? 'faded' : undefined} onPress={() => setTool('brush')}>
+            Pencil (b)
           </Button>
           <Button
-            onPress={() => {
-              setZoom(1);
-              setScroll({ x: 0, y: 0 });
-            }}
+            variant={tool === 'eraser' ? 'faded' : undefined}
+            onPress={() => setTool('eraser')}
           >
-            No zoom (0)
+            Eraser (e)
           </Button>
-          <Button onPress={() => setZoom(z => Math.max(z / ZOOM_FACTOR, MIN_ZOOM))}>
-            Zoom (-)
-          </Button>
-          <Button onPress={applyMatrix}>Apply</Button>
-          <div style={{ marginTop: 8, fontSize: 12 }}>Zoom: x{zoom.toFixed(2)}</div>
-        </div>
+        </RadioGroup>
+        <Button onPress={() => cleanMatrix()}>Clear (c)</Button>
+        <Button onPress={() => setZoom(z => Math.min(z * ZOOM_FACTOR, MAX_ZOOM))}>Zoom (+)</Button>
+        <Button
+          onPress={() => {
+            setZoom(1);
+            setScroll({ x: 0, y: 0 });
+          }}
+        >
+          No zoom (0)
+        </Button>
+        <Button onPress={() => setZoom(z => Math.max(z / ZOOM_FACTOR, MIN_ZOOM))}>Zoom (-)</Button>
+        <Button onPress={applyMatrix}>Apply</Button>
+        <div style={{ marginTop: 8, fontSize: 12 }}>Zoom: x{zoom.toFixed(2)}</div>
       </div>
     </div>
   );
