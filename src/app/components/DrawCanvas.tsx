@@ -12,7 +12,7 @@ interface DrawCanvasProps {
 
 type Tool = 'brush' | 'eraser';
 
-const CANVAS_POINT_SIZE = 3;
+const CANVAS_POINT_SIZE = 1.1; // slightly larger than 1 to avoid aliasing, ends up in manual drawing of width 2
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 20;
 const ZOOM_FACTOR = 1.02;
@@ -79,7 +79,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       const sw = canvasSize.width / zoom;
       const sh = canvasSize.height / zoom;
       ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
-      ctx.imageSmoothingEnabled = false;
+      ctx.imageSmoothingEnabled = false; // Disable image smoothing for pixel-perfect rendering
       ctx.drawImage(image, sx, sy, sw, sh, 0, 0, canvasSize.width, canvasSize.height);
     }
   }, [image, scroll, zoom, canvasSize]);
@@ -98,12 +98,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     for (let y = 0; y < persistentMatrixRef.current.length; y++) {
       for (let x = 0; x < persistentMatrixRef.current[y].length; x++) {
         if (persistentMatrixRef.current[y][x] === 1) {
-          ctx.fillRect(
-            x - CANVAS_POINT_SIZE / 2,
-            y - CANVAS_POINT_SIZE / 2,
-            CANVAS_POINT_SIZE,
-            CANVAS_POINT_SIZE
-          );
+          ctx.fillRect(x, y, CANVAS_POINT_SIZE, CANVAS_POINT_SIZE);
         }
       }
     }
