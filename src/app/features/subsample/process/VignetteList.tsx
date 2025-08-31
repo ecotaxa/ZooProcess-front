@@ -328,6 +328,7 @@ export default function VignetteList({
           placement="center"
           scrollBehavior={'inside'}
           size={'5xl'}
+          isDismissable={false}
         >
           <ModalContent className="h-full">
             <ModalHeader>Separate {editIndex}</ModalHeader>
