@@ -13,7 +13,7 @@ interface DrawCanvasProps {
 type Tool = 'brush' | 'eraser';
 
 const CANVAS_POINT_SIZE = 1.1; // slightly larger than 1 to avoid aliasing, ends up in manual drawing of width 2
-const MIN_ZOOM = 1;
+const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 20;
 const ZOOM_FACTOR = 1.02;
 const WHEEL_ZOOM_SPEED = 0.002;
@@ -41,13 +41,51 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
   const [tool, setTool] = useState<Tool>('brush');
   const [isDrawing, setIsDrawing] = useState(false);
-  const [zoom, setZoom] = useState(MIN_ZOOM);
+  const [zoom, setZoom] = useState(1);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [scroll, setScroll] = useState({ x: 0, y: 0 });
 
   const [updateKey, setUpdateKey] = useState(0);
   const forceUpdate = () => setUpdateKey(k => k + 1);
+
+  // Compute scroll bounds for a given zoom so that when zoom < 1 the image can be centered
+  const getScrollBounds = (z: number) => {
+    const viewW = canvasSize.width / z;
+    const viewH = canvasSize.height / z;
+
+    const availW = canvasSize.width - viewW; // >=0 when zoomed-in, <0 when zoomed-out
+    const availH = canvasSize.height - viewH;
+
+    let minX: number, maxX: number, minY: number, maxY: number;
+    if (availW >= 0) {
+      minX = 0;
+      maxX = availW;
+    } else {
+      const extraW = -availW; // how much larger the view is than the image
+      minX = -extraW / 2;
+      maxX = extraW / 2;
+    }
+
+    if (availH >= 0) {
+      minY = 0;
+      maxY = availH;
+    } else {
+      const extraH = -availH;
+      minY = -extraH / 2;
+      maxY = extraH / 2;
+    }
+
+    return { minX, maxX, minY, maxY };
+  };
+
+  const clampScrollToBounds = (x: number, y: number, z: number) => {
+    const { minX, maxX, minY, maxY } = getScrollBounds(z);
+    return {
+      x: clamp(x, minX, maxX),
+      y: clamp(y, minY, maxY),
+    };
+  };
 
   useEffect(() => {
     const img = new Image();
@@ -75,13 +113,13 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   useEffect(() => {
     const ctx = canvasRef.current?.getContext('2d');
     if (ctx && image) {
-      const sx = scroll.x;
-      const sy = scroll.y;
-      const sw = canvasSize.width / zoom;
-      const sh = canvasSize.height / zoom;
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
       ctx.imageSmoothingEnabled = false; // Disable image smoothing for pixel-perfect rendering
-      ctx.drawImage(image, sx, sy, sw, sh, 0, 0, canvasSize.width, canvasSize.height);
+      ctx.setTransform(zoom, 0, 0, zoom, -scroll.x * zoom, -scroll.y * zoom);
+      ctx.drawImage(image, 0, 0);
+      ctx.restore();
     }
   }, [image, scroll, zoom, canvasSize]);
 
@@ -135,10 +173,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         const newZoom = clamp(targetZoom, MIN_ZOOM, MAX_ZOOM);
         const newScrollX = imageX - offsetX / newZoom;
         const newScrollY = imageY - offsetY / newZoom;
-        setScroll({
-          x: clamp(newScrollX, 0, canvasSize.width - canvasSize.width / newZoom),
-          y: clamp(newScrollY, 0, canvasSize.height - canvasSize.height / newZoom),
-        });
+        const clamped = clampScrollToBounds(newScrollX, newScrollY, newZoom);
+        setScroll(clamped);
         setZoom(newZoom);
       };
 
@@ -187,10 +223,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
         const newScrollX = imageX - offsetX / targetZoom;
         const newScrollY = imageY - offsetY / targetZoom;
-        setScroll({
-          x: clamp(newScrollX, 0, canvasSize.width - canvasSize.width / targetZoom),
-          y: clamp(newScrollY, 0, canvasSize.height - canvasSize.height / targetZoom),
-        });
+        const clamped = clampScrollToBounds(newScrollX, newScrollY, targetZoom);
+        setScroll(clamped);
         setZoom(targetZoom);
       } else {
         // Allow default scrolling of the container/page
@@ -285,23 +319,22 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       const dy = e.clientY - lastPanPos.current.y;
       lastPanPos.current = { x: e.clientX, y: e.clientY };
 
-      const maxX = canvasSize.width - canvasSize.width / zoom;
-      const maxY = canvasSize.height - canvasSize.height / zoom;
+      const { minX, maxX, minY, maxY } = getScrollBounds(zoom);
 
       let newScrollX = scroll.x;
       let newScrollY = scroll.y;
       let updateInternal = false;
 
-      if (maxX > 0) {
-        newScrollX = clamp(scroll.x - dx / zoom, 0, maxX);
+      if (minX !== maxX) {
+        newScrollX = clamp(scroll.x - dx / zoom, minX, maxX);
         updateInternal = true;
       } else if (containerRef.current) {
         // No internal horizontal pan range; pan the outer container
         containerRef.current.scrollBy({ left: -dx, top: 0, behavior: 'auto' });
       }
 
-      if (maxY > 0) {
-        newScrollY = clamp(scroll.y - dy / zoom, 0, maxY);
+      if (minY !== maxY) {
+        newScrollY = clamp(scroll.y - dy / zoom, minY, maxY);
         updateInternal = true;
       } else if (containerRef.current) {
         // No internal vertical pan range; pan the outer container
@@ -356,10 +389,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     const imageY = offsetY / zoom + scroll.y;
     const newScrollX = imageX - offsetX / newZoom;
     const newScrollY = imageY - offsetY / newZoom;
-    setScroll({
-      x: clamp(newScrollX, 0, canvasSize.width - canvasSize.width / newZoom),
-      y: clamp(newScrollY, 0, canvasSize.height - canvasSize.height / newZoom),
-    });
+    const clamped = clampScrollToBounds(newScrollX, newScrollY, newZoom);
+    setScroll(clamped);
     setZoom(newZoom);
   };
 
@@ -526,9 +557,12 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           classNames={{ label: 'text-xs', value: 'text-xs' }}
           minValue={MIN_ZOOM}
           maxValue={MAX_ZOOM}
-          step={1}
+          step={0.1}
           value={zoom}
-          getValue={zoom => `x${zoom}`}
+          getValue={v => {
+            const num = Array.isArray(v) ? v[0] : v;
+            return `x${Number(num).toFixed(2)}`;
+          }}
           onChange={val => {
             const v = Array.isArray(val) ? val[0] : val;
             const rect = canvasWrapperRef.current?.getBoundingClientRect();
