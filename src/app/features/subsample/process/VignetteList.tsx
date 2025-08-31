@@ -164,6 +164,31 @@ export default function VignetteList({
       } else if (!modalOpen && e.key === 'ArrowUp') {
         setSelectedIndex(i => Math.max(i - 1, 0));
         e.preventDefault();
+      } else if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          // Shift+Tab => previous
+          if (modalOpen && editIndex !== null) {
+            const newIndex = Math.max(editIndex - 1, 0);
+            if (newIndex !== editIndex) {
+              setSelectedIndex(newIndex);
+              handleEditMask(newIndex);
+            }
+          } else {
+            setSelectedIndex(i => Math.max(i - 1, 0));
+          }
+        } else {
+          // Tab => next
+          if (modalOpen && editIndex !== null) {
+            const newIndex = Math.min(editIndex + 1, vignettes.length - 1);
+            if (newIndex !== editIndex) {
+              setSelectedIndex(newIndex);
+              handleEditMask(newIndex);
+            }
+          } else {
+            setSelectedIndex(i => Math.min(i + 1, vignettes.length - 1));
+          }
+        }
+        e.preventDefault();
       } else if (!modalOpen && e.key === 'Enter') {
         // Open the edit modal for the currently selected vignette
         handleEditMask(selectedIndex);
