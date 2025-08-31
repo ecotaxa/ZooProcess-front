@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Button } from '@heroui/button';
+import { Button, ButtonGroup } from '@heroui/button';
 import { RadioGroup } from '@mui/material';
+import { Kbd, Slider } from '@heroui/react';
 
 interface DrawCanvasProps {
   imagePath: string;
@@ -39,7 +40,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
   const [tool, setTool] = useState<Tool>('brush');
   const [isDrawing, setIsDrawing] = useState(false);
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(MIN_ZOOM);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [scroll, setScroll] = useState({ x: 0, y: 0 });
@@ -430,54 +431,76 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         }}
       >
         <RadioGroup>
-          <Button variant={tool === 'brush' ? 'faded' : undefined} onPress={() => setTool('brush')}>
-            Pencil (b)
+          <Button
+            variant={tool === 'brush' ? 'faded' : undefined}
+            onPress={() => setTool('brush')}
+            aria-keyshortcuts="b"
+            endContent={<Kbd>B</Kbd>}
+          >
+            Pencil
           </Button>
           <Button
             variant={tool === 'eraser' ? 'faded' : undefined}
             onPress={() => setTool('eraser')}
+            aria-keyshortcuts="e"
+            endContent={<Kbd>E</Kbd>}
           >
-            Eraser (e)
+            Eraser
           </Button>
         </RadioGroup>
-        <Button onPress={() => cleanMatrix()}>Clear (c)</Button>
-        <Button onPress={() => zoomStep(1)}>Zoom (+)</Button>
-        <Button
-          onPress={() => {
-            setZoom(1);
-            setScroll({ x: 0, y: 0 });
-          }}
-        >
-          No zoom (0)
+        <Button onPress={() => cleanMatrix()} aria-keyshortcuts="c" endContent={<Kbd>C</Kbd>}>
+          Clear
         </Button>
-        <Button onPress={() => zoomStep(-1)}>Zoom (-)</Button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 12 }}>Zoom</span>
-          <input
-            type="range"
-            min={Math.log(MIN_ZOOM)}
-            max={Math.log(MAX_ZOOM)}
-            step={0.01}
-            value={Math.log(zoom)}
-            onFocus={() => {
-              // Immediately redirect focus back to the canvas wrapper when the slider receives it
-              // This avoids the slider capturing keyboard focus while keeping mouse drag functional
-              // setTimeout(() => canvasWrapperRef.current?.focus(), 0);
+        <ButtonGroup size="sm" className="gap-0 flex-col items-stretch">
+          <Button
+            size="sm"
+            onPress={() => zoomStep(-1)}
+            aria-keyshortcuts="-"
+            endContent={<Kbd>-</Kbd>}
+          >
+            Zoom out
+          </Button>
+          <Button
+            size="sm"
+            onPress={() => {
+              setZoom(1);
+              setScroll({ x: 0, y: 0 });
             }}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const rect = canvasWrapperRef.current?.getBoundingClientRect();
-              if (!rect) return;
-              const target = Math.exp(Number(e.target.value));
-              zoomAtPoint(target, rect.width / 2, rect.height / 2);
-              // setTimeout(() => canvasWrapperRef.current!.focus(), 100);
-              // setTimeout(() => canvasWrapperRef.current?.focus(), 0);
-            }}
-            tabIndex={-1}
-            onMouseLeave={() => setTimeout(() => canvasWrapperRef.current?.focus(), 0)}
-          />
-        </div>
-        <Button onPress={applyMatrix}>Apply</Button>
-        <div style={{ marginTop: 8, fontSize: 12 }}>Zoom: x{zoom.toFixed(2)}</div>
+            aria-keyshortcuts="0"
+            endContent={<Kbd>0</Kbd>}
+          >
+            Reset
+          </Button>
+          <Button
+            size="sm"
+            onPress={() => zoomStep(1)}
+            aria-keyshortcuts="+"
+            endContent={<Kbd>+</Kbd>}
+          >
+            Zoom in
+          </Button>
+        </ButtonGroup>
+        <Slider
+          size="sm"
+          label={`Zoom`}
+          aria-label="Zoom"
+          classNames={{ label: 'text-xs', value: 'text-xs' }}
+          minValue={MIN_ZOOM}
+          maxValue={MAX_ZOOM}
+          step={1}
+          value={zoom}
+          getValue={zoom => `x${zoom}`}
+          onChange={val => {
+            const v = Array.isArray(val) ? val[0] : val;
+            const rect = canvasWrapperRef.current?.getBoundingClientRect();
+            if (!rect) return;
+            const target = Number(v);
+            zoomAtPoint(target, rect.width / 2, rect.height / 2);
+          }}
+          tabIndex={-1}
+          onMouseLeave={() => setTimeout(() => canvasWrapperRef.current?.focus(), 0)}
+        />
+        <Button onPress={applyMatrix}>Save</Button>
       </div>
     </div>
   );
