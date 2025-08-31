@@ -37,6 +37,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const isPanningRef = useRef(false);
   const lastPanPos = useRef<{ x: number; y: number } | null>(null);
   const prevImagePathRef = useRef<string | null>(null);
+  const lastCenteredImagePathRef = useRef<string | null>(null);
 
   const [tool, setTool] = useState<Tool>('brush');
   const [isDrawing, setIsDrawing] = useState(false);
@@ -200,6 +201,32 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     target?.addEventListener('wheel', handleWheel, { passive: false });
     return () => target?.removeEventListener('wheel', handleWheel);
   }, [canvasSize, scroll, zoom]);
+
+  // Center the outer scrollbars when the image is larger than the viewport
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || !image) return;
+
+    // Only center once per imagePath to avoid overriding user's manual scroll
+    if (lastCenteredImagePathRef.current === imagePath) return;
+
+    const center = () => {
+      if (!container) return;
+      const needsH = container.scrollWidth > container.clientWidth;
+      const needsV = container.scrollHeight > container.clientHeight;
+      if (needsH || needsV) {
+        const left = Math.max(0, Math.floor((container.scrollWidth - container.clientWidth) / 2));
+        const top = Math.max(0, Math.floor((container.scrollHeight - container.clientHeight) / 2));
+        container.scrollTo({ left, top });
+      }
+      lastCenteredImagePathRef.current = imagePath;
+    };
+
+    // Wait for layout, then schedule after paint with a bit more delay to avoid race conditions
+    requestAnimationFrame(() => {
+      setTimeout(center, 50);
+    });
+  }, [imagePath, image, canvasSize]);
 
   const drawPoint = (x: number, y: number) => {
     if (!persistentMatrixRef.current) return;

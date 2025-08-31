@@ -203,14 +203,14 @@ export default function VignetteList({
             handleEditMask(index);
           }} // open the editor
           onImageLoaded={(height: number) => {
-            console.log('👀 imageLoaded', index, height);
+            // console.log('👀 imageLoaded', index, height);
             setRowHeights(prev => {
               const current = prev[index];
               if (Math.abs(current - height) < 2) return prev;
               if (current === height) return prev;
 
               const next = { ...prev, [index]: height };
-              console.log('🔁 setHeight', index, height);
+              // console.log('🔁 setHeight', index, height);
 
               // requestAnimationFrame(() => {
               //   if (listRef.current) {
@@ -218,7 +218,7 @@ export default function VignetteList({
               //   }
               // });
               setTimeout(() => {
-                console.log('🧯 resetAfterIndex', index, height);
+                // console.log('🧯 resetAfterIndex', index, height);
                 listRef.current?.resetAfterIndex(index, false);
               }, 0);
 
