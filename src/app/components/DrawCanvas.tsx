@@ -205,10 +205,11 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     if (!persistentMatrixRef.current) return;
     const px = Math.floor(x);
     const py = Math.floor(y);
-    for (let dy = 0; dy < CANVAS_POINT_SIZE; dy++) {
-      for (let dx = 0; dx < CANVAS_POINT_SIZE; dx++) {
-        const fx = px + dx - Math.floor(CANVAS_POINT_SIZE / 2);
-        const fy = py + dy - Math.floor(CANVAS_POINT_SIZE / 2);
+    const point_size = tool === 'brush' ? CANVAS_POINT_SIZE : CANVAS_POINT_SIZE * 5;
+    for (let dy = 0; dy < point_size; dy++) {
+      for (let dx = 0; dx < point_size; dx++) {
+        const fx = px + dx - Math.floor(point_size / 2);
+        const fy = py + dy - Math.floor(point_size / 2);
         if (fx < 0 || fy < 0 || fx >= canvasSize.width || fy >= canvasSize.height) continue;
         if (persistentMatrixRef.current[fy]) {
           persistentMatrixRef.current[fy][fx] = tool === 'brush' ? 1 : 0;
@@ -344,7 +345,23 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     zoomAtPoint(target, cx, cy);
   };
 
-  const getCursor = () => (tool === 'brush' ? 'crosshair' : 'not-allowed');
+  // Build a lightweight SVG-based eraser cursor and memoize it
+  const eraserCursor = React.useMemo(() => {
+    const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'>
+  <g transform='rotate(-25 12 12)'>
+    <rect x='5' y='9' width='10' height='8' rx='2' fill='#f3a6bb' stroke='#333' stroke-width='1'/>
+    <rect x='10' y='9' width='5' height='8' rx='2' fill='#f8dde6'/>
+    <path d='M5 16 L15 16' stroke='#333' stroke-width='0.5' opacity='0.4'/>
+  </g>
+</svg>`;
+    // Hotspot roughly at the bottom-left tip (scaled for 32x32 from 24x24: 6->8, 18->24)
+    const hotspotX = 8; // tune for perceived tip
+    const hotspotY = 24;
+    return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}") ${hotspotX} ${hotspotY}, crosshair`;
+  }, []);
+
+  const getCursor = () => (tool === 'brush' ? 'crosshair' : eraserCursor);
 
   return (
     <div style={{ display: 'flex', flexGrow: '1', gap: 12, minHeight: 0 }}>
