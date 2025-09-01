@@ -116,10 +116,12 @@ export async function getVignettes(
   token: string,
   projectId: string,
   sampleId: string,
-  subsampleId: string
+  subsampleId: string,
+  image: string | undefined = undefined
 ) {
   const api = await axiosInstance({ token: token });
-  const url = '/vignettes/' + projectId + '/' + sampleId + '/' + subsampleId;
+  let url = '/vignettes/' + projectId + '/' + sampleId + '/' + subsampleId;
+  if (image) url += '?only=' + image;
   const response = await api.get<I.VignetteResponse>(url);
 
   return response.data; //.data;

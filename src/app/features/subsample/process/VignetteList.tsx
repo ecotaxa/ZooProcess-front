@@ -11,6 +11,8 @@ import {
 } from 'app/lib/DrawCanvasTools.ts';
 import DrawCanvas from 'app/components/DrawCanvas.tsx';
 import { saveMaskViaApi } from 'api/save-mask.ts';
+import { getVignettes } from 'api/zooprocess-api.ts';
+import { useAuth } from 'app/stores/auth-context.tsx';
 // import { X } from 'framer-motion/dist/types.d-CtuPurYT';
 
 // const VignetItem = dynamic(() => import('./VignetItem'), { ssr: false })
@@ -34,6 +36,7 @@ export default function VignetteList({
   // itemHeight = 110, // à ajuster selon le rendu visuel de VignetItem
   // height = 700      // hauteur scrollable visible (px)
 }: Readonly<Props>) {
+  const { authState } = useAuth();
   // const itemHeight = 110
   const calculatedHeight = typeof window !== 'undefined' ? window.innerHeight * 0.78 : 800;
   // const [vignettes, setVignettes] = useState<VignetteData[]>(initialVignettes);
@@ -51,12 +54,9 @@ export default function VignetteList({
     const requestId = ++loadRequestIdRef.current;
     const gzFile = vignettes[editIndex].matrix;
 
-    let matrixUrl: string;
-    if (folder.startsWith('/api/vignette')) {
-      matrixUrl = `${folder}/${gzFile}`;
-    } else {
-      matrixUrl = `/${folder}/${gzFile}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
-    }
+    if (gzFile == null) return;
+
+    const matrixUrl = `${folder}/${gzFile}`;
 
     const load = async () => {
       try {
@@ -66,14 +66,7 @@ export default function VignetteList({
         }
       } catch (e) {
         // Fallback to zero matrix sized to image if we cannot load the gz
-        let imgPath: string;
-        if (folder.startsWith('/api/vignette')) {
-          imgPath = `${folder}/${vignettes[editIndex].scan}`;
-        } else {
-          imgPath = `/${folder}/${vignettes[editIndex].scan}`
-            .replace(/\\/g, '/')
-            .replace(/\/\/+/, '/');
-        }
+        const imgPath = `${folder}/${vignettes[editIndex].scan}`;
         const img = new window.Image();
         img.src = imgPath;
         img.onload = () => {
@@ -89,10 +82,9 @@ export default function VignetteList({
     void load();
   }, [editIndex, vignettes, folder]);
 
-  const [maskRefreshMap, setMaskRefreshMap] = useState<{ [mask: string]: number }>({});
   const [rowHeights, setRowHeights] = useState<{ [index: number]: number }>({});
 
-  const [, setImageSize] = useState<{ width: number; height: number } | null>(null);
+  const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
 
   // to the automatic scroll
   const listRef = useRef<any>(null);
@@ -190,8 +182,6 @@ export default function VignetteList({
 
   // Item renderer pour react-window
   const Row = ({ index, style }: ListChildComponentProps) => {
-    const maskName = vignettes[index].mask || '';
-    const maskRefreshKey = maskRefreshMap[maskName] || 0;
     return (
       <div style={style}>
         <VignetItem
@@ -229,7 +219,6 @@ export default function VignetteList({
               return next;
             });
           }}
-          maskRefreshKey={maskRefreshKey}
         />
       </div>
     );
@@ -262,12 +251,18 @@ export default function VignetteList({
     const srcFile = vignettes[editIndex].scan;
     try {
       await saveMaskViaApi(matrix, srcFile, folder);
-      setMaskRefreshMap(prev => ({
-        ...prev,
-        [vignettes[editIndex].mask!]: Date.now(),
-      }));
-      handleCloseEdit();
-      // Optionnel: reload la vignette ou toast
+      // e.g. /api/vignette/689c42f9e63c0c86d9cc0df6/689c42f9e63c0c86d9cc0df7/689c42f9e63c0c86d9cc0dfa/
+      const img_address = folder.split('/').slice(-3);
+      // e.g. v10_cut:apero2023_tha_bioness_005_st20_d_n1_d3_1_x1045yDD7wB9h4A.png
+      const img_name = srcFile.split(':').slice(-1)[0];
+      // Re-fetch the vignette data
+      getVignettes(authState.accessToken!, img_address[0], img_address[1], img_address[2], img_name)
+        .then(rrsp => {
+          vignettes[editIndex] = rrsp.data[0];
+        })
+        .then(value => {
+          handleCloseEdit();
+        });
     } catch (err) {
       alert('Erreur sauvegarde mask: ' + err);
     }

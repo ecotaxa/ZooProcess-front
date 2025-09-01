@@ -106,7 +106,7 @@ export interface VignetteData {
   scan: string;
   matrix?: string; // both or none with mask
   mask?: string;
-  vignettes?: string[];
+  vignettes?: string[]; // sub-vignettes due to separation
 }
 
 export interface VignetteResponse {
