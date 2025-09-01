@@ -487,8 +487,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           <Button
             variant={tool === 'brush' ? 'faded' : undefined}
             onPress={() => setTool('brush')}
-            aria-keyshortcuts="b"
-            endContent={<Kbd>B</Kbd>}
+            aria-keyshortcuts="p"
+            endContent={<Kbd>P</Kbd>}
           >
             Pencil
           </Button>
@@ -522,7 +522,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
             aria-keyshortcuts="0"
             endContent={<Kbd>0</Kbd>}
           >
-            Reset
+            No Zoom
           </Button>
           <Button
             size="sm"
