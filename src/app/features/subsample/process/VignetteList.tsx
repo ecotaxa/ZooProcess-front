@@ -89,8 +89,6 @@ export default function VignetteList({
     void load();
   }, [editIndex, vignettes, folder]);
 
-  const [zoomMaskSrc, setZoomMaskSrc] = useState<string | null>(null);
-  // const selectedVignette = vignettes[selectedIndex];
   const [maskRefreshMap, setMaskRefreshMap] = useState<{ [mask: string]: number }>({});
   const [rowHeights, setRowHeights] = useState<{ [index: number]: number }>({});
 
@@ -107,21 +105,6 @@ export default function VignetteList({
     //   return updated;
     // });
   }, []);
-
-  useEffect(() => {
-    const selectedVignette = vignettes[selectedIndex];
-    if (selectedVignette?.mask) {
-      if (folder.startsWith('/api/vignette')) {
-        setZoomMaskSrc(`${folder}/${selectedVignette.mask}`);
-      } else {
-        setZoomMaskSrc(
-          `/${folder}/${selectedVignette.mask}`.replace(/\\/g, '/').replace(/\/\/+/, '/')
-        );
-      }
-    } else {
-      setZoomMaskSrc(null);
-    }
-  }, [selectedIndex, vignettes, folder]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -204,10 +187,6 @@ export default function VignetteList({
       listRef.current.scrollToItem(selectedIndex, 'center');
     }
   }, [selectedIndex]);
-
-  const handleMaskHover = useCallback((maskSrc: string | null) => {
-    setZoomMaskSrc(maskSrc);
-  }, []);
 
   // Item renderer pour react-window
   const Row = ({ index, style }: ListChildComponentProps) => {
@@ -331,20 +310,6 @@ export default function VignetteList({
       >
         {Row}
       </List>
-      {/* </div> */}
-      {zoomMaskSrc && (
-        <div
-          className="fixed left-0 top-0 h-full flex items-center z-50 pointer-events-none"
-          style={{ width: '320px' }}
-        >
-          <img
-            src={zoomMaskSrc}
-            alt="Mask zoom"
-            className="max-h-[80vh] max-w-[300px] m-6 rounded shadow-2xl bg-white"
-            draggable={false}
-          />
-        </div>
-      )}
       {editIndex !== null && (
         <Modal
           isOpen={true}
