@@ -98,19 +98,10 @@ export default function VignetItem({
   }, [isVisible, vignette.scan, vignette.mask, folder, vignette.matrix, onUpdate]);
 
   let scanSrc, maskSrc;
-  if (folder.startsWith('/vignette')) {
-    // TODO:remove
-    scanSrc = `${folder}/${vignette.scan}`;
-    maskSrc = vignette.mask
-      ? `${folder}/${vignette.mask}` + (maskRefreshKey ? `?t=${maskRefreshKey}` : '')
-      : '';
-  } else {
-    scanSrc = `/${folder}/${vignette.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
-    maskSrc = vignette.mask
-      ? `/${folder}/${vignette.mask}`.replace(/\\/g, '/').replace(/\/\/+/, '/') +
-        (maskRefreshKey ? `?t=${maskRefreshKey}` : '')
-      : '';
-  }
+  scanSrc = `${folder}/${vignette.scan}`;
+  maskSrc = vignette.mask
+    ? `${folder}/${vignette.mask}` + (maskRefreshKey ? `?t=${maskRefreshKey}` : '')
+    : '';
 
   return (
     <div
@@ -131,20 +122,14 @@ export default function VignetItem({
           <SmartImage src={scanSrc} alt="Scan" />
         </div>
         <div style={{ maxWidth: 200, maxHeight: 200 }}>
-          {maskSrc ? (
-            <SmartImage
-              src={maskSrc}
-              alt="Mask"
-              onClick={e => {
-                e.stopPropagation();
-                onEditMask?.();
-              }}
-            />
-          ) : (
-            <div className="w-[200px] h-[200px] flex items-center justify-center text-gray-400 text-xs rounded border bg-gray-200">
-              No mask
-            </div>
-          )}
+          <SmartImage
+            src={maskSrc || scanSrc!}
+            alt="Mask"
+            onClick={e => {
+              e.stopPropagation();
+              onEditMask?.();
+            }}
+          />
         </div>
         <div className="ml-8" />
         <div className="flex  gap-4 ml-4 items-end justify-end">

@@ -259,9 +259,9 @@ export default function VignetteList({
 
   const handleApply = async (matrix: number[][]) => {
     if (editIndex == null) return;
-    const gzFile = vignettes[editIndex].matrix;
+    const srcFile = vignettes[editIndex].scan;
     try {
-      await saveMaskViaApi(matrix, gzFile, folder);
+      await saveMaskViaApi(matrix, srcFile, folder);
       setMaskRefreshMap(prev => ({
         ...prev,
         [vignettes[editIndex].mask!]: Date.now(),

@@ -1,9 +1,9 @@
 import pako from 'pako';
 
-export async function saveMaskViaApi(matrix: number[][], gzFilename: string, folder: string) {
+export async function saveMaskViaApi(matrix: number[][], srcFilename: string, folder: string) {
   const blob = new Blob([getCompressedArrayFromMatrix(matrix)]);
 
-  const mask_post_url = folder.replace('vignette', 'vignette_mask') + '/' + gzFilename;
+  const mask_post_url = folder.replace('vignette', 'vignette_mask') + '/' + srcFilename;
   await sendBlobToServer(mask_post_url, 'application/gzip', blob);
 }
 
@@ -54,10 +54,10 @@ async function sendBlobToServer(url: string, mimeType: string, buffer: Blob) {
     });
 
     const result = await response.json();
-    console.log('Upload successful:', result);
+    // console.log('Upload successful:', result);
     return result;
   } catch (error) {
-    console.error('Error uploading buffer:', error);
+    // console.error('Error uploading buffer:', error);
     throw error;
   }
 }
