@@ -59,9 +59,17 @@ export function itemsFromProjects(response: Array<Project>) {
         if (subsample.state !== SubSampleStateEnum.EMPTY) {
           actions.push('View', 'Process');
         }
+
+        const displayName = subsample.name.startsWith(sample.name)
+          ? subsample.name.slice(sample.name.length + 1).trim()
+          : subsample.name;
+
         items.push({
           state: stateToLabel(subsample.state),
-          subsample,
+          subsample: {
+            ...subsample,
+            name: displayName,
+          },
           sample,
           project,
           actions: actions,
