@@ -89,9 +89,6 @@ export default function VignetItem({
       {/* pseudo grille */}
       <div className="flex gap-4">
         <div style={{ maxWidth: 200, maxHeight: 200 }}>
-          <SmartImage src={scanSrc} alt="Scan" />
-        </div>
-        <div style={{ maxWidth: 200, maxHeight: 200 }}>
           <SmartImage
             src={maskSrc || scanSrc}
             alt="Mask"
