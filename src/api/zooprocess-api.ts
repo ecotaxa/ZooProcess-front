@@ -51,9 +51,13 @@ function convertProjectDates(project: I.Project) {
   return project;
 }
 
-export async function getProjects(token: string): Promise<I.Projects> {
+export async function getProjects(
+  token: string,
+  depth: number | undefined = undefined
+): Promise<I.Projects> {
   const api = await axiosInstance({ token: token });
-  const response = await api.get<I.Projects>(`/projects`);
+  const url = '/projects' + (depth ? '?depth=' + depth : '');
+  const response = await api.get<I.Projects>(url);
   return response.data.map(project => {
     return convertProjectDates(project);
   });

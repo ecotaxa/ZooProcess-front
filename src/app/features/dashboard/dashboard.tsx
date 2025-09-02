@@ -1,10 +1,19 @@
-import React, { useState, useEffect, type FC } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo, type FC } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'app/stores/auth-context';
-import { getProjects } from 'api/zooprocess-api';
+import { getProjects, getProject } from 'api/zooprocess-api';
 import { Button } from '@heroui/button';
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react';
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Select,
+  SelectItem,
+} from '@heroui/react';
 import { itemsFromProjects, type ProjectItem } from 'app/features/dashboard/items.ts';
 
 export const Dashboard = () => {
@@ -12,13 +21,55 @@ export const Dashboard = () => {
   const navigate = useNavigate();
   const { authState, logout } = useAuth();
   const [projectItems, setProjectItems] = useState<ProjectItem[]>([]);
+  const [projectsIds, setProjectsIds] = useState<Array<{ id: string; name: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // URL query param sync
+  const [searchParams, setSearchParams] = useSearchParams();
+  const projectParam = searchParams.get('project');
+  const [selectedProjectId, setSelectedProjectId] = useState<string | 'all'>(projectParam ?? 'all');
+
+  type SelectOption = { id: string; name: string };
+  const selectOptions: SelectOption[] = useMemo(
+    () => [
+      { id: 'all', name: 'All projects' },
+      ...projectsIds.map(p => ({ id: p.id, name: p.name })),
+    ],
+    [projectsIds]
+  );
+
+  // Load shallow (id, name) list of projects for the selector
   useEffect(() => {
-    getProjects(authState.accessToken!)
-      .then(response => {
-        const items = itemsFromProjects(response);
+    const token = authState.accessToken!;
+    getProjects(token, 1)
+      .then(shallow => {
+        setProjectsIds(shallow.map(p => ({ id: p.id, name: p.name })));
+        // If URL contains an unknown project id, reset to 'all'
+        if (projectParam && !shallow.find(p => p.id === projectParam)) {
+          setSelectedProjectId('all');
+        }
+      })
+      .catch(error => {
+        setError(error.message);
+      });
+  }, [authState.accessToken]);
+
+  // Load table items depending on selection
+  useEffect(() => {
+    const token = authState.accessToken!;
+    setLoading(true);
+    setError(null);
+    const run = async () => {
+      try {
+        let items: ProjectItem[] = [];
+        if (selectedProjectId === 'all') {
+          const full = await getProjects(token);
+          items = itemsFromProjects(full);
+        } else if (selectedProjectId) {
+          const proj = await getProject(token, selectedProjectId);
+          items = itemsFromProjects([proj]);
+        }
         // Sort items by subsample updatedAt in descending order (if available)
         items.sort((a, b) => {
           const dateA = a.subsample.updatedAt.getTime();
@@ -26,15 +77,36 @@ export const Dashboard = () => {
           return dateB - dateA;
         });
         setProjectItems(items);
-      })
-      .catch(error => {
+      } catch (error: any) {
         setProjectItems([]);
-        setError(error.message);
-      })
-      .finally(() => {
+        setError(error.message ?? String(error));
+      } finally {
         setLoading(false);
+      }
+    };
+    run();
+  }, [authState.accessToken, selectedProjectId]);
+
+  // Reflect local selection in URL whenever it changes
+  useEffect(() => {
+    if (selectedProjectId === 'all') {
+      setSearchParams(params => {
+        params.delete('project');
+        return params;
       });
-  }, [authState.accessToken]); // Add authState.accessToken as a dependency
+    } else if (selectedProjectId) {
+      setSearchParams(params => {
+        params.set('project', selectedProjectId);
+        return params;
+      });
+    }
+  }, [selectedProjectId, setSearchParams]);
+
+  // Keep selection in sync if the user edits the URL manually
+  useEffect(() => {
+    const pid = searchParams.get('project');
+    setSelectedProjectId(pid ?? 'all');
+  }, [searchParams]);
 
   const handleLogout = () => {
     // Clear the auth state
@@ -45,14 +117,34 @@ export const Dashboard = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <Button
-          onPress={handleLogout}
-          className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
-        >
-          {t('SettingsPage:Logout')}
-        </Button>
+      <div className="flex flex-col gap-4 mb-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <Button
+            onPress={handleLogout}
+            className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
+          >
+            {t('SettingsPage:Logout')}
+          </Button>
+        </div>
+
+        {/* Project filter Select */}
+        <div className="flex items-center gap-3">
+          <Select
+            label="Filter by project"
+            selectedKeys={
+              selectedProjectId === 'all' ? new Set(['all']) : new Set([selectedProjectId])
+            }
+            onSelectionChange={keys => {
+              const key = Array.from(keys as Set<string>)[0];
+              setSelectedProjectId(key || 'all');
+            }}
+            items={selectOptions}
+            className="max-w-sm"
+          >
+            {item => <SelectItem key={item.id}>{item.name}</SelectItem>}
+          </Select>
+        </div>
       </div>
 
       {loading ? (
@@ -69,8 +161,8 @@ export const Dashboard = () => {
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
           <Table
             aria-label="Projects Table"
-            isStriped={true}
-            isHeaderSticky={true}
+            isStriped
+            isHeaderSticky
             classNames={{
               base: 'max-h-[90vh] overflow-y-auto',
               wrapper: 'p-0', // Default p-4 shows an ugly gap _above_ thead
@@ -82,7 +174,7 @@ export const Dashboard = () => {
               <TableColumn>Subsample</TableColumn>
               <TableColumn>Sample</TableColumn>
               <TableColumn>Updated At</TableColumn>
-              <TableColumn>Project</TableColumn>
+              <TableColumn>{selectedProjectId ? '' : 'Project'}</TableColumn>
             </TableHeader>
             <TableBody emptyContent={!loading && 'No projects found'}>
               {projectItems.map((item, index) => (
@@ -110,7 +202,7 @@ export const Dashboard = () => {
                   <TableCell>{item.subsample.name}</TableCell>
                   <TableCell>{item.sample.name}</TableCell>
                   <TableCell>{item.subsample.updatedAt.toLocaleDateString()}</TableCell>
-                  <TableCell>{item.project.name}</TableCell>
+                  <TableCell>{selectedProjectId ? '' : item.project.name}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
