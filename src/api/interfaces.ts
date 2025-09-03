@@ -104,6 +104,7 @@ export interface IExportSubsampleReq {
 
 export interface VignetteData {
   scan: string;
+  score: number;
   matrix?: string; // both or none with mask
   mask?: string;
   vignettes?: string[]; // sub-vignettes due to separation

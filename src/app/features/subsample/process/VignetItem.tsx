@@ -69,9 +69,9 @@ export default function VignetItem({
     return () => observer.disconnect();
   }, [onImageLoaded]);
 
-  let scanSrc, maskSrc;
-  scanSrc = `${folder}/${vignette.scan}`;
-  maskSrc = vignette.mask ? `${folder}/${vignette.mask}` : null;
+  const scanSrc = `${folder}/${vignette.scan}`;
+  const maskSrc = vignette.mask ? `${folder}/${vignette.mask}` : null;
+  const score = Math.round(vignette.score * 100);
 
   return (
     <div
@@ -98,7 +98,11 @@ export default function VignetItem({
             }}
           />
         </div>
-        <div style={{ writingMode: 'vertical-rl', textOrientation: 'upright' }}>{index}</div>
+        <div
+          style={{ writingMode: 'vertical-rl', textOrientation: 'upright', textAlign: 'center' }}
+        >
+          {score}
+        </div>
         <div className="flex gap-4 ml-0 items-end justify-end">
           {vignette.vignettes?.map((img, i) => (
             <SmartImage

@@ -5,10 +5,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from
 
 import VignetItem from './VignetItem.tsx';
 import type { VignetteData } from 'api/interfaces.ts';
-import {
-  readMatrixFromCompressedBinary,
-  saveMatrixAsCompressedBinary,
-} from 'app/lib/DrawCanvasTools.ts';
+import { readMatrixFromCompressedBinary } from 'app/lib/DrawCanvasTools.ts';
 import DrawCanvas from 'app/components/DrawCanvas.tsx';
 import { saveMaskViaApi } from 'api/save-mask.ts';
 import { getVignettes } from 'api/zooprocess-api.ts';
@@ -41,6 +38,9 @@ export default function VignetteList({
   const calculatedHeight = typeof window !== 'undefined' ? window.innerHeight * 0.78 : 800;
   // const [vignettes, setVignettes] = useState<VignetteData[]>(initialVignettes);
   const vignettes = initialVignettes;
+  vignettes.sort((a, b) => {
+    return b.score - a.score; // descending by score
+  });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [editIndex, setEditIndex] = useState<number | null>(null); // pour la modale édition
   const [editMatrix, setEditMatrix] = useState<number[][] | undefined>(undefined);
