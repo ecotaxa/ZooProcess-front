@@ -162,6 +162,18 @@ export async function exportToEcoTaxa(
   const response = await api.post<I.IExportSubsampleReq>(url, req);
   return response.data;
 }
+
+export async function deleteSubsample(
+  token: string,
+  projectId: string,
+  sampleId: string,
+  subsampleId: string
+): Promise<void> {
+  const api = await axiosInstance({ token: token });
+  const url = `/projects/${projectId}/samples/${sampleId}/subsamples/${subsampleId}`;
+  await api.delete(url);
+}
+
 /////////////////////////////////
 // UNUSED BELOW
 /////////////////////////////////

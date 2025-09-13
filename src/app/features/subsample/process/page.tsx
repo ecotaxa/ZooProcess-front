@@ -9,6 +9,7 @@ import {
   loginToEcoTaxa,
   markSubSample,
   processSubSample,
+  deleteSubsample,
 } from 'api/zooprocess-api.ts';
 import {
   type EcotaxaProjects,
@@ -40,6 +41,7 @@ import VignetteList from 'app/features/subsample/process/VignetteList.tsx';
 import { Button } from '@heroui/button';
 import { EcoTaxaLoginForm } from 'app/features/ecotaxa/ecotaxa-login-form';
 import { Autocomplete, AutocompleteItem } from '@heroui/autocomplete';
+import { useNavigate } from 'react-router-dom';
 
 const MULTIPLE_SCORE_THRESHOLD = 0.4;
 
@@ -51,6 +53,7 @@ export const SubsampleProcessPage = () => {
     'subsampleId',
   ]);
   const { authState } = useAuth();
+  const navigate = useNavigate();
 
   const noBc: BreadcrumbItem = { id: '', name: '' };
 
@@ -197,6 +200,13 @@ export const SubsampleProcessPage = () => {
 
   function onConfirmInvalidMask() {
     setShowInvalidModal(false);
+    deleteSubsample(authState.accessToken!, projectId, sampleId, subsampleId)
+      .then(() => {
+        navigate(`/dashboard?project=${encodeURIComponent(projectId)}`);
+      })
+      .catch(error => {
+        setError('Failed to delete subsample: ' + (error?.message || error));
+      });
   }
 
   function scanCheckPage() {
