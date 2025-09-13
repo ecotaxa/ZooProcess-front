@@ -1,7 +1,7 @@
 import React from 'react';
-import { Breadcrumbs, BreadcrumbItem } from '@heroui/breadcrumbs';
-import { Link } from '@heroui/link';
+import { Breadcrumbs, BreadcrumbItem as UIBreadcrumbItem } from '@heroui/breadcrumbs';
 import type { FC } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
 export interface BreadcrumbItem {
   id: string;
@@ -14,14 +14,6 @@ export interface BreadcrumbsProps {
 }
 
 export const ProjectBreadcrumbs: FC<BreadcrumbsProps> = ({ items /*,name*/, separator = '>' }) => {
-  const makeBreadcrumbItem = (item: string | BreadcrumbItem) => {
-    if (typeof item === 'string') {
-      return <BreadcrumbItem key={item}>{item}</BreadcrumbItem>;
-    } else {
-      return <BreadcrumbItem key={item.id}>{item.name || item.id}</BreadcrumbItem>;
-    }
-  };
-
   return (
     <Breadcrumbs
       separator={separator}
@@ -29,7 +21,25 @@ export const ProjectBreadcrumbs: FC<BreadcrumbsProps> = ({ items /*,name*/, sepa
         separator: 'px-2',
       }}
     >
-      {items.map(item => makeBreadcrumbItem(item))}
+      {items.map((item, idx) => {
+        const key = item.id;
+        const label = item.name || item.id;
+        // First breadcrumb links to dashboard with the project preselected
+        if (idx === 0) {
+          return (
+            <UIBreadcrumbItem key={key}>
+              <RouterLink to={`/dashboard?project=${encodeURIComponent(item.id)}`}>
+                {label}
+              </RouterLink>
+            </UIBreadcrumbItem>
+          );
+        }
+        return (
+          <UIBreadcrumbItem isDisabled={true} key={key}>
+            {label}
+          </UIBreadcrumbItem>
+        );
+      })}
     </Breadcrumbs>
   );
 };

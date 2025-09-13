@@ -308,7 +308,7 @@ export const SubsampleProcessPage = () => {
         {/*Scan processing*/}
         <ProjectBreadcrumbs items={breadcrumbsList}></ProjectBreadcrumbs>
         <SubsampleProcessTimeline current={step ?? -1}></SubsampleProcessTimeline>
-        {subsample && subsample.state}
+        {subsample?.state}
       </CardHeader>
       <CardBody>
         {error && <p className="text-red-500">{error}</p>}

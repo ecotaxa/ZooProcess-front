@@ -10,9 +10,6 @@ import DrawCanvas from 'app/components/DrawCanvas.tsx';
 import { saveMaskViaApi } from 'api/save-mask.ts';
 import { getVignettes } from 'api/zooprocess-api.ts';
 import { useAuth } from 'app/stores/auth-context.tsx';
-// import { X } from 'framer-motion/dist/types.d-CtuPurYT';
-
-// const VignetItem = dynamic(() => import('./VignetItem'), { ssr: false })
 
 async function loadMatrixFromGz(url: string): Promise<number[][]> {
   const res = await fetch(url);
