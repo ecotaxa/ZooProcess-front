@@ -19,7 +19,7 @@ export function ScanCheckPage(
       <CardBody className="p-2">
         <div className="bg-100 p-2">
           <div>
-            <MyImage src={params.mask_url} alt="Mask" legend="Mask" onLoad={imgDone} />
+            <MyImage src={params.mask_url} alt="Mask" legend="" onLoad={imgDone} />
           </div>
           {!isLoading && (
             <CardFooter className="flex justify-between py-3">

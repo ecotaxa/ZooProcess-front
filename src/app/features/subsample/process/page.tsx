@@ -25,7 +25,16 @@ import { useAuth } from 'app/stores/auth-context.tsx';
 import { type BreadcrumbItem, ProjectBreadcrumbs } from 'app/components/breadcrumbs.tsx';
 import { useRequiredParams } from 'app/lib/router-utils.ts';
 import { SubsampleProcessTimeline } from 'app/features/subsample/process/timeline.tsx';
-import { Card, CardBody, CardHeader } from '@heroui/react';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from '@heroui/react';
 import { ScanCheckPage } from 'app/features/subsample/process/process.tsx';
 import VignetteList from 'app/features/subsample/process/VignetteList.tsx';
 import { Button } from '@heroui/button';
@@ -55,6 +64,7 @@ export const SubsampleProcessPage = () => {
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   // Common task
   const [task, setTask] = useState<ITask | null>(null);
+  const [showInvalidModal, setShowInvalidModal] = useState(false);
 
   function launchProcess() {
     processSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
@@ -168,7 +178,13 @@ export const SubsampleProcessPage = () => {
     subsampleMark('separated');
   }
 
-  function onMaskInvalid() {}
+  function onMaskInvalid() {
+    setShowInvalidModal(true);
+  }
+
+  function onConfirmInvalidMask() {
+    setShowInvalidModal(false);
+  }
 
   function scanCheckPage() {
     return (
@@ -321,6 +337,31 @@ export const SubsampleProcessPage = () => {
         {step == 1 && separatePage()}
         {step == 2 && uploadPage()}
       </CardBody>
+      {showInvalidModal && (
+        <Modal
+          isOpen={true}
+          onClose={() => setShowInvalidModal(false)}
+          backdrop="blur"
+          placement="center"
+          scrollBehavior={'inside'}
+          isDismissable={false}
+        >
+          <ModalContent>
+            <ModalHeader>Invalid mask</ModalHeader>
+            <ModalBody>
+              <p>
+                The mask will marked as invalid. Please return to ZooProcess v8 and re-scan the
+                subsample.
+              </p>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onPress={onConfirmInvalidMask}>
+                Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
     </Card>
   );
 };
