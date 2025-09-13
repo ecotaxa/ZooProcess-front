@@ -84,11 +84,34 @@ export default function VignetteList({
 
   const [rowHeights, setRowHeights] = useState<{ [index: number]: number }>({});
 
+  // Background image preload cache
+  const preloadedUrlsRef = useRef<Set<string>>(new Set());
+
   const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
 
   // to the automatic scroll
   const listRef = useRef<any>(null);
   const loadRequestIdRef = useRef(0);
+
+  // Preload a single URL once
+  const preloadUrl = useCallback((url: string) => {
+    if (typeof window === 'undefined') return;
+    const cache = preloadedUrlsRef.current;
+    if (!url || cache.has(url)) return;
+    cache.add(url);
+    const run = () => {
+      const img = new window.Image();
+      img.decoding = 'async';
+      img.loading = 'eager' as any; // hint only
+      img.src = url;
+      // no onload needed; browser will cache
+    };
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(run, { timeout: 1500 });
+    } else {
+      setTimeout(run, 20);
+    }
+  }, []);
 
   const updateVignette = useCallback((index: number, newData: Partial<VignetteData>) => {
     // setVignettes(prev => {
@@ -179,6 +202,42 @@ export default function VignetteList({
       listRef.current.scrollToItem(selectedIndex, 'center');
     }
   }, [selectedIndex]);
+
+  // Global preload: fetch ALL images (mask and scan) in background, chunked
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!vignettes || !vignettes.length) return;
+
+    let canceled = false;
+    const CHUNK = 50; // number of items per idle slice
+    let i = 0;
+
+    const processChunk = () => {
+      if (canceled) return;
+      const end = Math.min(i + CHUNK, vignettes.length);
+      for (let j = i; j < end; j++) {
+        const v = vignettes[j];
+        if (!v) continue;
+        if (v.scan) preloadUrl(`${folder}/${v.scan}`);
+        if (v.mask) preloadUrl(`${folder}/${v.mask}`);
+      }
+      i = end;
+      if (i < vignettes.length) {
+        if ('requestIdleCallback' in window) {
+          (window as any).requestIdleCallback(processChunk, { timeout: 1500 });
+        } else {
+          setTimeout(processChunk, 20);
+        }
+      }
+    };
+
+    // start immediately to not wait for scroll events
+    processChunk();
+
+    return () => {
+      canceled = true;
+    };
+  }, [vignettes, folder, preloadUrl]);
 
   // Item renderer pour react-window
   const Row = ({ index, style }: ListChildComponentProps) => {
