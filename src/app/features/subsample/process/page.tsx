@@ -1,4 +1,4 @@
-import React, { type Key, useEffect, useState } from 'react';
+import React, { type Key, useEffect, useMemo, useState } from 'react';
 import {
   exportToEcoTaxa,
   getProject,
@@ -41,6 +41,8 @@ import { Button } from '@heroui/button';
 import { EcoTaxaLoginForm } from 'app/features/ecotaxa/ecotaxa-login-form';
 import { Autocomplete, AutocompleteItem } from '@heroui/autocomplete';
 
+const MULTIPLE_SCORE_THRESHOLD = 0.4;
+
 export const SubsampleProcessPage = () => {
   // Get the parameters from the URL
   const { projectId, sampleId, subsampleId } = useRequiredParams([
@@ -65,6 +67,13 @@ export const SubsampleProcessPage = () => {
   // Common task
   const [task, setTask] = useState<ITask | null>(null);
   const [showInvalidModal, setShowInvalidModal] = useState(false);
+
+  // Derived counts reactively computed from vignettes
+  const vignettesCount = useMemo(() => (vignettes ? vignettes.length : null), [vignettes]);
+  const vignettesMultipleCount = useMemo(() => {
+    if (!vignettes) return null;
+    return vignettes.filter(v => (v.score ?? 0) > MULTIPLE_SCORE_THRESHOLD).length;
+  }, [vignettes]);
 
   function launchProcess() {
     processSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
@@ -118,6 +127,7 @@ export const SubsampleProcessPage = () => {
     if (subsample === null) {
       return;
     }
+
     if (subsample.state === SubSampleStateEnum.ACQUIRED) {
       setStep(0);
       launchProcess();
@@ -125,6 +135,9 @@ export const SubsampleProcessPage = () => {
       setStep(0);
       const maskScan = subsample.scan.find(s => s.type === ScanTypeEnum.V10_MASK && !s.deleted);
       setMaskScan(maskScan ?? null);
+      getVignettes(authState.accessToken!, projectId, sampleId, subsampleId).then(rrsp => {
+        setVignettes(rrsp.data ?? null);
+      });
     } else if (subsample.state === SubSampleStateEnum.MSK_APPROVED) {
       setStep(1);
       launchProcess();
@@ -189,6 +202,13 @@ export const SubsampleProcessPage = () => {
   function scanCheckPage() {
     return (
       <>
+        <div className="flex items-center gap-2">
+          {vignettesCount !== null && (
+            <span className="text-sm text-gray-600">
+              {vignettesCount} objects of which {vignettesMultipleCount ?? 0} may be multiple
+            </span>
+          )}
+        </div>
         {!maskScan && <p className="text-gray-500">Mask not available.</p>}
         {maskScan && (
           <ScanCheckPage mask_url={maskScan.url} onScanOK={onMaskValid} onScanKO={onMaskInvalid} />
