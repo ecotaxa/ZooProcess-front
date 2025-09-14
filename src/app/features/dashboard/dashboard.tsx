@@ -15,6 +15,7 @@ import {
   SelectItem,
 } from '@heroui/react';
 import { itemsFromProjects, type ProjectItem } from 'app/features/dashboard/items.ts';
+import { ZooprocessIcon } from '../../../icons';
 
 export const Dashboard = () => {
   const { t } = useTranslation();
@@ -182,23 +183,41 @@ export const Dashboard = () => {
                   key={`${item.project.id}-${item.sample.id}-${item.subsample.id}-${index}`}
                 >
                   <TableCell>
-                    <div className="flex space-x-2">
-                      {item.actions.map((action: string) => (
+                    <div className="flex items-center space-x-2">
+                      {item.viewable && (
                         <Link
-                          key={action}
-                          to={`/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}/${action}`}
+                          to={`/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}/View`}
                         >
                           <Button
                             size="sm"
                             className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-3 rounded-md transition-colors"
                           >
-                            {action}
+                            View
                           </Button>
                         </Link>
-                      ))}
+                      )}
+                      {item.action && (
+                        <Link
+                          to={`/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}/Process`}
+                        >
+                          <Button
+                            size="sm"
+                            aria-label={item.buttonTitle}
+                            title={item.buttonTitle}
+                            className="w-10 h-10 min-w-[2.5rem] p-0 rounded-full bg-blue-200 hover:bg-blue-400 text-white flex items-center justify-center"
+                          >
+                            <ZooprocessIcon
+                              name={item.icon!}
+                              size={24}
+                              className="text-white"
+                              label={item.buttonTitle}
+                            />
+                          </Button>
+                        </Link>
+                      )}
                     </div>
                   </TableCell>
-                  <TableCell>{item.state}</TableCell>
+                  <TableCell>{item.stateLabel}</TableCell>
                   <TableCell>{item.subsample.name}</TableCell>
                   <TableCell>{item.sample.name}</TableCell>
                   <TableCell>{item.subsample.updatedAt.toLocaleDateString()}</TableCell>

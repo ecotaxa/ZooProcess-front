@@ -5,36 +5,42 @@ import {
   type SubSample,
   SubSampleStateEnum,
 } from 'api/interfaces';
+import type { ZPIconName } from '../../../icons';
 
 // Interface for flattened project structure
 export interface ProjectItem {
-  state: string;
+  stateLabel: string;
+  buttonTitle?: string;
   subsample: SubSample;
   sample: Sample;
   project: Project;
-  actions: Array<string>;
+  viewable: boolean; // can link to view page
+  action?: 'process'; // main action that triggers icon in UI
+  icon?: ZPIconName; // optional icon name to represent state/action
 }
 
-function stateToLabel(state: SubSampleStateEnum) {
+function stateToLabel(
+  state: SubSampleStateEnum
+): [string, 'process' | undefined, ZPIconName | undefined, string | undefined] {
   switch (state) {
     case SubSampleStateEnum.EMPTY:
-      return 'No scan';
+      return ['No scan', undefined, 'pages', undefined];
     case SubSampleStateEnum.ACQUIRED:
-      return 'Scanned';
+      return ['Scanned', 'process', 'process', 'Approve mask'];
     case SubSampleStateEnum.SEGMENTED:
-      return 'Mask available';
+      return ['Mask available', 'process', 'process', 'Approve mask'];
     case SubSampleStateEnum.MSK_APPROVED:
-      return 'Mask approved';
+      return ['Mask approved', 'process', 'wave', 'Approve multiples'];
     case SubSampleStateEnum.MULTIPLES_GENERATED:
-      return 'Multiples available';
+      return ['Multiples available', 'process', 'wave', 'Approve multiples'];
     case SubSampleStateEnum.SEPARATION_VALIDATION_DONE:
-      return 'Multiples approved';
+      return ['Multiples approved', 'process', 'upload', 'Upload'];
     case SubSampleStateEnum.UPLOADING:
-      return 'Uploading to EcoTaxa';
+      return ['Uploading to EcoTaxa', undefined, 'upload', undefined];
     case SubSampleStateEnum.UPLOADED:
-      return 'Uploaded to EcoTaxa';
+      return ['Uploaded to EcoTaxa', undefined, 'upload', undefined];
     default:
-      return state;
+      return [state, undefined, undefined, undefined];
   }
 }
 
@@ -55,24 +61,27 @@ export function itemsFromProjects(response: Array<Project>) {
       for (const subsample of sample.subsample) {
         const nb_scans = subsample.scan.filter(scan => scan.type == ScanTypeEnum.SCAN).length;
         // Add an entry with count of "scans"
-        const actions = [];
-        if (subsample.state !== SubSampleStateEnum.EMPTY) {
-          actions.push('View', 'Process');
-        }
+        const viewable = subsample.state !== SubSampleStateEnum.EMPTY;
+        const [stateLabel, tupleAction, icon, title] = stateToLabel(subsample.state);
+        const action = tupleAction ?? (viewable ? 'process' : undefined);
+        const buttonTitle = action ? (title ?? 'foo') : undefined;
 
         const displayName = subsample.name.startsWith(sample.name)
           ? subsample.name.slice(sample.name.length + 1).trim()
           : subsample.name;
 
         items.push({
-          state: stateToLabel(subsample.state),
+          stateLabel,
+          buttonTitle,
           subsample: {
             ...subsample,
             name: displayName,
           },
           sample,
           project,
-          actions: actions,
+          viewable,
+          action,
+          icon,
         });
       }
     }

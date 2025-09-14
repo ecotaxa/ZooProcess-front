@@ -2,6 +2,7 @@ import * as React from 'react';
 // import DebugStore from '@/lib/debug-store.ts';
 // import { debug } from '@/config/settings.js';
 import 'app/lib/i18n.config';
+import { ZooprocessSprite } from '../icons/zooprocess-sprite';
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -22,5 +23,10 @@ export function Providers({ children }: Readonly<ProvidersProps>) {
     return () => window.removeEventListener('keydown', handleKey);
   }, []);
 
-  return <>{children}</>;
+  return (
+    <>
+      <ZooprocessSprite />
+      {children}
+    </>
+  );
 }
