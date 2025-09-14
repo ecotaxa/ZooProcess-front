@@ -143,6 +143,7 @@ export const SubsampleProcessPage = () => {
       });
     } else if (subsample.state === SubSampleStateEnum.MSK_APPROVED) {
       setStep(1);
+      setVignettes(null); // There is some blinking as the vignettes were fetched before the subsample was marked as approved
       launchProcess();
     } else if (subsample.state === SubSampleStateEnum.MULTIPLES_GENERATED) {
       setStep(1);
