@@ -9,12 +9,12 @@ import type { ZPIconName } from '../../../icons';
 
 // Interface for flattened project structure
 export interface ProjectItem {
+  project: Project;
+  sample: Sample;
+  subsample: SubSample;
   stateLabel: string;
   buttonTitle?: string;
-  subsample: SubSample;
-  sample: Sample;
-  project: Project;
-  viewable: boolean; // can link to view page
+  viewable: boolean; // can link to the view page
   action?: 'process'; // main action that triggers icon in UI
   icon?: ZPIconName; // optional icon name to represent state/action
 }

@@ -17,6 +17,49 @@ import {
 import { itemsFromProjects, type ProjectItem } from 'app/features/dashboard/items.ts';
 import { ZooprocessIcon } from '../../../icons';
 
+const renderActionButton = (item: ProjectItem) => {
+  const base = `/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}`;
+  const btns = [
+    { icon: 'instrument' as const, label: 'Instrument' },
+    { icon: 'process' as const, label: 'Process' },
+    { icon: 'wave' as const, label: 'Wave' },
+    { icon: 'upload' as const, label: 'Upload' },
+  ];
+  const activeIcon = btns.some(b => b.icon === item.icon)
+    ? (item.icon as (typeof btns)[number]['icon'])
+    : undefined;
+  const activeIndex = activeIcon ? btns.findIndex(b => b.icon === activeIcon) : -1;
+  return (
+    <Link to={`${base}/Process`}>
+      <Button
+        size="sm"
+        aria-label={item.buttonTitle ?? 'Process'}
+        title={item.buttonTitle ?? 'Process'}
+        className="flex items-center bg-gray-20"
+      >
+        <div className="flex items-center gap-0">
+          {btns.map((b, i) => {
+            const isActive = b.icon === activeIcon;
+            const isBeforeActive = activeIndex >= 0 && i < activeIndex;
+            const name = b.icon;
+            const iconClass = isActive ? 'text-blue-700 opacity-80' : 'text-gray-500 opacity-50';
+            const wrapClass = isActive
+              ? 'p-0.5 bg-blue-300'
+              : isBeforeActive
+                ? 'p-0.5 bg-green-100'
+                : 'p-0.5';
+            return (
+              <span key={b.icon} className={wrapClass}>
+                <ZooprocessIcon name={name} size={32} className={iconClass} />
+              </span>
+            );
+          })}
+        </div>
+      </Button>
+    </Link>
+  );
+};
+
 export const Dashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -196,25 +239,7 @@ export const Dashboard = () => {
                           </Button>
                         </Link>
                       )}
-                      {item.action && (
-                        <Link
-                          to={`/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}/Process`}
-                        >
-                          <Button
-                            size="sm"
-                            aria-label={item.buttonTitle}
-                            title={item.buttonTitle}
-                            className="w-10 h-10 min-w-[2.5rem] p-0 rounded-full bg-blue-200 hover:bg-blue-400 text-white flex items-center justify-center"
-                          >
-                            <ZooprocessIcon
-                              name={item.icon!}
-                              size={24}
-                              className="text-white"
-                              label={item.buttonTitle}
-                            />
-                          </Button>
-                        </Link>
-                      )}
+                      {renderActionButton(item)}
                     </div>
                   </TableCell>
                   <TableCell>{item.stateLabel}</TableCell>
