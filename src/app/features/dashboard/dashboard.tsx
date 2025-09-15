@@ -16,6 +16,7 @@ import {
 } from '@heroui/react';
 import { itemsFromProjects, type ProjectItem } from 'app/features/dashboard/items.ts';
 import { ZooprocessIcon } from '../../../icons';
+import { EyeIcon } from '@heroicons/react/24/outline';
 
 const renderActionButton = (item: ProjectItem) => {
   const base = `/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}`;
@@ -232,10 +233,15 @@ export const Dashboard = () => {
                           to={`/project/${item.project.id}/sample/${item.sample.id}/subsample/${item.subsample.id}/View`}
                         >
                           <Button
+                            isIconOnly
                             size="sm"
-                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-3 rounded-md transition-colors"
+                            variant="solid"
+                            color="primary"
+                            radius="lg"
+                            aria-label="View"
+                            title="View"
                           >
-                            View
+                            <EyeIcon className="w-6 h-6" />
                           </Button>
                         </Link>
                       )}
