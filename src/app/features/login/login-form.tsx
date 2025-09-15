@@ -73,11 +73,7 @@ export const LoginForm = () => {
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   return (
-    <CardWrapper
-      headerLabel={t('Welcome')}
-      backButtonLabel={t('BackButtonLabel')}
-      backButtonHref="/auth/register"
-    >
+    <CardWrapper headerLabel={t('Welcome')} backButtonLabel="" backButtonHref="/auth/register">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
@@ -130,9 +126,9 @@ export const LoginForm = () => {
                     />
                   </FormControl>
                   <FormMessage />
-                  <Link href="/auth/reset" size="sm" color="primary">
-                    {t('ForgotPassword')}
-                  </Link>
+                  {/*<Link href="/auth/reset" size="sm" color="primary">*/}
+                  {/*  {t('ForgotPassword')}*/}
+                  {/*</Link>*/}
                 </FormItem>
               )}
             />
