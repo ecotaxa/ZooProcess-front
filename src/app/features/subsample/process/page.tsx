@@ -1,7 +1,6 @@
 import React, { type Key, useEffect, useMemo, useState } from 'react';
 import {
   exportToEcoTaxa,
-  getProject,
   getSubSample,
   getTask,
   getVignettes,
@@ -25,6 +24,7 @@ import {
 import { useAuth } from 'app/stores/auth-context.tsx';
 import { type BreadcrumbItem, ProjectBreadcrumbs } from 'app/components/breadcrumbs.tsx';
 import { useRequiredParams } from 'app/lib/router-utils.ts';
+import { fetchSubsampleBreadcrumbsAndData } from 'app/lib/breadcrumbs-utils.ts';
 import { SubsampleProcessTimeline } from 'app/features/subsample/process/timeline.tsx';
 import {
   Card,
@@ -100,26 +100,10 @@ export const SubsampleProcessPage = () => {
   }
 
   useEffect(() => {
-    // Fetch the full project and navigate the tree manually
-    getProject(authState.accessToken!, projectId)
-      .then(projectData => {
-        const newBreadcrumbsList: BreadcrumbItem[] = [
-          { id: projectData.id, name: projectData.name },
-        ];
-
-        // Navigate through the project structure to find the specific subsample
-        const sample = projectData.samples.find(sample => sample.id === sampleId);
-        if (!sample) {
-          throw new Error(`Sample with ID ${sampleId} not found in project`);
-        }
-        newBreadcrumbsList.push({ id: sample.id, name: sample.name });
-        const subsampleData = sample.subsample.find(subsample => subsample.id === subsampleId);
-        if (!subsampleData) {
-          throw new Error(`Subsample with ID ${subsampleId} not found in sample`);
-        }
-        newBreadcrumbsList.push({ id: subsampleData.id, name: subsampleData.name });
-        setBreadcrumbsList(newBreadcrumbsList);
-        setSubsample(subsampleData);
+    fetchSubsampleBreadcrumbsAndData(authState.accessToken!, projectId, sampleId, subsampleId)
+      .then(({ breadcrumbs, subsample }) => {
+        setBreadcrumbsList(breadcrumbs);
+        setSubsample(subsample);
       })
       .catch(error => {
         setError('Failed to fetch project data: ' + error.message);
