@@ -102,7 +102,18 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       setCanvasSize({ width, height });
       setImage(img);
       if (shouldReset) {
-        setZoom(1);
+        // Set initial zoom so the image fills roughly 3/4 of the container
+        let initialZoom = 1;
+        const container = containerRef.current;
+        if (container) {
+          const cw = container.clientWidth;
+          const ch = container.clientHeight;
+          if (cw > 0 && ch > 0) {
+            const fitScale = 0.75 * Math.min(cw / width, ch / height);
+            initialZoom = clamp(fitScale, MIN_ZOOM, MAX_ZOOM);
+          }
+        }
+        setZoom(initialZoom);
         setScroll({ x: 0, y: 0 });
       }
       prevImagePathRef.current = imagePath;
