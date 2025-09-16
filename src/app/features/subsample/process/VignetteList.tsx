@@ -74,7 +74,7 @@ export default function VignetteList({
       }
     };
 
-    // Clear previous matrix while loading (optional)
+    // Clear the previous matrix while loading (optional)
     setEditMatrix(undefined);
     void load();
   }, [editIndex, vignettes, folder]);
@@ -379,11 +379,9 @@ export default function VignetteList({
                 initialMatrix={editMatrix}
                 strokeColor="red"
                 onApply={handleApply}
+                onCancel={handleCloseEdit}
               />
             </ModalBody>
-            <ModalFooter>
-              <Button onPress={handleCloseEdit}>Close</Button>
-            </ModalFooter>
           </ModalContent>
         </Modal>
       )}

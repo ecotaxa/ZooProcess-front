@@ -6,6 +6,7 @@ import { Kbd, Slider } from '@heroui/react';
 interface DrawCanvasProps {
   imagePath: string;
   onApply?: (matrix: number[][]) => void;
+  onCancel?: () => void;
   strokeColor?: string;
   initialMatrix?: number[][];
 }
@@ -23,6 +24,7 @@ const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(ma
 const DrawCanvas: React.FC<DrawCanvasProps> = ({
   imagePath,
   onApply,
+  onCancel,
   strokeColor = 'red',
   initialMatrix,
 }) => {
@@ -208,6 +210,12 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       if (e.key === '0') {
         setZoom(1);
         setScroll({ x: 0, y: 0 });
+      }
+      if (e.key === 'Escape') {
+        if (onCancel) {
+          e.preventDefault();
+          onCancel();
+        }
       }
     };
 
@@ -511,6 +519,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
             variant={tool === 'brush' ? 'faded' : undefined}
             onPress={() => setTool('brush')}
             aria-keyshortcuts="p"
+            title="Pencil (P)"
+            aria-label="Select Pencil tool (shortcut: P)"
             endContent={<Kbd>P</Kbd>}
           >
             Pencil
@@ -519,12 +529,20 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
             variant={tool === 'eraser' ? 'faded' : undefined}
             onPress={() => setTool('eraser')}
             aria-keyshortcuts="e"
+            title="Eraser (E)"
+            aria-label="Select Eraser tool (shortcut: E)"
             endContent={<Kbd>E</Kbd>}
           >
             Eraser
           </Button>
         </RadioGroup>
-        <Button onPress={() => cleanMatrix()} aria-keyshortcuts="c" endContent={<Kbd>C</Kbd>}>
+        <Button
+          onPress={() => cleanMatrix()}
+          aria-keyshortcuts="c"
+          title="Clear drawing (C)"
+          aria-label="Clear the drawing (shortcut: C)"
+          endContent={<Kbd>C</Kbd>}
+        >
           Clear
         </Button>
         <ButtonGroup size="sm" className="gap-0 flex-col items-stretch">
@@ -532,6 +550,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
             size="sm"
             onPress={() => zoomStep(-1)}
             aria-keyshortcuts="-"
+            title="Zoom out (-)"
+            aria-label="Zoom out (shortcut: -)"
             endContent={<Kbd>-</Kbd>}
           >
             Zoom out
@@ -543,6 +563,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
               setScroll({ x: 0, y: 0 });
             }}
             aria-keyshortcuts="0"
+            title="Reset zoom (0)"
+            aria-label="Reset zoom to 100% (shortcut: 0)"
             endContent={<Kbd>0</Kbd>}
           >
             No Zoom
@@ -551,6 +573,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
             size="sm"
             onPress={() => zoomStep(1)}
             aria-keyshortcuts="+"
+            title="Zoom in (+)"
+            aria-label="Zoom in (shortcut: +)"
             endContent={<Kbd>+</Kbd>}
           >
             Zoom in
@@ -579,7 +603,14 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           tabIndex={-1}
           onMouseLeave={() => setTimeout(() => containerRef.current?.focus(), 0)}
         />
-        <Button onPress={applyMatrix}>Save</Button>
+        {onCancel && (
+          <Button onPress={onCancel} title="Cancel" aria-label="Cancel editing" variant="faded">
+            Cancel
+          </Button>
+        )}
+        <Button onPress={applyMatrix} title="Save" aria-label="Save the current drawing">
+          Save
+        </Button>
       </div>
     </div>
   );
