@@ -49,6 +49,9 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const [updateKey, setUpdateKey] = useState(0);
   const forceUpdate = () => setUpdateKey(k => k + 1);
 
+  // Device Pixel Ratio for HiDPI-aware canvases
+  const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
+
   // Compute scroll bounds for a given zoom so that when zoom < 1 the image can be centered
   const getScrollBounds = (z: number) => {
     const viewW = canvasSize.width / z;
@@ -123,21 +126,23 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
   useEffect(() => {
     const ctx = canvasRef.current?.getContext('2d');
-    if (ctx && image) {
+    if (ctx && image && canvasRef.current) {
       ctx.save();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
+      // Clear the full backing store (device pixels)
+      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       ctx.imageSmoothingEnabled = false; // Disable image smoothing for pixel-perfect rendering
-      ctx.setTransform(zoom, 0, 0, zoom, 0, 0);
+      // Scale drawing for device pixel ratio; visual zoom is applied via CSS size
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.drawImage(image, 0, 0);
-      // Draw an inner frame around the canvas
+      // Draw an inner frame around the canvas in logical pixels
       ctx.lineWidth = 2;
       ctx.strokeStyle = '#ccc';
       const inset = ctx.lineWidth / 2; // keep stroke fully inside the canvas
       ctx.strokeRect(inset, inset, canvasSize.width - 2 * inset, canvasSize.height - 2 * inset);
       ctx.restore();
     }
-  }, [image, scroll, zoom, canvasSize]);
+  }, [image, scroll, zoom, canvasSize, dpr]);
 
   useEffect(() => {
     const ctx = overlayRef.current?.getContext('2d');
@@ -147,7 +152,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, overlayRef.current!.width, overlayRef.current!.height);
 
-    ctx.setTransform(zoom, 0, 0, zoom, 0, 0);
+    // Draw in logical pixel space and scale to device pixels via DPR
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = strokeColor;
 
     for (let y = 0; y < persistentMatrixRef.current.length; y++) {
@@ -159,7 +165,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     }
 
     ctx.restore();
-  }, [canvasSize, strokeColor, zoom, scroll, updateKey]);
+  }, [canvasSize, strokeColor, zoom, scroll, updateKey, dpr]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -449,20 +455,23 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         >
           <canvas
             ref={canvasRef}
-            width={canvasSize.width * zoom}
-            height={canvasSize.height * zoom}
+            width={Math.floor(canvasSize.width * dpr)}
+            height={Math.floor(canvasSize.height * dpr)}
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
               zIndex: 1,
               border: '1px solid #ccc',
+              // Visual size follows zoom via CSS, backing store stays at image size × DPR
+              width: canvasSize.width * zoom,
+              height: canvasSize.height * zoom,
             }}
           />
           <canvas
             ref={overlayRef}
-            width={canvasSize.width * zoom}
-            height={canvasSize.height * zoom}
+            width={Math.floor(canvasSize.width * dpr)}
+            height={Math.floor(canvasSize.height * dpr)}
             onMouseDown={handlePointerDown}
             onMouseUp={handlePointerUp}
             onMouseMove={handlePointerMove}
@@ -474,6 +483,9 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
               zIndex: 2,
               cursor: getCursor(),
               border: '1px solid #ccc',
+              // Visual size follows zoom via CSS, backing store stays at image size × DPR
+              width: canvasSize.width * zoom,
+              height: canvasSize.height * zoom,
             }}
           />
         </div>
