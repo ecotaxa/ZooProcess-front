@@ -51,6 +51,9 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const [updateKey, setUpdateKey] = useState(0);
   const forceUpdate = () => setUpdateKey(k => k + 1);
 
+  // Track whether the user modified the overlay since the image was loaded
+  const [dirtySinceLoad, setDirtySinceLoad] = useState(false);
+
   // Device Pixel Ratio for HiDPI-aware canvases
   const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
 
@@ -121,6 +124,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         setZoom(initialZoom);
         setScroll({ x: 0, y: 0 });
       }
+      // New image or matrix loaded -> reset dirty flag
+      setDirtySinceLoad(false);
       prevImagePathRef.current = imagePath;
       forceUpdate();
     };
@@ -211,11 +216,9 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         setZoom(1);
         setScroll({ x: 0, y: 0 });
       }
-      if (e.key === 'Escape') {
-        if (onCancel) {
-          e.preventDefault();
-          onCancel();
-        }
+      if (e.key === 'Escape' || e.key === 'Enter') {
+        e.preventDefault();
+        applyMatrix();
       }
     };
 
@@ -225,10 +228,10 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown, { capture: true });
     window.addEventListener('keyup', handleKeyUp);
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown, { capture: true });
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, [canvasSize, scroll, zoom]);
@@ -307,16 +310,21 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         }
       }
     }
+    // Mark as modified on any drawing action
+    setDirtySinceLoad(true);
     forceUpdate();
   };
 
   const cleanMatrix = () => {
     if (!persistentMatrixRef.current) return;
     persistentMatrixRef.current = persistentMatrixRef.current.map(row => row.fill(0));
+    setDirtySinceLoad(true);
     forceUpdate();
   };
 
   const handlePointerDown = (e: React.MouseEvent) => {
+    // Ensure canvas wrapper has keyboard focus so Esc key works while interacting
+    canvasWrapperRef.current?.focus();
     // Start panning with middle mouse or Space+Left
     const isMiddle = e.button === 1;
     const isSpaceLeft = e.button === 0 && spaceHeldRef.current;
@@ -390,6 +398,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     if (!persistentMatrixRef.current) return;
     const matrix = persistentMatrixRef.current.map(row => [...row]);
     if (onApply) onApply(matrix);
+    // After saving, consider the state clean relative to this load
+    setDirtySinceLoad(false);
   };
 
   // Helpers for UI-centered zooming
@@ -453,6 +463,12 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           id="canvases"
           ref={canvasWrapperRef}
           tabIndex={0}
+          onKeyDown={e => {
+            if (e.key === 'Escape' || e.key === 'Enter') {
+              e.preventDefault();
+              applyMatrix();
+            }
+          }}
           style={{
             position: 'relative',
             width: canvasSize.width * zoom,
@@ -604,13 +620,41 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           onMouseLeave={() => setTimeout(() => containerRef.current?.focus(), 0)}
         />
         {onCancel && (
-          <Button onPress={onCancel} title="Cancel" aria-label="Cancel editing" variant="faded">
-            Cancel
+          <Button
+            onPress={onCancel}
+            title="Discard"
+            aria-label="Discard changes"
+            isDisabled={!dirtySinceLoad}
+          >
+            Discard
           </Button>
         )}
-        <Button onPress={applyMatrix} title="Save" aria-label="Save the current drawing">
-          Save
-        </Button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Button
+            onPress={applyMatrix}
+            title="Save (Esc, Enter)"
+            aria-label="Save the current drawing"
+            aria-keyshortcuts="Escape Enter"
+            isDisabled={!dirtySinceLoad}
+            endContent={
+              dirtySinceLoad ? (
+                <span
+                  aria-hidden
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 9999,
+                    backgroundColor: '#f31260',
+                    display: 'inline-block',
+                    marginLeft: 1,
+                  }}
+                />
+              ) : null
+            }
+          >
+            Save
+          </Button>
+        </div>
       </div>
     </div>
   );
