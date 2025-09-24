@@ -54,12 +54,15 @@ export type SubSamples = Array<SubSample>;
 export enum SubSampleStateEnum {
   EMPTY = 'EMPTY', // No scan
   ACQUIRED = 'ACQUIRED', // There is a scanned image
+  SEGMENTATION_FAILED = 'SEGMENTATION_FAILED', // Something went wrong while segmenting/counting potential multiples
   SEGMENTED = 'SEGMENTED', // # Segmentation and MSK generation took place
   MSK_APPROVED = 'MSK_APPROVED', // Visual MSK check and object count was made and OK
+  MULTIPLES_GENERATION_FAILED = 'MULTIPLES_GENERATION_FAILED', // Something went wrong generating multiples
   MULTIPLES_GENERATED = 'MULTIPLES_GENERATED', // # ML determined multiples
   SEPARATION_VALIDATION_DONE = 'SEPARATION_VALIDATION_DONE', // Validation of multiples done
   UPLOADING = 'UPLOADING', // Transferring to EcoTaxa
   UPLOADED = 'UPLOADED', // Final state, all went into EcoTaxa
+  UPLOAD_FAILED = 'UPLOAD_FAILED', // Something went while uploading
 }
 
 export enum TaskStatusEnum {

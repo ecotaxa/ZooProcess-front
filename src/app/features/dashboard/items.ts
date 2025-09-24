@@ -27,6 +27,8 @@ function stateToLabel(
       return ['No scan', undefined, 'pages', undefined];
     case SubSampleStateEnum.ACQUIRED:
       return ['Scanned', 'process', 'process', 'Approve mask'];
+    case SubSampleStateEnum.SEGMENTATION_FAILED:
+      return ['Mask missing', 'process', 'process', 'Approve mask'];
     case SubSampleStateEnum.SEGMENTED:
       return ['Mask available', 'process', 'process', 'Approve mask'];
     case SubSampleStateEnum.MSK_APPROVED:

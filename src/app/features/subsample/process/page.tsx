@@ -1,5 +1,6 @@
 import React, { type Key, useEffect, useMemo, useState } from 'react';
 import {
+  deleteSubsample,
   exportToEcoTaxa,
   getSubSample,
   getTask,
@@ -8,7 +9,6 @@ import {
   loginToEcoTaxa,
   markSubSample,
   processSubSample,
-  deleteSubsample,
 } from 'api/zooprocess-api.ts';
 import {
   type EcotaxaProjects,
@@ -31,10 +31,10 @@ import {
   CardBody,
   CardHeader,
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
+  ModalContent,
   ModalFooter,
+  ModalHeader,
 } from '@heroui/react';
 import { ScanCheckPage } from 'app/features/subsample/process/process.tsx';
 import VignetteList from 'app/features/subsample/process/VignetteList.tsx';
@@ -62,14 +62,16 @@ export const SubsampleProcessPage = () => {
   const [breadcrumbsList, setBreadcrumbsList] = useState<BreadcrumbItem[]>([noBc, noBc, noBc]);
   const [subsample, setSubsample] = useState<SubSample | null>(null);
   const [step, setStep] = useState<number | null>(null);
+
+  // Common task
+  const [task, setTask] = useState<ITask | null>(null);
+  const [showInvalidModal, setShowInvalidModal] = useState(false);
+
   const [maskScan, setMaskScan] = useState<Scan | null>(null); // Target of step 0
   const [vignettes, setVignettes] = useState<VignetteData[] | null>(null); // Target of step 1
   const [ecotaxaToken, setEcotaxaToken] = useState<string | null>(null); // Intermediate of step 2
   const [ecotaxaProjects, setEcotaxaProjects] = useState<EcotaxaProjects | null>(null); // Intermediate of step 2
-  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
-  // Common task
-  const [task, setTask] = useState<ITask | null>(null);
-  const [showInvalidModal, setShowInvalidModal] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null); // Intermediate of step 3
 
   // Derived counts reactively computed from vignettes
   const vignettesCount = useMemo(() => (vignettes ? vignettes.length : null), [vignettes]);
@@ -78,7 +80,7 @@ export const SubsampleProcessPage = () => {
     return vignettes.filter(v => (v.score ?? 0) > MULTIPLE_SCORE_THRESHOLD).length;
   }, [vignettes]);
 
-  function launchProcess() {
+  function loadOrLaunchProcess() {
     processSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
       .then(result => {
         setTask(result.task);
@@ -88,7 +90,7 @@ export const SubsampleProcessPage = () => {
       });
   }
 
-  function subsampleMark(status: string) {
+  function markSubsampleAs(status: string) {
     const req: IMarkSubsampleReq = { status: status };
     markSubSample(authState.accessToken!, projectId, sampleId, subsampleId, req)
       .then(subsample => {
@@ -115,9 +117,12 @@ export const SubsampleProcessPage = () => {
       return;
     }
 
-    if (subsample.state === SubSampleStateEnum.ACQUIRED) {
+    if (
+      subsample.state === SubSampleStateEnum.ACQUIRED ||
+      subsample.state === SubSampleStateEnum.SEGMENTATION_FAILED
+    ) {
       setStep(0);
-      launchProcess();
+      loadOrLaunchProcess();
     } else if (subsample.state === SubSampleStateEnum.SEGMENTED) {
       setStep(0);
       const maskScan = subsample.scan.find(s => s.type === ScanTypeEnum.V10_MASK && !s.deleted);
@@ -128,7 +133,7 @@ export const SubsampleProcessPage = () => {
     } else if (subsample.state === SubSampleStateEnum.MSK_APPROVED) {
       setStep(1);
       setVignettes(null); // There is some blinking as the vignettes were fetched before the subsample was marked as approved
-      launchProcess();
+      loadOrLaunchProcess();
     } else if (subsample.state === SubSampleStateEnum.MULTIPLES_GENERATED) {
       setStep(1);
       getVignettes(authState.accessToken!, projectId, sampleId, subsampleId).then(rrsp => {
@@ -139,22 +144,26 @@ export const SubsampleProcessPage = () => {
     }
   }, [subsample]);
 
+  function fetchSubsample() {
+    getSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
+      .then(subsampleData => {
+        setSubsample(subsampleData);
+      })
+      .catch(error => {
+        setError('Failed to fetch subsample data: ' + error.message);
+      });
+  }
+
   useEffect(() => {
     if (task === null) {
       return;
     }
     if (task.status === TaskStatusEnum.FAILED) {
-      setError('Task failed: ' + task.log);
+      setError(`Task #${task.id} failed: ${task.log} `);
       return;
     }
     if (task.status === TaskStatusEnum.FINISHED) {
-      getSubSample(authState.accessToken!, projectId, sampleId, subsampleId)
-        .then(subsampleData => {
-          setSubsample(subsampleData);
-        })
-        .catch(error => {
-          setError('Failed to fetch subsample data: ' + error.message);
-        });
+      fetchSubsample();
       return;
     }
     const timeout = setTimeout(() => {
@@ -172,11 +181,11 @@ export const SubsampleProcessPage = () => {
   }, [task]);
 
   function onMaskValid() {
-    subsampleMark('approved');
+    markSubsampleAs('approved');
   }
 
   function onSeparateOK() {
-    subsampleMark('separated');
+    markSubsampleAs('separated');
   }
 
   function onMaskInvalid() {
@@ -333,6 +342,23 @@ export const SubsampleProcessPage = () => {
       </div>
     );
   }
+  function retryOnError() {
+    if (step === 0) {
+      deleteSubsample(authState.accessToken!, projectId, sampleId, subsampleId)
+        .then(() => {
+          fetchSubsample();
+          setError(null);
+        })
+        .catch(error => {
+          setError('Failed to clear job error: ' + (error?.message || error));
+        });
+    } else if (step === 1) {
+    } else if (step === 2) {
+    } else {
+      window.location.reload(); // For network problems or other weirdness
+    }
+  }
+
   return (
     <Card className="container mx-auto p-1">
       <CardHeader className="flex justify-between items-center mb-1">
@@ -343,7 +369,19 @@ export const SubsampleProcessPage = () => {
       </CardHeader>
       <CardBody>
         {error && <p className="text-red-500">{error}</p>}
-        {task && (
+        {error && (
+          <div className="mb-2">
+            <Button
+              className="bg-blue-400 hover:bg-blue-600 text-white font-small py-1 px-3 rounded-md transition-colors"
+              onPress={() => {
+                retryOnError();
+              }}
+            >
+              Retry
+            </Button>
+          </div>
+        )}
+        {!error && task && (
           <p className="text-amber-500">
             Task #{task.id}: {task.log}
           </p>
