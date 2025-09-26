@@ -130,7 +130,10 @@ export const SubsampleProcessPage = () => {
       getVignettes(authState.accessToken!, projectId, sampleId, subsampleId).then(rrsp => {
         setVignettes(rrsp.data ?? null);
       });
-    } else if (subsample.state === SubSampleStateEnum.MSK_APPROVED) {
+    } else if (
+      subsample.state === SubSampleStateEnum.MSK_APPROVED ||
+      subsample.state === SubSampleStateEnum.MULTIPLES_GENERATION_FAILED
+    ) {
       setStep(1);
       setVignettes(null); // There is some blinking as the vignettes were fetched before the subsample was marked as approved
       loadOrLaunchProcess();
@@ -343,16 +346,15 @@ export const SubsampleProcessPage = () => {
     );
   }
   function retryOnError() {
-    if (step === 0) {
+    if (step === 0 || step === 1) {
       deleteSubsample(authState.accessToken!, projectId, sampleId, subsampleId)
         .then(() => {
-          fetchSubsample();
           setError(null);
+          fetchSubsample();
         })
         .catch(error => {
           setError('Failed to clear job error: ' + (error?.message || error));
         });
-    } else if (step === 1) {
     } else if (step === 2) {
     } else {
       window.location.reload(); // For network problems or other weirdness

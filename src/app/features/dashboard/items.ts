@@ -35,6 +35,8 @@ function stateToLabel(
       return ['Mask approved', 'process', 'wave', 'Approve multiples'];
     case SubSampleStateEnum.MULTIPLES_GENERATED:
       return ['Multiples available', 'process', 'wave', 'Approve multiples'];
+    case SubSampleStateEnum.MULTIPLES_GENERATION_FAILED:
+      return ['Multiples missing', 'process', 'wave', 'Approve multiples'];
     case SubSampleStateEnum.SEPARATION_VALIDATION_DONE:
       return ['Multiples approved', 'process', 'upload', 'Upload'];
     case SubSampleStateEnum.UPLOADING:
