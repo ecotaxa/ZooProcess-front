@@ -66,6 +66,7 @@ export const SubsampleProcessPage = () => {
   // Common task
   const [task, setTask] = useState<ITask | null>(null);
   const [showInvalidModal, setShowInvalidModal] = useState(false);
+  const [showConfirmSeparation, setShowConfirmSeparation] = useState(false);
 
   const [maskScan, setMaskScan] = useState<Scan | null>(null); // Target of step 0
   const [vignettes, setVignettes] = useState<VignetteData[] | null>(null); // Target of step 1
@@ -231,14 +232,16 @@ export const SubsampleProcessPage = () => {
         {!vignettes && <p className="text-gray-500">No vignette to verify.</p>}
         {vignettes && <VignetteList initialVignettes={vignettes} folder={folder} />}
         {vignettes && (
-          <Button
-            className="bg-blue-400 hover:bg-blue-600 text-white font-small w-1/6 mb-1 py-1 px-2 rounded-md transition-colors"
-            onPress={() => {
-              onSeparateOK();
-            }}
-          >
-            Done separating
-          </Button>
+          <div className="w-full flex justify-center">
+            <Button
+              className="bg-blue-400 hover:bg-blue-600 text-white font-small w-1/6 mb-1 py-1 px-2 rounded-md transition-colors"
+              onPress={() => {
+                setShowConfirmSeparation(true);
+              }}
+            >
+              Done separating
+            </Button>
+          </div>
         )}
       </>
     );
@@ -413,6 +416,44 @@ export const SubsampleProcessPage = () => {
               <Button color="primary" onPress={onConfirmInvalidMask}>
                 Confirm
               </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
+      {showConfirmSeparation && (
+        <Modal
+          isOpen={true}
+          onClose={() => setShowConfirmSeparation(false)}
+          backdrop="blur"
+          placement="center"
+          scrollBehavior={'inside'}
+          isDismissable={false}
+        >
+          <ModalContent>
+            <ModalHeader>Confirm validation</ModalHeader>
+            <ModalBody>
+              <p className="font-semibold">
+                You won't be able to come back to this separation. Are you sure you want to validate?
+              </p>
+            </ModalBody>
+            <ModalFooter>
+              <div className="flex gap-2">
+                <Button
+                  variant="flat"
+                  onPress={() => setShowConfirmSeparation(false)}
+                >
+                  No
+                </Button>
+                <Button
+                  color="primary"
+                  onPress={() => {
+                    onSeparateOK();
+                    setShowConfirmSeparation(false);
+                  }}
+                >
+                  Yes
+                </Button>
+              </div>
             </ModalFooter>
           </ModalContent>
         </Modal>
