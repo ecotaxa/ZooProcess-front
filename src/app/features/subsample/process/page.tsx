@@ -349,7 +349,7 @@ export const SubsampleProcessPage = () => {
     );
   }
   function retryOnError() {
-    if (step === 0 || step === 1) {
+    if (step === 0 || step === 1 || step === 2) {
       deleteSubsample(authState.accessToken!, projectId, sampleId, subsampleId)
         .then(() => {
           setError(null);
@@ -358,7 +358,6 @@ export const SubsampleProcessPage = () => {
         .catch(error => {
           setError('Failed to clear job error: ' + (error?.message || error));
         });
-    } else if (step === 2) {
     } else {
       window.location.reload(); // For network problems or other weirdness
     }
@@ -433,15 +432,13 @@ export const SubsampleProcessPage = () => {
             <ModalHeader>Confirm validation</ModalHeader>
             <ModalBody>
               <p className="font-semibold">
-                You won't be able to come back to this separation. Are you sure you want to validate?
+                You won't be able to come back to this separation. Are you sure you want to
+                validate?
               </p>
             </ModalBody>
             <ModalFooter>
               <div className="flex gap-2">
-                <Button
-                  variant="flat"
-                  onPress={() => setShowConfirmSeparation(false)}
-                >
+                <Button variant="flat" onPress={() => setShowConfirmSeparation(false)}>
                   No
                 </Button>
                 <Button

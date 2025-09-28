@@ -39,8 +39,8 @@ function stateToLabel(
       return ['Multiples missing', 'process', 'wave', 'Approve multiples'];
     case SubSampleStateEnum.SEPARATION_VALIDATION_DONE:
       return ['Multiples approved', 'process', 'upload', 'Upload'];
-    case SubSampleStateEnum.UPLOADING:
-      return ['Uploading to EcoTaxa', undefined, 'upload', undefined];
+    case SubSampleStateEnum.UPLOAD_FAILED:
+      return ['Upload missing', 'process', 'upload', 'Upload'];
     case SubSampleStateEnum.UPLOADED:
       return ['Uploaded to EcoTaxa', undefined, 'upload', undefined];
     default:
