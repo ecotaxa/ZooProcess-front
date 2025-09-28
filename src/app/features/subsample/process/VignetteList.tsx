@@ -349,7 +349,12 @@ export default function VignetteList({
 
   return (
     <div className="relative w-full overflow-hidden bg-white">
-      {vignettes.length} to validate
+      <div className="mb-2">
+        {vignettes.length} objects to validate
+        <span className="ml-2 text-xs text-gray-500">
+          To be sure to review all images, you can scroll page by page using Space or Page Down
+        </span>
+      </div>
       <List
         ref={listRef}
         height={calculatedHeight}
