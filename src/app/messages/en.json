@@ -9,7 +9,7 @@
   "Login": {
     "Email": "Email",
     "AlreadyExist": "Email already in use with different provider!",
-    "Welcome": "Welcome back",
+    "Welcome": "Use your EcoTaxa credentials",
     "BackButtonLabel": "Don't have an account?",
     "Password": "Password",
     "EnterPassword": "Enter your password",

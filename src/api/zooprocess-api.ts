@@ -8,14 +8,11 @@ export interface Login {
   password: string;
 }
 
-let token = '';
-
 export async function login(data: Login): Promise<string> {
   const api = await axiosInstance({ useAuth: false });
   return await api
     .post('/login', data)
     .then(function (response) {
-      token = response.data;
       return Promise.resolve(response.data);
     })
     .catch(function (error: AxiosError) {
@@ -131,35 +128,11 @@ export async function getVignettes(
   return response.data; //.data;
 }
 
-export async function loginToEcoTaxa(token: string, email: string, password: string) {
-  const api = await axiosInstance({ token: token });
-  const url = '/ecotaxa/login';
-  const req = { username: email, password: password };
-  const response = await api.post<I.EcoTaxaLoginResponse>(url, req);
-
-  return response.data.token;
-}
-
 export async function listEcoTaxaProjects(token: string, ecotaxaToken: string) {
   const api = await axiosInstance({ token: token });
   const url = '/ecotaxa/projects?token=' + ecotaxaToken;
   const response = await api.get<I.EcotaxaProjects>(url);
 
-  return response.data;
-}
-
-export async function exportToEcoTaxa(
-  token: string,
-  projectId: string,
-  sampleId: string,
-  subsampleId: string,
-  ecotaxaToken: string,
-  ecoTaxaProjectId: number
-) {
-  const api = await axiosInstance({ token: token });
-  const url = `/projects/${projectId}/samples/${sampleId}/subsamples/${subsampleId}/export`;
-  const req = { token: ecotaxaToken, projid: ecoTaxaProjectId };
-  const response = await api.post<I.IExportSubsampleReq>(url, req);
   return response.data;
 }
 

@@ -1,17 +1,13 @@
 import React, { type Key, useEffect, useMemo, useState } from 'react';
 import {
   deleteSubsample,
-  exportToEcoTaxa,
   getSubSample,
   getTask,
   getVignettes,
-  listEcoTaxaProjects,
-  loginToEcoTaxa,
   markSubSample,
   processSubSample,
 } from 'api/zooprocess-api.ts';
 import {
-  type EcotaxaProjects,
   type IMarkSubsampleReq,
   type ITask,
   type Scan,
@@ -39,8 +35,6 @@ import {
 import { ScanCheckPage } from 'app/features/subsample/process/process.tsx';
 import VignetteList from 'app/features/subsample/process/VignetteList.tsx';
 import { Button } from '@heroui/button';
-import { EcoTaxaLoginForm } from 'app/features/ecotaxa/ecotaxa-login-form';
-import { Autocomplete, AutocompleteItem } from '@heroui/autocomplete';
 import { useNavigate } from 'react-router-dom';
 
 const MULTIPLE_SCORE_THRESHOLD = 0.4;
@@ -70,9 +64,6 @@ export const SubsampleProcessPage = () => {
 
   const [maskScan, setMaskScan] = useState<Scan | null>(null); // Target of step 0
   const [vignettes, setVignettes] = useState<VignetteData[] | null>(null); // Target of step 1
-  const [ecotaxaToken, setEcotaxaToken] = useState<string | null>(null); // Intermediate of step 2
-  const [ecotaxaProjects, setEcotaxaProjects] = useState<EcotaxaProjects | null>(null); // Intermediate of step 2
-  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null); // Intermediate of step 3
 
   // Derived counts reactively computed from vignettes
   const vignettesCount = useMemo(() => (vignettes ? vignettes.length : null), [vignettes]);
@@ -143,8 +134,12 @@ export const SubsampleProcessPage = () => {
       getVignettes(authState.accessToken!, projectId, sampleId, subsampleId).then(rrsp => {
         setVignettes(rrsp.data);
       });
-    } else if (subsample.state === SubSampleStateEnum.SEPARATION_VALIDATION_DONE) {
+    } else if (
+      subsample.state === SubSampleStateEnum.SEPARATION_VALIDATION_DONE ||
+      subsample.state === SubSampleStateEnum.UPLOAD_FAILED
+    ) {
       setStep(2);
+      loadOrLaunchProcess();
     }
   }, [subsample]);
 
@@ -248,105 +243,7 @@ export const SubsampleProcessPage = () => {
   }
 
   function uploadPage() {
-    const handleEcoTaxaLogin = (credentials: { username: string; password: string }) => {
-      loginToEcoTaxa(authState.accessToken!, credentials.username, credentials.password)
-        .then(token => {
-          if (token === null) {
-            setError('Failed to login to EcoTaxa');
-          } else {
-            setError(null);
-            setEcotaxaToken(token);
-            listEcoTaxaProjects(authState.accessToken!, token)
-              .then(ecotaxaProjects => {
-                setEcotaxaProjects(ecotaxaProjects);
-              })
-              .catch(error => {
-                setError('Failed to list EcoTaxa projects: ' + error.message);
-              });
-          }
-        })
-        .catch(error => {
-          setError('Failed to login to EcoTaxa: ' + error.message);
-        });
-    };
-
-    const onProjectSelect = (key: Key | null) => {
-      setSelectedProjectId(key as number);
-    };
-
-    const handleProjectSubmit = () => {
-      if (selectedProjectId) {
-        exportToEcoTaxa(
-          authState.accessToken!,
-          projectId,
-          sampleId,
-          subsampleId,
-          ecotaxaToken!,
-          selectedProjectId
-        )
-          .then(result => {
-            setSubsample(result.subsample);
-            setTask(result.task);
-          })
-          .catch(error => {
-            setError('Failed to export to EcoTaxa: ' + error.message);
-          });
-      }
-    };
-
-    return (
-      <div className="w-full">
-        {ecotaxaToken && (
-          <div
-            className="bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded relative mb-4"
-            role="alert"
-          >
-            <span className="block sm:inline">Logged in EcoTaxa.</span>
-          </div>
-        )}
-        {!ecotaxaToken && <EcoTaxaLoginForm onSubmit={handleEcoTaxaLogin} />}
-        {ecotaxaProjects && (
-          <div className="mt-4">
-            <div className="flex flex-col space-y-4">
-              <Autocomplete
-                className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                disabled={selectedProjectId !== null}
-                label="Project to export to:"
-                placeholder="Search for a project"
-                isRequired={true}
-                onSelectionChange={onProjectSelect}
-                selectedKey={selectedProjectId}
-                labelPlacement={'outside'}
-              >
-                {ecotaxaProjects.map(project => (
-                  <AutocompleteItem key={project.projid}>{project.title}</AutocompleteItem>
-                ))}
-              </Autocomplete>
-            </div>
-            {selectedProjectId && (
-              <div
-                className="bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded relative mb-4"
-                role="alert"
-              >
-                <span className="block sm:inline">
-                  Selected project:{selectedProjectId}
-                  {ecotaxaProjects.find(p => p.projid === selectedProjectId)?.title}
-                </span>
-              </div>
-            )}
-            {selectedProjectId && (
-              <Button
-                className="bg-blue-400 hover:bg-blue-600 text-white font-small w-1/4 py-2 px-4 rounded-md transition-colors"
-                onPress={handleProjectSubmit}
-                isDisabled={!selectedProjectId}
-              >
-                Export To Project #{selectedProjectId}
-              </Button>
-            )}
-          </div>
-        )}
-      </div>
-    );
+    return <div className="w-full"></div>;
   }
   function retryOnError() {
     if (step === 0 || step === 1 || step === 2) {
