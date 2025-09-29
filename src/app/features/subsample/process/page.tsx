@@ -140,6 +140,8 @@ export const SubsampleProcessPage = () => {
     ) {
       setStep(2);
       loadOrLaunchProcess();
+    } else if (subsample.state === SubSampleStateEnum.UPLOADED) {
+      setStep(3);
     }
   }, [subsample]);
 
@@ -245,8 +247,27 @@ export const SubsampleProcessPage = () => {
   function uploadPage() {
     return <div className="w-full"></div>;
   }
+  function reUploadPage() {
+    return (
+      <>
+        <p className="text-gray-600 mb-2 text-center">
+          To launch a re-upload to EcoTaxa, e.g. after a metadata change, click the button below.
+        </p>
+        <div className="w-full flex justify-center">
+          <Button
+            className="bg-blue-400 hover:bg-blue-600 text-white font-small w-1/6 mb-1 py-1 px-2 rounded-md transition-colors"
+            onPress={() => {
+              retryOnError();
+            }}
+          >
+            Re-Upload
+          </Button>
+        </div>
+      </>
+    );
+  }
   function retryOnError() {
-    if (step === 0 || step === 1 || step === 2) {
+    if (step === 0 || step === 1 || step === 2 || step === 3) {
       deleteSubsample(authState.accessToken!, projectId, sampleId, subsampleId)
         .then(() => {
           setError(null);
@@ -266,10 +287,9 @@ export const SubsampleProcessPage = () => {
         {/*Scan processing*/}
         <ProjectBreadcrumbs items={breadcrumbsList}></ProjectBreadcrumbs>
         <SubsampleProcessTimeline current={step ?? -1}></SubsampleProcessTimeline>
-        {subsample?.state}
       </CardHeader>
       <CardBody>
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 whitespace-pre-line">{error}</p>}
         {error && (
           <div className="mb-2">
             <Button
@@ -290,6 +310,7 @@ export const SubsampleProcessPage = () => {
         {step == 0 && scanCheckPage()}
         {step == 1 && separatePage()}
         {step == 2 && uploadPage()}
+        {step == 3 && reUploadPage()}
       </CardBody>
       {showInvalidModal && (
         <Modal

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, type FC } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'app/stores/auth-context';

@@ -28,7 +28,7 @@ function stateToLabel(
     case SubSampleStateEnum.ACQUIRED:
       return ['Scanned', 'process', 'process', 'Approve mask'];
     case SubSampleStateEnum.SEGMENTATION_FAILED:
-      return ['Mask missing', 'process', 'process', 'Approve mask'];
+      return ['No Mask', 'process', 'process', 'Approve mask'];
     case SubSampleStateEnum.SEGMENTED:
       return ['Mask available', 'process', 'process', 'Approve mask'];
     case SubSampleStateEnum.MSK_APPROVED:
@@ -36,13 +36,13 @@ function stateToLabel(
     case SubSampleStateEnum.MULTIPLES_GENERATED:
       return ['Multiples available', 'process', 'wave', 'Approve multiples'];
     case SubSampleStateEnum.MULTIPLES_GENERATION_FAILED:
-      return ['Multiples missing', 'process', 'wave', 'Approve multiples'];
+      return ['No Multiples', 'process', 'wave', 'Approve multiples'];
     case SubSampleStateEnum.SEPARATION_VALIDATION_DONE:
       return ['Multiples approved', 'process', 'upload', 'Upload'];
     case SubSampleStateEnum.UPLOAD_FAILED:
-      return ['Upload missing', 'process', 'upload', 'Upload'];
+      return ['Not Uploaded', 'process', 'upload', 'Upload'];
     case SubSampleStateEnum.UPLOADED:
-      return ['Uploaded to EcoTaxa', undefined, 'upload', undefined];
+      return ['Uploaded to EcoTaxa', 'process', 'upload', 'Re-Upload'];
     default:
       return [state, undefined, undefined, undefined];
   }
