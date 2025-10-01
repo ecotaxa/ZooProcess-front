@@ -185,7 +185,7 @@ export const Dashboard = () => {
               setSelectedProjectId(key || 'all');
             }}
             items={selectOptions}
-            className="max-w-sm"
+            className="max-w-md"
           >
             {item => <SelectItem key={item.id}>{item.name}</SelectItem>}
           </Select>
@@ -221,7 +221,7 @@ export const Dashboard = () => {
               <TableColumn>Updated At</TableColumn>
               <TableColumn>{selectedProjectId ? '' : 'Project'}</TableColumn>
             </TableHeader>
-            <TableBody emptyContent={!loading && 'No projects found'}>
+            <TableBody emptyContent={!loading && 'No scan found'}>
               {projectItems.map((item, index) => (
                 <TableRow
                   key={`${item.project.id}-${item.sample.id}-${item.subsample.id}-${index}`}
@@ -251,7 +251,12 @@ export const Dashboard = () => {
                   <TableCell>{item.stateLabel}</TableCell>
                   <TableCell>{item.subsample.name}</TableCell>
                   <TableCell>{item.sample.name}</TableCell>
-                  <TableCell>{item.subsample.updatedAt.toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {item.subsample.updatedAt.toLocaleString(undefined, {
+                      dateStyle: 'short',
+                      timeStyle: 'short',
+                    })}
+                  </TableCell>
                   <TableCell>{selectedProjectId ? '' : item.project.name}</TableCell>
                 </TableRow>
               ))}
