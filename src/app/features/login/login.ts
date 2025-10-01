@@ -11,7 +11,7 @@ export const login: (values: output<typeof LoginSchema>) => Promise<string> = as
 
   // Return a rejected promise for validation errors
   if (!validatedFields.success) {
-    return Promise.reject(new Error(validatedFields.error.message));
+    throw new Error(validatedFields.error.message);
   }
 
   const { email, password } = validatedFields.data;
@@ -20,11 +20,7 @@ export const login: (values: output<typeof LoginSchema>) => Promise<string> = as
   return await API_login({
     email,
     password,
-  })
-    .then(token => {
-      return Promise.resolve(token);
-    })
-    .catch(function (error: Error) {
-      return Promise.reject(error);
-    });
+  }).then(token => {
+    return token;
+  });
 };

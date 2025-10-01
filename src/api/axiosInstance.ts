@@ -5,16 +5,20 @@ const axiosInstance = async ({
   useAuth = true,
   token = undefined,
   params = {},
+  timeout = undefined,
 }: {
   useAuth?: boolean;
   token?: string;
   params?: any;
+  timeout?: number;
 }): Promise<AxiosInstance> => {
   // console.log('axiosInstance()');
 
+  const effectiveTimeout = timeout ?? (params?.timeout as number | undefined) ?? 30000;
+
   let _params: CreateAxiosDefaults<any> = {
     baseURL: '/api',
-    timeout: 30000,
+    timeout: effectiveTimeout,
   };
 
   if (token && useAuth) {

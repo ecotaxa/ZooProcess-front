@@ -13,10 +13,10 @@ export async function login(data: Login): Promise<string> {
   return await api
     .post('/login', data)
     .then(function (response) {
-      return Promise.resolve(response.data);
+      return response.data;
     })
     .catch(function (error: AxiosError) {
-      return Promise.reject(error);
+      throw error;
     });
 }
 
@@ -52,7 +52,7 @@ export async function getProjects(
   token: string,
   depth: number | undefined = undefined
 ): Promise<I.Projects> {
-  const api = await axiosInstance({ token: token });
+  const api = await axiosInstance({ token: token, timeout: 2 * 60 * 1000 });
   const url = '/projects' + (depth ? '?depth=' + depth : '');
   const response = await api.get<I.Projects>(url);
   return response.data.map(project => {
@@ -61,7 +61,7 @@ export async function getProjects(
 }
 
 export async function getProject(token: string, projectId: string): Promise<I.Project> {
-  const api = await axiosInstance({ token: token });
+  const api = await axiosInstance({ token: token, timeout: 60 * 1000 });
   const response = await api.get<I.Project>(`/projects/${projectId}`);
   return convertProjectDates(response.data);
 }
