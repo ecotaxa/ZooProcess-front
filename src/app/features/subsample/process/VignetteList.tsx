@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { VariableSizeList as List, type ListChildComponentProps } from 'react-window';
 
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@heroui/react';
+import { Modal, ModalContent, ModalHeader, ModalBody } from '@heroui/react';
 
 import VignetItem from './VignetItem.tsx';
 import type { VignetteData } from 'api/interfaces.ts';
@@ -31,65 +31,23 @@ export default function VignetteList({
   // height = 700      // hauteur scrollable visible (px)
 }: Readonly<Props>) {
   const { authState } = useAuth();
-  // const itemHeight = 110
   const calculatedHeight = typeof window !== 'undefined' ? window.innerHeight * 0.78 : 800;
-  // const [vignettes, setVignettes] = useState<VignetteData[]>(initialVignettes);
   const vignettes = initialVignettes;
   vignettes.sort((a, b) => {
     return b.score - a.score; // descending by score
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [editIndex, setEditIndex] = useState<number | null>(null); // pour la modale édition
+  const [imagePath, setImagePath] = useState<string>('');
   const [editMatrix, setEditMatrix] = useState<number[][] | undefined>(undefined);
-
-  // Materialize dependency: whenever editIndex changes, (re)load the corresponding matrix
-  useEffect(() => {
-    if (editIndex === null) return;
-    // Guard against out-of-range
-    if (editIndex < 0 || editIndex >= vignettes.length) return;
-
-    const requestId = ++loadRequestIdRef.current;
-    const gzFile = vignettes[editIndex].matrix;
-
-    if (gzFile == null) return;
-
-    const matrixUrl = `${folder}/${gzFile}`;
-
-    const load = async () => {
-      try {
-        const matrix = await loadMatrixFromGz(matrixUrl);
-        if (loadRequestIdRef.current === requestId) {
-          setEditMatrix(matrix);
-        }
-      } catch (e) {
-        // Fallback to zero matrix sized to image if we cannot load the gz
-        const imgPath = `${folder}/${vignettes[editIndex].scan}`;
-        const img = new window.Image();
-        img.src = imgPath;
-        img.onload = () => {
-          if (loadRequestIdRef.current === requestId) {
-            setEditMatrix(Array.from({ length: img.height }, () => Array(img.width).fill(0)));
-          }
-        };
-      }
-    };
-
-    // Clear the previous matrix while loading (optional)
-    setEditMatrix(undefined);
-    void load();
-  }, [editIndex, vignettes, folder]);
-
   const [rowHeights, setRowHeights] = useState<{ [index: number]: number }>({});
 
   // Background image preload cache
   const preloadedUrlsRef = useRef<Set<string>>(new Set());
 
-  const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
-
   // to the automatic scroll
   const listRef = useRef<any>(null);
   const loadRequestIdRef = useRef(0);
-
   // Preload a single URL once
   const preloadUrl = useCallback((url: string) => {
     if (typeof window === 'undefined') return;
@@ -110,13 +68,63 @@ export default function VignetteList({
     }
   }, []);
 
-  const updateVignette = useCallback((index: number, newData: Partial<VignetteData>) => {
-    // setVignettes(prev => {
-    //   const updated = [...prev];
-    //   updated[index] = { ...updated[index], ...newData };
-    //   return updated;
-    // });
-  }, []);
+  // Load the matrix and only set the imagePath after a successful load
+  useEffect(() => {
+    // Reset when there's no valid selection
+    if (editIndex === null || editIndex < 0 || editIndex >= vignettes.length) {
+      loadRequestIdRef.current++;
+      setEditMatrix(undefined);
+      setImagePath('');
+      return;
+    }
+
+    const requestId = ++loadRequestIdRef.current;
+    const ev = vignettes[editIndex];
+    const gzFile = ev.matrix;
+
+    const imgPath = folder.startsWith('/api/vignette')
+      ? `${folder}/${ev.scan}`
+      : `/${folder}/${ev.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+
+    function setMatrix(img: HTMLImageElement) {
+      if (!canceled && loadRequestIdRef.current === requestId) {
+        const img_height = img.naturalHeight;
+        const img_width = img.naturalWidth;
+        const blankMatrix = Array.from({ length: img_height }, () => new Array(img_width).fill(0));
+        setEditMatrix(blankMatrix);
+        setImagePath(imgPath);
+      }
+    }
+
+    let canceled = false;
+    if (gzFile == null) {
+      const img = new Image();
+      img.src = imgPath;
+      img.decoding = 'async';
+      img.loading = 'eager' as any; // hint only
+      if (img.complete) {
+        setTimeout(() => setMatrix(img), 5);
+      } else {
+        img.onload = () => {
+          setMatrix(img);
+        };
+      }
+    } else {
+      const matrixUrl = `${folder}/${gzFile}`;
+      const load = async () => {
+        loadMatrixFromGz(matrixUrl).then(matrix => {
+          if (!canceled && loadRequestIdRef.current === requestId) {
+            setEditMatrix(matrix);
+            setImagePath(imgPath);
+          }
+        });
+      };
+      void load();
+    }
+    return () => {
+      canceled = true;
+    };
+  }, [editIndex, vignettes, folder]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -236,7 +244,7 @@ export default function VignetteList({
     };
   }, [vignettes, folder, preloadUrl]);
 
-  // Item renderer pour react-window
+  // Item renderer for react-window
   const Row = ({ index, style }: ListChildComponentProps) => {
     return (
       <div style={style}>
@@ -244,7 +252,7 @@ export default function VignetteList({
           key={index}
           vignette={vignettes[index]}
           folder={folder}
-          onUpdate={(newData: any) => updateVignette(index, newData)}
+          onUpdate={() => {}}
           index={index}
           selected={index === selectedIndex} // move scroll on this ligne and show the zoomed scan with its segmentation lines on the right side
           onClick={() => setSelectedIndex(index)}
@@ -292,7 +300,6 @@ export default function VignetteList({
     return ret + 8; // add some padding
   };
 
-  // Modale
   const handleEditMask = (index: number) => {
     setEditIndex(index);
   };
@@ -323,29 +330,6 @@ export default function VignetteList({
       alert('Erreur sauvegarde mask: ' + err);
     }
   };
-
-  const editVignette = editIndex !== null ? vignettes[editIndex] : null;
-  let imagePath;
-  if (folder.startsWith('/api/vignette')) {
-    imagePath = editVignette ? `${folder}/${editVignette.scan}` : '';
-  } else {
-    imagePath = editVignette
-      ? `/${folder}/${editVignette.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/')
-      : '';
-  }
-
-  useEffect(() => {
-    if (!imagePath) return;
-
-    const img = new window.Image();
-    img.src = imagePath;
-    img.onload = () => {
-      setImageSize({
-        width: img.naturalWidth,
-        height: img.naturalHeight,
-      });
-    };
-  }, [imagePath]);
 
   return (
     <div className="relative w-full overflow-hidden bg-white">
@@ -379,13 +363,17 @@ export default function VignetteList({
           <ModalContent className="h-full">
             <ModalHeader>Separate {editIndex}</ModalHeader>
             <ModalBody>
-              <DrawCanvas
-                imagePath={imagePath}
-                initialMatrix={editMatrix}
-                strokeColor="red"
-                onApply={handleApply}
-                onCancel={handleCloseEdit}
-              />
+              {!editMatrix && <span>No vignette?</span>}
+              {editMatrix && (
+                <DrawCanvas
+                  key={imagePath}
+                  imagePath={imagePath}
+                  initialMatrix={editMatrix}
+                  strokeColor="red"
+                  onApply={handleApply}
+                  onCancel={handleCloseEdit}
+                />
+              )}
             </ModalBody>
           </ModalContent>
         </Modal>

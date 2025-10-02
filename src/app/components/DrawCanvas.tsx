@@ -1,14 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Button, ButtonGroup } from '@heroui/button';
-import { RadioGroup } from '@mui/material';
 import { Kbd, Slider } from '@heroui/react';
 
 interface DrawCanvasProps {
   imagePath: string;
+  initialMatrix: number[][];
+  strokeColor: string;
   onApply?: (matrix: number[][]) => void;
   onCancel?: () => void;
-  strokeColor?: string;
-  initialMatrix?: number[][];
 }
 
 type Tool = 'brush' | 'eraser';
@@ -16,17 +15,16 @@ type Tool = 'brush' | 'eraser';
 const CANVAS_POINT_SIZE = 1.1; // slightly larger than 1 to avoid aliasing, ends up in manual drawing of width 2
 const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 20;
-const ZOOM_FACTOR = 1.02;
 const WHEEL_ZOOM_SPEED = 0.002;
 const STEP_ZOOM_FACTOR = 1.2;
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
 const DrawCanvas: React.FC<DrawCanvasProps> = ({
   imagePath,
+  initialMatrix,
+  strokeColor,
   onApply,
   onCancel,
-  strokeColor = 'red',
-  initialMatrix,
 }) => {
   const persistentMatrixRef = useRef<number[][] | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -38,8 +36,9 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const spaceHeldRef = useRef(false);
   const isPanningRef = useRef(false);
   const lastPanPos = useRef<{ x: number; y: number } | null>(null);
-  const prevImagePathRef = useRef<string | null>(null);
   const lastCenteredImagePathRef = useRef<string | null>(null);
+  const lastAutoZoomedImagePathRef = useRef<string | null>(null);
+  const reqIdRef = useRef(0);
 
   const [tool, setTool] = useState<Tool>('brush');
   const [isDrawing, setIsDrawing] = useState(false);
@@ -53,9 +52,26 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
   // Track whether the user modified the overlay since the image was loaded
   const [dirtySinceLoad, setDirtySinceLoad] = useState(false);
+  const [ready, setReady] = useState(false);
 
   // Device Pixel Ratio for HiDPI-aware canvases
   const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
+
+  function loadImage(src: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = src;
+      img.onload = async () => {
+        try {
+          // Ensure pixels are decoded before first paint to avoid flashes
+          if (img.decode) await img.decode();
+        } catch {}
+        resolve(img);
+      };
+      img.onerror = err => reject(err);
+    });
+  }
 
   // Compute scroll bounds for a given zoom so that when zoom < 1 the image can be centered
   const getScrollBounds = (z: number) => {
@@ -96,38 +112,39 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   };
 
   useEffect(() => {
-    const img = new Image();
-    const shouldReset = prevImagePathRef.current !== imagePath;
-    img.src = imagePath;
-    img.onload = () => {
-      const width = img.width;
-      const height = img.height;
-      const matrix =
-        initialMatrix?.length === height && initialMatrix[0]?.length === width
-          ? initialMatrix.map(row => [...row])
-          : Array.from({ length: height }, () => Array(width).fill(0));
-      persistentMatrixRef.current = matrix;
-      setCanvasSize({ width, height });
-      setImage(img);
-      if (shouldReset) {
-        // Set initial zoom so the image fills roughly 3/4 of the container
-        let initialZoom = 1;
-        const container = containerRef.current;
-        if (container) {
-          const cw = container.clientWidth;
-          const ch = container.clientHeight;
-          if (cw > 0 && ch > 0) {
-            const fitScale = 0.75 * Math.min(cw / width, ch / height);
-            initialZoom = clamp(fitScale, MIN_ZOOM, MAX_ZOOM);
-          }
-        }
-        setZoom(initialZoom);
-        setScroll({ x: 0, y: 0 });
+    const reqId = ++reqIdRef.current;
+    setReady(false);
+    let canceled = false;
+
+    const run = async () => {
+      try {
+        // Always load image first
+        const img = await loadImage(imagePath);
+
+        const width = img.width;
+        const height = img.height;
+
+        // Copy the provided initialMatrix (assumed to be correctly sized)
+        const matrix: number[][] = initialMatrix.map(r => [...r]);
+
+        if (canceled || reqIdRef.current !== reqId) return;
+
+        persistentMatrixRef.current = matrix;
+        setCanvasSize({ width, height });
+        setImage(img);
+
+        // New image or matrix loaded -> reset dirty flag
+        setDirtySinceLoad(false);
+        setReady(true);
+        forceUpdate();
+      } catch (e) {
+        console.error('Failed loading assets', e);
       }
-      // New image or matrix loaded -> reset dirty flag
-      setDirtySinceLoad(false);
-      prevImagePathRef.current = imagePath;
-      forceUpdate();
+    };
+
+    void run();
+    return () => {
+      canceled = true;
     };
   }, [imagePath, initialMatrix]);
 
@@ -211,7 +228,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
       if (e.key === 'b') setTool('brush');
       if (e.key === 'e') setTool('eraser');
-      if (e.key === 'c') cleanMatrix();
+      if (e.key === 'c') clearMatrix();
       if (e.key === '+') zoomAroundPoint(zoom * STEP_ZOOM_FACTOR);
       if (e.key === '-') zoomAroundPoint(zoom / STEP_ZOOM_FACTOR);
       if (e.key === '0') {
@@ -271,6 +288,69 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     return () => target?.removeEventListener('wheel', handleWheel);
   }, [canvasSize, scroll, zoom]);
 
+  // Reset auto-zoom guard when imagePath changes so keyboard navigation triggers fit again
+  useEffect(() => {
+    lastAutoZoomedImagePathRef.current = null;
+  }, [imagePath]);
+
+  // After the editor is mounted and assets are ready, compute an initial auto-zoom that fits the image.
+  useEffect(() => {
+    if (!ready || !image) return;
+    if (lastAutoZoomedImagePathRef.current === imagePath) return;
+
+    let canceled = false;
+
+    const doAutoZoom = () => {
+      if (canceled) return;
+      const container = containerRef.current;
+      if (!container) {
+        // Try again on the next frame if the container isn't mounted yet
+        requestAnimationFrame(doAutoZoom);
+        return;
+      }
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      if (cw <= 0 || ch <= 0) {
+        // Defer until layout stabilizes
+        setTimeout(doAutoZoom, 50);
+        return;
+      }
+
+      const width = canvasSize.width;
+      const height = canvasSize.height;
+      if (width <= 0 || height <= 0) return;
+
+      const fitScale = 0.75 * Math.min(cw / width, ch / height);
+      const z = clamp(fitScale, MIN_ZOOM, MAX_ZOOM);
+
+      setZoom(z);
+      setScroll({ x: 0, y: 0 });
+      lastAutoZoomedImagePathRef.current = imagePath;
+
+      // Center the outer scrollbars after zooming to keep the image centered in view
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const c = containerRef.current;
+          if (!c) return;
+          const needsH = c.scrollWidth > c.clientWidth;
+          const needsV = c.scrollHeight > c.clientHeight;
+          if (needsH || needsV) {
+            const left = Math.max(0, Math.floor((c.scrollWidth - c.clientWidth) / 2));
+            const top = Math.max(0, Math.floor((c.scrollHeight - c.clientHeight) / 2));
+            c.scrollTo({ left, top });
+          }
+        }, 50);
+      });
+    };
+
+    // Kick off auto-zoom computation
+    doAutoZoom();
+
+    return () => {
+      canceled = true;
+    };
+  }, [ready, imagePath, image, canvasSize]);
+
   // Center the outer scrollbars when the image is larger than the viewport
   useEffect(() => {
     const container = containerRef.current;
@@ -317,7 +397,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     forceUpdate();
   };
 
-  const cleanMatrix = () => {
+  const clearMatrix = () => {
     if (!persistentMatrixRef.current) return;
     persistentMatrixRef.current = persistentMatrixRef.current.map(row => row.fill(0));
     setDirtySinceLoad(true);
@@ -443,6 +523,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
   const getCursor = () => (tool === 'brush' ? 'crosshair' : eraserCursor);
 
+  if (!ready) return <div>...</div>;
+
   return (
     <div style={{ display: 'flex', flexGrow: '1', gap: 12, minHeight: 0 }}>
       <div
@@ -536,30 +618,28 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           alignSelf: 'center',
         }}
       >
-        <RadioGroup>
-          <Button
-            variant={tool === 'brush' ? 'faded' : undefined}
-            onPress={() => setTool('brush')}
-            aria-keyshortcuts="p"
-            title="Pencil (P)"
-            aria-label="Select Pencil tool (shortcut: P)"
-            endContent={<Kbd>P</Kbd>}
-          >
-            Pencil
-          </Button>
-          <Button
-            variant={tool === 'eraser' ? 'faded' : undefined}
-            onPress={() => setTool('eraser')}
-            aria-keyshortcuts="e"
-            title="Eraser (E)"
-            aria-label="Select Eraser tool (shortcut: E)"
-            endContent={<Kbd>E</Kbd>}
-          >
-            Eraser
-          </Button>
-        </RadioGroup>
         <Button
-          onPress={() => cleanMatrix()}
+          variant={tool === 'brush' ? 'faded' : undefined}
+          onPress={() => setTool('brush')}
+          aria-keyshortcuts="p"
+          title="Pencil (P)"
+          aria-label="Select Pencil tool (shortcut: P)"
+          endContent={<Kbd>P</Kbd>}
+        >
+          Pencil
+        </Button>
+        <Button
+          variant={tool === 'eraser' ? 'faded' : undefined}
+          onPress={() => setTool('eraser')}
+          aria-keyshortcuts="e"
+          title="Eraser (E)"
+          aria-label="Select Eraser tool (shortcut: E)"
+          endContent={<Kbd>E</Kbd>}
+        >
+          Eraser
+        </Button>
+        <Button
+          onPress={() => clearMatrix()}
           aria-keyshortcuts="c"
           title="Clear drawing (C)"
           aria-label="Clear the drawing (shortcut: C)"
