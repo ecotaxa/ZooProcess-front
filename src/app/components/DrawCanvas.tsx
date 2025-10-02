@@ -159,6 +159,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, overlayRef.current!.width, overlayRef.current!.height);
 
+    // Ensure no smoothing is applied when canvas is scaled
+    ctx.imageSmoothingEnabled = false;
     // Draw in logical pixel space and scale to device pixels via DPR
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = strokeColor;
@@ -487,6 +489,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
               left: 0,
               zIndex: 1,
               border: '1px solid #ccc',
+              // Ensure nearest-neighbor scaling for crisp pixels when zooming
+              imageRendering: 'pixelated',
               // Visual size follows zoom via CSS, backing store stays at image size × DPR
               width: canvasSize.width * zoom,
               height: canvasSize.height * zoom,
@@ -507,6 +511,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
               zIndex: 2,
               cursor: getCursor(),
               border: '1px solid #ccc',
+              // Ensure nearest-neighbor scaling for crisp pixels when zooming
+              imageRendering: 'pixelated',
               // Visual size follows zoom via CSS, backing store stays at image size × DPR
               width: canvasSize.width * zoom,
               height: canvasSize.height * zoom,
