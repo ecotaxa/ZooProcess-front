@@ -7,7 +7,7 @@ import VignetItem from './VignetItem.tsx';
 import type { VignetteData } from 'api/interfaces.ts';
 import { readMatrixFromCompressedBinary } from 'app/lib/DrawCanvasTools.ts';
 import DrawCanvas from 'app/components/DrawCanvas.tsx';
-import { saveMaskViaApi } from 'api/save-mask.ts';
+import { saveMaskViaApi, simulateMaskViaApi } from 'api/save-mask.ts';
 import { getVignettes } from 'api/zooprocess-api.ts';
 import { useAuth } from 'app/stores/auth-context.tsx';
 
@@ -84,7 +84,7 @@ export default function VignetteList({
 
     const imgPath = folder.startsWith('/api/vignette')
       ? `${folder}/${ev.scan}`
-      : `/${folder}/${ev.scan}`.replace(/\\/g, '/').replace(/\/\/+/, '/');
+      : `/${folder}/${ev.scan}`.replaceAll(/\\/, '/').replace(/\/\/+/, '/');
 
     function setMatrix(img: HTMLImageElement) {
       if (!canceled && loadRequestIdRef.current === requestId) {
@@ -132,67 +132,29 @@ export default function VignetteList({
       const target = e.target as HTMLElement | null;
       const isTypingContext =
         !!target &&
-        (target.tagName === 'INPUT' ||
-          target.tagName === 'TEXTAREA' ||
-          (target as HTMLElement).isContentEditable);
+        (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
       if (isTypingContext) return;
 
       const modalOpen = editIndex !== null;
 
-      if (e.key === 'ArrowLeft') {
-        if (modalOpen && editIndex !== null) {
-          const newIndex = Math.max(editIndex - 1, 0);
-          if (newIndex !== editIndex) {
-            setSelectedIndex(newIndex);
-            handleEditMask(newIndex);
-          }
-        } else {
-          setSelectedIndex(i => Math.max(i - 1, 0));
-        }
+      // When the edit modal is open, it fully manages navigation and shortcuts
+      if (modalOpen) return;
+
+      // List-level navigation when no modal is open
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        setSelectedIndex(i => Math.max(i - 1, 0));
         e.preventDefault();
-      } else if (e.key === 'ArrowRight') {
-        if (modalOpen && editIndex !== null) {
-          const newIndex = Math.min(editIndex + 1, vignettes.length - 1);
-          if (newIndex !== editIndex) {
-            setSelectedIndex(newIndex);
-            handleEditMask(newIndex);
-          }
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        setSelectedIndex(i => Math.min(i + 1, vignettes.length - 1));
+        e.preventDefault();
+      } else if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          setSelectedIndex(i => Math.max(i - 1, 0));
         } else {
           setSelectedIndex(i => Math.min(i + 1, vignettes.length - 1));
         }
         e.preventDefault();
-      } else if (!modalOpen && e.key === 'ArrowDown') {
-        setSelectedIndex(i => Math.min(i + 1, vignettes.length - 1));
-        e.preventDefault();
-      } else if (!modalOpen && e.key === 'ArrowUp') {
-        setSelectedIndex(i => Math.max(i - 1, 0));
-        e.preventDefault();
-      } else if (e.key === 'Tab') {
-        if (e.shiftKey) {
-          // Shift+Tab => previous
-          if (modalOpen && editIndex !== null) {
-            const newIndex = Math.max(editIndex - 1, 0);
-            if (newIndex !== editIndex) {
-              setSelectedIndex(newIndex);
-              handleEditMask(newIndex);
-            }
-          } else {
-            setSelectedIndex(i => Math.max(i - 1, 0));
-          }
-        } else {
-          // Tab => next
-          if (modalOpen && editIndex !== null) {
-            const newIndex = Math.min(editIndex + 1, vignettes.length - 1);
-            if (newIndex !== editIndex) {
-              setSelectedIndex(newIndex);
-              handleEditMask(newIndex);
-            }
-          } else {
-            setSelectedIndex(i => Math.min(i + 1, vignettes.length - 1));
-          }
-        }
-        e.preventDefault();
-      } else if (!modalOpen && e.key === 'Enter') {
+      } else if (e.key === 'Enter') {
         // Open the edit modal for the currently selected vignette
         handleEditMask(selectedIndex);
         e.preventDefault();
@@ -322,12 +284,19 @@ export default function VignetteList({
       getVignettes(authState.accessToken!, img_address[0], img_address[1], img_address[2], img_name)
         .then(rrsp => {
           vignettes[editIndex] = rrsp.data[0];
-        })
-        .then(value => {
-          handleCloseEdit();
         });
     } catch (err) {
       alert('Erreur sauvegarde mask: ' + err);
+    }
+  };
+
+  const handlePreview = async (matrix: number[][]) => {
+    if (editIndex == null) return;
+    const srcFile = vignettes[editIndex].scan;
+    try {
+      return await simulateMaskViaApi(matrix, srcFile, folder);
+    } catch (err) {
+      alert('Erreur simulation mask: ' + err);
     }
   };
 
@@ -370,8 +339,26 @@ export default function VignetteList({
                   imagePath={imagePath}
                   initialMatrix={editMatrix}
                   strokeColor="red"
+                  onPreview={handlePreview}
                   onApply={handleApply}
                   onCancel={handleCloseEdit}
+                  onNavigatePrev={() => {
+                    if (editIndex === null) return;
+                    const newIndex = Math.max(editIndex - 1, 0);
+                    if (newIndex !== editIndex) {
+                      setSelectedIndex(newIndex);
+                      handleEditMask(newIndex);
+                    }
+                  }}
+                  onNavigateNext={() => {
+                    console.log('onNavigateNext ', editIndex, vignettes.length);
+                    if (editIndex === null) return;
+                    const newIndex = Math.min(editIndex + 1, vignettes.length - 1);
+                    if (newIndex !== editIndex) {
+                      setSelectedIndex(newIndex);
+                      handleEditMask(newIndex);
+                    }
+                  }}
                 />
               )}
             </ModalBody>

@@ -7,6 +7,13 @@ export async function saveMaskViaApi(matrix: number[][], srcFilename: string, fo
   await sendBlobToServer(mask_post_url, 'application/gzip', blob);
 }
 
+export async function simulateMaskViaApi(matrix: number[][], srcFilename: string, folder: string) {
+  const blob = new Blob([getCompressedArrayFromMatrix(matrix)]);
+
+  const mask_maybe_post_url = folder.replace('vignette', 'vignette_mask_maybe') + '/' + srcFilename;
+  return await sendBlobToServer(mask_maybe_post_url, 'application/gzip', blob);
+}
+
 function getCompressedArrayFromMatrix(matrix: number[][]) {
   const height = matrix.length;
   const width = matrix[0]?.length || 0;

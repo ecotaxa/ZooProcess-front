@@ -2,12 +2,15 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Button, ButtonGroup } from '@heroui/button';
 import { Kbd, Slider } from '@heroui/react';
 
-interface DrawCanvasProps {
+export interface DrawCanvasProps {
   imagePath: string;
   initialMatrix: number[][];
   strokeColor: string;
-  onApply?: (matrix: number[][]) => void;
+  onApply?: (matrix: number[][]) => any;
   onCancel?: () => void;
+  onPreview?: (matrix: number[][]) => Promise<any>;
+  onNavigatePrev?: () => void;
+  onNavigateNext?: () => void;
 }
 
 type Tool = 'brush' | 'eraser';
@@ -17,6 +20,8 @@ const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 20;
 const WHEEL_ZOOM_SPEED = 0.002;
 const STEP_ZOOM_FACTOR = 1.2;
+const INACTIVITY_TIMEOUT = 2000; // show hints after this many milliseconds of inactivity
+
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
 const DrawCanvas: React.FC<DrawCanvasProps> = ({
@@ -25,7 +30,10 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   strokeColor,
   onApply,
   onCancel,
-}) => {
+  onPreview,
+  onNavigatePrev,
+  onNavigateNext,
+}: Readonly<DrawCanvasProps>) => {
   const persistentMatrixRef = useRef<number[][] | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
@@ -47,12 +55,59 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [scroll, setScroll] = useState({ x: 0, y: 0 });
 
+  // ROIs and features returned by onPreview callback;
+  type RoiWithFeatures = {
+    object_bx: number;
+    object_by: number;
+    object_width: number;
+    object_height: number;
+    object_x: number;
+    object_y: number;
+    object_major: number;
+    object_minor: number;
+    object_angle: number;
+  };
+  const [rois, setRois] = useState<RoiWithFeatures[]>([]);
+
   const [updateKey, setUpdateKey] = useState(0);
   const forceUpdate = () => setUpdateKey(k => k + 1);
 
   // Track whether the user modified the overlay since the image was loaded
   const [dirtySinceLoad, setDirtySinceLoad] = useState(false);
+  // Mirror dirtySinceLoad into a ref to avoid stale closures inside global event listeners
+  const dirtySinceLoadRef = useRef(false);
+  useEffect(() => {
+    dirtySinceLoadRef.current = dirtySinceLoad;
+  }, [dirtySinceLoad]);
   const [ready, setReady] = useState(false);
+
+  // Feedback after inactivity following drawing/erasing
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resetInactivityTimer = React.useCallback(() => {
+    if (inactivityTimerRef.current !== null) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    inactivityTimerRef.current = setTimeout(async () => {
+      try {
+        if (!persistentMatrixRef.current) return;
+        const matrix = persistentMatrixRef.current.map(row => [...row]);
+        const ret = await onPreview?.(matrix);
+        setRois(ret.rois);
+      } catch (e) {
+        // avoid breaking the timer if preview callback throws
+        console.error('onPreview callback failed:', e);
+      }
+    }, INACTIVITY_TIMEOUT);
+  }, [onPreview]);
+
+  // Clear timer on unmount
+  useEffect(() => {
+    return () => {
+      if (inactivityTimerRef.current !== null) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+    };
+  }, []);
 
   // Device Pixel Ratio for HiDPI-aware canvases
   const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
@@ -133,10 +188,26 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         setCanvasSize({ width, height });
         setImage(img);
 
-        // New image or matrix loaded -> reset dirty flag
+        // New image or matrix loaded -> reset dirty flag and clear ROIs
         setDirtySinceLoad(false);
+        setRois([]);
         setReady(true);
         forceUpdate();
+
+        // Immediately fetch ROIs so they are drawn as soon as the image is loaded
+        void (async () => {
+          try {
+            if (!onPreview) return;
+            // Work on a copy to avoid future mutations during drawing
+            const matrixForPreview = matrix.map(r => [...r]);
+            const ret = await onPreview(matrixForPreview);
+            if (!canceled && reqIdRef.current === reqId && ret && Array.isArray(ret.rois)) {
+              setRois(ret.rois);
+            }
+          } catch (e) {
+            console.error('initial onPreview failed:', e);
+          }
+        })();
       } catch (e) {
         console.error('Failed loading assets', e);
       }
@@ -190,8 +261,34 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       }
     }
 
+    // Draw ROI ellipses provided by onPreview, in image-space coordinates
+    if (rois.length > 0) {
+      ctx.lineWidth = 1; // logical pixel width
+      ctx.strokeStyle = 'rgba(0, 255, 0, 0.95)';
+      ctx.setLineDash([4, 2]);
+      for (const r of rois) {
+        const cx = r.object_bx + r.object_x;
+        const cy = r.object_by + r.object_y;
+        const major = r.object_major;
+        const minor = r.object_minor;
+        const angleDeg = r.object_angle;
+        const radiusX = major / 2; // assume major/minor are full axis lengths
+        const radiusY = minor / 2;
+        const rotation = Number.isFinite(angleDeg) ? -(angleDeg * Math.PI) / 180 : 0;
+        ctx.beginPath();
+        // Clamp radii to avoid Canvas errors with tiny values
+        const rx = Math.max(0.5, radiusX);
+        const ry = Math.max(0.5, radiusY);
+        ctx.ellipse(cx, cy, rx, ry, rotation, 0, Math.PI * 2);
+        ctx.stroke();
+        // Debug (simple rectangle)
+        // ctx.strokeRect(r.object_bx, r.object_by, r.object_width, r.object_height);
+      }
+      ctx.setLineDash([]);
+    }
+
     ctx.restore();
-  }, [canvasSize, strokeColor, zoom, scroll, updateKey, dpr]);
+  }, [canvasSize, strokeColor, zoom, scroll, updateKey, dpr, rois]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -226,6 +323,23 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         setZoom(newZoom);
       };
 
+      const requestNav = (dir: 'prev' | 'next') => {
+        const cb = dir === 'prev' ? onNavigatePrev : onNavigateNext;
+        if (!cb) return;
+        e.preventDefault();
+        const doNav = async () => {
+          try {
+            if (dirtySinceLoadRef.current) {
+              applyMatrix();
+            }
+          } finally {
+            console.log('requestNav', dir);
+            cb();
+          }
+        };
+        void doNav();
+      };
+
       if (e.key === 'b') setTool('brush');
       if (e.key === 'e') setTool('eraser');
       if (e.key === 'c') clearMatrix();
@@ -237,7 +351,15 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       }
       if (e.key === 'Escape' || e.key === 'Enter') {
         e.preventDefault();
-        applyMatrix();
+        void applyMatrix(true);
+        return;
+      }
+      if (e.key === 'ArrowLeft' || (e.key === 'Tab' && e.shiftKey)) {
+        requestNav('prev');
+        return;
+      }
+      if (e.key === 'ArrowRight' || (e.key === 'Tab' && !e.shiftKey)) {
+        requestNav('next');
       }
     };
 
@@ -395,6 +517,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     // Mark as modified on any drawing action
     setDirtySinceLoad(true);
     forceUpdate();
+    resetInactivityTimer();
   };
 
   const clearMatrix = () => {
@@ -402,6 +525,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     persistentMatrixRef.current = persistentMatrixRef.current.map(row => row.fill(0));
     setDirtySinceLoad(true);
     forceUpdate();
+    resetInactivityTimer();
   };
 
   const handlePointerDown = (e: React.MouseEvent) => {
@@ -476,12 +600,25 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     lastDrawPos.current = curr;
   };
 
-  const applyMatrix = () => {
+  const applyMatrix = async (closeAfter = false) => {
     if (!persistentMatrixRef.current) return;
     const matrix = persistentMatrixRef.current.map(row => [...row]);
-    if (onApply) onApply(matrix);
-    // After saving, consider the state clean relative to this load
-    setDirtySinceLoad(false);
+    try {
+      const result = onApply ? onApply(matrix) : undefined;
+      // After initiating save, consider the state clean relative to this load
+      setDirtySinceLoad(false);
+      if (closeAfter) {
+        // If onApply returned a Promise, wait for it before closing
+        if (result && typeof (result as any).then === 'function') {
+          await (result as Promise<any>);
+        }
+        onCancel?.();
+      }
+      return result;
+    } catch (e) {
+      // Do not close on error
+      throw e;
+    }
   };
 
   // Helpers for UI-centered zooming
@@ -550,7 +687,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           onKeyDown={e => {
             if (e.key === 'Escape' || e.key === 'Enter') {
               e.preventDefault();
-              applyMatrix();
+              void applyMatrix(true);
             }
           }}
           style={{
@@ -717,8 +854,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Button
-            onPress={applyMatrix}
-            title="Save (Esc, Enter)"
+            onPress={() => applyMatrix(true)}
+            title="Save (Esc, Enter, Tab, Arrows)"
             aria-label="Save the current drawing"
             aria-keyshortcuts="Escape Enter"
             isDisabled={!dirtySinceLoad}
