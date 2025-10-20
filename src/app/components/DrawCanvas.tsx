@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Button, ButtonGroup } from '@heroui/button';
 import { Kbd, Slider } from '@heroui/react';
+import { contourNonWhite } from 'app/utils/objectContour.ts';
+import { RGB_CONTOUR_COLORS } from 'app/utils/contourColors';
 
 export interface DrawCanvasProps {
   imagePath: string;
@@ -66,6 +68,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     object_major: number;
     object_minor: number;
     object_angle: number;
+    object_xstart: number;
+    object_ystart: number;
   };
   const [rois, setRois] = useState<RoiWithFeatures[]>([]);
 
@@ -253,38 +257,34 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = strokeColor;
 
+    let thereAreSeparators = false;
     for (let y = 0; y < persistentMatrixRef.current.length; y++) {
       for (let x = 0; x < persistentMatrixRef.current[y].length; x++) {
         if (persistentMatrixRef.current[y][x] === 1) {
           ctx.fillRect(x, y, CANVAS_POINT_SIZE, CANVAS_POINT_SIZE);
+          thereAreSeparators = true;
         }
       }
     }
 
-    // Draw ROI ellipses provided by onPreview, in image-space coordinates
-    if (rois.length > 0) {
-      ctx.lineWidth = 1; // logical pixel width
-      ctx.strokeStyle = 'rgba(0, 255, 0, 0.95)';
-      ctx.setLineDash([4, 2]);
-      for (const r of rois) {
-        const cx = r.object_bx + r.object_x;
-        const cy = r.object_by + r.object_y;
-        const major = r.object_major;
-        const minor = r.object_minor;
-        const angleDeg = r.object_angle;
-        const radiusX = major / 2; // assume major/minor are full axis lengths
-        const radiusY = minor / 2;
-        const rotation = Number.isFinite(angleDeg) ? -(angleDeg * Math.PI) / 180 : 0;
-        ctx.beginPath();
-        // Clamp radii to avoid Canvas errors with tiny values
-        const rx = Math.max(0.5, radiusX);
-        const ry = Math.max(0.5, radiusY);
-        ctx.ellipse(cx, cy, rx, ry, rotation, 0, Math.PI * 2);
-        ctx.stroke();
-        // Debug (simple rectangle)
-        // ctx.strokeRect(r.object_bx, r.object_by, r.object_width, r.object_height);
-      }
-      ctx.setLineDash([]);
+    // Draw ROI contour points only if several of them are present
+    if (rois.length > 1 || thereAreSeparators) {
+      rois.forEach((r, idx) => {
+        const colorHex = RGB_CONTOUR_COLORS[idx % RGB_CONTOUR_COLORS.length] ?? '#00FF00';
+
+        const imageCtx = canvasRef.current?.getContext('2d');
+        const overlayCtx = overlayRef.current?.getContext('2d');
+        if (overlayCtx && imageCtx) {
+          const sx = Math.floor(r.object_xstart * dpr);
+          const sy = Math.floor(r.object_ystart * dpr);
+          try {
+            // Paint only the boundary pixels of the non-white region for this ROI, using its designated color
+            contourNonWhite(imageCtx, overlayCtx, persistentMatrixRef.current!, sx, sy, colorHex);
+          } catch (err) {
+            console.error('floodFillWithTolerance failed:', err);
+          }
+        }
+      });
     }
 
     ctx.restore();
