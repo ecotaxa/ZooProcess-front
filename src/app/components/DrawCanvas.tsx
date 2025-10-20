@@ -19,10 +19,10 @@ type Tool = 'brush' | 'eraser';
 
 const CANVAS_POINT_SIZE = 1.1; // slightly larger than 1 to avoid aliasing, ends up in manual drawing of width 2
 const MIN_ZOOM = 0.1;
-const MAX_ZOOM = 20;
+const MAX_ZOOM = 5;
 const WHEEL_ZOOM_SPEED = 0.002;
 const STEP_ZOOM_FACTOR = 1.2;
-const INACTIVITY_TIMEOUT = 2000; // show hints after this many milliseconds of inactivity
+const INACTIVITY_TIMEOUT = 2000; // show objects contours after this inactivity
 
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
@@ -442,7 +442,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       const height = canvasSize.height;
       if (width <= 0 || height <= 0) return;
 
-      const fitScale = 0.75 * Math.min(cw / width, ch / height);
+      const fitScale = 0.95 * Math.min(cw / width, ch / height);
       const z = clamp(fitScale, MIN_ZOOM, MAX_ZOOM);
 
       setZoom(z);
