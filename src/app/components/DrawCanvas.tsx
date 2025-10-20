@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { Button, ButtonGroup } from '@heroui/button';
 import { Kbd, Slider } from '@heroui/react';
 import { contourNonWhite } from 'app/utils/objectContour.ts';
@@ -19,7 +20,7 @@ type Tool = 'brush' | 'eraser';
 
 const CANVAS_POINT_SIZE = 1.1; // slightly larger than 1 to avoid aliasing, ends up in manual drawing of width 2
 const MIN_ZOOM = 0.1;
-const MAX_ZOOM = 5;
+const MAX_ZOOM = 8;
 const WHEEL_ZOOM_SPEED = 0.002;
 const STEP_ZOOM_FACTOR = 1.2;
 const INACTIVITY_TIMEOUT = 2000; // show objects contours after this inactivity
@@ -36,18 +37,24 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   onNavigatePrev,
   onNavigateNext,
 }: Readonly<DrawCanvasProps>) => {
+  // Paint data
   const persistentMatrixRef = useRef<number[][] | null>(null);
+  // Image
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  // Painting overlay
   const overlayRef = useRef<HTMLCanvasElement>(null);
+  // Div containing the 2 canvases
   const containerRef = useRef<HTMLDivElement>(null);
+  // Div containing above div
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
+
   const lastMouse = useRef({ x: 0, y: 0 });
   const lastDrawPos = useRef<{ x: number; y: number } | null>(null);
   const spaceHeldRef = useRef(false);
+
   const isPanningRef = useRef(false);
   const lastPanPos = useRef<{ x: number; y: number } | null>(null);
-  const lastCenteredImagePathRef = useRef<string | null>(null);
-  const lastAutoZoomedImagePathRef = useRef<string | null>(null);
+
   const reqIdRef = useRef(0);
 
   const [tool, setTool] = useState<Tool>('brush');
@@ -309,18 +316,18 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
         spaceHeldRef.current = true;
         e.preventDefault();
       }
-      const offsetX = lastMouse.current.x;
-      const offsetY = lastMouse.current.y;
-      const imageX = offsetX / zoom;
-      const imageY = offsetY / zoom;
-
       const zoomAroundPoint = (targetZoom: number) => {
-        const newZoom = clamp(targetZoom, MIN_ZOOM, MAX_ZOOM);
-        const newScrollX = imageX - offsetX / newZoom;
-        const newScrollY = imageY - offsetY / newZoom;
-        const clamped = clampScrollToBounds(newScrollX, newScrollY, newZoom);
-        setScroll(clamped);
-        setZoom(newZoom);
+        const c = containerRef.current;
+        const w = canvasWrapperRef.current;
+        if (!c || !w) {
+          setZoom(clamp(targetZoom, MIN_ZOOM, MAX_ZOOM));
+          return;
+        }
+        const containerRect = c.getBoundingClientRect();
+        const wrapperRect = w.getBoundingClientRect();
+        const viewportOffsetX = lastMouse.current.x + wrapperRect.left - containerRect.left;
+        const viewportOffsetY = lastMouse.current.y + wrapperRect.top - containerRect.top;
+        zoomAtPoint(targetZoom, viewportOffsetX, viewportOffsetY);
       };
 
       const requestNav = (dir: 'prev' | 'next') => {
@@ -333,7 +340,6 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
               applyMatrix();
             }
           } finally {
-            console.log('requestNav', dir);
             cb();
           }
         };
@@ -379,29 +385,24 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (!canvasWrapperRef.current) return;
+      if (!containerRef.current) return;
 
-      const zooming = e.ctrlKey; // Only zoom when user intends to (e.g., pinch on trackpad)
+      const scrolling = e.ctrlKey; // Only zoom when user intends to (e.g., pinch on trackpad)
 
-      if (zooming) {
+      if (scrolling) {
+        // Allow default scrolling of the container/page
+      } else {
         e.preventDefault();
-        const rect = canvasWrapperRef.current.getBoundingClientRect();
+        const c = containerRef.current;
+        if (!c) return;
+        const rect = c.getBoundingClientRect();
         const offsetX = e.clientX - rect.left;
         const offsetY = e.clientY - rect.top;
 
         const factor = Math.exp(-e.deltaY * WHEEL_ZOOM_SPEED);
         const targetZoom = clamp(zoom * factor, MIN_ZOOM, MAX_ZOOM);
 
-        const imageX = offsetX / zoom;
-        const imageY = offsetY / zoom;
-
-        const newScrollX = imageX - offsetX / targetZoom;
-        const newScrollY = imageY - offsetY / targetZoom;
-        const clamped = clampScrollToBounds(newScrollX, newScrollY, targetZoom);
-        setScroll(clamped);
-        setZoom(targetZoom);
-      } else {
-        // Allow default scrolling of the container/page
+        zoomAtPoint(targetZoom, offsetX, offsetY);
       }
     };
 
@@ -410,15 +411,9 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     return () => target?.removeEventListener('wheel', handleWheel);
   }, [canvasSize, scroll, zoom]);
 
-  // Reset auto-zoom guard when imagePath changes so keyboard navigation triggers fit again
-  useEffect(() => {
-    lastAutoZoomedImagePathRef.current = null;
-  }, [imagePath]);
-
   // After the editor is mounted and assets are ready, compute an initial auto-zoom that fits the image.
   useEffect(() => {
     if (!ready || !image) return;
-    if (lastAutoZoomedImagePathRef.current === imagePath) return;
 
     let canceled = false;
 
@@ -447,7 +442,6 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
 
       setZoom(z);
       setScroll({ x: 0, y: 0 });
-      lastAutoZoomedImagePathRef.current = imagePath;
 
       // Center the outer scrollbars after zooming to keep the image centered in view
       requestAnimationFrame(() => {
@@ -472,32 +466,6 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       canceled = true;
     };
   }, [ready, imagePath, image, canvasSize]);
-
-  // Center the outer scrollbars when the image is larger than the viewport
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container || !image) return;
-
-    // Only center once per imagePath to avoid overriding user's manual scroll
-    if (lastCenteredImagePathRef.current === imagePath) return;
-
-    const center = () => {
-      if (!container) return;
-      const needsH = container.scrollWidth > container.clientWidth;
-      const needsV = container.scrollHeight > container.clientHeight;
-      if (needsH || needsV) {
-        const left = Math.max(0, Math.floor((container.scrollWidth - container.clientWidth) / 2));
-        const top = Math.max(0, Math.floor((container.scrollHeight - container.clientHeight) / 2));
-        container.scrollTo({ left, top });
-      }
-      lastCenteredImagePathRef.current = imagePath;
-    };
-
-    // Wait for layout, then schedule after paint with a bit more delay to avoid race conditions
-    requestAnimationFrame(() => {
-      setTimeout(center, 50);
-    });
-  }, [imagePath, image, canvasSize]);
 
   const drawPoint = (x: number, y: number) => {
     if (!persistentMatrixRef.current) return;
@@ -621,23 +589,60 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     }
   };
 
-  // Helpers for UI-centered zooming
-  const zoomAtPoint = (target: number, offsetX: number, offsetY: number) => {
+  // Navigate to previous/next item, auto-saving if there are unsaved changes
+  const handleNavigate = (dir: 'prev' | 'next') => {
+    const cb = dir === 'prev' ? onNavigatePrev : onNavigateNext;
+    if (!cb) return;
+    const doNav = async () => {
+      try {
+        if (dirtySinceLoadRef.current) {
+          await applyMatrix();
+        }
+      } finally {
+        cb();
+      }
+    };
+    void doNav();
+  };
+
+  // Helpers for UI-centered zooming (anchor is relative to the scroll container viewport)
+  const zoomAtPoint = (target: number, viewportOffsetX: number, viewportOffsetY: number) => {
+    const c = containerRef.current;
     const newZoom = clamp(target, MIN_ZOOM, MAX_ZOOM);
-    const imageX = offsetX / zoom;
-    const imageY = offsetY / zoom;
-    const newScrollX = imageX - offsetX / newZoom;
-    const newScrollY = imageY - offsetY / newZoom;
-    const clamped = clampScrollToBounds(newScrollX, newScrollY, newZoom);
-    setScroll(clamped);
-    setZoom(newZoom);
+    const oldZoom = zoom;
+
+    if (!c) {
+      // If container isn't ready, just commit the zoom synchronously
+      flushSync(() => setZoom(newZoom));
+      return;
+    }
+
+    // Compute the desired scroll based on preserving the anchor point position during scale
+    const scale = newZoom / oldZoom;
+    const leftBefore = c.scrollLeft;
+    const topBefore = c.scrollTop;
+    const desiredLeft = leftBefore * scale + viewportOffsetX * (scale - 1);
+    const desiredTop = topBefore * scale + viewportOffsetY * (scale - 1);
+
+    // Commit zoom synchronously so scroll metrics reflect the new size immediately
+    flushSync(() => setZoom(newZoom));
+
+    // Clamp using the new (post-zoom) scroll metrics
+    const maxLeft = Math.max(0, c.scrollWidth - c.clientWidth);
+    const maxTop = Math.max(0, c.scrollHeight - c.clientHeight);
+    const left = clamp(desiredLeft, 0, maxLeft);
+    const top = clamp(desiredTop, 0, maxTop);
+
+    // Set scroll instantly (avoid scrollTo to dodge any smooth-scroll or UA quirks)
+    c.scrollLeft = left;
+    c.scrollTop = top;
   };
 
   const zoomStep = (dir: 1 | -1) => {
-    const rect = canvasWrapperRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const cx = rect.width / 2;
-    const cy = rect.height / 2;
+    const c = containerRef.current;
+    if (!c) return;
+    const cx = c.clientWidth / 2;
+    const cy = c.clientHeight / 2;
     const target = dir === 1 ? zoom * STEP_ZOOM_FACTOR : zoom / STEP_ZOOM_FACTOR;
     zoomAtPoint(target, cx, cy);
   };
@@ -663,37 +668,34 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   if (!ready) return <div>...</div>;
 
   return (
-    <div style={{ display: 'flex', flexGrow: '1', gap: 12, minHeight: 0 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexGrow: '1',
+        gap: 12,
+        minHeight: 0,
+      }}
+    >
       <div
         id="flex_canvases"
         ref={containerRef}
         style={{
           border: '1px solid #ccc',
           display: 'flex',
-          flexGrow: '1',
-          alignSelf: 'stretch',
-          position: 'relative',
-          alignItems: 'flex-start', // TODO: Hack to prevent the canvas from being cut off at the top.
           justifyContent: 'center',
-          maxWidth: '100%',
-          maxHeight: '100vh',
           overflow: 'auto',
+          width: '100%',
+          overflowAnchor: 'none',
         }}
       >
         <div
           id="canvases"
           ref={canvasWrapperRef}
           tabIndex={0}
-          onKeyDown={e => {
-            if (e.key === 'Escape' || e.key === 'Enter') {
-              e.preventDefault();
-              void applyMatrix(true);
-            }
-          }}
           style={{
-            position: 'relative',
             width: canvasSize.width * zoom,
             height: canvasSize.height * zoom,
+            position: 'relative',
             marginTop: 'auto',
             marginBottom: 'auto',
           }}
@@ -708,7 +710,6 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
               left: 0,
               zIndex: 1,
               border: '1px solid #ccc',
-              // Ensure nearest-neighbor scaling for crisp pixels when zooming
               imageRendering: 'pixelated',
               // Visual size follows zoom via CSS, backing store stays at image size × DPR
               width: canvasSize.width * zoom,
@@ -730,7 +731,6 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
               zIndex: 2,
               cursor: getCursor(),
               border: '1px solid #ccc',
-              // Ensure nearest-neighbor scaling for crisp pixels when zooming
               imageRendering: 'pixelated',
               // Visual size follows zoom via CSS, backing store stays at image size × DPR
               width: canvasSize.width * zoom,
@@ -834,10 +834,10 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
           }}
           onChange={val => {
             const v = Array.isArray(val) ? val[0] : val;
-            const rect = containerRef.current?.getBoundingClientRect();
-            if (!rect) return;
+            const c = containerRef.current;
+            if (!c) return;
             const target = Number(v);
-            zoomAtPoint(target, rect.width / 2, rect.height / 2);
+            zoomAtPoint(target, c.clientWidth / 2, c.clientHeight / 2);
           }}
           tabIndex={-1}
           onMouseLeave={() => setTimeout(() => containerRef.current?.focus(), 0)}
@@ -878,6 +878,28 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
             Save
           </Button>
         </div>
+        <ButtonGroup size="sm" className="gap-0 flex-col items-stretch">
+          <Button
+            size="sm"
+            onPress={() => handleNavigate('prev')}
+            isDisabled={!onNavigatePrev}
+            title="Previous (Left Arrow)"
+            aria-label="Navigate to previous"
+            endContent={<Kbd aria-hidden>←</Kbd>}
+          >
+            Previous
+          </Button>
+          <Button
+            size="sm"
+            onPress={() => handleNavigate('next')}
+            isDisabled={!onNavigateNext}
+            title="Next (Right Arrow)"
+            aria-label="Navigate to next"
+            endContent={<Kbd aria-hidden>→</Kbd>}
+          >
+            Next
+          </Button>
+        </ButtonGroup>
       </div>
     </div>
   );

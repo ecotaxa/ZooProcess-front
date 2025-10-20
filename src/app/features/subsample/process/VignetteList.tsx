@@ -281,10 +281,15 @@ export default function VignetteList({
       // e.g. v10_cut:apero2023_tha_bioness_005_st20_d_n1_d3_1_x1045yDD7wB9h4A.png
       const img_name = srcFile.split(':').slice(-1)[0];
       // Re-fetch the vignette data
-      getVignettes(authState.accessToken!, img_address[0], img_address[1], img_address[2], img_name)
-        .then(rrsp => {
-          vignettes[editIndex] = rrsp.data[0];
-        });
+      getVignettes(
+        authState.accessToken!,
+        img_address[0],
+        img_address[1],
+        img_address[2],
+        img_name
+      ).then(rrsp => {
+        vignettes[editIndex] = rrsp.data[0];
+      });
     } catch (err) {
       alert('Erreur sauvegarde mask: ' + err);
     }
@@ -351,7 +356,6 @@ export default function VignetteList({
                     }
                   }}
                   onNavigateNext={() => {
-                    console.log('onNavigateNext ', editIndex, vignettes.length);
                     if (editIndex === null) return;
                     const newIndex = Math.min(editIndex + 1, vignettes.length - 1);
                     if (newIndex !== editIndex) {
