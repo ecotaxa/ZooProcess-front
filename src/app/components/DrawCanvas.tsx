@@ -331,19 +331,8 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       };
 
       const requestNav = (dir: 'prev' | 'next') => {
-        const cb = dir === 'prev' ? onNavigatePrev : onNavigateNext;
-        if (!cb) return;
         e.preventDefault();
-        const doNav = async () => {
-          try {
-            if (dirtySinceLoadRef.current) {
-              applyMatrix();
-            }
-          } finally {
-            cb();
-          }
-        };
-        void doNav();
+        handleNavigate(dir);
       };
 
       if (e.key === 'b') setTool('brush');
@@ -440,8 +429,11 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
       const fitScale = 0.95 * Math.min(cw / width, ch / height);
       const z = clamp(fitScale, MIN_ZOOM, MAX_ZOOM);
 
-      setZoom(z);
-      setScroll({ x: 0, y: 0 });
+      // Commit initial zoom and reset scroll synchronously so layout reflects the new size immediately
+      flushSync(() => {
+        setZoom(z);
+        setScroll({ x: 0, y: 0 });
+      });
 
       // Center the outer scrollbars after zooming to keep the image centered in view
       requestAnimationFrame(() => {
@@ -497,9 +489,10 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
   };
 
   const handlePointerDown = (e: React.MouseEvent) => {
-    // Ensure canvas wrapper has keyboard focus so Esc key works while interacting
-    canvasWrapperRef.current?.focus();
-    // Start panning with middle mouse or Space+Left
+    // Ensure the canvas wrapper has keyboard focus so Esc key works while interacting.
+    // But do not let it scroll the container
+    canvasWrapperRef.current?.focus({ preventScroll: true });
+    // Start panning with middle mouse
     const isMiddle = e.button === 1;
     const isSpaceLeft = e.button === 0 && spaceHeldRef.current;
     if (isMiddle || isSpaceLeft) {
