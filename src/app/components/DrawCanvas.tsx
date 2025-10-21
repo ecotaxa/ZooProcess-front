@@ -876,7 +876,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
             size="sm"
             onPress={() => handleNavigate('prev')}
             isDisabled={!onNavigatePrev}
-            title="Previous (Left Arrow)"
+            title="Previous (Left Arrow, Shift-Tab)"
             aria-label="Navigate to previous"
             endContent={<Kbd aria-hidden>←</Kbd>}
           >
@@ -886,7 +886,7 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
             size="sm"
             onPress={() => handleNavigate('next')}
             isDisabled={!onNavigateNext}
-            title="Next (Right Arrow)"
+            title="Next (Right Arrow, Tab)"
             aria-label="Navigate to next"
             endContent={<Kbd aria-hidden>→</Kbd>}
           >

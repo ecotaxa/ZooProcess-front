@@ -39,11 +39,11 @@ export function contourNonWhite(
 
   const setPixel = (x: number, y: number) => {
     const i = coordsToIdx(x, y);
-    const previous = imageData[i];
+    const previous = imageData[i]; // all 3 have the same value
     overlayData[i] = fillR;
     overlayData[i + 1] = fillG;
     overlayData[i + 2] = fillB;
-    overlayData[i + 3] = 192 - previous / 2;
+    overlayData[i + 3] = 192 - (previous / 3) * 2;
   };
 
   // 8-connected BFS over the non-white components
