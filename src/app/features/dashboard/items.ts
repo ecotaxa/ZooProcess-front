@@ -41,6 +41,8 @@ function stateToLabel(
       return ['Multiples approved', 'process', 'upload', 'Upload'];
     case SubSampleStateEnum.UPLOAD_FAILED:
       return ['Not Uploaded', 'process', 'upload', 'Upload'];
+    case SubSampleStateEnum.UPLOADING:
+      return ['Uploading...', 'process', 'upload', 'Upload'];
     case SubSampleStateEnum.UPLOADED:
       return ['Uploaded to EcoTaxa', 'process', 'upload', 'Re-Upload'];
     default:

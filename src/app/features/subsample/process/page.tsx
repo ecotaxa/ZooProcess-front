@@ -142,6 +142,7 @@ export const SubsampleProcessPage = () => {
       loadOrLaunchProcess();
     } else if (subsample.state === SubSampleStateEnum.UPLOADED) {
       setStep(3);
+      loadOrLaunchProcess();
     }
   }, [subsample]);
 
@@ -164,7 +165,7 @@ export const SubsampleProcessPage = () => {
       return;
     }
     if (task.status === TaskStatusEnum.FINISHED) {
-      fetchSubsample();
+      if (step !== 3) fetchSubsample();
       return;
     }
     const timeout = setTimeout(() => {
@@ -257,14 +258,50 @@ export const SubsampleProcessPage = () => {
           <Button
             className="bg-blue-400 hover:bg-blue-600 text-white font-small w-1/6 mb-1 py-1 px-2 rounded-md transition-colors"
             onPress={() => {
-              retryOnError();
+              uploadAgain();
             }}
           >
-            Re-Upload
+            Upload again
+          </Button>
+        </div>
+        <p className="text-gray-600 mb-2 text-center">
+          To fix a separation problem i.e. get back to previous page, click the button below.
+        </p>
+        <div className="w-full flex justify-center">
+          <Button
+            className="bg-blue-400 hover:bg-blue-600 text-white font-small w-1/6 mb-1 py-1 px-2 rounded-md transition-colors"
+            onPress={() => {
+              separateAgain();
+            }}
+          >
+            Separate again
           </Button>
         </div>
       </>
     );
+  }
+  function uploadAgain() {
+    if (step !== 3) return;
+    deleteSubsample(authState.accessToken!, projectId, sampleId, subsampleId)
+      .then(() => {
+        setError(null);
+        fetchSubsample();
+      })
+      .catch(error => {
+        setError('Failed to step back: ' + (error?.message || error));
+      });
+  }
+  function separateAgain() {
+    if (step !== 3) return;
+    deleteSubsample(authState.accessToken!, projectId, sampleId, subsampleId)
+      .then(() => deleteSubsample(authState.accessToken!, projectId, sampleId, subsampleId))
+      .then(() => {
+        setError(null);
+        fetchSubsample();
+      })
+      .catch(error => {
+        setError('Failed to step back twice: ' + (error?.message || error));
+      });
   }
   function retryOnError() {
     if (step === 0 || step === 1 || step === 2 || step === 3) {
@@ -350,8 +387,8 @@ export const SubsampleProcessPage = () => {
             <ModalHeader>Confirm validation</ModalHeader>
             <ModalBody>
               <p className="font-semibold">
-                You won't be able to come back to this separation. Are you sure you want to
-                validate?
+                Coming back to this separation will imply manual operations on EcoTaxa. Are you sure
+                you want to validate?
               </p>
             </ModalBody>
             <ModalFooter>
