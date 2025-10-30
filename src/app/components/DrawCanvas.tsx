@@ -70,11 +70,6 @@ const DrawCanvas: React.FC<DrawCanvasProps> = ({
     object_by: number;
     object_width: number;
     object_height: number;
-    object_x: number;
-    object_y: number;
-    object_major: number;
-    object_minor: number;
-    object_angle: number;
     object_xstart: number;
     object_ystart: number;
   };

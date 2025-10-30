@@ -275,7 +275,7 @@ export default function VignetteList({
     if (editIndex == null) return;
     const srcFile = vignettes[editIndex].scan;
     try {
-      await saveMaskViaApi(matrix, srcFile, folder);
+      await saveMaskViaApi(authState.accessToken!, matrix, srcFile, folder);
       // e.g. /api/vignette/689c42f9e63c0c86d9cc0df6/689c42f9e63c0c86d9cc0df7/689c42f9e63c0c86d9cc0dfa/
       const img_address = folder.split('/').slice(-3);
       // e.g. v10_cut:apero2023_tha_bioness_005_st20_d_n1_d3_1_x1045yDD7wB9h4A.png
@@ -299,7 +299,7 @@ export default function VignetteList({
     if (editIndex == null) return;
     const srcFile = vignettes[editIndex].scan;
     try {
-      return await simulateMaskViaApi(matrix, srcFile, folder);
+      return await simulateMaskViaApi(authState.accessToken!, matrix, srcFile, folder);
     } catch (err) {
       alert('Erreur simulation mask: ' + err);
     }

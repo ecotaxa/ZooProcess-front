@@ -1,17 +1,27 @@
 import pako from 'pako';
 
-export async function saveMaskViaApi(matrix: number[][], srcFilename: string, folder: string) {
+export async function saveMaskViaApi(
+  token: string,
+  matrix: number[][],
+  srcFilename: string,
+  folder: string
+) {
   const blob = new Blob([getCompressedArrayFromMatrix(matrix)]);
 
   const mask_post_url = folder.replace('vignette', 'vignette_mask') + '/' + srcFilename;
-  await sendBlobToServer(mask_post_url, 'application/gzip', blob);
+  await sendBlobToServer(token, mask_post_url, 'application/gzip', blob);
 }
 
-export async function simulateMaskViaApi(matrix: number[][], srcFilename: string, folder: string) {
+export async function simulateMaskViaApi(
+  token: string,
+  matrix: number[][],
+  srcFilename: string,
+  folder: string
+) {
   const blob = new Blob([getCompressedArrayFromMatrix(matrix)]);
 
   const mask_maybe_post_url = folder.replace('vignette', 'vignette_mask_maybe') + '/' + srcFilename;
-  return await sendBlobToServer(mask_maybe_post_url, 'application/gzip', blob);
+  return await sendBlobToServer(token, mask_maybe_post_url, 'application/gzip', blob);
 }
 
 function getCompressedArrayFromMatrix(matrix: number[][]) {
@@ -38,7 +48,7 @@ function getCompressedArrayFromMatrix(matrix: number[][]) {
   return compressed;
 }
 
-async function sendBlobToServer(url: string, mimeType: string, buffer: Blob) {
+async function sendBlobToServer(token: string, url: string, mimeType: string, buffer: Blob) {
   try {
     // Create a new FormData object
     const formData = new FormData();
@@ -52,9 +62,11 @@ async function sendBlobToServer(url: string, mimeType: string, buffer: Blob) {
     // Append the file to the FormData
     formData.append('file', file);
 
-    // Send the FormData as the request body
     const response = await fetch(url, {
       method: 'POST',
+      headers: {
+        Authorization: 'bearer ' + token,
+      },
       body: formData,
       // Note: Don't set Content-Type header when sending FormData
       // It will be set automatically with the correct boundary
